@@ -1,0 +1,25 @@
+Email Details -
+URL - http://pratyakshmachinery.com/webmail
+username - info@pratyakshmachinery.com 
+password - mydream01
+
+
+Hosting Details :-
+Username - pmpl90@yahoo.com
+Password - Mydream@01
+
+
+Cpanel details :-
+URL - http://pratyakshmachinery.com:2082/
+username - pratypx1
+password - *123456Must!@#*
+
+
+8889077790
+pmpl90@yahoo.com
+
+
+Database :-
+dbname - pratypx1_pmpl
+username - pratypx1_user
+password - e~*mRj9KJH+S
