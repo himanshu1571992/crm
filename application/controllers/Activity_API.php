@@ -9,7 +9,6 @@ class Activity_API extends CRM_Controller
 
         $this->load->model('home_model');
     }
-
     
     public function get_activity_list()
     {
