@@ -39,7 +39,9 @@ $where = do_action('staff_table_sql_where', []);
 
 array_push($where, 'AND tblstaff.active = 1');
 
-if (!is_admin() == 1){
+/* this condition will be check designation of login person */
+$staffdesignation_id = get_staff_info(get_staff_user_id())->designation_id;
+if (is_admin() == 0 && (!in_array($staffdesignation_id, [12,48]))){
     array_push($where, 'AND tblstaff.added_by ='.get_staff_user_id());
 }
 

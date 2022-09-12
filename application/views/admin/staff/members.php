@@ -780,7 +780,9 @@
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="salary_details">
                                         <div class="row">
-
+                                            <div class="col-md-12">
+                                                <a href="javascript:void(0);" class="btn-sm btn-info pull-right ctc_calculate"><i class="fa fa-calculator"> CALCULATE</i></a>        
+                                            </div>
                                         	<div class="form-group col-md-6">
 	                                        	<div class="form-group">
 	                                                <label for="taxable" class="control-label">Is Taxable*</label>
@@ -1559,6 +1561,43 @@
 		<?php echo form_close(); ?>
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div class="modal fade" id="ctc_calculate_modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Salary Calculation</h4>
+			</div>
+			<div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group col-md-6" app-field-wrapper="date">
+                            <label for="salary" class="control-label">Salary</label>
+                            <div class="input-group">
+                                <input type="text" id="deduction_salary" required="" name="salary" class="form-control" value=""><div class="input-group-addon"><i class="fa fa-money money-icon"></i></div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="type" class="control-label">Deduction Type</label>
+                            <select class="form-control selectpicker" id="deduction_type" name="type" required="">
+                                <option value="" disabled selected >--Select One-</option>
+                                <option value="1" >No Deduction No Bonus</option>
+                                <option value="2" >No Deduction with Bonus</option>
+                                <option value="3" >Deduction No Bonus</option>
+                                <option value="4" >Deduction with Bonus</option>
+                            </select>
+                        </div>                                
+                    </div>                                   
+                </div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
+				<button type="submit" class="btn btn-success ctc_deduction_btn">Calculate</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <?php init_tail(); ?>
 <script>
    $(function() {
@@ -1862,6 +1901,32 @@ init_selectpicker();
             }
         })
     }
+
+    $(document).on("click", ".ctc_calculate", function(){
+        $("#ctc_calculate_modal").modal("show");
+    });
+    $(document).on("click", ".ctc_deduction_btn", function(){
+        var salary = $("#deduction_salary").val();
+        var deduction_type = $("#deduction_type").val();
+        
+        if (salary != '' && deduction_type != ''){
+            $.ajax({
+                type    : "POST",
+                url     : "<?php echo site_url('admin/salary/get_staff_gross_salary'); ?>",
+                data    : {'salary' : salary, 'deduction_type': deduction_type},
+                success : function(response){
+                    if(response != ''){
+                        var resArr = $.parseJSON(response);
+                        $("#monthly_salary").val('').val(resArr["final"]);
+                        $("#gross_salary").val('').val(resArr["gross"]);
+                        $("#ctc_calculate_modal").modal("hide");
+                    }
+                }
+            })
+        }else{
+            alert("Salary and deduction type both are required.");
+        }
+    });
 </script>
 </body>
 </html>

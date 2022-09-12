@@ -1660,4 +1660,16 @@ class Salary extends Admin_controller
 
     }
 
+	function get_staff_gross_salary(){
+
+		if (!empty($_POST)) {
+            extract($this->input->post());
+			
+			$other_allowance = get_new_other_allowance($salary, $deduction_type);
+			$ctc_info = get_new_ctc($salary, $other_allowance, $deduction_type);
+			
+			echo json_encode(array("gross" => $ctc_info['gross'], "final" => $ctc_info['final']));
+		}
+	}
+	
 }

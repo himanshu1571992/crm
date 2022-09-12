@@ -172,4 +172,25 @@ class Test_API extends CRM_Controller
         die;
     }
 
+    /* this function use for remove duplicate contacts */
+    function get_duplicate_contacts(){
+        $this->load->model("home_model");
+        $get_user = $this->db->query("SELECT userid, COUNT(*) FROM `tblcontacts` GROUP BY userid HAVING COUNT(userid) > 1")->result();
+        if (!empty($get_user)){
+            foreach ($get_user as $user) {
+                
+                $getcontact = $this->db->query("SELECT `id`,`userid`,`phonenumber`,`contact_type` FROM `tblcontacts` WHERE `userid` = ".$user->userid." ")->result();
+                if (!empty($getcontact)){
+                    foreach ($getcontact as $key => $value) {
+                        $chkcontact = $this->db->query("SELECT `id` FROM `tblcontacts` WHERE `userid` = ".$value->userid." AND `phonenumber` = ".$value->phonenumber." AND `contact_type` = ".$value->contact_type." ORDER BY id DESC")->row();
+                        if (!empty($chkcontact)){
+                            $this->home_model->delete("tblcontacts", array("id !="=> $chkcontact->id,"userid" => $value->userid, "phonenumber" => $value->phonenumber, "contact_type" => $value->contact_type));
+                        }
+                    }
+                }
+            }
+        }
+        echo "ok";
+    }
+
 }

@@ -387,7 +387,20 @@ class Purchase extends Admin_controller {
         $data['all_city_data'] = $this->db->query("SELECT * FROM `tblcities` ORDER BY name ASC")->result_array();
 
         //$data['product_data'] = $this->db->query("SELECT p.* FROM `tblproducts` p LEFT JOIN `tblcategorymultiselect` cm ON p.`product_cat_id`=cm.category_id LEFT JOIN `tblmultiselectmaster` ms ON cm.multiselect_id=ms.id WHERE ms.multiselect='proposal'")->result_array();
-        $data['product_data'] = $this->db->query("SELECT * FROM `tblproducts` where status = 1 and is_approved = 1 ORDER BY name ASC")->result_array();
+        // $data['product_data'] = $this->db->query("SELECT * FROM `tblproducts` where status = 1 and is_approved = 1 ORDER BY name ASC")->result_array();
+        $data['product_data'] = array();
+        $product_data = $this->db->query("SELECT * FROM `tblproducts` where status = 1 and is_approved = 1 ORDER BY name ASC")->result_array();
+        $temp_product_data = $this->db->query("SELECT * FROM `tbltemperoryproduct` where status = 1 ORDER BY product_name ASC ")->result_array();
+        if(!empty($product_data)){
+            foreach ($product_data as $r) {
+                $data['product_data'][] = array('id'=>$r['id'],'name'=>$r['sub_name'],'is_temp'=>0);
+            }
+        }
+        if(!empty($temp_product_data)){
+            foreach ($temp_product_data as $r1) {
+                $data['product_data'][] = array('id'=>$r1['id'],'name'=>$r1['product_name'],'is_temp'=>1);
+            }
+        }
         $this->load->model('Staffgroup_model');
         $data['Staffgroup'] = $this->db->query("SELECT st.* FROM `tblstaffgroup` st LEFT JOIN `tblstaffgroupmultiselect` stm ON st.`id`=stm.`staffgroup_id` LEFT JOIN `tblmultiselectmaster` ms ON stm.multiselect_id=ms.id WHERE ms.multiselect='proposal'")->result_array();
         $Staffgroup = $this->db->query("SELECT st.* FROM `tblstaffgroup` st LEFT JOIN `tblstaffgroupmultiselect` stm ON st.`id`=stm.`staffgroup_id` LEFT JOIN `tblmultiselectmaster` ms ON stm.multiselect_id=ms.id WHERE ms.id='19'")->result_array();

@@ -305,7 +305,6 @@ class Staff_model extends CRM_Model
 
         return true;
     }
-
     /**
      * Get staff member/s
      * @param  mixed $id Optional - staff id
