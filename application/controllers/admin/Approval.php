@@ -183,8 +183,8 @@ class Approval extends Admin_controller
             $where .= " and status = 0 and approve_status = 0 ";
         }
 
-        $data['notification_list'] = $this->db->query("SELECT * FROM tblmasterapproval WHERE ".$where." and `module_id` NOT IN (18,30,31,33,37,39,42,45,48,58,59) order by id desc ")->result();
-        $data['module_info'] = $this->db->query("SELECT * FROM tblcrmmodules WHERE `id` NOT IN (18,30,31,33,37,39,42,45,48,58,59) AND `status` = 1 ")->result();
+        $data['notification_list'] = $this->db->query("SELECT * FROM tblmasterapproval WHERE ".$where." and `module_id` NOT IN (18,30,31,33,37,39,42,45,48,58,59,60) order by id desc ")->result();
+        $data['module_info'] = $this->db->query("SELECT * FROM tblcrmmodules WHERE `id` NOT IN (18,30,31,33,37,39,42,45,48,58,59,60) AND `status` = 1 ")->result();
         
         $data['title'] = 'Approval Notificatoin List';
         $this->load->view('admin/approval/notifications', $data); 
@@ -352,8 +352,8 @@ class Approval extends Admin_controller
             $where .= " and status = 0 and approve_status = 0 ";
         }
 
-        $data['notification_list'] = $this->db->query("SELECT * FROM tblmasterapproval WHERE ".$where." and `module_id` IN (18,30,31,33,37,39,42,45,48,58,59) order by id desc ")->result();
-        $data['module_info'] = $this->db->query("SELECT * FROM tblcrmmodules WHERE `id` IN (18,30,31,33,37,39,42,45,48,58,59) AND `status` = 1 ")->result();
+        $data['notification_list'] = $this->db->query("SELECT * FROM tblmasterapproval WHERE ".$where." and `module_id` IN (18,30,31,33,37,39,42,45,48,58,59,60) order by id desc ")->result();
+        $data['module_info'] = $this->db->query("SELECT * FROM tblcrmmodules WHERE `id` IN (18,30,31,33,37,39,42,45,48,58,59,60) AND `status` = 1 ")->result();
         
         $data['title'] = 'Activity Tag Notificatoin List';
         $this->load->view('admin/approval/activity_notifications_list', $data); 

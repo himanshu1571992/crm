@@ -1151,17 +1151,23 @@ class Task extends Admin_controller
 
     public function activity_log($id = '')
     {
-
-
-
     	$data['id'] = $id;
-
     	$data['activity_log'] = $this->home_model->get_result('tbltask_activity_log', array('task_id'=>$id), '');
-
-
     	if(!empty($_POST)){
     		extract($this->input->post());
 
+			/* this is for check notification update */
+            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$id."' and staff_id = '".get_staff_user_id()."' and module_id = 60")->result();
+            if (!empty($chk_notification)){
+                foreach ($chk_notification as $value) {
+                    $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
+                }
+            }
+			if(empty($description)){
+				set_alert('danger', 'Activity cannot be empty!');
+				redirect($_SERVER['HTTP_REFERER']);
+				die;
+			}
 
     		$add_data_1 = array(
 		                    'task_id' => $id,
@@ -1171,18 +1177,37 @@ class Task extends Admin_controller
 		                );
 
 		    $insert_1 = $this->home_model->insert('tbltask_activity_log', $add_data_1);
+			if($insert_1){
 
-		   if($insert_1){
-			   	set_alert('success', 'New Activity Add Successfully');
-	            redirect($_SERVER['HTTP_REFERER']);
-		   }
-
+				if (!empty($tag_staff_ids)){
+					$staff_ids = explode(",", $tag_staff_ids);
+					foreach ($staff_ids as $staff_id) {
+						$n_data = array(
+							 'description' => 'You taged in Task activity Log',
+							 'staff_id' => $staff_id,
+							 'fromuserid' => get_staff_user_id(),
+							 'table_id' => $id,
+							 'isread' => 0,
+							 'module_id' => 60,
+							 'link'  => "task/activity_log/".$id,
+							 'date' => date('Y-m-d H:i:s'),
+							 'date_time' => date('Y-m-d H:i:s')
+						 );
+						 $this->home_model->insert('tblmasterapproval', $n_data);
+ 
+						//Sending Mobile Intimation
+						$token = get_staff_token($staff_id);
+						$title = 'Schach';
+						$message = 'You taged in Task activity Log';
+						$send_intimation = sendFCM($message, $title, $token, $page = 2);
+					}
+				}
+				set_alert('success', 'New Activity Add Successfully');
+				redirect($_SERVER['HTTP_REFERER']);
+			}
     	}
-
+		$data["title"] = value_by_id("tbltasks", $id, "title");
     	$this->load->view('admin/task/activity_log', $data);
-
-
-
     }
 
 
