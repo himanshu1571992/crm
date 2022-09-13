@@ -1020,3 +1020,14 @@ function is_sales_person(){
     }
     return FALSE;
 }
+
+/* this is show creator information */
+function get_creator_info($added_by, $created_at){
+    $createdby = (!empty($added_by)) ? get_staff_full_name($added_by) : 'N/A';
+    $created_date = (!empty($created_at)) ? _d($created_at) : '--:--';
+    $createdbyinfo = "<div class='col-md-12'><span class='text-info'>Created By&nbsp;:&nbsp;</span><span>".$createdby."</span></div>
+    <div class='col-md-12' style='margin-bottom:5px;'><span class='text-info'>Created At&nbsp;&nbsp;:&nbsp;</span><span>".$created_date."</span></div>";
+?>
+    <a href="javascript:void(0);" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="<?php echo $createdbyinfo; ?>"><i class="fa fa-user-circle-o" style="font-size:15px;color:#000" aria-hidden="true"></i></a>
+<?php    
+}

@@ -94,10 +94,23 @@
                                     $ttl_overall_rating_percent = 0;
 									if(!empty($estimate_list)){
 										$z=1;
-										foreach($estimate_list as $row){	
+										foreach($estimate_list as $row){
+
+
+                                            $challan_ids = '0';
+                                            $proforma_challan_info = $this->db->query("SELECT id FROM `tblproformachalan` where rel_id = '".$row->id."'")->result();
+                                            if(!empty($proforma_challan_info)){
+                                                foreach($proforma_challan_info as $proforma_challan){
+                                                    $info = $this->db->query("SELECT id FROM `tblchalanmst` where rel_type = 'proforma_challan' and rel_id = '".$proforma_challan->id."' and process > 0 ")->row();
+                                                    if(!empty($info)){
+                                                        $challan_ids .= ','.$info->id;
+                                                    }
+                                                }
+                                            }	
 
 								
-    										$challan_info = $this->db->query("SELECT * from tblchalanmst where rel_id = '".$row->id."' and process > 0  ")->result(); 
+    										//$challan_info = $this->db->query("SELECT * from tblchalanmst where rel_id = '".$row->id."' and process > 0  ")->result(); 
+                                            $challan_info = $this->db->query("SELECT * from tblchalanmst where id IN (".$challan_ids.")  ")->result(); 
                                             
                                             
                                             $client_info = $this->db->query("SELECT * FROM `tblclientbranch` where userid = '".$row->clientid."' ")->row();

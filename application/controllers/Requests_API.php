@@ -2403,6 +2403,7 @@ public function edit_request()
 			}else{
 				//$check = $this->home_model->get_row('tblrequests', array('confirmed_by_user'=>0,'cancel'=>0,'approved_status'=>0,'addedfrom'=>$user_id), '');
 				$check = $this->home_model->get_row('tblrequests', array('confirmed_by_user'=>0,'category'=>$category,'cancel'=>0,'approved_status'=>0,'addedfrom'=>$user_id), '');
+
 			}		
 			
 
@@ -2430,7 +2431,11 @@ public function edit_request()
 						if($check)
 						{
 							$return_arr['status'] = "false";
-							$return_arr['mgs'] = 'Your request is approved. please confirm your approved request';
+							if($check->pettycash_id > 0){
+								$return_arr['mgs'] = 'Your request is approved. but pending by pettycash manager';
+							}else{								
+								$return_arr['mgs'] = 'Your request is approved. please confirm your approved request';
+							}
 						}
 						else
 						{

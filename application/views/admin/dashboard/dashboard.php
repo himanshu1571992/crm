@@ -393,7 +393,7 @@ $("document").ready(function() {
 
 
 function getlinlk(id) {
-  
+
    $.ajax({
         type    : "POST",
         url     : "<?php echo base_url(); ?>admin/approval/getNotificationLink",
@@ -408,7 +408,6 @@ function getlinlk(id) {
 }
 
 function getDetails(id) {
-
 
    $.ajax({
       type    : "POST",

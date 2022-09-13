@@ -781,7 +781,7 @@
                                     <div role="tabpanel" class="tab-pane" id="salary_details">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="javascript:void(0);" class="btn-sm btn-info pull-right ctc_calculate"><i class="fa fa-calculator"> CALCULATE</i></a>        
+                                                <a href="javascript:void(0);" class="btn-sm btn-info pull-right ctc_calculate"><i class="fa fa-calculator"> CALCULATE GROSS</i></a>        
                                             </div>
                                         	<div class="form-group col-md-6">
 	                                        	<div class="form-group">

@@ -41,7 +41,7 @@ array_push($where, 'AND tblstaff.active = 1');
 
 /* this condition will be check designation of login person */
 $staffdesignation_id = get_staff_info(get_staff_user_id())->designation_id;
-if (is_admin() == 0 && (!in_array($staffdesignation_id, [12,48]))){
+if (is_admin() == 0 && (!in_array($staffdesignation_id, [4]))){
     array_push($where, 'AND tblstaff.added_by ='.get_staff_user_id());
 }
 

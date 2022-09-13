@@ -727,4 +727,45 @@ class Staff_API extends CI_Controller {
         //http://mustafa-pc/crm/Staff_API/updateStaffAccountDetails?user_id=1&account_no=115425858585&ifsc_code=IFG12544&bank_name=kotak mahindra bank
 
     }
+
+
+    public function getDepartmentAndBranchMaster()
+    {
+       
+      $return_arr = array();
+        if(!empty($_GET))
+        {
+            extract($this->input->get());   
+        }
+        elseif(!empty($_POST)) 
+        {
+            extract($this->input->post());
+        }
+
+        
+
+      $department_info  = $this->db->query("SELECT id,name FROM `tbldepartmentsmaster` where status = 1 order by name asc  ")->result_array();
+      $branch_info  = $this->db->query("SELECT id,comp_branch_name FROM `tblcompanybranch` where status = 1 order by id asc  ")->result_array();
+
+      if(!empty($department_info)){
+            
+            $return_arr['status'] = true;   
+            $return_arr['message'] = "Successfully";
+            $return_arr['data']['company_department'] = $department_info;
+            $return_arr['data']['company_branch'] = $branch_info;
+      }else{
+            $return_arr['status'] = false;  
+            $return_arr['message'] = "Record Not Found!";
+            $return_arr['data'] = [];
+      }
+
+      
+       header('Content-type: application/json');
+       echo json_encode($return_arr);
+
+       //https://mustafa-pc/crm/Staff_API/getDepartmentAndBranchMaster
+
+    }
+
+
 }

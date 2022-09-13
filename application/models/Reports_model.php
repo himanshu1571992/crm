@@ -629,9 +629,9 @@ class Reports_model extends CRM_Model
     function callindia_mart()
     {
         
-//        $url = 'https://mapi.indiamart.com/wservce/enquiry/listing/GLUSR_MOBILE/8450912880/GLUSR_MOBILE_KEY/MTY0MDIzODcyMi40MjA0IzMwNjY5MDE5/Start_Time/15-MAR-2021/End_Time/15-MAR-2021/';
-        //$url = 'https://mapi.indiamart.com/wservce/enquiry/listing/GLUSR_MOBILE/8450912880/GLUSR_MOBILE_KEY/MTY0MDIzODcyMi40MjA0IzMwNjY5MDE5/Start_Time/24-OCT-2021/End_Time/23-DEC-2021/';
-       $url = 'https://mapi.indiamart.com/wservce/enquiry/listing/GLUSR_MOBILE/8450912880/GLUSR_MOBILE_KEY/MTY0MDIzODcyMi40MjA0IzMwNjY5MDE5/';
+
+     //$url = 'https://mapi.indiamart.com/wservce/enquiry/listing/GLUSR_MOBILE/8450912880/GLUSR_MOBILE_KEY/MTY2MjcyMTIzMC42OTc5IzMwNjY5MDE5/Start_Time/Start_Time/01-APR-2022/End_Time/30-APR-2022/';
+$url = 'https://mapi.indiamart.com/wservce/enquiry/listing/GLUSR_MOBILE/8450912880/GLUSR_MOBILE_KEY/MTY2MjcyMTIzMC42OTc5IzMwNjY5MDE5/';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $curl_scraped_page = curl_exec($ch);

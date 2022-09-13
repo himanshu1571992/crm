@@ -1671,5 +1671,5 @@ class Salary extends Admin_controller
 			echo json_encode(array("gross" => $ctc_info['gross'], "final" => $ctc_info['final']));
 		}
 	}
-	
+
 }

@@ -239,6 +239,8 @@
                                                                             $approved_amount = 0.00;
                                                                             foreach ($chk_purchase_payment as $value) {
                                                                                 $approved_amount += $value->approved_amount;
+                                                                                $approved_amount += $value->tdsamount;
+                                                                                $approved_amount += $value->tcsamount;
                                                                                 if ($value->payment_by == 1) {
                                                                                     if ($value->status == 0 && $value->utr_no == "") {
                                                                                         $pending_request = 1;
@@ -664,6 +666,8 @@
                                                                             $approved_amount = 0.00;
                                                                             foreach ($chk_purchase_payment as $value) {
                                                                                 $approved_amount += $value->approved_amount;
+                                                                                $approved_amount += $value->tdsamount;
+                                                                                $approved_amount += $value->tcsamount;
                                                                                 if ($value->payment_by == 1) {
                                                                                     if ($value->status == 0 && $value->utr_no == "") {
                                                                                         $pending_request = 1;
