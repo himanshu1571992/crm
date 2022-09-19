@@ -88,7 +88,10 @@
                                                 ?>
                                                 <tr>
                                                     <td><?php echo ++$key; ?></td> 
-                                                    <td><?php echo 'PDN-' . str_pad($value->id, 4, '0', STR_PAD_LEFT); ?></td>
+                                                    <td>
+                                                        <?php echo 'PDN-' . str_pad($value->id, 4, '0', STR_PAD_LEFT); ?>
+                                                        <?php echo get_creator_info($value->staff_id, $value->created_date); ?>
+                                                    </td>
                                                     <td><a href="<?php echo admin_url('vendor/vendor/' . $value->vender_id); ?>" target="_blank"><?php echo cc(value_by_id('tblvendor', $value->vender_id, 'name')); ?></a></td>
                                                     <td><?php echo (!empty($mr_number)) ? $mr_number : 'MR-'.$value->mr_id; ?></td>
                                                     <td><?php echo _d($value->date); ?></td> 

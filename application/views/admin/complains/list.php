@@ -126,7 +126,10 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo ++$k; ?></td>
-                                                        <td><?php echo "Comp-".$row->id; ?></td>
+                                                        <td>
+                                                            <?php echo "Comp-".$row->id; ?>
+                                                            <?php echo get_creator_info($row->staff_id, $row->created_on); ?>
+                                                        </td>
                                                         <td><?php echo _d($row->complain_date); ?></td>
                                                         <td><?php echo $client_info->company; ?></td>
                                                         <td><?php echo value_by_id("tblcomplainstypes", $row->complain_type_id, "title"); ?></td>

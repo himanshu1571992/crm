@@ -7,6 +7,7 @@ $sTable = 'tblvendor';
 $aColumns = [
 //    '`id`',
     '`id`',
+    '`added_by`',
     '`name`',
     '`id`',
     '`email`',
@@ -30,6 +31,7 @@ foreach ($rResult as $aRow) {
 
     // #
     $row[] = $aRow['id'];
+    $row[] = ($aRow['added_by'] > 0) ? get_employee_fullname($aRow['added_by']) : 'N/A';
 
     $url_edit = admin_url('vendor/vendor/' . $aRow['id']);
     $url = admin_url('vendor/vendor_profile/' . $aRow['id']);

@@ -1,4 +1,4 @@
-l<?php init_head(); ?>
+<?php init_head(); ?>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 <style>
@@ -24,8 +24,18 @@ legend.scheduler-border {
                 <div class="col-md-12">
                     <div class="panel_s">
                         <div class="panel-body">
+						
+							<div class="row panelHead">
+                                <div class="col-xs-12 col-md-6">
+                                    <h4 class="no-margin">Task - Details <?php if (!empty($task_info->task_file)) { ?><a target="_blank" href="<?php echo base_url('uploads/tasks/' . $task_info->task_file); ?>" class="btn btn-info pull-right">View Attachment</a><?php } ?> </h4>
+                                </div>
+                                <div class="col-xs-12 col-md-6 text-right">
+                                    <a href="<?php echo admin_url('Task/activity_log/'.$task_info->id); ?>" target="_blank" class="btn btn-info">Activity</a>
+                                    
+                                </div>
+                            </div>
 
-                            <h4 class="no-margin">Task - Details <?php if (!empty($task_info->task_file)) { ?><a target="_blank" href="<?php echo base_url('uploads/tasks/' . $task_info->task_file); ?>" class="btn btn-info pull-right">View Attachment</a><?php } ?> </h4>
+                            
                             <hr class="hr-panel-heading">
 
                             
@@ -63,7 +73,10 @@ legend.scheduler-border {
                                                                     <p><?php echo $priority; ?></p>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-4">
+															<?php
+															if(!empty($status_info)){
+															?>
+															<div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <?php
                                                                     if ($task_info->is_repeat == 1) {
@@ -98,7 +111,20 @@ legend.scheduler-border {
                                                                     }
                                                                     ?>
                                                                 </div>
-                                                            </div>
+                                                            </div>	
+															<?php
+															}/*else{
+															?>
+															<div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <h4 class="control-label">S</h4>
+                                                                    <p><?php echo $priority; ?></p>
+                                                                </div>
+                                                            </div>	
+															<?php
+															}*/
+															?>
+                                                            
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -115,12 +141,27 @@ legend.scheduler-border {
                                                                 <p><?php echo date('d/m/Y', strtotime($task_info->start_date)); ?></p>
                                                             </div>
                                                         </div>
+														<?php
+														if(!empty($status_info)){
+														?>
                                                         <div class="col-md-4">
                                                             <div class="form-group">
                                                                 <h4 class="control-label">Due Date</h4>
                                                                 <p><?php echo date('d/m/Y', strtotime($task_info->due_date)); ?></p>
                                                             </div>
                                                         </div>
+														<?php
+														}else{
+														?>
+														<div class="form-group col-md-4" app-field-wrapper="date">
+															<label for="due_date" class="control-label">Due Date</label>
+															<div class="input-group date">
+																<input id="due_date" required="" name="due_date" class="form-control task_date" value="<?php echo (isset($task_info) && $task_info->due_date != "") ? date('d/m/Y',strtotime($task_info->due_date)) : "" ?>" aria-invalid="false" type="text" ><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+															</div>		
+														</div>
+														<?php
+														}
+														?>
                                                     </div>
                                                 </div>
                                                 </fieldset>
@@ -128,7 +169,7 @@ legend.scheduler-border {
                                                     <br>
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <h4 class="control-label">Task Related To</h4>
                                                                     <p><fieldset class="scheduler-border">
@@ -265,7 +306,7 @@ legend.scheduler-border {
                                                                     </fieldset></p>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <h4 class="control-label">Task Assigned To</h4>
                                                                     <?php
@@ -276,8 +317,19 @@ legend.scheduler-border {
                                                                         if (!empty($task_info->assigned_to)) {
                                                                             echo '<fieldset class="scheduler-border"><br>';
                                                                             foreach ($assignee_arr as $key => $staff_id) {
+																				$assign_info = $this->db->query("SELECT * FROM tbltaskassignees WHERE task_id = ".$task_info->id." AND staff_id = '".$staff_id."'")->row();
+																				$assignPersonStatus = '';
+																				if(!empty($assign_info)){
+																					if($assign_info->task_status == 0){
+																						$assignPersonStatus = '<span class="text-warning">(Pending)</span>';
+																					}elseif($assign_info->task_status == 1){
+																						$assignPersonStatus = '<span class="text-success">(Completed)</span>';
+																					}elseif($assign_info->task_status == 2){
+																						$assignPersonStatus = '<span class="text-danger">(Rejected)</span>';
+																					}
+																				}
                                                                                 ?>
-                                                                                <?php echo ++$key;?>) <a target="_blank" href="<?php echo admin_url('staff/member/' . $staff_id); ?>" ><?php echo get_employee_name($staff_id); ?></a><br>
+                                                                                <?php echo ++$key;?>) <a target="_blank" href="<?php echo admin_url('staff/member/' . $staff_id); ?>" ><?php echo get_employee_name($staff_id); ?></a> <?php echo $assignPersonStatus; ?><br>
                                                                                 <?php
                                                                             }
                                                                             echo '</fieldset>';
@@ -287,7 +339,7 @@ legend.scheduler-border {
                                                                         ?></p>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-4">
                                                                 <div class="form-group">
                                                                     <h4 class="control-label">Files Attachment </h4>
                                                                     <?php 
@@ -367,7 +419,7 @@ legend.scheduler-border {
                                                 if ($task_info->is_repeat == 0) {
                                                     ?>
                                                     <div class="text-right">
-                                                        <button class="btn btn-info"><?php echo _l('submit'); ?></button>
+                                                        <button class="btn btn-info">Update</button>
                                                     </div>
                                                     <?php
                                                 }
@@ -423,6 +475,13 @@ legend.scheduler-border {
 
 
     });
+	
+	$('.task_date').datepicker({
+  
+     dateFormat: 'dd/mm/yy',
+	 minDate:new Date()
+	  
+});
 </script> 
 
 <script type="text/javascript">

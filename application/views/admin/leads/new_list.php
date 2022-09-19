@@ -484,7 +484,7 @@ if(!empty($this->session->userdata('lead_search'))){
                                         $outputType .= '</ul>';
                                         $outputType .= '</div>';
                                     $outputType .= '</span></div></div>';
-
+                                    
                                 ?>
                                 <tr>
                                     <td><?php echo ++$key; ?></td>                                                
@@ -492,9 +492,8 @@ if(!empty($this->session->userdata('lead_search'))){
                                         <?php //echo '<a href="'.admin_url('leads/index/' . $value->id).'" onclick="init_lead(' . $value->id . ');return false;"> LEAD-'.number_series($value->id).'</a>'; ?>
                                         <?php 
                                             echo '<a target="_blank" href="'.admin_url('leads/lead_profile/' . $value->id).'"> LEAD-'.number_series($value->id).'</a>';
-                                           
+                                            echo get_creator_info($value->addedfrom, $value->created_at);
                                         ?>
-
                                     </td>
                                     <td><?php echo cc($company);  echo '<br/>';
                                             //echo $outputStatus;

@@ -140,7 +140,8 @@ class Enquirytype extends Admin_controller {
         if ($id == '') {
             $title = "Add New Lead Status";
         } else {
-            $data['enquirytype'] = (array) $this->Enquirytype_model->get($id);
+            // $data['enquirytype'] = (array) $this->Enquirytype_model->get($id);
+            $data['enquirytype'] = $this->db->query("SELECT * FROM `tblmainenquirytypemaster` WHERE `id`= '".$id."' ")->row_array();
             $title = "Edit Lead Status";
         }
 
@@ -210,6 +211,7 @@ class Enquirytype extends Admin_controller {
             $data["title"] = $post_data["title"];
             $data["status"] = $post_data["status"];
             $data["description"] = $post_data["description"];
+            $data['added_by'] = get_staff_user_id();
             $data["created_at"] = date("Y-m-d H:i:s");
             $data["updated_at"] = date("Y-m-d H:i:s");
             if ($id == '') {
@@ -291,6 +293,7 @@ class Enquirytype extends Admin_controller {
             $data["title"] = $post_data["title"];
             $data["status"] = $post_data["status"];
             $data["description"] = $post_data["description"];
+            $data["added_by"] = get_staff_user_id();
             $data["created_at"] = date("Y-m-d H:i:s");
             $data["updated_at"] = date("Y-m-d H:i:s");
             if ($id == '') {

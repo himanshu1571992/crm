@@ -112,6 +112,7 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Category Type</th>
                                         <th>Product Category</th>
                                         <th>Date</th>
@@ -140,6 +141,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? '<span class="badge badge-info">'.get_employee_fullname($row->added_by).'</span>' : '--'; ?></td>
                                                 <td><?php echo cc($category_type);?></td>
                                                 <td><?php echo cc($category_name);?></td>
                                                 <td><?php echo _d($row->created_date);?></td>

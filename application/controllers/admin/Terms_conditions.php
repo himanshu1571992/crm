@@ -28,14 +28,13 @@ class Terms_conditions extends Admin_controller
 
     public function update($id="")
     {
-
         check_permission('14,33,242','create');
-
         if(!empty($_POST)){
             extract($this->input->post());
 
             $ad_data = array(
                 // 'terms_conditions' => $terms_conditions,
+                'added_by'=> get_staff_user_id(),
                 'updated_at' => date('Y-m-d H:i:s')
             );
 

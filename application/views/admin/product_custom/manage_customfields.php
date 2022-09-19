@@ -25,6 +25,7 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Name</th>
                                         <th>Type</th>
                                         <th>Status</th>
@@ -45,6 +46,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? '<span class="badge badge-info">'.get_employee_fullname($row->added_by).'</span>' : '--'; ?></td>
                                                 <td><?php echo cc($row->name);?></td>
                                                 <td><?php echo ($row->type == 1) ? 'Input Box' : 'Text Box'; ?></td>
                                                 <td><?php echo $toggleActive;?></td>

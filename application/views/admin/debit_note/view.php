@@ -162,16 +162,16 @@ if(!empty($s_tdate)){
 								<table class="table" id="newtable">
 									<thead>
                                         <tr>
-                                                <th>S.No.</th>
-                                                <th>Number</th>
-                                                <th>Customer</th>
-                                                <th>Challan</th>
-                                                <th>Date</th>
-                                                <th>Amount</th>
-                                                <th>Status</th>
-                                                <th>Send Email</th>
-                                                <th>Send Courier</th>
-                                                <th>Action</th>
+                                            <th>S.No.</th>
+                                            <th>Number</th>
+                                            <th>Customer</th>
+                                            <th>Challan</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Send Email</th>
+                                            <th>Send Courier</th>
+                                            <th>Action</th>
                                         </tr>
 									</thead>
 									<tbody>
@@ -216,7 +216,10 @@ if(!empty($s_tdate)){
 											?>
 											<tr>
 												<td><?php echo $z++;?></td>
-												<td><?php echo $row->number;?></td>
+												<td>
+                                                    <?php echo $row->number;?>
+                                                    <?php echo get_creator_info($row->staff_id, $row->created_date); ?>
+                                                </td>
 												<td><a href="<?php echo admin_url('clients/client/'.$row->clientid);?>" target="_blank"><?php echo cc($client_info->client_branch_name); ?></a></td>
 												<td><?php echo $challan_no;?></td>
 												<td><?php echo _d($row->dabit_note_date); ?></td>

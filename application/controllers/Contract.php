@@ -77,6 +77,4 @@ class Contract extends Clients_controller
         $this->view = 'contracthtml';
         $this->layout();
     }
-
-    
 }

@@ -125,7 +125,10 @@
 
 													?>
 													<tr>
-														<td><?php echo ++$key; ?></td>
+														<td>
+															<?php echo ++$key; ?>
+															<?php echo get_creator_info($value->added_by, $value->created_at); ?>
+														</td>
 														<td><?php echo $value->title; ?></td>
 														<td><?php echo $assign_name; ?></td>
 														<td><?php echo ($value->is_repeat == 1) ? 'Yes' : 'No'; ?></td>

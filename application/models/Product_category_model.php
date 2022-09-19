@@ -39,6 +39,7 @@ class Product_category_model extends CRM_Model {
     public function add($data) {
         /*$multiselect_id=$data['multiselect_id'];
 		$data['multiselect_id'] =implode(',',$data['multiselect_id']);*/
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $data['updated_at'] = date("Y-m-d H:i:s");
 

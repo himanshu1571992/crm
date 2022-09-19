@@ -13,12 +13,17 @@
                     <?php if(count($sources) > 0){ ?>
                     <table class="table dt-table scroll-responsive">
                         <thead>
+                            <th>#</th>
+                            <th>Added By</th>
                             <th><?php echo _l('leads_sources_table_name'); ?></th>
                             <th><?php echo 'Status'; ?></th>
+                            <th>Created At</th>
                             <th><?php echo _l('options'); ?></th>
                         </thead>
                         <tbody>
-                            <?php foreach($sources as $source){ 
+                            <?php 
+                            $i=1;
+                            foreach($sources as $source){ 
                                 $checked = ($source['status'] == 1 ) ? 'checked' : '';
                                        $toggleActive = '<div class="onoffswitch">
                                                 <input type="checkbox" data-switch-url="' . admin_url() . 'leads/change_source_status" name="onoffswitch" class="onoffswitch-checkbox" id="' . $source['id'] . '" data-id="' . $source['id'] . '" ' . $checked . '>
@@ -26,12 +31,15 @@
                                             </div>';
                                 ?>
                             <tr>
+                                <td><?php echo $i++; ?></td>
+                                <td><?php echo ($source['added_by'] > 0) ? get_employee_fullname($source['added_by']) : 'N/A'; ?></td>
                                 <td><a href="#" onclick="edit_source(this,<?php echo $source['id']; ?>); return false" data-name="<?php echo $source['name']; ?>"><?php echo cc($source['name']); ?></a><br />
                                     <span class="text-muted">
                                         <?php echo _l('leads_table_total',total_rows('tblleads',array('source'=>$source['id']))); ?>
                                     </span>
                                 </td>
                                 <td><?php echo $toggleActive; ?></td>
+                                <td><?php echo (!empty($source['created_at']) && $source['created_at'] !='0000-00-00 00:00:00') ? _d($source['created_at']) : '--'; ?></td>
                                 <td>
                                     <a href="#" onclick="edit_source(this,<?php echo $source['id']; ?>); return false" data-name="<?php echo $source['name']; ?>" class="btn btn-default btn-icon"><i class="fa fa-pencil-square-o"></i></a>
                                     <a href="<?php echo admin_url('leads/delete_source/'.$source['id']); ?>" class="btn btn-danger btn-icon _delete"><i class="fa fa-remove"></i></a>

@@ -17,6 +17,7 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Title</th>
                                         <th>Division</th>
                                         <th>Status</th>
@@ -39,17 +40,15 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? '<span class="badge badge-info">'.get_employee_fullname($row->added_by).'</span>' : '--'; ?></td>
                                                 <td><?php echo cc($row->title); ?></td>
                                                 <td><?php echo value_by_id("tbldivisionmaster", $row->division_id, "title"); ?></td>
                                                 <td><?php echo $toggleActive;?></td>
                                                 <td><?php echo _d($row->created_at);?></td>
-
                                                 <td class="text-center">
-                                                  <a href="<?php echo admin_url('departments/add_subdivision/'.$row->id); ?>" class="btn btn-info btn-xs">Edit</a>
-                                                  <a href="<?php echo admin_url('departments/delete_subdivisionmaster/'.$row->id); ?>" class="btn btn-danger btn-xs _delete">Delete</a>
-
+                                                    <a href="<?php echo admin_url('departments/add_subdivision/'.$row->id); ?>" class="btn btn-info btn-xs">Edit</a>
+                                                    <a href="<?php echo admin_url('departments/delete_subdivisionmaster/'.$row->id); ?>" class="btn btn-danger btn-xs _delete">Delete</a>
                                                 </td>
-
                                               </tr>
                                             <?php
                                         }

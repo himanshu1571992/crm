@@ -329,6 +329,36 @@
                                             </select>
                                         </div>
                                     </div>
+                                    
+                                    <div class="col-md-3 ">
+                                      <div class="form-group">
+                                          <label for="expected_date" class="control-label">Expected Date</label>
+                                          <?php
+                                                if (isset($save_info) && !empty($save_info)){
+                                                  $expecteddate = $save_info->expected_date;
+                                                }else{
+                                                  $expecteddate = (isset($stockdata['expected_date']) && $stockdata['expected_date'] != "") ? $stockdata['expected_date'] : "";
+                                                }
+                                           ?>
+                                          <input type="text" class="form-control datepicker" name="expected_date" id="expected_date" value="<?php echo $expecteddate; ?>" required>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3 ">
+                                      <div class="form-group">
+                                          <label for="warehouse_id" class="control-label"><?php echo _l('stock_remarks'); ?></label>
+                                          <?php
+                                                if (isset($save_info) && !empty($save_info)){
+                                                  $remarks = $save_info->remark;
+                                                }else{
+                                                  $remarks = (isset($stockdata['remarks']) && $stockdata['remarks'] != "") ? $stockdata['remarks'] : "";
+                                                }
+                                           ?>
+                                          <textarea id="remarks" class="form-control" name="remarks"><?php echo $remarks; ?></textarea>
+                                      </div>
+                                    </div>
+                                 </div>
+
+                                <div class="row">
                                     <div class="col-md-3 estimate_div" style="display:none;">
                                       <div class="form-group">
                                           <label for="profarma_invoice">Proforma Invoice</label>
@@ -347,22 +377,6 @@
                                       </div>
                                     </div>
                                     <div class="col-md-6 remarkdiv">
-                                      <div class="form-group">
-                                          <label for="warehouse_id" class="control-label"><?php echo _l('stock_remarks'); ?></label>
-                                          <?php
-                                                if (isset($save_info) && !empty($save_info)){
-                                                  $remarks = $save_info->remark;
-                                                }else{
-                                                  $remarks = (isset($stockdata['remarks']) && $stockdata['remarks'] != "") ? $stockdata['remarks'] : "";
-                                                }
-                                           ?>
-                                          <textarea id="remarks" class="form-control" name="remarks"><?php echo $remarks; ?></textarea>
-                                      </div>
-                                    </div>
-                                 </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
                                       <div class="form-group">
                                            <label for="warehouse_id" class="control-label">Assign To</label>
                                             <select onchange="staffdropdown()" required="" class="form-control selectpicker" multiple data-live-search="true" id="assign" name="assign[assignid][]">

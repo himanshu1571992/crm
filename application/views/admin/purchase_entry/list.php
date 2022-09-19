@@ -83,7 +83,10 @@
                                     ?>
                                         <tr>
                                             <td><?php echo ++$key; ?></td>                                                
-                                            <td><?php echo cc($value->name); ?></td>
+                                            <td>
+                                                <?php echo cc($value->name); ?>
+                                                <?php echo get_creator_info($value->staff_id, $value->created_on); ?>
+                                            </td>
                                             <td><?php echo date("d-m-Y", strtotime($value->invoice_date)); ?></td>
                                             <td><?php echo $value->invoice_number; ?></td>
                                             <td><?php echo $value->gst_number; ?></td>  

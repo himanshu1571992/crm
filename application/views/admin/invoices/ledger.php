@@ -225,18 +225,23 @@
 $allinvoice_ids = 0;
 $alldn_ids = 0;
 $ttl_billing = 0;
-if(!empty($site_ids)){
-
-	$branch_str = implode(",",$client_branch);
+if(!empty($client_branch)){
+	$branch_str = 0;
+	if(!empty($client_branch)){			
+		$branch_str = implode(",",$client_branch);
+	}
+	if(empty($service_type)){
+		$service_type = '0';
+	}
 	//$payment_debitnote = $this->db->query("SELECT * FROM tbldebitnotepayment where clientid = '".$client_id."' and status = '1' order by date ".$flow." ")->result();
 ?>
 <form action="<?php echo admin_url('invoices/ledger_pdf'); ?>" enctype="multipart/form-data" method="post" accept-charset="utf-8" target="_balnk">
-<input type="hidden" value="<?php echo implode(",",$site_ids); ?>" name="site_ids">
+<input type="hidden" value="<?php echo (!empty($site_ids)) ? implode(",",$site_ids) : ''; ?>" name="site_ids">
 <input type="hidden" value="<?php echo $branch_str; ?>" name="client_branch">
-<input type="hidden" value="<?php echo $client_id; ?>" name="client_id">
-<input type="hidden" value="<?php echo $flow; ?>" name="flow">
-<input type="hidden" value="<?php echo $service_type; ?>" name="service_type">
-<input type="hidden" value="<?php echo $year_id; ?>" name="year_id">
+<input type="hidden" value="<?php echo (!empty($client_id)) ? $client_id : ''; ?>" name="client_id">
+<input type="hidden" value="<?php echo (!empty($flow)) ? $flow : ''; ?>" name="flow">
+<input type="hidden" value="<?php echo (!empty($service_type)) ? $service_type : ''; ?>" name="service_type">
+<input type="hidden" value="<?php echo (!empty($year_id)) ? $year_id : ''; ?>" name="year_id">
 
 <div class="content">
 	<div class="row">
@@ -247,6 +252,7 @@ if(!empty($site_ids)){
 						$i = 0;
 						$grand_bal = 0;
 						$grand_recevied = 0;
+						if(!empty($site_ids)){
 						foreach ($site_ids as $s_id) {
 							$i++;
 							$site_info = $this->db->query("SELECT * FROM tblsitemanager where id = '".$s_id."' ")->row();
@@ -774,6 +780,7 @@ if(!empty($site_ids)){
 							<?php
 							$grand_recevied += ($ttl_recv + $ttl_tds);
 						}
+						}
 					?>
 
 					<?php
@@ -914,7 +921,10 @@ if(!empty($site_ids)){
 						}
 						//$onaccout_amt = $this->db->query("SELECT COALESCE(SUM(ttl_amt),0) AS ttl_amount FROM `tblclientpayment`  where client_id IN (".$branch_str.") and payment_behalf = 1 and service_type = '".$service_type."' ")->row()->ttl_amount;
 						$onaccout_amt = 0;
-						$onaccout_amt_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$branch_str.") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ".$datefilter." ")->result();
+						if(!empty($service_type)){
+							$onaccout_amt_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$branch_str.") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ".$datefilter." ")->result();	
+						}
+						
 						if(!empty($onaccout_amt_info)){
 							foreach ($onaccout_amt_info as $on_am) {
 								$to_see = ($on_am->payment_mode == 1 && $on_am->chaque_status != 1) ? '0' : '1';
@@ -933,7 +943,7 @@ if(!empty($site_ids)){
 
 					$clientrefund_amt = $this->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (" . $branch_str . ") and pd.utr_no != '' and service_type = '".$service_type."' ".$refubddatefilter." order by r.id desc")->row()->ttl_amount;
                     $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt));
-
+					
                     ?>
                     <table class="table details-table">
 					<tfoot>

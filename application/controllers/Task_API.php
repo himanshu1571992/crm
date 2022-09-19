@@ -1009,6 +1009,40 @@ class Task_API extends CRM_Controller
 
 		    $insert_1 = $this->home_model->insert('tbltask_activity_log', $add_data_1); 
 
+		    // For Tagging 
+            /* this is for check notification uodate */
+            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$task_id."' and staff_id = '".$staff_id."' and module_id = 60")->result();
+            if (!empty($chk_notification)){
+                foreach ($chk_notification as $value) {
+                    $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
+                }
+            }
+
+            if(!empty($tag_staff_ids)){
+            	 $staff_ids = json_decode($tag_staff_ids);
+            	 foreach ($staff_ids as $s_id) {
+                   $n_data = array(
+                        'description' => 'You taged in task activity',
+                        'staff_id' => $s_id,
+                        'fromuserid' => $staff_id,
+                        'table_id' => $task_id,
+                        'isread' => 0,
+                        'module_id' => 60,
+                        'link'  => "Task/activity_log/".$task_id,
+                        'date' => date('Y-m-d H:i:s'),
+                        'date_time' => date('Y-m-d H:i:s')
+                    );
+
+                    $this->home_model->insert('tblmasterapproval', $n_data);
+                    
+                    //Sending Mobile Intimation
+                    $token = get_staff_token($s_id);
+                    $title = 'Schach';
+                    $message = 'You taged in task activity';
+                    $send_intimation = sendFCM($message, $title, $token, $page = 2);
+               }
+            }
+
 		    if($insert_1){
 		    	$return_arr['status'] = true;	
 				$return_arr['message'] = "New activity added Successfully";

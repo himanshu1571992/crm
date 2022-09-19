@@ -38,7 +38,6 @@
                                               <th>Category</th>
                                               <th>Picture</th>
                                               <th width="10%">Status</th>
-                                              <th>Date Created</th>
                                               <th class="text-center">Action</th>
                                           </tr>
                                       </thead>
@@ -73,7 +72,10 @@
                                               }
                                           ?>
                                           <tr>
-                                              <td class="text-center"><?php echo ++$key; ?></td>
+                                            <td class="text-center">
+                                                <?php echo ++$key; ?>
+                                                <?php echo get_creator_info($value->staff_id, $value->created_at); ?>
+                                            </td>
                                               <td class="text-center">
                                                 <?php echo cc($value->product_name); ?>
                                                 <div class="row-options">
@@ -95,7 +97,6 @@
                                                       }
                                                   ?>
                                               </td>
-                                              <td class="text-center"><?php echo _d($value->created_at); ?></td>
                                               <td>
                                                 <?php
                                                 if ($value->status == 1){

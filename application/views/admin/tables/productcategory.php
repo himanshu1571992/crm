@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $aColumns = [
 //    '`id`',
     '`id`',
+    'added_by',
     '`name`',
     '`color`',
     '`status`',
@@ -26,6 +27,7 @@ foreach ($rResult as $aRow) {
 
     // #
     $row[] = $aRow['id'];
+    $row[] = ($aRow['added_by'] > 0) ? get_employee_fullname($aRow['added_by']) : 'N/A';
     
     $url = admin_url('productcategory/productcategory/' . $aRow['id']);
 

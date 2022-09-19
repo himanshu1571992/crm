@@ -169,7 +169,10 @@
                                     ?>
                                     <tr>
                                         <td><?php echo ++$key; ?></td>                                                
-                                        <td><?php echo '<a href="' . site_url('invoice/' . $value->id . '/' . $value->hash) . $type .'" target="_blank">' .format_invoice_number($value->id). '</a>'; ?></td>
+                                        <td>
+                                            <?php echo '<a href="' . site_url('invoice/' . $value->id . '/' . $value->hash) . $type .'" target="_blank">' .format_invoice_number($value->id). '</a>'; ?>
+                                            <?php echo get_creator_info($value->addedfrom, $value->datecreated); ?>
+                                        </td>
                                         <td><?php echo value_by_id("tblcompanybranch",$value->billing_branch_id,'comp_branch_name'); ?></td> 
                                         <td><?php echo $value->total; ?></td>
                                         <td><?php echo _d($value->duedate); ?></td> 

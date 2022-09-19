@@ -47,7 +47,8 @@ class Cities extends Admin_controller
 				$ad_data = array(
 							'name' => $city,     
 							'state_id' => $state_id,                               
-							'status' => $status,                        
+							'status' => $status,                
+                            'added_by' => get_staff_user_id(),
 							'created_at' => date('Y-m-d H:i:s'),
 							'updated_at' => date('Y-m-d H:i:s'),
 						);
@@ -71,7 +72,8 @@ class Cities extends Admin_controller
 				$ad_data = array(
 							'name' => $city,     
 							'state_id' => $state_id,                               
-							'status' => $status
+							'status' => $status,
+                            'updated_at' => date('Y-m-d H:i:s'),
 						);
 				$success = $this->home_model->update('tblcities',$ad_data,array('id'=>$id));			
 								

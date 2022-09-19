@@ -150,6 +150,7 @@
                                                             <th>Compilation Days</th>
                                                             <th>Priority</th>
                                                             <th>Order Status</th>
+                                                            <th>Created At</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -207,6 +208,7 @@
                                                                 <a href="javascript:void(0);" class="label label-success orderconfirm" data-toggle="modal" data-section="1" data-target="#delivery_order_confirm" data-order_id="<?php echo $value->confirm_order_id; ?>" data-id="<?php echo $value->id; ?>" id="order_confirm"><?php echo cc($pro_status); ?></a>
                                                             <?php } ?>
                                                             </td>
+                                                            <td><?php echo _d($value->created_at); ?></td>
                                                             <td class="text-center">
 
                                                             <div class="btn-group pull-right">
@@ -380,6 +382,7 @@
                                                             <th>Compilation Days</th>
                                                             <th>Priority</th>
                                                             <th>Order Status</th>
+                                                            <th>Created At</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -437,6 +440,7 @@
                                                                 <a href="javascript:void(0);" class="label label-success orderconfirm" data-toggle="modal" data-section="1" data-target="#delivery_order_confirm" data-order_id="<?php echo $value->confirm_order_id; ?>" data-id="<?php echo $value->id; ?>" id="order_confirm"><?php echo cc($pro_status); ?></a>
                                                             <?php } ?>
                                                             </td>
+                                                            <td><?php echo _d($value->created_at); ?></td>
                                                             <td class="text-center">
 
                                                             <div class="btn-group pull-right">
@@ -610,6 +614,7 @@
                                                             <th>Compilation Days</th>
                                                             <th>Priority</th>
                                                             <th>Order Status</th>
+                                                            <th>Created At</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -667,6 +672,7 @@
                                                                         <a href="javascript:void(0);" class="label label-success orderconfirm" data-toggle="modal" data-section="2" data-target="#delivery_order_confirm" data-order_id="<?php echo $value->confirm_order_id; ?>" data-id="<?php echo $value->id; ?>" id="order_confirm"><?php echo cc($pro_status); ?></a>
                                                                     <?php } ?>
                                                                 </td>
+                                                                <td><?php echo _d($value->created_at); ?></td>
                                                                 <td class="text-center">
 
                                                                 <div class="btn-group pull-right">

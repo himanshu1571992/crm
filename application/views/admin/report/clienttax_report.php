@@ -241,7 +241,7 @@ init_head();
                             </div>
                             <br>
                             <div class="table-responsive" style="margin-bottom:30px;">
-                                <table class="table" id="newtable">
+                                <table class="table" id="">
                                     <thead>
                                         <tr>
                                             <th>S.No</th>

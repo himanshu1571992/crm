@@ -230,9 +230,9 @@ class Salary extends Admin_controller
 		$data['month'] = date("m");	
 		$data['year'] = date("Y");	
 	   
-	   if(is_admin() != 1){
+	   /*if(is_admin() != 1){
 		    access_denied('dashboard');
-	   }
+	   }*/
 		$data['branch_info'] = $this->home_model->get_result('tblcompanybranch', array('status'=>1), '');
 		$data['month_info'] = $this->home_model->get_result('tblmonths', '', '');
 		
@@ -1671,5 +1671,5 @@ class Salary extends Admin_controller
 			echo json_encode(array("gross" => $ctc_info['gross'], "final" => $ctc_info['final']));
 		}
 	}
-	
+
 }

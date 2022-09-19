@@ -153,6 +153,7 @@ class Purchase_model extends CRM_Model {
                         'finaldiscountamount' => $data['saleproposal']['finaldiscountamount'],
                         'totalamount' => $data['saleproposal']['totalamount'],
                         'created_date' => date('Y-m-d'),
+                        'created_at' => date('Y-m-d H:i:s'),
                         'mr_ids' => $mr_str,
                         'po_type' => $data['po_type'],
                         'roundoff_amount' => $roundoff_amt,

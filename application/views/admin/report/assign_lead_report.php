@@ -221,6 +221,7 @@ init_head();
                                                 <td>
                                                     <?php
                                                         echo '<a target="_blank" href="' . admin_url('leads/lead_profile/' . $value->id) . '"> LEAD-' . number_series($value->id) . '</a>';
+                                                        echo get_creator_info($value->addedfrom, $value->created_at);
                                                     ?>
                                                 </td>
                                                 <td><?php

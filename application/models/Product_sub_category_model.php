@@ -33,6 +33,7 @@ class Product_sub_category_model extends CRM_Model {
     public function add($data) {
 
         //$data['multiselect_id'] =implode(',',$data['multiselect_id']);
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $data['updated_at'] = date("Y-m-d H:i:s");
         $this->db->insert('tblproductsubcategory', $data);
@@ -66,6 +67,7 @@ class Product_sub_category_model extends CRM_Model {
     public function add_parent($data) {
 
         //$data['multiselect_id'] =implode(',',$data['multiselect_id']);
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $this->db->insert('tblproductparentcategory', $data);
         $insert_id = $this->db->insert_id();
@@ -93,6 +95,7 @@ class Product_sub_category_model extends CRM_Model {
     public function add_child($data) {
 
         //$data['multiselect_id'] =implode(',',$data['multiselect_id']);
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $this->db->insert('tblproductchildcategory', $data);
         $insert_id = $this->db->insert_id();

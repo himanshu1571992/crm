@@ -43,11 +43,13 @@
                                           <thead>
                                               <tr>
                                                   <th>S.No</th>
+                                                  <th>Added By</th>
                                                   <th>Date</th>
                                                   <th>Drawing Name</th>
                                                   <th>Drawing ID</th>
                                                   <th>Approved By</th>
                                                   <th>Remark of Standard Conversion</th>
+                                                  <th>Created At</th>
                                                   <th>Drawing Attachment</th>
                                               </tr>
                                           </thead>
@@ -59,11 +61,13 @@
                                              ?>
                                                       <tr>
                                                           <td><?php echo ++$key; ?></td>
+                                                          <td><span class="badge badge-info"><?php echo ($row->added_by > 0) ? get_employee_fullname($row->added_by) : 'N/A'; ?></span></td>
                                                           <td><?php echo _d($row->date); ?></td>
                                                           <td><?php echo value_by_id("tbldesignsubmission", $row->designsubmission_id, "drawing_name"); ?></td>
                                                           <td><?php echo value_by_id("tbldesignsubmission", $row->designsubmission_id, "drawing_id"); ?></td>
                                                           <td><?php echo get_employee_name($row->approved_by); ?></td>
                                                           <td><?php echo $row->remark; ?></td>
+                                                          <td><?php echo _d($row->created_at); ?></td>
                                                           <td>
                                                               <a href="javascript:void(0)" class="status" data-target="#drawingattachment<?php echo $key; ?>" id="status" data-toggle="modal">View Drawing</a>
                                                               <div id="drawingattachment<?php echo $key; ?>" class="modal fade" role="dialog">

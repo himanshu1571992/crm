@@ -32,7 +32,7 @@
                             </div>
                             <div class="col-xs-12 col-md-6 text-right">
                                 <a href="<?php echo admin_url('tds/tds_challan_list'); ?>" type="submit" class="btn btn-info">TDS Challan List </a>
-                                <a href="<?php echo admin_url('tds/add_tds_desuction'); ?>" type="submit" class="btn btn-info"><i class="fa fa-plus"></i> Add TDS Deduction</a>
+                                <a href="<?php echo admin_url('tds/add_tds_deduction'); ?>" type="submit" class="btn btn-info"><i class="fa fa-plus"></i> Add TDS Deduction</a>
                             </div>
                         </div>
                         <hr class="hr-panel-heading">
@@ -60,7 +60,7 @@
                                         <label for="type" class="control-label">Type</label>
                                         <select name="type" class="form-control selectpicker" data-live-search="true" id="type">
                                             <option value=""></option>
-                                            <option value="0" <?php echo (strlen($type) > 0 && $type == '0') ? 'selected' : ''; ?>>Direct</option>
+                                            <option value="0" <?php echo (isset($type) && strlen($type) > 0 && $type == '0') ? 'selected' : ''; ?>>Direct</option>
                                             <option value="1" <?php echo (isset($type) && $type == '1') ? 'selected' : ''; ?>>PO Payment</option>
                                             <option value="2" <?php echo (isset($type) && $type == '2') ? 'selected' : ''; ?>>Payment Request</option>
                                             <option value="3" <?php echo (isset($type) && $type == '3') ? 'selected' : ''; ?>>Employee Salary</option>
@@ -89,7 +89,7 @@
                                                 <th>Date of Trasaction</th>
                                                 <th>PAN No of Party</th>
                                                 <th width="15%">TDS Section</th>
-                                                <th width="15%">TDS Challan</th>
+                                                <th width="20%">TDS Challan</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -108,13 +108,20 @@
                                                     $yearmonth = "";
                                                     if ($row->rel_type == "3"){
                                                         $salarylog = $this->db->query("SELECT month,year FROM tblsalarypaidlog WHERE id='".$row->rel_id."'")->row();
-                                                        $month = value_by_id("tblmonths", $salarylog->month, "month_name");
-                                                        $yearmonth = "<br><span>(".$month."-".$salarylog->year.")</span>";
+                                                        if (!empty($salarylog)){
+                                                            $month = value_by_id("tblmonths", $salarylog->month, "month_name");
+                                                            $yearmonth = "<br><span>(".$month."-".$salarylog->year.")</span>";
+                                                        }
                                                     }
                                             ?>                                                                                      
                                                     <tr>
-                                                        <td><?php echo $z++;?></td>
-                                                        <td><?php echo cc($row->party_name).' '.$newrowflag.$yearmonth;  ?></td>
+                                                        <td>
+                                                            <?php echo $z++;?>
+                                                            <?php echo get_creator_info($row->addedby, $row->created_at); ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php echo cc($row->party_name).' '.$newrowflag.$yearmonth;  ?>
+                                                        </td>
                                                         <td>
                                                             <?php 
                                                                 if ($row->rel_type == '1'){
@@ -162,7 +169,14 @@
                                                             }else{
                                                                 $linkalert = "alert('Please add TDS section first')";
                                                                 echo '<a href="javascript:void(0);" onclick="'.$linkalert.'" class="btn-sm btn-info"><i class="fa fa-plus"></i> Link To Challan</a>';
-                                                            }    
+                                                            }   
+                                                            
+                                                            if ($row->rel_type == 0){
+                                                                echo '&nbsp;<a href="'.admin_url('tds/add_tds_deduction/'.$row->id).'" class="btn-sm btn-info"><i class="fa fa-edit"></i></a>';
+                                                            }
+                                                            if ($row->section_id == 0 && $row->tds_challan_id == 0){
+                                                                echo '&nbsp;<a href="'.admin_url('tds/delete_tds_deduction/'.$row->id).'" class="btn-sm btn-danger _delete"><i class="fa fa-trash"></i></a>';
+                                                            }
                                                             ?>
                                                         </td>
                                                     </tr>

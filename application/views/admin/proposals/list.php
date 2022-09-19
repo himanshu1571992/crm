@@ -143,7 +143,6 @@ if(!empty($this->session->userdata('proposal_where_amt_desc'))){
                                 <th>Total</th>
                                 <th>Date</th>                                        
                                 <th>Source</th>                                        
-                                <th>Created Date</th>
                                 <th>Status</th>
                                 <th>Followup</th>
                                 <th>Req. Transport Amount</th>
@@ -159,13 +158,15 @@ if(!empty($this->session->userdata('proposal_where_amt_desc'))){
                                 ?>
                                 <tr>
                                     <td><?php echo ++$key; ?></td>                                                
-                                    <td><?php echo '<a target="_blank" href="' . admin_url('proposals/list_proposals/' . $value->id) . '" onclick="init_proposal(' . $value->id . '); ">' . format_proposal_number($value->id) . '</a>'; ?></td>
+                                    <td>
+                                        <?php echo '<a target="_blank" href="' . admin_url('proposals/list_proposals/' . $value->id) . '" onclick="init_proposal(' . $value->id . '); ">' . format_proposal_number($value->id) . '</a>'; ?>
+                                        <?php echo get_creator_info($value->addedfrom, $value->datecreated); ?>
+                                    </td>
                                     <td><?php echo cc($value->proposal_to); ?></td>
                                     <td><?php echo $value->total_tax; ?></td>
                                     <td><?php echo $value->total; ?></td>                                        
                                     <td><?php echo _d($value->date); ?></td> 
                                     <td><?php echo $source; ?></td> 
-                                    <td><?php echo _d($value->datecreated); ?></td> 
                                     <td><?php echo format_proposal_status($value->status); ?></td>
                                     <td><a target="_blank" href="<?php echo admin_url('follow_up/lead_activity/'.$value->rel_id); ?>">Activity</a></td>
                                     <td>

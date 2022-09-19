@@ -167,6 +167,7 @@ class Departments extends Admin_controller
 
                 $ad_data = array(
                     'title' => $title,
+                    'added_by' => get_staff_user_id(),
                     'created_at' => date('Y-m-d H:i:s')
                 );
                 $insert = $this->home_model->insert('tbldivisionmaster', $ad_data);
@@ -249,6 +250,7 @@ class Departments extends Admin_controller
                 $ad_data = array(
                     'division_id' => $division_id,
                     'title' => $title,
+                    'added_by' => get_staff_user_id(),
                     'created_at' => date('Y-m-d H:i:s')
                 );
                 $insert = $this->home_model->insert('tblsubdivisionmaster', $ad_data);

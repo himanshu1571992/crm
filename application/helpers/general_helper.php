@@ -1020,3 +1020,133 @@ function is_sales_person(){
     }
     return FALSE;
 }
+
+/* this is show creator information */
+function get_creator_info($added_by, $created_at){
+    $createdby = (!empty($added_by)) ? get_staff_full_name($added_by) : 'N/A';
+    $created_date = (!empty($created_at) && $created_at != '0000-00-00 00:00:00') ? _d($created_at) : '--:--';
+    $createdbyinfo = "<div class='col-md-12'><span class='text-info'>Created By&nbsp;:&nbsp;</span><span>".$createdby."</span></div>
+    <div class='col-md-12' style='margin-bottom:5px;'><span class='text-info'>Created At&nbsp;&nbsp;:&nbsp;</span><span>".$created_date."</span></div>";
+?>
+    <a href="javascript:void(0);" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="<?php echo $createdbyinfo; ?>"><i class="fa fa-user-circle-o" style="font-size:15px;color:#000" aria-hidden="true"></i></a>
+<?php    
+}
+/* 
+    this function use for send activity tag notification
+ */
+function send_activitytag_notification($requestdata){
+    $CI = & get_instance();
+    
+    $touserid = $requestdata['touserid'];
+    $fromuserid = $requestdata['fromuserid'];
+    $table_id = $requestdata['table_id'];
+    $description = $requestdata['description'];
+    $module_id = $requestdata['module_id'];
+    $link = $requestdata['link'];
+    $activity_id = $requestdata['activity_id'];
+    $n_data = array(
+        'description' => $description,
+        'staff_id' => $touserid,
+        'fromuserid' => $fromuserid,
+        'table_id' => $table_id,
+        'isread' => 0,
+        'module_id' => $module_id,
+        'link'  => $link,
+        'date' => date('Y-m-d H:i:s'),
+        'date_time' => date('Y-m-d H:i:s')
+    );
+
+    $CI->home_model->insert('tblmasterapproval', $n_data);
+
+    //Sending Mobile Intimation
+        $token = get_staff_token($touserid);
+        $title = 'Schach';
+        $send_intimation = sendFCM($description, $title, $token, $page = 2);
+
+    /* store tagging information in the db */   
+    $tagged_data = array(
+        'module_id' => $module_id,
+        'table_id' => $table_id,
+        'activity_id' => $activity_id,
+        'tagged_from' => $fromuserid,
+        'tagged_to' => $touserid,
+        'created_at' => date('Y-m-d H:i:s')
+    );
+    $CI->home_model->insert('tblactivitytagged', $tagged_data);    
+}
+
+/* this function use for send activity replied */
+function send_activity_replied($module_id, $table_id, $tagged_from, $tagged_to){
+    $CI = & get_instance();
+
+    /* this is for check notification uodate */
+    $chk_notification = $CI->db->query("SELECT `id` FROM `tblmasterapproval` WHERE table_id = '".$table_id."' and staff_id = '".$tagged_to."' and module_id = '".$module_id."' and activity_replied = 0")->result();
+    if (!empty($chk_notification)){
+        foreach ($chk_notification as $value) {
+            $CI->home_model->update("tblmasterapproval", array("status" => 1, "approve_status" => 1), array("id" => $value->id));
+        }
+    }
+
+    $link = "";
+    if ($module_id == 30){
+        $link = "follow_up/lead_activity/".$table_id;
+        $description = 'You got replied on leads activity follow up';
+    }else if ($module_id == 18){
+        $link = "enquirycall/enquirycall_activity/".$table_id;
+        $description = 'You got replied on enquirycall activity follow up';
+    }else if ($module_id == 31){
+        $link = "follow_up/client_activity/".$table_id;
+        $description = 'You got replied on client activity follow up';
+    }else if ($module_id == 33){
+        $link = "follow_up/po_activity/".$table_id;
+        $description = 'You got replied on purchase order activity follow up';
+    }else if ($module_id == 37){
+        $link = "follow_up/estimates_activity/".$table_id;
+        $description = 'You got replied on proforma invoice activity follow up';
+    }else if ($module_id == 39){
+        $link = "follow_up/candidate_requirement_activity/".$table_id;
+        $description = 'You got replied on candidate requirement activity follow up';
+    }else if ($module_id == 42){
+        $link = "designrequisition/designrequisition_activity".$table_id;
+        $description = 'You got replied on design requisition activity follow up';
+    }else if ($module_id == 45){
+        $link = "requirement/requirement_activity/".$table_id;
+        $description = 'You got replied on requirment activity follow up';
+    }else if ($module_id == 48){
+        $link = "designrequisition/design_activity/".$table_id;
+        $description = 'You got replied on design activity follow up';
+    }else if ($module_id == 60){
+        $link = "task/activity_log/".$table_id;
+        $description = 'You got replied on task activity follow up';
+    }
+
+    if ($table_id != '' && $tagged_from != ''){
+        $chk_tag_data = $CI->db->query("SELECT * FROM `tblactivitytagged` where module_id = '".$module_id."' and table_id = '".$table_id."' and tagged_from = '".$tagged_from."' and tagged_to = '".$tagged_to."' and status = 1")->result();
+    }else{
+        $chk_tag_data = $CI->db->query("SELECT * FROM `tblactivitytagged` where module_id = '".$module_id."' and table_id = '".$table_id."' and tagged_to = '".$tagged_to."' and status = 1")->result();
+    }  
+
+    if (!empty($chk_tag_data)){
+        foreach ($chk_tag_data as $val) {
+            $tagged_data = array("status" => 2, "replied_at" => date("Y-m-d H:i:s"));
+            $CI->home_model->update("tblactivitytagged", $tagged_data, array("id" => $val->id));
+
+            if ($link != ""){
+                $replied_data = array(
+                    'description' => $description,
+                    'staff_id' => $val->tagged_from,
+                    'fromuserid' => $tagged_to,
+                    'table_id' => $table_id,
+                    'isread' => 0,
+                    'module_id' => $module_id,
+                    'activity_replied' => 1,
+                    'link'  => $link,
+                    'date' => date('Y-m-d H:i:s'),
+                    'date_time' => date('Y-m-d H:i:s')
+                );
+
+                $CI->home_model->insert('tblmasterapproval', $replied_data);
+            }
+        }
+    }
+}

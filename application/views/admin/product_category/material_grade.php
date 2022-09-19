@@ -30,6 +30,7 @@
                                         <thead>
                                             <tr>
                                                 <th>S.No</th>
+                                                <th>Added By</th>
                                                 <th>Title</th>
                                                 <th>Thickness (In MM)</th>
                                                 <th>Status</th>
@@ -52,6 +53,7 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo ++$k; ?></td>
+                                                        <td><?php echo ($row->added_by > 0) ? '<span class="badge badge-info">'.get_employee_fullname($row->added_by).'</span>' : 'N/A'; ?></td>
                                                         <td><?php echo cc($row->title); ?></td>
                                                         <td><?php echo $row->thickness; ?></td>
                                                         <td><?php echo $toggleActive; ?></td>

@@ -71,7 +71,6 @@
                                                           <th>Request No</th>
                                                           <th style="width: 50.717px;">Status</th>
                                                           <th>Date</th>
-                                                          <th>Added By</th>
                                                           <th>Product Type</th>
                                                           <th>Type</th>
                                                           <th>Client/Staff</th>
@@ -109,10 +108,12 @@
                                                      ?>
                                                               <tr>
                                                                   <td><?php echo ++$key; ?></td>
-                                                                  <td><?php echo "DR-".str_pad($row->id, 3, '0', STR_PAD_LEFT); ?></td>
+                                                                  <td>
+                                                                    <?php echo "DR-".str_pad($row->id, 3, '0', STR_PAD_LEFT); ?>
+                                                                    <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                                  </td>
                                                                   <td><?php echo ($row->enquirycall_id > 0) ? '<span class="btn-sm btn-success" >From Lead</span>' : '<span class="btn-sm btn-info">Direct</span>'; ?></td>
                                                                   <td><?php echo _d($row->date); ?></td>
-                                                                  <td><?php echo get_employee_name($row->added_by); ?></td>
                                                                   <td><?php echo ($row->product_type == 1) ? 'Standard' : 'Customized'; ?></td>
                                                                   <td><?php echo ($row->type == 1) ? 'Staff' : 'Client'; ?></td>
                                                                   <td>
@@ -226,7 +227,6 @@
                                                               <th>Request No.</th>
                                                               <th style="width: 50.717px;">Status</th>
                                                               <th>Date</th>
-                                                              <th>Added By</th>
                                                               <th>Product Type</th>
                                                               <th>Type</th>
                                                               <th>Client/Staff</th>
@@ -253,10 +253,12 @@
                                                        ?>
                                                                 <tr>
                                                                     <td Width="1%"><?php echo ++$key; ?></td>
-                                                                    <td><?php echo "DR-".str_pad($row->id, 3, '0', STR_PAD_LEFT); ?></td>
+                                                                    <td>
+                                                                        <?php echo "DR-".str_pad($row->id, 3, '0', STR_PAD_LEFT); ?>
+                                                                        <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                                    </td>
                                                                     <td><?php echo ($row->enquirycall_id > 0) ? '<span class="btn-sm btn-success" >From Lead</span>' : '<span class="btn-sm btn-info">Direct</span>'; ?></td>
                                                                     <td><?php echo _d($row->date); ?></td>
-                                                                    <td><?php echo get_employee_name($row->added_by); ?></td>
                                                                     <td><?php echo ($row->product_type == 1) ? 'Standard' : 'Customized'; ?></td>
                                                                     <td><?php echo ($row->type == 1) ? 'Staff' : 'Client'; ?></td>
                                                                     <td>

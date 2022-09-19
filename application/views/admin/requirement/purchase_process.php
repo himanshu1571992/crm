@@ -50,9 +50,15 @@
 		<div class="panel-body">
             <div class="row">
                 <div class="col-md-3">
-                 <h5 style="font-size:15px;color:red;"><u>Remark :</u></h5>
-                 <span><?php echo $requirement_info->remark; ?></span>
-             </div>
+                    <h5 style="font-size:15px;color:red;"><u>Expected Date</u> : </h5>
+                    <div class="form-group">
+                        <span><?php echo (!empty($requirement_info) && !empty($requirement_info->expected_date)) ? _d($requirement_info->expected_date) : "N/A"; ?></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h5 style="font-size:15px;color:red;"><u>Remark :</u></h5>
+                    <span><?php echo $requirement_info->remark; ?></span>
+                </div>
              <?php if(isset($requirement_info) && $requirement_info->reason_for_request > 0){ ?>
                <div class="col-md-3">
                    <h5 style="font-size:15px;color:red;"><u>Reason For Request</u></h5>
@@ -94,6 +100,7 @@
                <?php 
                }
              } ?>
+             <hr>
             </div>
 		<div class="row">
 			 <div class="col-md-4">

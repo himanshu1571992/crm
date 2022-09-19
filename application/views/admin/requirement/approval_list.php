@@ -84,6 +84,7 @@
                                         <th>S.No</th>
                                         <th>Request ID</th>
                                         <th>Added By</th>
+                                        <th>Expected Date</th>
                                         <th>Remark</th>
                                         <th>Date</th>
                                         <th class="text-center">Action</th>
@@ -100,6 +101,7 @@
                                                 <td><?php echo $i++;?></td>                                             
                                                 <td><?php echo 'P-REQ-'.str_pad($row->id, 4, '0', STR_PAD_LEFT);?></td>
                                                 <td><?php echo get_employee_name($row->staff_id);?></td>
+                                                <td><?php echo (!empty($row->expected_date)) ? _d($row->expected_date) :'N/A';?></td>
                                                 <td><?php echo cc($row->remark);?></td>
                                                 <td><?php echo date('d-m-Y h:i a',strtotime($row->created_at));?></td>
                                                 <td class="text-center">

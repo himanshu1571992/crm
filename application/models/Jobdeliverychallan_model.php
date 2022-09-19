@@ -50,6 +50,7 @@ class Jobdeliverychallan_model extends CRM_Model {
                         'driver_name' => $data['driver_name'],
                         'driver_no' => $data['driver_no'],
                         'status' => 0,
+                        'added_by' => get_staff_user_id(),
                         'created_at' => date("Y-m-d H:i:s"),
                         'updated_at' => date("Y-m-d H:i:s"),
                   );

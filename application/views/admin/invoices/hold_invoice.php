@@ -154,7 +154,10 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo ++$key; ?></td>                                                
-                                                <td><?php echo '<a href="' . site_url('invoice/' . $value->id . '/' . $value->hash) . $type .'" target="_blank">' .format_invoice_number($value->id). '</a>'; ?></td>
+                                                <td>
+                                                    <?php echo '<a href="' . site_url('invoice/' . $value->id . '/' . $value->hash) . $type .'" target="_blank">' .format_invoice_number($value->id). '</a>'; ?>
+                                                    <?php echo get_creator_info($value->addedfrom, $value->datecreated); ?>
+                                                </td>
                                                 <td><?php echo $value->total; ?></td>
                                                 <td><?php echo _d($value->invoice_date); ?></td> 
                                                 <td><a href="<?php echo admin_url('clients/client/'.$value->clientid);?>" target="_blank"><?php echo cc($client_info->client_branch_name); ?></a></td>
@@ -162,7 +165,7 @@
 
                                                 <td class="text-center">													
                                                    <!-- <a href="<?php echo admin_url('invoices/renew_invoice/' . $value->id); ?>" class="btn-sm btn-primary">Renew</a>-->
-<a href="javascript:void(0);" data-toggle="modal" data-target="#finalcialyear_modal" data-id="<?php echo $value->id; ?>" class="btn-sm btn-primary renew-div">Renew</a>
+                                                    <a href="javascript:void(0);" data-toggle="modal" data-target="#finalcialyear_modal" data-id="<?php echo $value->id; ?>" class="btn-sm btn-primary renew-div">Renew</a>
                                                     <a href="<?php echo admin_url('invoices/update_rental_status/1/' . $value->id); ?>" class="btn-sm btn-primary _delete">Pickup</a>
                                                 </td>
 

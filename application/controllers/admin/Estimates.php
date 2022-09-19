@@ -1650,9 +1650,9 @@ class Estimates extends Admin_controller {
             $where3 .= " and c.complete_status = 0 AND c.branch_id='".get_login_branch()."'";
         }
 
-        $aluminium_list = $this->db->query("SELECT e.*, c.id as confirm_order_id, c.complete_status, c.delivery_date, c.order_status_id, c.expected_completed_date, c.compilation_days, c.priority, c.proformachallan_id FROM `tblconfirmorder` as c LEFT JOIN `tblestimates` as e  ON e.id = c.estimate_id WHERE ".$where1." AND e.product_type = '1' ORDER BY c.id DESC")->result();
-        $fomwork_list = $this->db->query("SELECT e.*, c.id as confirm_order_id, c.complete_status, c.delivery_date, c.order_status_id, c.expected_completed_date, c.compilation_days, c.priority, c.proformachallan_id FROM `tblconfirmorder` as c LEFT JOIN `tblestimates` as e  ON e.id = c.estimate_id WHERE ".$where2." AND e.product_type = '4' ORDER BY c.id DESC")->result();
-        $scaffolding_list = $this->db->query("SELECT e.*, c.id as confirm_order_id, c.complete_status, c.delivery_date, c.order_status_id, c.expected_completed_date, c.compilation_days, c.priority, c.proformachallan_id FROM `tblconfirmorder` as c LEFT JOIN `tblestimates` as e  ON e.id = c.estimate_id WHERE ".$where3." AND e.product_type = '3' ORDER BY c.id DESC")->result();
+        $aluminium_list = $this->db->query("SELECT e.*, c.id as confirm_order_id, c.complete_status, c.delivery_date, c.order_status_id, c.expected_completed_date, c.compilation_days, c.priority, c.proformachallan_id, c.created_at FROM `tblconfirmorder` as c LEFT JOIN `tblestimates` as e  ON e.id = c.estimate_id WHERE ".$where1." AND e.product_type = '1' ORDER BY c.id DESC")->result();
+        $fomwork_list = $this->db->query("SELECT e.*, c.id as confirm_order_id, c.complete_status, c.delivery_date, c.order_status_id, c.expected_completed_date, c.compilation_days, c.priority, c.proformachallan_id, c.created_at FROM `tblconfirmorder` as c LEFT JOIN `tblestimates` as e  ON e.id = c.estimate_id WHERE ".$where2." AND e.product_type = '4' ORDER BY c.id DESC")->result();
+        $scaffolding_list = $this->db->query("SELECT e.*, c.id as confirm_order_id, c.complete_status, c.delivery_date, c.order_status_id, c.expected_completed_date, c.compilation_days, c.priority, c.proformachallan_id, c.created_at FROM `tblconfirmorder` as c LEFT JOIN `tblestimates` as e  ON e.id = c.estimate_id WHERE ".$where3." AND e.product_type = '3' ORDER BY c.id DESC")->result();
         // Get records
         /*$order_confirm_list = array();
 
@@ -1746,6 +1746,7 @@ class Estimates extends Admin_controller {
                 $this->home_model->update("tblconfirmorderstatus", $fieldData, array("id" => $id));
                 set_alert('success', "Order status edit successfully");
             }else{
+                $fieldData["added_by"] = get_staff_user_id();
                 $fieldData["date"] = date("Y-m-d");
                 $fieldData["created_at"] = date("Y-m-d H:i:s");
                 $this->home_model->insert("tblconfirmorderstatus", $fieldData);

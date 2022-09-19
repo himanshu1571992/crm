@@ -103,7 +103,10 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
-                                                <td><?php echo 'VEND-E-'.str_pad($row->id, 4, '0', STR_PAD_LEFT); ?></td>
+                                                <td>
+                                                    <?php echo 'VEND-E-'.str_pad($row->id, 4, '0', STR_PAD_LEFT); ?>
+                                                    <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                </td>
                                                 <td><?php echo cc($row->name);?></td>
                                                 <td><?php echo cc(value_by_id('tblcompanyexpensecatergory',$row->category_id,'name'));?></td>
                                                 <td><?php echo $row->mobile_no;?></td>

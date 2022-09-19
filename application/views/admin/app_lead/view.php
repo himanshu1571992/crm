@@ -57,6 +57,7 @@
                                         <thead>
                                             <tr>
                                                 <th>S.No.</th>
+                                                <th>Added By</th>
                                                 <th>Company Name</th>
                                                 <th>Company Email</th>
                                                 <th>Company Number</th>
@@ -82,6 +83,7 @@
                                                     ?>																						
                                                     <tr>
                                                         <td><?php echo $z++; ?></td>
+                                                        <td><?php echo get_employee_name($row->staff_id); ?></td>
                                                         <td><?php echo cc($row->company_name); ?></td>
                                                         <td><?php echo $row->company_email; ?></td>
                                                         <td><?php echo $row->company_number; ?></td>

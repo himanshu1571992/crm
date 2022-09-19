@@ -102,6 +102,7 @@ class Requirement extends Admin_controller
             $ad_data = array(
                 'staff_id' => get_staff_user_id(),
                 'billing_branch_id' => get_login_branch(),
+                'expected_date' => db_date($expected_date),
                 'remark' => $remarks,
                 'department_id' => $department_id,
                 'save' => $save,
@@ -970,7 +971,7 @@ class Requirement extends Admin_controller
     }
 
     /* this function use for requirment activity */
-    public function requirement_activity($id){
+    public function requirement_activity($id, $from_user_id=''){
         $data['title'] = 'Requirement Activities';
         $reinfo = $this->home_model->get_row("tblrequirement", array("id" => $id), array("*"));
         $data["parsonname"] = 'P-REQ-'.str_pad($reinfo->id, 4, '0', STR_PAD_LEFT);
@@ -978,12 +979,16 @@ class Requirement extends Admin_controller
             extract($this->input->post());
 
             /* this is for check notification uodate */
-            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$id."' and staff_id = '".get_staff_user_id()."' and module_id = 45")->result();
-            if (!empty($chk_notification)){
-                foreach ($chk_notification as $value) {
-                    $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
-                }
-            }
+            // $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$id."' and staff_id = '".get_staff_user_id()."' and module_id = 45")->result();
+            // if (!empty($chk_notification)){
+            //     foreach ($chk_notification as $value) {
+            //         $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
+            //     }
+            // }
+
+            /* this code use for check tagging information */
+            send_activity_replied(45, $id, $from_user_id, get_staff_user_id());
+
             if(!empty($important_search)){
                  $data['activity_log'] = $this->db->query("SELECT * FROM `tblrequirmentactivity` where requirement_id = '".$id."' and priority = '1' and parent_id = '0' order by id asc")->result();
             }else{
@@ -1012,28 +1017,22 @@ class Requirement extends Admin_controller
 
                 $insert_id = $this->home_model->insert('tblrequirmentactivity',$ad_data);
                 if (!empty($tag_staff_ids)){
-                   $staff_ids = explode(",", $tag_staff_ids);
-                   foreach ($staff_ids as $staff_id) {
-                       $n_data = array(
-                            'description' => 'You taged in requirment activity',
-                            'staff_id' => $staff_id,
-                            'fromuserid' => get_staff_user_id(),
-                            'table_id' => $id,
-                            'isread' => 0,
+                    
+                    $staff_ids = explode(",", $tag_staff_ids);
+                    foreach ($staff_ids as $staff_id) {
+
+                        /*send single notification to tag person */
+                        $tag_notification_arr = array(
+                            'activity_id' => $insert_id,
                             'module_id' => 45,
-                            'link'  => "requirement/requirement_activity/".$id,
-                            'date' => date('Y-m-d H:i:s'),
-                            'date_time' => date('Y-m-d H:i:s')
+                            'table_id' => $id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in requirment activity',
+                            'link'  => "requirement/requirement_activity/".$id
                         );
-
-                        $this->home_model->insert('tblmasterapproval', $n_data);
-
-                        //Sending Mobile Intimation
-                            $token = get_staff_token($staff_id);
-                            $title = 'Schach';
-                            $message = 'You taged in requirment activity';
-                            $send_intimation = sendFCM($message, $title, $token, $page = 2);
-                   }
+                        send_activitytag_notification($tag_notification_arr);
+                    }
                 }
 
                 set_alert('success', 'Activity Added successfully');

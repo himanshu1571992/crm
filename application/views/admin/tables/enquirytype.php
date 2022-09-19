@@ -4,6 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 $aColumns = [
     '`id`',
+    '`added_by`',
     '`name`',
     '`enquiry_type_main_id`',
     '`color`',
@@ -30,6 +31,7 @@ foreach ($rResult as $aRow) {
     $category = value_by_id_empty("tblmainenquirytypemaster", $aRow['enquiry_type_main_id'], "name");
     
     $row[] = $aRow['id'];
+    $row[] = ($aRow['added_by']) ? get_employee_fullname($aRow['added_by']) : 'N/A';
     
     $url = admin_url('enquirytype/enquirytype/' . $aRow['id']);
 

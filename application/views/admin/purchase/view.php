@@ -239,6 +239,8 @@
                                                                             $approved_amount = 0.00;
                                                                             foreach ($chk_purchase_payment as $value) {
                                                                                 $approved_amount += $value->approved_amount;
+                                                                                $approved_amount += $value->tdsamount;
+                                                                                $approved_amount += $value->tcsamount;
                                                                                 if ($value->payment_by == 1) {
                                                                                     if ($value->status == 0 && $value->utr_no == "") {
                                                                                         $pending_request = 1;
@@ -312,8 +314,13 @@
                                                                             $po_number = (is_numeric($row->number)) ? 'PO-' . $row->number : $row->number;
                                                                             $pickup_ho = $this->db->query("SELECT * from `tblchallanprocess` where `type` = 2 and `po_id` = '".$row->id."' and `for` = 2 ")->row();
                                                                             ?>
-                                                                            <tr><td><?php echo $z++; ?></td>
-                                                                                <td><a  title="View" target="_blank" href="<?php echo admin_url('purchase/download_pdf/' . $row->id); ?>"><?php echo $po_number; ?></a></td>
+                                                                            <tr><td>
+                                                                                    <?php echo $z++; ?>
+                                                                                    <?php echo get_creator_info($row->staff_id, $row->created_at); ?>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <a  title="View" target="_blank" href="<?php echo admin_url('purchase/download_pdf/' . $row->id); ?>"><?php echo $po_number; ?></a>
+                                                                                </td>
                                                                                 <td><?php echo date('d/m/Y', strtotime($row->date)); ?></td>
                                                                                 <td><?php echo cc(value_by_id('tblvendor', $row->vendor_id, 'name')); ?></td>
                                                                                 <td><?php echo $warehouse; ?></td>
@@ -664,6 +671,8 @@
                                                                             $approved_amount = 0.00;
                                                                             foreach ($chk_purchase_payment as $value) {
                                                                                 $approved_amount += $value->approved_amount;
+                                                                                $approved_amount += $value->tdsamount;
+                                                                                $approved_amount += $value->tcsamount;
                                                                                 if ($value->payment_by == 1) {
                                                                                     if ($value->status == 0 && $value->utr_no == "") {
                                                                                         $pending_request = 1;
@@ -745,8 +754,13 @@
                                                                             $po_number = (is_numeric($row->number)) ? 'PO-' . $row->number : $row->number;
                                                                             $pickup_ho = $this->db->query("SELECT * from `tblchallanprocess` where `type` = 2 and `po_id` = '".$row->id."' and `for` = 2 ")->row();
                                                                             ?>
-                                                                            <tr><td><?php echo $z++; ?></td>
-                                                                                <td><a  title="View" target="_blank" href="<?php echo admin_url('purchase/download_pdf/' . $row->id); ?>"><?php echo $po_number; ?></a></td>
+                                                                            <tr><td>
+                                                                                    <?php echo $z++; ?>
+                                                                                    <?php echo get_creator_info($row->staff_id, $row->created_at); ?>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <a  title="View" target="_blank" href="<?php echo admin_url('purchase/download_pdf/' . $row->id); ?>"><?php echo $po_number; ?></a>
+                                                                                </td>
                                                                                 <td><?php echo date('d/m/Y', strtotime($row->date)); ?></td>
                                                                                 <td><?php echo cc(value_by_id('tblvendor', $row->vendor_id, 'name')); ?></td>
                                                                                 <td><?php echo $warehouse; ?></td>

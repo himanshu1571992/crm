@@ -23,10 +23,12 @@
                                 <table class="table" id="newtable">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">S.No</th>
-                                            <th class="text-center">Name</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Action</th>
+                                            <th>S.No</th>
+                                            <th >Added By</th>
+                                            <th >Name</th>
+                                            <th >Status</th>
+                                            <th >Created At</th>
+                                            <th >Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -47,8 +49,10 @@
 
                                     <tr>
                                         <td><?php echo ++$key; ?></td>
+                                        <td><?php echo ($value->added_by > 0) ? '<span class="badge badge-info">'.get_employee_fullname($value->added_by).'</span>' : 'N/A'; ?></td>
                                         <td><?php echo cc($value->name); ?></td>
-                                        <td class="text-center"><?php echo '<button type="button" class="'.$cls.' btn-sm status">'.$status.'</button>'; ?></td>
+                                        <td ><?php echo '<button type="button" class="'.$cls.' btn-sm status">'.$status.'</button>'; ?></td>
+                                        <td><?php echo _d($value->created_at); ?></td>
                                         <td class="text-center">
                                           <a href="<?php echo admin_url('product_new/product_master/'.$value->id); ?>" class="btn-sm btn-primary" title="Edit">Edit</a>
                                         </td>

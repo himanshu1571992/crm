@@ -188,7 +188,6 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                                             <tr>
                                                 <th>S.No1</th>
                                                 <th>Invoice #</th>
-                                                <th>Created By</th>
                                                 <th>Service Type</th>
                                                 <th>Amount</th>
                                                 <th>Invoice Date</th>
@@ -234,8 +233,10 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                                                     ?>
                                                     <tr>
                                                         <td><?php echo ++$key; ?></td>                                                
-                                                        <td><?php echo '<a href="' . site_url('invoice/' . $value->id . '/' . $value->hash) . $type . '" target="_blank">' . format_invoice_number($value->id) . '</a>'; ?></td>
-                                                        <td><?php echo get_employee_name($value->addedfrom); ?></td>
+                                                        <td>
+                                                            <?php echo '<a href="' . site_url('invoice/' . $value->id . '/' . $value->hash) . $type . '" target="_blank">' . format_invoice_number($value->id) . '</a>'; ?>
+                                                            <?php echo get_creator_info($value->addedfrom, $value->datecreated); ?>
+                                                        </td>
                                                         <td><?php echo $service_type; ?></td>
                                                         <td><?php echo $value->total; ?></td>
                                                         <td><?php echo _d($value->invoice_date); ?></td> 

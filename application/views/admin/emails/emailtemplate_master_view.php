@@ -56,10 +56,11 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">S.No</th>
+                                            <th class="text-center">Added By</th>
                                             <th class="text-center">Module Name</th>
                                             <th class="text-center">Template Name</th>
                                             <th class="text-center">Subject</th>
-                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Created At</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Action</th>
                                         </tr>
@@ -80,6 +81,7 @@
                                     
                                     <tr>
                                         <td class="text-center"><?php echo ++$key; ?></td>
+                                        <td><?php echo ($value->added_by > 0) ? get_employee_fullname($value->added_by) : 'N/A'; ?></td>
                                         <td class="text-center"><?php echo value_by_id('tblemailmodulemasters',$value->module_id,'name'); ?></td>
                                         <td class="text-center"><?php echo $value->template_name; ?></td>
                                         <td class="text-center"><?php echo $value->subject; ?></td>

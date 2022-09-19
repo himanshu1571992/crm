@@ -127,13 +127,10 @@ class General_API extends CRM_Controller
 
 				$profile = $this->staff_model->get($row->fromuserid);
 
+				$profile_image = '';
 				if(!empty($profile->profile_image)){
 
-					$profile_image = base_url('uploads/staff_profile_images/'.$user_id.'/'.$profile->profile_image);
-
-				}else{
-
-					$profile_image = '--';
+					$profile_image = base_url('uploads/staff_profile_images/'.$row->fromuserid.'/'.$profile->profile_image);
 
 				}
 
@@ -1807,85 +1804,61 @@ public function get_locations()
 
 
 public function get_staff_list()
-
     {
-
        
 
 	  $return_arr = array();
-
 		if(!empty($_GET))
-
 		{
-
-			extract($this->input->get());	
-
+			extract($this->input->get());
 		}
-
 		elseif(!empty($_POST)) 
-
 		{
-
 			extract($this->input->post());
-
 		}
 
 
+		$where = "active = 1 ";
+		if(!empty($branch_id) && !empty($department_id)){
+			$where .= " and `reporting_branch_id` = ".$branch_id." AND `department_id` = ".$department_id." ";
+		}
+		if(!empty($user_id)){
+			$where .= " and staffid != '".$user_id."' ";
+		}
 
-		$user_info = $this->home_model->get_result('tblstaff', array('active'=>1), '',array('firstname','asc'));
+		$user_info  = $this->db->query("SELECT * FROM `tblstaff` where ".$where." order by firstname asc  ")->result();
 
 
 
 		 if(!empty($user_info)){
-
 		   foreach($user_info as $row){
-
-			
-
  			
 
 			$user_array[] = array(
-
 				'id' => $row->staffid,
-
-				'name' => $row->firstname
-
+				'name' => $row->firstname,
+				'designation' => get_designation($row->designation_id),
 			);
 
 			
 
 		   }
 
-
-
-
-
-		    $return_arr['status'] = true;	
-
+		    $return_arr['status'] = true;
 			$return_arr['message'] = "Successfully";
-
 			$return_arr['data'] = $user_array;
 
 	   }else{
-
 			$return_arr['status'] = false;	
-
 			$return_arr['message'] = "Record Not Found!";
-
-			$return_arr['data'] = '';
-
+			$return_arr['data'] = [];
 	  }
-
 	  
 
 	   header('Content-type: application/json');
-
 	   echo json_encode($return_arr);
 
-
-
-	   //http://35.154.77.171/schach/General_API/get_staff_list
-
+	   //http://schachengineers.com/schacrm/General_API/get_staff_list?branch_id=1&department_id=1&user_id=65
 	}
 
 
@@ -2519,11 +2492,17 @@ public function get_staff_list()
 				$superior_info = get_staff_info($user_info->superior_id);
 
 				if(!empty($superior_info)){
+
+					$profile_image = '';
+					if(!empty($superior_info->profile_image)){
+                        $profile_image = base_url('uploads/staff_profile_images/'.$superior_info->staffid.'/'.$superior_info->profile_image);
+                    }
 					$data[] = array(
 						'designation' => 'Superior',
 						'name' => $superior_info->firstname,
 						'email' => $superior_info->email,
 						'mobile' => $superior_info->phonenumber,
+						'profile_image' => $profile_image,
 					);	
 				}
 			
@@ -2533,21 +2512,32 @@ public function get_staff_list()
 
 			$hr_info = get_staff_info(330);
 			if(!empty($hr_info)){
+
+				$profile_image = '';
+				if(!empty($hr_info->profile_image)){
+                    $profile_image = base_url('uploads/staff_profile_images/'.$hr_info->staffid.'/'.$hr_info->profile_image);
+                }
 				$data[] = array(
 					'designation' => 'HR',
 					'name' => $hr_info->firstname,
 					'email' => $hr_info->email,
 					'mobile' => $hr_info->phonenumber,
+					'profile_image' => $profile_image,
 				);	
 			}
 
 			$director_info = get_staff_info(1);
 			if(!empty($director_info)){
+				$profile_image = '';
+				if(!empty($director_info->profile_image)){
+                    $profile_image = base_url('uploads/staff_profile_images/'.$director_info->staffid.'/'.$director_info->profile_image);
+                }
 				$data[] = array(
 					'designation' => 'Director',
 					'name' => $director_info->firstname,
-					'email' => $director_info->email,
+					'email' => '',
 					'mobile' => '',
+					'profile_image' => $profile_image,
 				);	
 			}
 

@@ -206,7 +206,6 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                               <tr>
                                 <th>S.No1</th>
                                 <th>Invoice #</th>
-                                <th>Created By</th>
                                 <th>Sales Person</th>
                                 <th>Amount</th>
                                 <th>Invoice Date</th>
@@ -256,8 +255,10 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                                     <tr>
                                         <td><?php echo ++$key; ?></td>
                                         <!-- <td><?php echo '<a href="' . site_url('invoice/' . $value->id . '/' . $value->hash) . $type .'" target="_blank">' .format_invoice_number($value->id). '</a>'; ?></td> -->
-                                        <td ><a target="_blank" href="<?php echo admin_url('invoices/download_pdf/'.$value->id.'/?output_type=I');?>" data-status="1"><?php echo format_invoice_number($value->id); ?></a></td>
-                                        <td><?php echo ($value->addedfrom > 0) ? get_employee_name($value->addedfrom) : '--'; ?></td>
+                                        <td >
+                                            <a target="_blank" href="<?php echo admin_url('invoices/download_pdf/'.$value->id.'/?output_type=I');?>" data-status="1"><?php echo format_invoice_number($value->id); ?></a>
+                                            <?php echo get_creator_info($value->addedfrom, $value->datecreated); ?>
+                                        </td>
                                         <td><?php echo (!empty($sales_person) && $sales_person->staff_id > 0) ? get_employee_name($sales_person->staff_id) : '--'; ?></td>
                                         <td><?php echo $value->total; ?></td>
                                         <td><?php echo _d($value->invoice_date); ?></td>

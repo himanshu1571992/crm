@@ -123,6 +123,7 @@ class Productcategory extends Admin_controller {
             $insert_data["updated_at"] = date("Y-m-d H:i:s");
             if ($id == '') {
                 
+                $insert_data["added_by"] = get_staff_user_id();
                 $insert_data["status"] = 1;
                 $insert_data["created_at"] = date("Y-m-d H:i:s");
                 $insert_id = $this->home_model->insert("tblmaterialgrade", $insert_data);

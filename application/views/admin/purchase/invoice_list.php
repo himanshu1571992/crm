@@ -96,15 +96,15 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
-                                        <th>Invoice #</th>
+                                        <th width="10%">Invoice #</th>
                                         <th>Reference No.</th>
                                         <th>PO No.</th>
                                         <th>Vendor</th>
                                         <th>Amount</th>
                                         <th>Date</th>
                                         <th>Invoice For</th>
-                                        <th>Invoices</th>
-                                        <th>Action</th>
+                                        <th width="15%">Invoices</th>
+                                        <th width="25%">Action</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -131,7 +131,10 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                             ?>
                                             <tr>
                                                 <td><?php echo ++$key; ?></td>                                                
-                                                <td><?php echo 'Inv-'.str_pad($value->id, 4, '0', STR_PAD_LEFT); ?></td>
+                                                <td>
+                                                    <?php echo 'Inv-'.str_pad($value->id, 4, '0', STR_PAD_LEFT); ?>
+                                                    <?php echo get_creator_info($value->staff_id, $value->created_at); ?>
+                                                </td>
                                                 <td><?php echo $value->reference_number; ?></td>
                                                 <td><?php echo $po_number; ?></td>
                                                 <td><a href="<?php echo admin_url('vendor/vendor/'.$value->vendor_id);?>" target="_blank"><?php echo cc(value_by_id('tblvendor',$value->vendor_id,'name')); ?></a></td>

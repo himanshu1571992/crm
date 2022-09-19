@@ -305,6 +305,7 @@ class Staff_model extends CRM_Model
 
         return true;
     }
+
     /**
      * Get staff member/s
      * @param  mixed $id Optional - staff id
@@ -1175,7 +1176,9 @@ class Staff_model extends CRM_Model
         }else{
            $data['relieving_date']= '0000-00-00';
         }
-
+        if(!empty($data['resignation_date'])){
+            $data['resignation_date']= db_date($data['resignation_date']);
+        }
 
         $joining_date = str_replace("/","-",$data['joining_date']);
         $data['joining_date']=date('Y-m-d',strtotime($joining_date));
@@ -1727,6 +1730,9 @@ class Staff_model extends CRM_Model
             }
             if ($staff_log_data->relieving_date){
                 $update_data["relieving_date"] = $staff_log_data->relieving_date;
+            }
+            if ($staff_log_data->resignation_date){
+                $update_data["resignation_date"] = $staff_log_data->resignation_date;
             }
             if ($staff_log_data->religion_id){
                 $update_data["religion_id"] = $staff_log_data->religion_id;

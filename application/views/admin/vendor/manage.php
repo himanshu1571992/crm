@@ -48,6 +48,7 @@ if (check_permission_page(91, 'create')) { ?></h4>
                         $_table_data = array(
 //                            '<span class="hide"> - </span><div class="checkbox mass_select_all_wrap"><input type="checkbox" id="mass_select_all" data-to-table="clients"><label></label></div>',
                             '#',
+                            'Added By',
                             _l('vendor_name'),
                             _l('vendor_id'),
                             'Description',
@@ -55,7 +56,6 @@ if (check_permission_page(91, 'create')) { ?></h4>
                             _l('vendor_status'),
                             "Audit Status",
                             "Vendor Created Date",
-
                         );
 
                         foreach ($_table_data as $_t) {

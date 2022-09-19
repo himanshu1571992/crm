@@ -509,30 +509,28 @@ class Enquirycall extends Admin_controller
     }
 
     /* this is for enquiry call activity */
-    public function enquirycall_activity($enquirycall_id){
+    public function enquirycall_activity($enquirycall_id, $from_user_id = ""){
         $data['title'] = 'Enquirycall Activities';
 
         if(!empty($_POST)){
             extract($this->input->post());
-// echo "<pre>";
-            // print_r($_POST);
-            // exit;
+
             /* this is for check notification uodate */
-            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$enquirycall_id."' and staff_id = '".get_staff_user_id()."' and module_id = 18")->result();
-            if (!empty($chk_notification)){
-                foreach ($chk_notification as $value) {
-                    $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
-                }
-            }
+            // $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$enquirycall_id."' and staff_id = '".get_staff_user_id()."' and module_id = 18")->result();
+            // if (!empty($chk_notification)){
+            //     foreach ($chk_notification as $value) {
+            //         $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
+            //     }
+            // }
+
+            /* this code use for check tagging information */
+            send_activity_replied(18, $enquirycall_id, $from_user_id, get_staff_user_id());
+
             if(!empty($important_search)){
                  $data['activity_log'] = $this->db->query("SELECT * FROM `tblenquirycall_activity` where enquirycall_id = '".$enquirycall_id."' and priority = '1' and parent_id = '0' order by id asc")->result();
             }else{
 
-                if(!empty($suggestion)){
-                    $message = $suggestion;
-                }else{
-                    $message = $description;
-                }
+                $message = (!empty($suggestion)) ? $suggestion : $description;
                 $parent_id = (!empty($parent_id)) ? $parent_id : 0;
                 if ($parent_id > 0){
                     $message = $activity_reply[$parent_id];
@@ -560,25 +558,18 @@ class Enquirycall extends Admin_controller
                 if (!empty($tag_staff_ids)){
                    $staff_ids = explode(",", $tag_staff_ids);
                    foreach ($staff_ids as $staff_id) {
-                       $n_data = array(
-                            'description' => 'You taged in enquirycall activity',
-                            'staff_id' => $staff_id,
-                            'fromuserid' => get_staff_user_id(),
-                            'table_id' => $enquirycall_id,
-                            'isread' => 0,
+
+                        $tag_notification_arr = array(
+                            'activity_id' => $insert_id,
                             'module_id' => 18,
-                            'link'  => "enquirycall/enquirycall_activity/".$enquirycall_id,
-                            'date' => date('Y-m-d H:i:s'),
-                            'date_time' => date('Y-m-d H:i:s')
+                            'table_id' => $enquirycall_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in enquirycall activity',
+                            'link'  => "enquirycall/enquirycall_activity/".$enquirycall_id
                         );
+                        send_activitytag_notification($tag_notification_arr);
 
-                        $this->home_model->insert('tblmasterapproval', $n_data);
-
-                        //Sending Mobile Intimation
-                            $token = get_staff_token($staff_id);
-                            $title = 'Schach';
-                            $message = 'You taged in enquirycall activity';
-                            $send_intimation = sendFCM($message, $title, $token, $page = 2);
                    }
                 }
 

@@ -124,7 +124,10 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                             ?>
                                             <tr>
                                                 <td><?php echo ++$key; ?></td>                                                
-                                                <td><?php echo 'INV-'.str_pad($value->id, 4, '0', STR_PAD_LEFT); ?></td>
+                                                <td>
+                                                    <?php echo 'INV-'.str_pad($value->id, 4, '0', STR_PAD_LEFT); ?>
+                                                    <?php echo get_creator_info($value->staff_id, $value->created_at); ?>
+                                                </td>
                                                 <td><?php echo $value->reference_number; ?></td>
                                                 <td><a href="<?php echo admin_url('vendor/vendor/'.$value->vendor_id);?>" target="_blank"><?php echo cc(value_by_id('tblvendor',$value->vendor_id,'name')); ?></a></td>
                                                 <td><?php echo $value->totalamount; ?></td>

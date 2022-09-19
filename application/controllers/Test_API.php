@@ -173,7 +173,7 @@ class Test_API extends CRM_Controller
     }
 
     /* this function use for remove duplicate contacts */
-    function get_duplicate_contacts(){
+    function delete_duplicate_contacts(){
         $this->load->model("home_model");
         $get_user = $this->db->query("SELECT userid, COUNT(*) FROM `tblcontacts` GROUP BY userid HAVING COUNT(userid) > 1")->result();
         if (!empty($get_user)){
@@ -193,4 +193,19 @@ class Test_API extends CRM_Controller
         echo "ok";
     }
 
+
+    function remove_profile_image($user_id,$fileName){
+
+       
+        $path = get_upload_path_by_type('staff') . $user_id. '/'.$fileName;
+             if(unlink($path)){
+            echo 'success';
+        }else{
+            echo 'failed';
+        }
+       
+      
+        
+
+    }
 }

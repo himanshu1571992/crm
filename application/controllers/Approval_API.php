@@ -52,10 +52,18 @@ class Approval_API extends CRM_Controller
                         $readdate='--';
                   }
 
-                  $from_name = '--';
-                  if($value->fromuserid){
+                    $from_name = '--';
+                    $profile_image = '';
+                    if($value->fromuserid){
                     $from_name = get_employee_name($value->fromuserid);
-                  }
+
+                        $profile = $this->staff_model->get($value->fromuserid);
+                        if(!empty($profile->profile_image)){
+                            $profile_image = base_url('uploads/staff_profile_images/'.$value->fromuserid.'/'.$profile->profile_image);
+                        }
+                    }
+
+
 
                   $pdf_html = '';
 
@@ -76,6 +84,7 @@ class Approval_API extends CRM_Controller
                            'id' => $value->id,
                            'web_url' => $value->link,
                            'table_module_id' => $table_module_id,
+                           'profile_image' => $profile_image,
                            'name' => $from_name,
                            'description' => $value->description,
                            'date_time' =>  _dt($value->date_time),

@@ -275,6 +275,7 @@ class Emails extends Admin_controller
             foreach ($message as $key) {
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'module_id' => $module_id,
                     'template_name' => $name,
                     'subject' => $subject,

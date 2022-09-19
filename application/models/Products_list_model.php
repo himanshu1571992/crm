@@ -126,10 +126,17 @@ class Products_list_model extends CRM_Model {
             }
             $name_html .= ' | <a target="_blank" href="' . $inspection_url . '">Inspection Details</a>';
             $name_html .= '</div>';
+
+
+            $productlog = $this->db->query("SELECT `staff_id`,`created_at` FROM `tblproducts_log` WHERE `name`='".$product->name."' ORDER BY id DESC ")->row();
+            $updated_by = (!empty($productlog)) ? get_employee_fullname($productlog->staff_id) : 0;
+            $updated_at = (!empty($productlog)) ? _d($productlog->created_at) : '--';
+            // $updatedby_info = get_creator_info($updated_by, $updated_at);
+            $updateinfo = '<br><span class="text-info">Update By : </span>'.$updated_by.'<br><span class="text-info">Update At : </span>'.$updated_at;
             $no++;
             $row = array();
             $row[] = $no;
-            $row[] = $name_html;
+            $row[] = $name_html.$updateinfo;
             $row[] = "PRO-" .number_series($product->id);
             $row[] = cc(value_by_id('tblunitmaster',$product->unit_2,'name'));
             $row[] = cc(value_by_id('tblproductcategory',$product->product_cat_id,'name'));

@@ -39,6 +39,7 @@ class Complain_types extends Admin_controller {
             $id = $data["comp_type_id"];
             unset($data["comp_type_id"]);
             if ($id == ""){
+                $data["added_by"] = get_staff_user_id();
                 $data["created_on"] = date('Y-m-d H:i:s');
                 $data["updated_on"] = date('Y-m-d H:i:s');
                 $insert_id = $this->home_model->insert('tblcomplainstypes', $data);

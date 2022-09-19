@@ -60,8 +60,9 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Title</th>
-                                        <th>DateTime</th>
+                                        <th>Created At</th>
                                         <th>Action</th>
                                       </tr>
                                     </thead>
@@ -74,6 +75,7 @@
                                         ?>
                                         <tr>
                                             <td><?php echo $i++; ?></td>  
+                                            <td><?php echo ($value->added_by > 0) ? get_employee_fullname($value->added_by) : 'N/A'; ?></td>
                                             <td><?php echo cc($value->title); ?></td>                                        
                                             <td><?php echo _d($value->created_at); ?></td>
                                             <td>

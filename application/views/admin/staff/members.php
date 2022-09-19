@@ -781,7 +781,7 @@
                                     <div role="tabpanel" class="tab-pane" id="salary_details">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <a href="javascript:void(0);" class="btn-sm btn-info pull-right ctc_calculate"><i class="fa fa-calculator"> CALCULATE</i></a>        
+                                                <a href="javascript:void(0);" class="btn-sm btn-info pull-right ctc_calculate"><i class="fa fa-calculator"> CALCULATE GROSS</i></a>        
                                             </div>
                                         	<div class="form-group col-md-6">
 	                                        	<div class="form-group">
@@ -1097,10 +1097,16 @@
                                                 <label for="relieving_reason" class="control-label">Relieving Reason</label>
                                                 <textarea id="relieving_reason" name="relieving_reason" class="form-control"><?php echo (isset($member['relieving_reason']) && $member['relieving_reason'] != "") ? $member['relieving_reason'] : "" ?></textarea>
                                             </div>
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-3">
                                                 <label for="relieving_date" class="control-label">Relieving Date</label>
                                                 <input type="text" id="relieving_date" name="relieving_date" class="form-control datepicker" value="<?php if (isset($member['relieving_date']) && $member['relieving_date'] != "0000-00-00") {
                                         echo date('d/m/Y', strtotime($member['relieving_date']));
+                                    } ?>">
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="resignation_date" class="control-label">Resignation Date</label>
+                                                <input type="text" id="resignation_date" name="resignation_date" class="form-control datepicker" value="<?php if (isset($member['resignation_date']) && $member['resignation_date'] != "0000-00-00") {
+                                        echo date('d/m/Y', strtotime($member['resignation_date']));
                                     } ?>">
                                             </div>
                                             <div class="form-group col-md-6">
@@ -1435,13 +1441,15 @@
                                                     <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_intent_letter/'.$staff_id);?>" target='_blank'>Intent Letter</a></td></tr>
                                                     <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_joining_letter/'.$staff_id);?>" target='_blank'>Joining Letter</a></td></tr>
                                                     <?php
-                                                        if ($member["relieving_date"] != "0000-00-00"){
+                                                        if ($member["relieving_date"] != "0000-00-00" && $member["resignation_date"] != NULL){
                                                     ?>
                                                     <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_exprience_certificate/'.$staff_id);?>" target='_blank'>Experience Letter</a></td></tr>
                                                     <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_relieving_letter/'.$staff_id);?>" target='_blank'>Relieving Letter</a></td></tr>
                                                     <?php
                                                         }
                                                     ?>
+                                                    <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_confirmation_letter/'.$staff_id);?>" target='_blank'>Confirmation Letter</a></td></tr>
+                                                    <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_offer_letter/'.$staff_id);?>" target='_blank'>Offer Letter</a></td></tr>
                                                     <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_hr_policy/'.$staff_id);?>" target='_blank'>HR Policy</a></td></tr>
                                                 </tbody>
                                             </table>

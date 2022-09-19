@@ -90,7 +90,10 @@
                                                     $adjusted_amount = $this->db->query("SELECT COALESCE(SUM(`tds_amount`),0) as ttl_amount FROM tbltdsdeduction WHERE tds_challan_id = '".$row->id."' ")->row()->ttl_amount;
                                             ?>                                                                                      
                                                     <tr>
-                                                        <td><?php echo $z++;?></td>
+                                                        <td>
+                                                            <?php echo $z++;?>
+                                                            <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                        </td>
                                                         <td><?php echo get_employee_fullname($row->added_by);  ?></td>
                                                         <td><?php echo $row->challan_no;?></td>
                                                         <td><?php echo _d($row->date);?></td>

@@ -8635,7 +8635,7 @@ if(!function_exists('get_approval_counts'))
     {
 		$CI =& get_instance();
 		$user_id = get_staff_user_id();
-		$query_1 = $CI->db->query("SELECT COALESCE(count(id),0) as ttl_rows FROM `tblmasterapproval` where staff_id = '".$user_id."' and status = 0 and approve_status = 0 and `module_id` NOT IN (18,30,31,33,37,39,42,45,48,58,59)")->row();
+		$query_1 = $CI->db->query("SELECT COALESCE(count(id),0) as ttl_rows FROM `tblmasterapproval` where staff_id = '".$user_id."' and status = 0 and approve_status = 0 and `module_id` NOT IN (18,30,31,33,37,39,42,45,48,58,59,60)")->row();
 		return $query_1->ttl_rows;
 	}
 }
@@ -8646,7 +8646,7 @@ if(!function_exists('get_activitytag_counts'))
     {
 		$CI =& get_instance();
 		$user_id = get_staff_user_id();
-		$query_1 = $CI->db->query("SELECT COALESCE(count(id),0) as ttl_rows FROM `tblmasterapproval` where staff_id = '".$user_id."' and status = 0 and approve_status = 0 and `module_id` IN (18,30,31,33,37,39,42,45,48,58,59)")->row();
+		$query_1 = $CI->db->query("SELECT COALESCE(count(id),0) as ttl_rows FROM `tblmasterapproval` where staff_id = '".$user_id."' and status = 0 and approve_status = 0 and `module_id` IN (18,30,31,33,37,39,42,45,48,58,59,60)")->row();
 		return $query_1->ttl_rows;
 	}
 }

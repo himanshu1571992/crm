@@ -163,32 +163,35 @@ if(!empty($s_tdate)){
 									</thead>
 									<tbody>
 									<?php
-                  $sum= 0;
-                  $cgst_sum= 0;
-                  $igst_sum= 0;
+                                        $sum= 0;
+                                        $cgst_sum= 0;
+                                        $igst_sum= 0;
 									if(!empty($debitnote_list)){
 										$z=1;
                     
 										foreach($debitnote_list as $row){	
 											$vendor_info = $this->db->query("SELECT `name` from `tblvendor` where id = '".$row->vendor_id."'  ")->row();		
 
-                      if($row->status == '1'){
-                          if($row->tax_type == 1){
-                              $tax = ($row->total_tax/2);
-                              $sgst = number_format(round($tax), 2, '.', ''); 
-                              $sum += $sgst;
-                              $cgst = number_format(round($tax), 2, '.', '');
-                              $cgst_sum += $cgst;
-                          }else{
-                              $igst = $row->total_tax;
-                              $igst_sum += $igst;
-                          }
-                      }									
+                                                if($row->status == '1'){
+                                                    if($row->tax_type == 1){
+                                                        $tax = ($row->total_tax/2);
+                                                        $sgst = number_format(round($tax), 2, '.', ''); 
+                                                        $sum += $sgst;
+                                                        $cgst = number_format(round($tax), 2, '.', '');
+                                                        $cgst_sum += $cgst;
+                                                    }else{
+                                                        $igst = $row->total_tax;
+                                                        $igst_sum += $igst;
+                                                    }
+                                                }									
 
 											?>																						
 											<tr>
 												<td><?php echo $z++;?></td>
-												<td><?php echo $row->number;?></td>
+												<td>
+                                                    <?php echo $row->number;?>
+                                                    <?php echo get_creator_info($row->staff_id, $row->created_at); ?>
+                                                </td>
 												<td><a href="<?php echo admin_url('vendor/vendor_profile/'.$row->vendor_id);?>" target="_blank"><?php echo cc($vendor_info->name); ?></a></td>
 												<td><?php echo $row->invoice_numbers;?></td>
 												<td><?php echo _d($row->date); ?></td>

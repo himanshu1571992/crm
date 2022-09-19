@@ -200,12 +200,23 @@ class Staff_API extends CI_Controller {
                 $date = date('Y-m-d');
              }
 
+
             $check_time = date('Y-m-d'). ' 17:30:00';
-            if(date('Y-m-d H:i:s') >= $check_time){
-                $can_verify = 1;
+            if((date('Y-m-d H:i:s') >= date('Y-m-d'). ' 11:00:00') && (date('Y-m-d H:i:s') <= date('Y-m-d'). ' 11:59:59')){
+                $can_verify = 1;    
+            }elseif(date('Y-m-d H:i:s') >= $check_time){
+                $can_verify = 1;  
             }else{
                 $can_verify = 0;
             }
+            
+
+            
+            /*if(date('Y-m-d H:i:s') >= $check_time){
+                $can_verify = 1;
+            }else{
+                $can_verify = 0;
+            }*/
 
             if(empty($show_all)){
                 $show_all = 0;
@@ -599,6 +610,7 @@ class Staff_API extends CI_Controller {
                 $insert_data['contract_from_date'] = $staffinfo->contract_from_date;
                 $insert_data['designation_id'] = $staffinfo->designation_id;
                 $insert_data['birth_date'] = $staffinfo->birth_date;
+                $insert_data['actual_birth_date'] = $staffinfo->actual_birth_date;
                 $insert_data['joining_date'] = $staffinfo->joining_date;
                 $insert_data['pan_card_no'] = $staffinfo->pan_card_no;
                 $insert_data['adhar_no'] = $staffinfo->adhar_no;
@@ -727,4 +739,45 @@ class Staff_API extends CI_Controller {
         //http://mustafa-pc/crm/Staff_API/updateStaffAccountDetails?user_id=1&account_no=115425858585&ifsc_code=IFG12544&bank_name=kotak mahindra bank
 
     }
+
+
+    public function getDepartmentAndBranchMaster()
+    {
+       
+      $return_arr = array();
+        if(!empty($_GET))
+        {
+            extract($this->input->get());   
+        }
+        elseif(!empty($_POST)) 
+        {
+            extract($this->input->post());
+        }
+
+        
+
+      $department_info  = $this->db->query("SELECT id,name FROM `tbldepartmentsmaster` where status = 1 order by name asc  ")->result_array();
+      $branch_info  = $this->db->query("SELECT id,comp_branch_name FROM `tblcompanybranch` where status = 1 order by id asc  ")->result_array();
+
+      if(!empty($department_info)){
+            
+            $return_arr['status'] = true;   
+            $return_arr['message'] = "Successfully";
+            $return_arr['data']['company_department'] = $department_info;
+            $return_arr['data']['company_branch'] = $branch_info;
+      }else{
+            $return_arr['status'] = false;  
+            $return_arr['message'] = "Record Not Found!";
+            $return_arr['data'] = [];
+      }
+
+      
+       header('Content-type: application/json');
+       echo json_encode($return_arr);
+
+       //https://mustafa-pc/crm/Staff_API/getDepartmentAndBranchMaster
+
+    }
+
+
 }

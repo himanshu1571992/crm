@@ -141,7 +141,6 @@ if (check_permission_page(43, 'create')) { ?></h4>
                                                 <th>PO Number</th>
                                                 <th>Vendor</th>
                                                 <th>Date</th>
-                                                <th>Created Date</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
 
@@ -190,12 +189,14 @@ if (check_permission_page(43, 'create')) { ?></h4>
                                                     ?>
                                                     <tr >
                                                         <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>"><?php echo $z++; ?></td>
-                                                        <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>"><?php echo (!empty($row->numer)) ? $row->numer : 'MR-' . $row->id; ?></td>
+                                                        <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>">
+                                                            <?php echo (!empty($row->numer)) ? $row->numer : 'MR-' . $row->id; ?>
+                                                            <?php echo get_creator_info($row->staff_id, $row->created_date); ?>
+                                                        </td>
                                                         <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>"><?php echo $type; ?></td>
                                                         <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>"><?php echo $po_number; ?></td>
                                                         <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>"><?php echo cc(value_by_id('tblvendor', $row->vendor_id, 'name')); ?></td>
                                                         <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>"><?php echo date('d/m/Y', strtotime($row->date)); ?></td>
-                                                        <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>"><?php echo date('d/m/Y', strtotime($row->created_date)); ?></td>
                                                         <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>"><?php echo '<button type="button" class="' . $cls . ' btn-sm status" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">' . $status . '</button>'; ?></td>
                                                         <td class="<?php echo ($working_days >= 2) ? 'danger-row':''; ?>">
                                                             <?php

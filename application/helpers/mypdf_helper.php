@@ -7584,21 +7584,37 @@ function staff_exprience_certificate($staff_info, $format){
         <p style="margin-bottom:0px;">'.$company_info['address'].'</p>
         <p style="margin-bottom:0px;"><b>Company Contact Email :</b> admin@schachengineers.com</p>
         <p style="margin-bottom:0px;"><b>Company Contact No. :</b> +91-7304997369</p>
-      </td>
-      <td id="company" class="vertical-align-top bg-transparent padding-remove" style="width:30%">
-         <br><br><br><br><br>
-         <p><b>Date:- </b> '.date("d-M-Y").'</p>';
+      </td>';
 
-  $html .= '</td>
-    </tr>
+  $html .= '</tr>
   </table>';
-    $html .= '<u><h2 style="text-align:center;" class="name">Experience Certificate</h2></u>';
 
+
+  $emp_address = '';
+    if (!empty($staff_info->permenent_address)){
+        $emp_address = $staff_info->permenent_address;
+    }
+    if (!empty($staff_info->permenent_city)){
+      $empcity = value_by_id('tblcities', $staff_info->permenent_city, 'name');
+      $emp_address = ($emp_address != '') ? $emp_address.', '.$empcity : $empcity;
+    }
+
+    if (!empty($staff_info->permenent_state)){
+      $empstate = value_by_id('tblstates', $staff_info->permenent_state, 'name');
+      $emp_address = ($emp_address != '') ? $emp_address.', '.$empstate : $empstate;
+    }
+    $html .= '<u><h2 style="text-align:center;" class="name">Experience Letter</h2></u><br><br><br><br>';
+    $html .= '<p style="text-align:left;"><b>Date: </b>'.date("d-M-Y").'</p><br><br><br>';
     $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{from_date}" => date("d-M-Y", strtotime($staff_info->joining_date)), "{to_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)), "{designation}" => $designation_name);
     $contect = strtr($format->content, $splvars);
   $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p>';
 //
 //  $html .= '<p style="margin-bottom: 5px; margin-top: 5px;"><b>Assets handed over:</b></p>';
+
+$html .= '<br><br><br><br><br><br><p style="text-align:left;">Best Regards,</p>';
+$html .= '<h4 style="text-align:left;">For<b> SCHACH Engineers Pvt Ltd </b></h4>';
+$html .= '<img style="margin-bottom:10px;" width="100" height="100" src="assets/images/sign_and_stamp.png">';
+$html .= '<br><h4 style="text-align:left;"><b>Authorized Signatory </b></h4>';
 
     $html .= '<div style="text-align:center;font-weight:800;color: #000;font-size:18px;margin-top: 15px;margin-bottom: 10px;"> </div>';
     $html .= '<table border="0" cellspacing="0" cellpadding="0" style="position:absolute;bottom:50px;">
@@ -7680,8 +7696,8 @@ function staff_intent_letter($staff_info, $format){
 
 function staff_joining_letter($staff_info, $format){
   $CI =& get_instance();
-// echo "<pre>";
-// print_r($staff_info);exit;
+  // echo "<pre>";
+  // print_r($staff_info);exit;
   $company_info = get_company_details();
   $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
   $designation_name = value_by_id("tbldesignation", $staff_info->designation_id, "designation");
@@ -7700,19 +7716,74 @@ function staff_joining_letter($staff_info, $format){
         <p style="margin-bottom:0px;"><b>Company Contact No. :</b> +91-7304997369</p>
       </td>
     </tr>
-  </table>';
-  $html .= '<u><h2 style="text-align:center;" class="name">Private and Confidential</h2></u>';
-    $html .= '<p style="text-align:left;"><b>To: </b></p>';
-    $html .= '<p style="text-align:left;"><b>Name: </b>'.get_employee_fullname($staff_info->staffid).'</p>';
-    $html .= '<p style="text-align:left;"><b>Address: </b>'.$staff_info->permenent_address.'</p>';
+  </table><br><br>';
+
+    $emp_address = '';
+    if (!empty($staff_info->permenent_address)){
+        $emp_address = $staff_info->permenent_address;
+    }
+    if (!empty($staff_info->permenent_city)){
+      $empcity = value_by_id('tblcities', $staff_info->permenent_city, 'name');
+      $emp_address = ($emp_address != '') ? $emp_address.', '.$empcity : $empcity;
+    }
+
+    if (!empty($staff_info->permenent_state)){
+      $empstate = value_by_id('tblstates', $staff_info->permenent_state, 'name');
+      $emp_address = ($emp_address != '') ? $emp_address.', '.$empstate : $empstate;
+    }
+    
     $html .= '<p style="text-align:left;"><b>Date: </b>'.date("d-M-Y").'</p>';
-    $html .= '<u><h2 style="text-align:center;" class="name">Letter of Intent</h2></u>';
+    $html .= '<p style="text-align:left;"><b>Employee Code: </b>'.$employee_code.'</p>';
+    $html .= '<p style="text-align:left;"><b>Employee Name: </b>'.get_employee_fullname($staff_info->staffid).'</p>';
+    $html .= '<p style="text-align:left;"><b>Employee Address: </b>'.$emp_address.'</p>';
+    
+    $html .= '<u><h2 style="text-align:center;" class="name">Sub: Letter of Appointment</h2></u>';
 
     $ctc = number_format(round(($staff_info->monthly_salary*12)), 2, '.', '');
-    $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{date}" => date("d-M-Y"), "{joining_date}" => date("d-M-Y", strtotime($staff_info->joining_date)), "{salary}" => $ctc." /-", "{designation}" => $designation_name);
+    $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{date}" => date("d-M-Y"), "{joining_date}" => date("d-M-Y", strtotime($staff_info->joining_date)), "{salary}" => $ctc, "{designation}" => $designation_name,
+    "{location}" => value_by_id("tbllocationmaster", $staff_info->location_id,"name"), "{working_from}"=> $staff_info->working_from, "{working_to}"=> $staff_info->working_to,
+    "{probation_period}" => $staff_info->paid_leave_time
+    );
     $contect = strtr($format->content, $splvars);
   $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p>';
-//
+    // $html .= '<table class="mb-15" cellspacing="0" cellpadding="0" border="0">
+    //             <tbody>
+    //               <tr>
+    //                 <td class="align-left vertical-align-top bg-transparent padding-remove" style="width:55%;">
+    //                   <p style="text-align:left;"><b>Best Regards, </b></p>
+    //                   <h4 style="text-align:left;"><b>For SCHACH Engineers Pvt Ltd </b></h4>
+    //                 </td>
+    //                 <td id="company" class="vertical-align-top bg-transparent padding-remove" style="width:45%;">
+    //                   <img style="margin-bottom:10px;" width="100" height="100" src="assets/images/sign_and_stamp.png">
+    //                 </td>
+    //               </tr>
+    //             </tbody>
+    //           </table>';
+  $html .= '<br><p style="text-align:left;"><b>Best Regards,</b></p>';
+  $html .= '<h4 style="text-align:left;">For<b> SCHACH Engineers Pvt Ltd </b></h4>';
+  $html .= '<img style="margin-bottom:10px;" width="100" height="100" src="assets/images/sign_and_stamp.png">';
+  $html .= '<br><h4 style="text-align:left;"><b>Authorized Signatory </b></h4>___________________';
+  $html .= '<br><br><p style="text-align:left;">I accept the appointment on the terms and conditions contained herein and will report for duty on _________________</p>';
+  $html .= '<table class="mb-15" cellspacing="0" cellpadding="0" border="0">
+  <tbody>
+    <tr>
+      <td class="align-left vertical-align-top bg-transparent padding-remove" style="width:50%;">
+        
+      </td>
+      <td id="company" class="vertical-align-top bg-transparent padding-remove" style="width:50%;">
+          <h4 style="text-align:right;"><b>Signature: ....................................................</b></h4>
+      </td>
+    </tr>
+    <tr>
+      <td class="align-left vertical-align-top bg-transparent padding-remove" style="width:50%;">
+          <h4 style="text-align:left;"><b>Date: ..............................</b></h4>
+      </td>
+      <td id="company" class="vertical-align-top bg-transparent padding-remove" style="width:50%;">
+          <h4 style="text-align:right;"><b>Name: .........................................................</b></h4>
+      </td>
+    </tr>
+  </tbody>
+</table>';
 //  $html .= '<p style="margin-bottom: 5px; margin-top: 5px;"><b>Assets handed over:</b></p>';
 
     $html .= '<div style="text-align:center;font-weight:800;color: #000;font-size:18px;margin-top: 20px;margin-bottom: 10px;"> </div>';
@@ -7757,13 +7828,194 @@ function staff_relieving_letter($staff_info, $format){
       </td>
     </tr>
   </table>';
-    $html .= '<u><h2 style="text-align:center;" class="name">Relieving letter</h2></u>';
 
-    $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{date}" => date("d-M-Y"), "{relieving_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)), "{designation}" => $designation_name);
+    $emp_address = '';
+    if (!empty($staff_info->permenent_address)){
+        $emp_address = $staff_info->permenent_address;
+    }
+    if (!empty($staff_info->permenent_city)){
+      $empcity = value_by_id('tblcities', $staff_info->permenent_city, 'name');
+      $emp_address = ($emp_address != '') ? $emp_address.', '.$empcity : $empcity;
+    }
+
+    if (!empty($staff_info->permenent_state)){
+      $empstate = value_by_id('tblstates', $staff_info->permenent_state, 'name');
+      $emp_address = ($emp_address != '') ? $emp_address.', '.$empstate : $empstate;
+    }
+    
+    $html .= '<br><br><p style="text-align:left;"><b>Dated: </b>'.date("d-M-Y").'</p><br><br><br>';
+    $html .= '<p style="text-align:left;"><b>Mr./Ms: </b>'.get_employee_fullname($staff_info->staffid).'</p>';
+    $html .= '<p style="text-align:left;">'.$emp_address.'</p><br><br>';
+    $html .= '<u><h2 style="text-align:center;" class="name">Sub: Relieving Letter</h2></u>';
+
+    $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{date}" => date("d-M-Y"), "{relieving_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)), "{resignation_date}" => date("d-M-Y", strtotime($staff_info->resignation_date)),  "{designation}" => $designation_name);
     $contect = strtr($format->content, $splvars);
-  $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p>';
-//
-//  $html .= '<p style="margin-bottom: 5px; margin-top: 5px;"><b>Assets handed over:</b></p>';
+  $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p><br><br><br>';
+
+  $html .= '<p style="text-align:left;">Best Regards,</p>';
+  $html .= '<h4 style="text-align:left;">For<b> SCHACH Engineers Pvt Ltd </b></h4>';
+  $html .= '<img style="margin-bottom:10px;" width="100" height="100" src="assets/images/sign_and_stamp.png">';
+  $html .= '<br><h4 style="text-align:left;"><b>Authorized Signatory </b></h4>';
+    $html .= '<div style="text-align:center;font-weight:800;color: #000;font-size:18px;margin-top: 20px;margin-bottom: 10px;"> </div>';
+    $html .= '<table border="0" cellspacing="0" cellpadding="0" style="position:absolute;bottom:50px;">
+        <tbody>
+        <tr>
+         <td class="desc" style="text-align:center;">
+          <h3 style="margin-bottom:0">Registered Office : Noida -  <span style="color:#000; font-weight:500;">G 401, AVJ Heights, Sector Zeta 1, Greater Noida - 201301</span></h3>
+        </td>
+      </tr>
+      <tr>
+            <td class="desc" style="text-align: center; color: #fff; background: #282929; font-size: 12px;">
+            <p><span style="color:#fff; margin-right:10px;text-transform:none;">MSME : UP28B0011156</span><span style="color:#fff; margin-right:10px;text-transform:none;">CIN :U51101UP2015PTC068937</span> <a href="mailto:info@schachengineers.com" style="color:#fff; margin-right:10px;text-transform:none;">info@schachengineers.com</a> +91(0)- 8450-912-880 <a style="color:#fff; margin-left:10px;text-transform:none;" href="http://www.schachengineers.com/">www.schachengineers.com</a></p>
+             </td>
+      </tr>
+        </tbody>
+    </table>
+</body></html>';
+
+  return $html;
+}
+
+
+function confirmation_letter($staff_info, $format){
+  $CI =& get_instance();
+// echo "<pre>";
+// print_r($staff_info);exit;
+  $company_info = get_company_details();
+  $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
+  $designation_name = value_by_id("tbldesignation", $staff_info->designation_id, "designation");
+
+  $html = '<html><title>Confirmation letter</title><head><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet"><style type="text/css">@page{margin:20px auto}@font-face{font-family:SourceSansPro;src:url(uploads/SourceSansPro-Regular.ttf)}.clearfix:after{content:"";display:table;clear:both}a{color:#0087C3;text-decoration:none}body{position:relative;width:18cm;height:29.7cm;margin:0 auto;color:#555;background:#FFF;font-family: Source Sans Pro, sans-serif;font-size:12px;font-family: Source Sans Pro, sans-serif;text-transform:capitalize;  overflow-wrap: break-word; word-wrap:break-word;}table{width:100%}table th, table td{padding:5px 10px;font-size:9.5px;background:#EEE;text-align:left;border-bottom:1px solid #FFF}table th{white-space:nowrap;font-weight:normal}table td h3{color:#000;font-size:1.1em;font-weight:600;margin:0;margin-bottom:5px}p{margin:0 0 5px 0}table .no{color:#fff;font-size:13px;background:#626F80}table .desc{text-align:left}.desc h3{font-size:10px;font-weight:600}.desc p{font-size:10px;margin-bottom:0;line-height:11px;}table .unit{background:#DDD}#company{text-align:right}#company .name{text-transform:uppercase;margin:0;margin-bottom:5px;color:#df2c2c;font-weight:600}.align-left{text-align:left}.text-right{text-align:right !important}.vertical-align-top{vertical-align:top}.bg-transparent{background:transparent}.mb-15{margin-bottom:8px}.main-table td{vertical-align:top}#notices{padding-left:6px; }#notices div{font-weight:600;font-size:11px;letter-spacing:1px;color:#df2c2c}.notice{margin-top:8px;font-size:14px;font-weight:600;color:#282929;line-height:30px;border-bottom:1px solid #282929;letter-spacing:0.5px}.fromToTable td{vertical-align:top}.termsList{margin-top:8px;font-size:11px;text-transform: none;}.note{text-align:center;background:#df2c2c;color:#fff;margin:10px 0;}.padding-remove{padding:7px 0px}.fromToTable tr th{width:50%;}</style></head><body>';
+
+  $html .= '<table border="0" cellspacing="0" cellpadding="0" class="mb-15">
+    <tr>
+      <td class="align-left vertical-align-top bg-transparent padding-remove" style="width:70%">
+        <img style="margin-bottom:10px;" width="150" height="50" src="uploads/company/logo.png">
+        <h3 style="margin-top:0; margin-bottom:0px;">'.$company_info['company_name'].'</h3>
+        <p style="margin-bottom:0px;">'.$company_info['address'].'</p>
+        <p style="margin-bottom:0px;"><b>Company Contact Email :</b> admin@schachengineers.com</p>
+        <p style="margin-bottom:0px;"><b>Company Contact No. :</b> +91-7304997369</p>
+      </td>
+    </tr>
+  </table>';
+  $html .= '<u><h2 style="text-align:center;" class="name">Confirmation letter</h2></u>';
+  $html .= '<br><br><p style="text-align:left;"><b>Date: </b>'.date("d-M-Y").'</p><br><br><br>';
+    $html .= '<p style="text-align:left;"><b>'.get_employee_fullname($staff_info->staffid).'</b></p>';
+    $html .= '<p style="text-align:left;"><b>'.$designation_name.'<b></p><br><br>';
+    
+
+    $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{date}" => date("d-M-Y"), "{relieving_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)), "{resignation_date}" => date("d-M-Y", strtotime($staff_info->resignation_date)),  "{designation}" => $designation_name
+    , "{joining_date}" => date("d-M-Y", strtotime($staff_info->joining_date)));
+    $contect = strtr($format->content, $splvars);
+  $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p><br><br><br>';
+
+  $html .= '<p style="text-align:left;">Yours faithfully,</p>';
+  $html .= '<h4 style="text-align:left;">For<b> SCHACH Engineers Pvt Ltd </b></h4>';
+  $html .= '<img style="margin-bottom:10px;" width="100" height="100" src="assets/images/sign_and_stamp.png">';
+  $html .= '<br><h4 style="text-align:left;"><b>Authorized Signatory </b></h4>';
+    $html .= '<div style="text-align:center;font-weight:800;color: #000;font-size:18px;margin-top: 20px;margin-bottom: 10px;"> </div>';
+    $html .= '<table border="0" cellspacing="0" cellpadding="0" style="position:absolute;bottom:50px;">
+        <tbody>
+        <tr>
+         <td class="desc" style="text-align:center;">
+          <h3 style="margin-bottom:0">Registered Office : Noida -  <span style="color:#000; font-weight:500;">G 401, AVJ Heights, Sector Zeta 1, Greater Noida - 201301</span></h3>
+        </td>
+      </tr>
+      <tr>
+            <td class="desc" style="text-align: center; color: #fff; background: #282929; font-size: 12px;">
+            <p><span style="color:#fff; margin-right:10px;text-transform:none;">MSME : UP28B0011156</span><span style="color:#fff; margin-right:10px;text-transform:none;">CIN :U51101UP2015PTC068937</span> <a href="mailto:info@schachengineers.com" style="color:#fff; margin-right:10px;text-transform:none;">info@schachengineers.com</a> +91(0)- 8450-912-880 <a style="color:#fff; margin-left:10px;text-transform:none;" href="http://www.schachengineers.com/">www.schachengineers.com</a></p>
+             </td>
+      </tr>
+        </tbody>
+    </table>
+</body></html>';
+
+  return $html;
+}
+
+function offer_letter($staff_info, $format){
+  $CI =& get_instance();
+// echo "<pre>";
+// print_r($staff_info);exit;
+  $company_info = get_company_details();
+  $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
+  $designation_name = value_by_id("tbldesignation", $staff_info->designation_id, "designation");
+
+  $html = '<html><title>Offer letter</title><head><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet"><style type="text/css">@page{margin:20px auto}@font-face{font-family:SourceSansPro;src:url(uploads/SourceSansPro-Regular.ttf)}.clearfix:after{content:"";display:table;clear:both}a{color:#0087C3;text-decoration:none}body{position:relative;width:18cm;height:29.7cm;margin:0 auto;color:#555;background:#FFF;font-family: Source Sans Pro, sans-serif;font-size:12px;font-family: Source Sans Pro, sans-serif;text-transform:capitalize;  overflow-wrap: break-word; word-wrap:break-word;}table{width:100%}table th, table td{padding:5px 10px;font-size:9.5px;background:#EEE;text-align:left;border-bottom:1px solid #FFF}table th{white-space:nowrap;font-weight:normal}table td h3{color:#000;font-size:1.1em;font-weight:600;margin:0;margin-bottom:5px}p{margin:0 0 5px 0}table .no{color:#fff;font-size:13px;background:#626F80}table .desc{text-align:left}.desc h3{font-size:10px;font-weight:600}.desc p{font-size:10px;margin-bottom:0;line-height:11px;}table .unit{background:#DDD}#company{text-align:right}#company .name{text-transform:uppercase;margin:0;margin-bottom:5px;color:#df2c2c;font-weight:600}.align-left{text-align:left}.text-right{text-align:right !important}.vertical-align-top{vertical-align:top}.bg-transparent{background:transparent}.mb-15{margin-bottom:8px}.main-table td{vertical-align:top}#notices{padding-left:6px; }#notices div{font-weight:600;font-size:11px;letter-spacing:1px;color:#df2c2c}.notice{margin-top:8px;font-size:14px;font-weight:600;color:#282929;line-height:30px;border-bottom:1px solid #282929;letter-spacing:0.5px}.fromToTable td{vertical-align:top}.termsList{margin-top:8px;font-size:11px;text-transform: none;}.note{text-align:center;background:#df2c2c;color:#fff;margin:10px 0;}.padding-remove{padding:7px 0px}.fromToTable tr th{width:50%;}</style></head><body>';
+
+  $html .= '<table border="0" cellspacing="0" cellpadding="0" class="mb-15">
+    <tr>
+      <td class="align-left vertical-align-top bg-transparent padding-remove" style="width:70%">
+        <img style="margin-bottom:10px;" width="150" height="50" src="uploads/company/logo.png">
+        <h3 style="margin-top:0; margin-bottom:0px;">'.$company_info['company_name'].'</h3>
+        <p style="margin-bottom:0px;">'.$company_info['address'].'</p>
+        <p style="margin-bottom:0px;"><b>Company Contact Email :</b> admin@schachengineers.com</p>
+        <p style="margin-bottom:0px;"><b>Company Contact No. :</b> +91-7304997369</p>
+      </td>
+    </tr>
+  </table>';
+  $emp_address = '';
+    if (!empty($staff_info->permenent_address)){
+        $emp_address = $staff_info->permenent_address;
+    }
+    if (!empty($staff_info->permenent_city)){
+      $empcity = value_by_id('tblcities', $staff_info->permenent_city, 'name');
+      $emp_address = ($emp_address != '') ? $emp_address.', '.$empcity : $empcity;
+    }
+
+    if (!empty($staff_info->permenent_state)){
+      $empstate = value_by_id('tblstates', $staff_info->permenent_state, 'name');
+      $emp_address = ($emp_address != '') ? $emp_address.', '.$empstate : $empstate;
+    }
+    $check_superior = $CI->db->query("SELECT staffid FROM `tblstaff` where superior_id  = ".$staff_info->staffid." and active = 1")->row();
+    $notice_period = (!empty($check_superior)) ? 'Three' : 'One';
+    $ctcsalary = ($staff_info->monthly_salary*12);
+    $reporting_branch = value_by_id('tblcompanybranch', $staff_info->reporting_branch_id, "comp_branch_name");
+    $superior_name = get_employee_fullname($staff_info->superior_id);
+  // $html .= '<u><h2 style="text-align:center;" class="name">Offer letter</h2></u>';
+  $html .= '<br><br><p style="text-align:left;"><b>Date: </b>'.date("d-M-Y").'</p><br><br><br>';
+    $html .= '<p style="text-align:left;"><b>Name Of the Candidate: </b>'.get_employee_fullname($staff_info->staffid).'</p>';
+    $html .= '<p style="text-align:left;"><b>Address: </b>'.$emp_address.'</p><br><br>';
+    
+
+    $splvars = array(
+      "{employee_name}" => get_employee_fullname($staff_info->staffid),
+      "{date}" => date("d-M-Y"),
+      "{relieving_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)),
+      "{resignation_date}" => date("d-M-Y", strtotime($staff_info->resignation_date)),
+      "{designation}" => $designation_name,
+      "{joining_date}" => date("d-M-Y", strtotime($staff_info->joining_date)),
+      "{reporting_branch}" => $reporting_branch,
+      "{superior}" => $superior_name,
+      "{salary}" => $ctcsalary,
+    );
+    $contect = strtr($format->content, $splvars);
+  $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p><br><br><br><br><br><br>';
+
+  $html .= '<br><br><p style="text-align:left;"><b>Yours Regards,</b></p>';
+  $html .= '<h4 style="text-align:left;">For<b> SCHACH Engineers Pvt Ltd </b></h4>';
+  $html .= '<img style="margin-bottom:10px;" width="100" height="100" src="assets/images/sign_and_stamp.png">';
+  $html .= '<br><h4 style="text-align:left;"><b>Authorized Signatory </b></h4>';
+
+  $html .= '<br><br><h4 style="text-align:left;"><b>Code of Conduct</b></h4>';
+  $html .= '<br><br>
+            <ul>
+                <li>Always arrive on time, stay on task no complaints should come from client end.</li>
+                <li>If you decide to leave the company, then you have to serve the notice period of <b>'.$notice_period.'</b> month if case you fail then your salary will not be payable.</li>
+                <li>If you want to apply for leave then apply one week before, leave should be approved by your reporting manager. If your leave is not approve it will consider as pay without leave.</li>
+                <li>Coming late half an hour for 3 consecutive days will be consider full day loss of pay.</li>
+                <li>Employees are prohibited from making threats or engaging in violent activities such as consumption of alcoholic beverages during working hours using abusive language, threatening, and theft.</li>
+                <li>Violations of this policy will lead to disciplinary action up to and including dismissal, as well as arrest and prosecution for any criminal acts.</li>
+                <li>Salaries will be paid by bank transfer before end of second week of the month.</li>
+                <li>During the probation you will not be eligible for leave and you will be on probation period for six months from the date of joining.</li>
+                <li>Employees will be responsible for handling & maintaining company’s equipment & property.</li>
+                <li>Observe and follow company safety rules and regulations.</li>
+                <li>Determine the need for repairs of company’s equipment & property require to be informed to the manager immediately</li>
+                <li>Maintain a safe and orderly environment of the facilities. </li>
+                <li>Do not keep your mobile phone turn off at any time.</li>
+            </ul>';
+
+
 
     $html .= '<div style="text-align:center;font-weight:800;color: #000;font-size:18px;margin-top: 20px;margin-bottom: 10px;"> </div>';
     $html .= '<table border="0" cellspacing="0" cellpadding="0" style="position:absolute;bottom:50px;">
@@ -7784,6 +8036,8 @@ function staff_relieving_letter($staff_info, $format){
 
   return $html;
 }
+
+
 function hr_policy($staff_info){
   $CI =& get_instance();
 // echo "<pre>";

@@ -178,10 +178,9 @@ class Company_expense extends Admin_controller
                             'address' => $address,
                             'remark' => $remark,
                             'status' => $status,
-                            'created_at' => date('Y-m-d')
+                            'added_by' => get_staff_user_id(),
+                            'created_at' => date('Y-m-d H:i:s')
                         );
-
-
 
             $insert = $this->home_model->insert('tblcompanyexpenseparties', $ad_data);
 

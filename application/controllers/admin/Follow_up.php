@@ -360,10 +360,9 @@ class Follow_up extends Admin_controller
         }
     }
 
-    public function client_activity($client_id = '')
+    public function client_activity($client_id = '', $from_user_id = "")
     {
         if(!empty($client_id)){
-            //$number_list = $this->db->query("SELECT c.phonenumber from tblcontacts as c LEFT JOIN tblenquiryclientperson as cp ON cp.contact_id = c.id where cp.enquiry_id = '".$client_id."' ")->result();
             $number_list = $this->db->query("SELECT phonenumber from tblcontacts  where userid = '".$client_id."' ")->result();
 
             $numbers = '';
@@ -390,22 +389,21 @@ class Follow_up extends Admin_controller
             extract($this->input->post());
 
            /* this is for check notification update */
-            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$client_id."' and staff_id = '".get_staff_user_id()."' and module_id = 31")->result();
-            if (!empty($chk_notification)){
-                foreach ($chk_notification as $value) {
-                    $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
-                }
-            }
+            // $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$client_id."' and staff_id = '".get_staff_user_id()."' and module_id = 31")->result();
+            // if (!empty($chk_notification)){
+            //     foreach ($chk_notification as $value) {
+            //         $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
+            //     }
+            // }
+
+            /* this code use for check tagging information */
+            send_activity_replied(31, $client_id, $from_user_id, get_staff_user_id());
 
             if(!empty($important_search)){
                  $data['activity_log'] = $this->db->query("SELECT * FROM `tblfollowupclientactivity` where client_id = '".$client_id."' and priority = '1' and `parent_id`='0'  order by id desc")->result();
             }else{
-                  if(!empty($suggestion)){
-                    $message = $suggestion;
-                }else{
-                    $message = $description;
-                }
 
+                $message = (!empty($suggestion)) ? $suggestion : $description;
                 $parent_id = (!empty($parent_id)) ? $parent_id : 0;
                 if ($parent_id > 0){
                     $message = $activity_reply[$parent_id];
@@ -417,41 +415,33 @@ class Follow_up extends Admin_controller
                     die;
                 }
 
-                 $ad_data = array(
-                            'client_id' => $client_id,
-                            'parent_id' => $parent_id,
-                            'message' => $message,
-                            'staffid' => get_staff_user_id(),
-                            'date' => date('Y-m-d'),
-                            'datetime' => date('Y-m-d H:i:s'),
-                            'priority' => 0,
-                            'status' => 1
-                        );
+                $ad_data = array(
+                    'client_id' => $client_id,
+                    'parent_id' => $parent_id,
+                    'message' => $message,
+                    'staffid' => get_staff_user_id(),
+                    'date' => date('Y-m-d'),
+                    'datetime' => date('Y-m-d H:i:s'),
+                    'priority' => 0,
+                    'status' => 1
+                );
 
                $insert_id = $this->home_model->insert('tblfollowupclientactivity',$ad_data);
 
                if (!empty($tag_staff_ids)){
                    $staff_ids = explode(",", $tag_staff_ids);
                    foreach ($staff_ids as $staff_id) {
-                       $n_data = array(
-                            'description' => 'You taged in client activity follow up',
-                            'staff_id' => $staff_id,
-                            'fromuserid' => get_staff_user_id(),
-                            'table_id' => $client_id,
-                            'isread' => 0,
+
+                        $tag_notification_arr = array(
+                            'activity_id' => $insert_id,
                             'module_id' => 31,
-                            'link'  => "follow_up/client_activity/".$client_id,
-                            'date' => date('Y-m-d H:i:s'),
-                            'date_time' => date('Y-m-d H:i:s')
+                            'table_id' => $client_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in client activity follow up',
+                            'link'  => "follow_up/client_activity/".$client_id
                         );
-
-                        $this->home_model->insert('tblmasterapproval', $n_data);
-
-                        //Sending Mobile Intimation
-                            $token = get_staff_token($staff_id);
-                            $title = 'Schach';
-                            $message = 'You taged in client activity follow up';
-                            $send_intimation = sendFCM($message, $title, $token, $page = 2);
+                        send_activitytag_notification($tag_notification_arr);
                    }
                }
 
@@ -704,7 +694,7 @@ class Follow_up extends Admin_controller
 
 
 
-    public function lead_activity($lead_id = '')
+    public function lead_activity($lead_id = '', $from_user_id = '')
     {
         if(!empty($lead_id)){
             $number_list = $this->db->query("SELECT c.phonenumber from tblcontacts as c LEFT JOIN tblenquiryclientperson as cp ON cp.contact_id = c.id where cp.enquiry_id = '".$lead_id."' ")->result();
@@ -713,43 +703,27 @@ class Follow_up extends Admin_controller
             if(!empty($number_list)){
                 $i = 0;
                 foreach ($number_list as $no) {
-                    if($i == 0){
-                        $numbers .= $no->phonenumber;
-                    }else{
-                        $numbers .= ','.$no->phonenumber;
-                    }
+                    $numbers .= ($i == 0) ? $no->phonenumber : ','.$no->phonenumber;
                     $i++;
                 }
             }
 
             if(!empty($numbers)){
                 $data['numbers'] = $numbers;
-                /*$where = "customer_number IN (".$numbers.")";
-                $data['call_history'] = $this->db->query("SELECT * from tblcalloutgoing where ".$where." order by id desc ")->result();*/
             }
         }
 
         if(!empty($_POST)){
             extract($this->input->post());
-            // echo "<pre>";
-            // print_r($_POST);
-            // exit;
-            /* this is for check notification uodate */
-            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$lead_id."' and staff_id = '".get_staff_user_id()."' and module_id = 30")->result();
-            if (!empty($chk_notification)){
-                foreach ($chk_notification as $value) {
-                    $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
-                }
-            }
+            
+            /* this code use for check tagging information */
+            send_activity_replied(30, $lead_id, $from_user_id, get_staff_user_id());
+
             if(!empty($important_search)){
-                 $data['activity_log'] = $this->db->query("SELECT * FROM `tblfollowupleadactivity` where lead_id = '".$lead_id."' and priority = '1' and parent_id = '0' order by id asc")->result();
+                $data['activity_log'] = $this->db->query("SELECT * FROM `tblfollowupleadactivity` where lead_id = '".$lead_id."' and priority = '1' and parent_id = '0' order by id asc")->result();
             }else{
 
-                if(!empty($suggestion)){
-                    $message = $suggestion;
-                }else{
-                    $message = $description;
-                }
+                $message = (!empty($suggestion)) ? $suggestion : $description;
                 $parent_id = (!empty($parent_id)) ? $parent_id : 0;
                 if ($parent_id > 0){
                     $message = $activity_reply[$parent_id];
@@ -774,32 +748,24 @@ class Follow_up extends Admin_controller
 
                 $insert_id = $this->home_model->insert('tblfollowupleadactivity',$ad_data);
 
-                /* this for update last activity date of lead */
-                $this->home_model->update('tblleads',array('last_activity_date'=>date('Y-m-d')),array('id'=>$lead_id));
+    /* this for update last activity date of lead */
+    $this->home_model->update('tblleads',array('last_activity_date'=>date('Y-m-d')),array('id'=>$lead_id));
 
                 if (!empty($tag_staff_ids)){
-                   $staff_ids = explode(",", $tag_staff_ids);
-                   foreach ($staff_ids as $staff_id) {
-                       $n_data = array(
-                            'description' => 'You taged in leads activity follow up',
-                            'staff_id' => $staff_id,
-                            'fromuserid' => get_staff_user_id(),
-                            'table_id' => $lead_id,
-                            'isread' => 0,
+                    $staff_ids = explode(",", $tag_staff_ids);
+                    foreach ($staff_ids as $staff_id) {
+
+                        $tag_notification_arr = array(
+                            'activity_id' => $insert_id,
                             'module_id' => 30,
-                            'link'  => "follow_up/lead_activity/".$lead_id,
-                            'date' => date('Y-m-d H:i:s'),
-                            'date_time' => date('Y-m-d H:i:s')
+                            'table_id' => $lead_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in leads activity follow up',
+                            'link'  => "follow_up/lead_activity/".$lead_id
                         );
-
-                        $this->home_model->insert('tblmasterapproval', $n_data);
-
-                        //Sending Mobile Intimation
-                            $token = get_staff_token($staff_id);
-                            $title = 'Schach';
-                            $message = 'You taged in leads activity follow up';
-                            $send_intimation = sendFCM($message, $title, $token, $page = 2);
-                   }
+                        send_activitytag_notification($tag_notification_arr);
+                    }
                 }
 
                 set_alert('success', 'Activity Added successfully');
@@ -1180,19 +1146,21 @@ class Follow_up extends Admin_controller
         }
     }
 
-    public function po_activity($po_id = '')
+    public function po_activity($po_id = '', $from_user_id = '')
     {
 
         if(!empty($_POST)){
             extract($this->input->post());
 
             /* this is for check notification uodate */
-            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$po_id."' and staff_id = '".get_staff_user_id()."' and module_id = '33'")->result();
-            if (!empty($chk_notification)){
-                foreach ($chk_notification as $value) {
-                    $this->home_model->update("tblmasterapproval", array("status" => 1, "approve_status" => 1), array("id" => $value->id));
-                }
-            }
+            // $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$po_id."' and staff_id = '".get_staff_user_id()."' and module_id = '33'")->result();
+            // if (!empty($chk_notification)){
+            //     foreach ($chk_notification as $value) {
+            //         $this->home_model->update("tblmasterapproval", array("status" => 1, "approve_status" => 1), array("id" => $value->id));
+            //     }
+            // }
+            /* this code use for check tagging information */
+            send_activity_replied(33, $po_id, $from_user_id, get_staff_user_id());
 
             if(!empty($important_search)){
                  $data['activity_log'] = $this->db->query("SELECT * FROM `tblpurchaseorderactivity` where po_id = '".$po_id."' and priority = '1' and `parent_id`='0' order by id asc")->result();
@@ -1228,25 +1196,17 @@ class Follow_up extends Admin_controller
                 if (!empty($tag_staff_ids)){
                    $staff_ids = explode(",", $tag_staff_ids);
                    foreach ($staff_ids as $staff_id) {
-                       $n_data = array(
-                            'description' => 'You taged in purchase order activity follow up',
-                            'staff_id' => $staff_id,
-                            'fromuserid' => get_staff_user_id(),
-                            'table_id' => $po_id,
-                            'isread' => 0,
+
+                        $tag_notification_arr = array(
+                            'activity_id' => $insert_id,
                             'module_id' => 33,
-                            'link'  => "follow_up/po_activity/".$po_id,
-                            'date' => date('Y-m-d H:i:s'),
-                            'date_time' => date('Y-m-d H:i:s')
+                            'table_id' => $po_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in purchase order activity follow up',
+                            'link'  => "follow_up/po_activity/".$po_id
                         );
-
-                        $this->home_model->insert('tblmasterapproval', $n_data);
-
-                        //Sending Mobile Intimation
-                            $token = get_staff_token($staff_id);
-                            $title = 'Schach';
-                            $message = 'You taged in purchase order activity follow up';
-                            $send_intimation = sendFCM($message, $title, $token, $page = 2);
+                        send_activitytag_notification($tag_notification_arr);
                    }
                 }
 
@@ -1333,18 +1293,21 @@ class Follow_up extends Admin_controller
        }
     }
 
-    public function estimates_activity($estimate_id = '')
+    public function estimates_activity($estimate_id = '', $from_user_id = '')
     {
         if(!empty($_POST)){
             extract($this->input->post());
 
             /* this is for check notification uodate */
-            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$estimate_id."' and staff_id = '".get_staff_user_id()."' and module_id = '37'")->result();
-            if (!empty($chk_notification)){
-                foreach ($chk_notification as $value) {
-                    $this->home_model->update("tblmasterapproval", array("status" => 1, "approve_status" => 1), array("id" => $value->id));
-                }
-            }
+            // $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$estimate_id."' and staff_id = '".get_staff_user_id()."' and module_id = '37'")->result();
+            // if (!empty($chk_notification)){
+            //     foreach ($chk_notification as $value) {
+            //         $this->home_model->update("tblmasterapproval", array("status" => 1, "approve_status" => 1), array("id" => $value->id));
+            //     }
+            // }
+
+            /* this code use for check tagging information */
+            send_activity_replied(37, $estimate_id, $from_user_id, get_staff_user_id());
 
             if(!empty($important_search)){
                  $data['activity_log'] = $this->db->query("SELECT * FROM `tblproformainvoiceactivity` where estimate_id = '".$estimate_id."' and priority = '1' and `parent_id`='0' order by id asc")->result();
@@ -1383,25 +1346,18 @@ class Follow_up extends Admin_controller
                 if (!empty($tag_staff_ids)){
                    $staff_ids = explode(",", $tag_staff_ids);
                    foreach ($staff_ids as $staff_id) {
-                       $n_data = array(
-                            'description' => 'You taged in proforma invoice activity follow up',
-                            'staff_id' => $staff_id,
-                            'fromuserid' => get_staff_user_id(),
-                            'table_id' => $estimate_id,
-                            'isread' => 0,
+
+                        $tag_notification_arr = array(
+                            'activity_id' => $insert_id,
                             'module_id' => 37,
-                            'link'  => "follow_up/estimates_activity/".$estimate_id,
-                            'date' => date('Y-m-d H:i:s'),
-                            'date_time' => date('Y-m-d H:i:s')
+                            'table_id' => $estimate_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in proforma invoice activity follow up',
+                            'link'  => "follow_up/estimates_activity/".$estimate_id
                         );
-
-                        $this->home_model->insert('tblmasterapproval', $n_data);
-
-                        //Sending Mobile Intimation
-                            $token = get_staff_token($staff_id);
-                            $title = 'Schach';
-                            $message = 'You taged in proforma invoice activity follow up';
-                            $send_intimation = sendFCM($message, $title, $token, $page = 2);
+                        send_activitytag_notification($tag_notification_arr);
+                         
                    }
                 }
 
@@ -1491,19 +1447,22 @@ class Follow_up extends Admin_controller
        }
     }
 
-    public function candidate_requirement_activity($requirement_id = '')
+    public function candidate_requirement_activity($requirement_id = '', $from_user_id = '')
     {
 
         if(!empty($_POST)){
             extract($this->input->post());
 
             /* this is for check notification uodate */
-            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$requirement_id."' and staff_id = '".get_staff_user_id()."' and module_id = '39'")->result();
-            if (!empty($chk_notification)){
-                foreach ($chk_notification as $value) {
-                    $this->home_model->update("tblmasterapproval", array("status" => 1, "approve_status" => 1), array("id" => $value->id));
-                }
-            }
+            // $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$requirement_id."' and staff_id = '".get_staff_user_id()."' and module_id = '39'")->result();
+            // if (!empty($chk_notification)){
+            //     foreach ($chk_notification as $value) {
+            //         $this->home_model->update("tblmasterapproval", array("status" => 1, "approve_status" => 1), array("id" => $value->id));
+            //     }
+            // }
+
+            /* this code use for check tagging information */
+            send_activity_replied(39, $requirement_id, $from_user_id, get_staff_user_id());
 
             if(!empty($important_search)){
                  $data['activity_log'] = $this->db->query("SELECT * FROM `tblcandidaterequirementactivity` where requirement_id = '".$requirement_id."' and priority = '1' and `parent_id` = '0' order by id asc")->result();
@@ -1539,28 +1498,20 @@ class Follow_up extends Admin_controller
                 $this->home_model->update('tblcandidaterequirement',array('last_activity_date'=>date('Y-m-d')),array('id'=>$requirement_id));
 
                 if (!empty($tag_staff_ids)){
-                   $staff_ids = explode(",", $tag_staff_ids);
-                   foreach ($staff_ids as $staff_id) {
-                       $n_data = array(
-                            'description' => 'You taged in candidate requirement activity follow up',
-                            'staff_id' => $staff_id,
-                            'fromuserid' => get_staff_user_id(),
-                            'table_id' => $requirement_id,
-                            'isread' => 0,
+                    $staff_ids = explode(",", $tag_staff_ids);
+                    foreach ($staff_ids as $staff_id) {
+
+                        $tag_notification_arr = array(
+                            'activity_id' => $insert_id,
                             'module_id' => 39,
-                            'link'  => "follow_up/candidate_requirement_activity/".$requirement_id,
-                            'date' => date('Y-m-d H:i:s'),
-                            'date_time' => date('Y-m-d H:i:s')
+                            'table_id' => $requirement_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in candidate requirement activity follow up',
+                            'link'  => "follow_up/candidate_requirement_activity/".$requirement_id
                         );
-
-                        $this->home_model->insert('tblmasterapproval', $n_data);
-
-                        //Sending Mobile Intimation
-                            $token = get_staff_token($staff_id);
-                            $title = 'Schach';
-                            $message = 'You taged in candidate requirement activity follow up';
-                            $send_intimation = sendFCM($message, $title, $token, $page = 2);
-                   }
+                        send_activitytag_notification($tag_notification_arr);
+                    }
                 }
 
                 set_alert('success', 'Activity Added successfully');
@@ -1824,7 +1775,7 @@ class Follow_up extends Admin_controller
                 // $tag_message = 'You taged in enquirycall activity <br><small class="text-danger">Message: '.$message.'</small>';
                 $action_url = "enquirycall/enquirycall_activity/".$enquirycall_id;
                 $ad_data['enquirycall_id'] = $enquirycall_id;
-                $this->home_model->insert('tblenquirycall_activity',$ad_data);
+                $insert_id = $this->home_model->insert('tblenquirycall_activity',$ad_data);
             }else if ($avtivity_type == 3){
                 $table_id = $design_requisition_id;
                 $module_id = 42;
@@ -1832,7 +1783,8 @@ class Follow_up extends Admin_controller
                 $tag_message = 'You taged in design requisition activity';
                 $action_url = "designrequisition/designrequisition_activity/".$design_requisition_id;
                 $ad_data['designrequisition_id'] = $design_requisition_id;
-                $this->home_model->insert('tbldesignrequisitionactivity',$ad_data);
+
+                $insert_id = $this->home_model->insert('tbldesignrequisitionactivity',$ad_data);
             }else if ($avtivity_type == 4){
                 $table_id = $estimate_id;
                 $module_id = 37;
@@ -1840,7 +1792,8 @@ class Follow_up extends Admin_controller
                 $tag_message = 'You taged in proforma invoice activity';
                 $action_url = "follow_up/estimates_activity/".$estimate_id;
                 $ad_data['estimate_id'] = $estimate_id;
-                $this->home_model->insert('tblproformainvoiceactivity',$ad_data);
+
+                $insert_id = $this->home_model->insert('tblproformainvoiceactivity',$ad_data);
             }else{
                 $table_id = $lead_id;
                 $module_id = 30;
@@ -1848,31 +1801,25 @@ class Follow_up extends Admin_controller
                 $tag_message = 'You taged in leads activity follow up';
                 $action_url = "follow_up/lead_activity/".$lead_id;
                 $ad_data['lead_id'] = $lead_id;
-                $this->home_model->insert('tblfollowupleadactivity',$ad_data);
+
+                $insert_id = $this->home_model->insert('tblfollowupleadactivity',$ad_data);
             }        
 
             if (!empty($tag_staff_ids)){
                 $staff_ids = explode(",", $tag_staff_ids);
                 foreach ($staff_ids as $staff_id) {
-                    $n_data = array(
-                        'description' => $tag_message,
-                        'staff_id' => $staff_id,
-                        'fromuserid' => get_staff_user_id(),
-                        'table_id' => $table_id,
-                        'isread' => 0,
+
+                    $tag_notification_arr = array(
+                        'activity_id' => $insert_id,
                         'module_id' => $module_id,
-                        'link'  => $action_url,
-                        'date' => date('Y-m-d H:i:s'),
-                        'date_time' => date('Y-m-d H:i:s')
+                        'table_id' => $table_id,
+                        'fromuserid' => get_staff_user_id(),
+                        'touserid' => $staff_id,
+                        'description' => $tag_message,
+                        'link'  => $action_url
                     );
-
-                    $this->home_model->insert('tblmasterapproval', $n_data);
-
-                    //Sending Mobile Intimation
-                    $token = get_staff_token($staff_id);
-                    $title = 'Schach';
-                    $message = $tag_message;
-                    sendFCM($message, $title, $token, $page = 2);
+                    send_activitytag_notification($tag_notification_arr);
+                    
                 }
             }
 
@@ -1900,4 +1847,6 @@ class Follow_up extends Admin_controller
         
         $this->load->view('admin/follow_up/special_lead_activity', $data);
     }
+
+    
 }

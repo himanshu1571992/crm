@@ -31,7 +31,8 @@ class Productcustom extends Admin_controller {
             }
             if ($id == '') {
 
-                $ad_data = array(                            
+                $ad_data = array(          
+                    'added_by' => get_staff_user_id(),                  
                     'name' => $name,
                     'field_for' => $field_for,
                     'type' => $type,
@@ -137,7 +138,8 @@ class Productcustom extends Admin_controller {
                     $final_category = 4;
                 }
 
-                $ad_data = array(                            
+                $ad_data = array(    
+                    'added_by' => get_staff_user_id(),                        
                     'product_cat_id' => $product_cat_id,
                     'product_sub_cat_id' => $product_sub_cat_id,
                     'parent_category_id' => $parent_category_id,

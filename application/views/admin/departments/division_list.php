@@ -25,6 +25,7 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Title</th>
                                         <th>Status</th>
                                         <th>DateTime</th>
@@ -46,6 +47,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? '<span class="badge badge-info">'.get_employee_fullname($row->added_by).'</span>' : '--'; ?></td>
                                                 <td><?php echo cc($row->title); ?></td>
                                                 <td><?php echo $toggleActive;?></td>
                                                 <td><?php echo _d($row->created_at);?></td>

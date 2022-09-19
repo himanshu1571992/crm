@@ -27,8 +27,10 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>City</th>
                                         <th>State</th>
+                                        <th>Created At</th>
                                         <th class="text-center">Action</th>
                                       </tr>
                                     </thead>
@@ -40,8 +42,10 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? get_employee_fullname($row->added_by) : 'N/A'; ?></td>
                                                 <td><?php echo cc($row->name);?></td>
                                                 <td><?php echo cc(value_by_id('tblstates',$row->state_id,'name'));?></td>
+                                                <td><?php echo ($row->created_at != '') ? _d($row->created_at) : '--'; ?></td>
                                                 <td class="text-center">
                                                     <?php 
                                                     if(check_permission_page('88,98,256','edit')){

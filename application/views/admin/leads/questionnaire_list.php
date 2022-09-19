@@ -25,12 +25,13 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Question Name</th>
                                         <th>Type</th>
                                         <th>Order</th>
                                         <th>Size</th>
                                         <th>Status</th>
-                                        <th>Date</th>
+                                        <th>Created At</th>
                                         <th class="text-center">Action</th>
                                       </tr>
                                     </thead>
@@ -49,6 +50,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? get_employee_fullname($row->added_by) : 'N/A'; ?></td>
                                                 <td title="<?php echo cc($row->question); ?>"><?php echo limit_word(cc($row->question)); ?></td>
                                                 <td><?php if($row->type == 1) { echo "Input Box"; } elseif ($row->type == 2) { echo "Text Box"; } elseif ($row->type == 3) { echo "Selection Box"; } else { echo "Multi-Selection Box"; }  ?></td>
                                                 <td><?php echo $row->question_order;?></td>

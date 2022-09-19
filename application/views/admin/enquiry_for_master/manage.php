@@ -26,6 +26,7 @@
                         $_table_data = array(
 //                            '<span class="hide"> - </span><div class="checkbox mass_select_all_wrap"><input type="checkbox" id="mass_select_all" data-to-table="clients"><label></label></div>',
                             '#',
+                            'Added By',
                             _l('enquiry_for_name'),
                             _l('enquiry_for_color'),
                             _l('enquiry_for_order'),

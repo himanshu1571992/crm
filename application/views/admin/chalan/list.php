@@ -147,7 +147,10 @@
                                     ?>
                                     <tr>
                                         <td><?php echo ++$key; ?></td>
-                                        <td><?php echo '<a target="_blank" href="' . admin_url('Chalan/pdf/'.$value->id.'/?output_type=I'). '" >' .$value->chalanno. '</a>'; ?></td>
+                                        <td>
+                                            <?php echo '<a target="_blank" href="' . admin_url('Chalan/pdf/'.$value->id.'/?output_type=I'). '" >' .$value->chalanno. '</a>'; ?>
+                                            <?php echo get_creator_info($value->addedfrom, $value->datecreated); ?>
+                                        </td>
                                         <td><?php echo ($value->service_type == 1) ? 'Rent' : 'Sale'; ?></td>
                                         <td><a href="<?php echo admin_url('clients/client/'.$value->clientid); ?>" target="_blank"><?php echo cc($client_info->client_branch_name); ?></a></td>
                                         <td><?php echo _d($value->challandate); ?></td>

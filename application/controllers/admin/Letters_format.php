@@ -330,4 +330,86 @@ class Letters_format extends Admin_controller
         //$dompdf->stream($file_name);
         $dompdf->stream($file_name, array("Attachment" => false));
     }
+
+    /* this function use for confirmation letter download */
+    public function download_confirmation_letter($id) {
+        require_once APPPATH.'third_party/pdfcrowd.php';
+        
+        if (!$id) {
+            redirect(admin_url('staff'));
+        }
+        $staff_info = get_employee_info($id);
+        
+        if (empty($staff_info)) {
+            redirect(admin_url('staff'));
+        }
+        $format = $this->db->query("SELECT `content` FROM tbllettersformat WHERE lettertype_id = 5 and status = 1")->row();
+        $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
+        $file_name = "Confirmation letter - ".$employee_code;
+        $html = confirmation_letter($staff_info, $format);
+        
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        // Parameters
+        $x          = 280;
+        $y          = 820;
+        $text       = "{PAGE_NUM} of {PAGE_COUNT}";     
+        $font       = $dompdf->getFontMetrics()->get_font('Helvetica', 'normal');   
+        $size       = 8;    
+        $color      = array(0,0,0);
+        $word_space = 0.0;
+        $char_space = 0.0;
+        $angle      = 0.0;
+
+        $dompdf->getCanvas()->page_text(
+          $x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle
+        );
+        
+        //$dompdf->stream($file_name);
+        $dompdf->stream($file_name, array("Attachment" => false));
+    }
+
+    /* this function use for offer letter download */
+    public function download_offer_letter($id) {
+        require_once APPPATH.'third_party/pdfcrowd.php';
+        
+        if (!$id) {
+            redirect(admin_url('staff'));
+        }
+        $staff_info = get_employee_info($id);
+        
+        if (empty($staff_info)) {
+            redirect(admin_url('staff'));
+        }
+        $format = $this->db->query("SELECT `content` FROM tbllettersformat WHERE lettertype_id = 6 and status = 1")->row();
+        $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
+        $file_name = "Offer letter - ".$employee_code;
+        $html = offer_letter($staff_info, $format);
+        
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        // Parameters
+        $x          = 280;
+        $y          = 820;
+        $text       = "{PAGE_NUM} of {PAGE_COUNT}";     
+        $font       = $dompdf->getFontMetrics()->get_font('Helvetica', 'normal');   
+        $size       = 8;    
+        $color      = array(0,0,0);
+        $word_space = 0.0;
+        $char_space = 0.0;
+        $angle      = 0.0;
+
+        $dompdf->getCanvas()->page_text(
+        $x, $y, $text, $font, $size, $color, $word_space, $char_space, $angle
+        );
+        
+        //$dompdf->stream($file_name);
+        $dompdf->stream($file_name, array("Attachment" => false));
+    }
 }

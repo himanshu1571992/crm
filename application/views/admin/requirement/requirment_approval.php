@@ -88,6 +88,12 @@
           </div>
         <?php } ?>
         <div class="col-md-3">
+          <h4 for="expected_date" class="control-label"><u>Expected Date</u> : </h4>
+          <div class="form-group">
+              <span class="text-danger"><?php echo (!empty($requirement_info) && !empty($requirement_info->expected_date)) ? _d($requirement_info->expected_date) : "N/A"; ?></span>
+          </div>
+        </div>
+        <div class="col-md-3">
           <h4 for="warehouse_id" class="control-label"><u><?php echo _l('stock_remarks'); ?></u> : </h4>
           <div class="form-group">
               <span class="text-danger"><?php echo (!empty($requirement_info)) ? $requirement_info->remark : ""; ?></span>

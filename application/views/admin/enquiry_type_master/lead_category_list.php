@@ -36,10 +36,11 @@
                                         <thead>
                                             <tr>
                                                 <th>S.No</th>
+                                                <th>Added By</th>
                                                 <th>Title</th>
                                                 <th>Description</th>
                                                 <th>Status</th>
-                                                <th>DateTime</th>
+                                                <th>Created By</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -50,6 +51,7 @@
                                             ?>
                                                     <tr>
                                                         <td><?php echo ++$k; ?></td>
+                                                        <td><?php echo ($row->added_by > 0) ? get_employee_fullname($row->added_by) : 'N/A'; ?></td>
                                                         <td><?php echo cc($row->title); ?></td>
                                                         <td><?php echo (!empty($row->description)) ? $row->description : "--"; ?></td>
                                                         <td><div class="onoffswitch">

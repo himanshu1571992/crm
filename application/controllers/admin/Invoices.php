@@ -3375,7 +3375,7 @@ class Invoices extends Admin_controller
         }
 
 
-       $data['invoice_list'] = $this->db->query("SELECT * FROM `tblinvoices` as i LEFT JOIN `tblclientbranch` as cb ON i.clientid = cb.userid WHERE ".$where." ORDER BY id DESC ")->result();
+       $data['invoice_list'] = $this->db->query("SELECT i.* FROM `tblinvoices` as i LEFT JOIN `tblclientbranch` as cb ON i.clientid = cb.userid WHERE ".$where." ORDER BY id DESC ")->result();
 
        $data['invoice_amount'] = $this->db->query("SELECT sum(total) as ttl_amt from `tblinvoices` as i LEFT JOIN `tblclientbranch` as cb ON i.clientid = cb.userid WHERE ".$where_ttl." ")->row()->ttl_amt;
 

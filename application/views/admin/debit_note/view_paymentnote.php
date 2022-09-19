@@ -139,7 +139,10 @@
 											?>
 											<tr>
 												<td><?php echo $z++;?></td>
-												<td><?php echo $row->number;?></td>
+												<td>
+                                                    <?php echo $row->number;?>
+                                                    <?php echo get_creator_info($row->staff_id, $row->created_date); ?>
+                                                </td>
 												<td><a href="<?php echo admin_url('clients/client/'.$row->clientid);?>" target="_blank"><?php echo cc($client_info->client_branch_name); ?></a></td>
 												<td><?php echo _d($row->date); ?></td>
 												<td><?php echo $tt_amt; ?></td>

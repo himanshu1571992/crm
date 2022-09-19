@@ -51,6 +51,7 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Updated By</th>
                                         <th>Title</th>
                                         <th>For</th>
                                         <th>Type</th>
@@ -81,6 +82,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? get_employee_fullname($row->added_by) : 'N/A'; ?></td>
                                                 <td><?php echo $row->name;?></td>
                                                 <td><?php echo $for; ?></td>                                               
                                                 <td><?php echo $type; ?></td>

@@ -27,6 +27,7 @@ class Complains_model extends CRM_Model
         $ad_data["location"] = $data["location"];
         $ad_data["remark"] = $data["remark"];
         $ad_data["complain_date"] = $complain_date;
+        $ad_data["created_on"] = date("Y-m-d H:i:s");
         $ad_data["staff_id"] = get_staff_user_id();
         
         $insert = $this->home_model->insert('tblcomplains', $ad_data); 

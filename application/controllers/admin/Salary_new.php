@@ -40,8 +40,9 @@ class Salary_new extends Admin_controller
         // $where = "active = 1 AND taxable = 1 AND joining_date <= '" . $j_date . "'";
         // $where2 = "active = 1 AND taxable = 2 AND joining_date <= '" . $j_date . "'";
 
+        $staffdesignation_id = get_staff_info(get_staff_user_id())->designation_id;
         $data['staff_list'] = array();
-        if (is_admin() == 1){
+        if (is_admin() == 1 || $staffdesignation_id == 4){
             $branch_info = $this->home_model->get_result('tblcompanybranch', array('status' => 1), '');
             if (!empty($branch_info)){
                 foreach ($branch_info as $binfo) {

@@ -196,14 +196,28 @@ class Approval extends Admin_controller
             extract($this->input->post());
 
             $notification_info = $this->db->query("SELECT * from tblmasterapproval where  id = '".$id."' ")->row();
+            $for_activity = value_by_id('tblcrmmodules',$notification_info->module_id,'for_activity');
+            $fromuserid = $notification_info->fromuserid;
+
 
             $ad_data = array( 
-                            'readdate' => date('Y-m-d H:i:s'),
-                            'isread' => 1
-                        );                    
+                'readdate' => date('Y-m-d H:i:s'),
+                'isread' => 1
+            );                    
             $update = $this->home_model->update('tblmasterapproval', $ad_data,array('id'=>$id));  
 
-            echo admin_url($notification_info->link);
+            if($for_activity == 1){
+                $notification_list = $notification_info->link.'/'.$fromuserid;
+            }else{
+               $notification_list = $notification_info->link;   
+            }
+
+            /* this code use for check activity replied */
+            if ($notification_info->activity_replied == 1){
+                $this->home_model->delete('tblmasterapproval', array('id'=>$id));
+            }
+
+            echo admin_url($notification_list);
 
         }
 

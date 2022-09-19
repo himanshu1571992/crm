@@ -3337,6 +3337,7 @@ class Leads extends Admin_controller
             if ($id == '') {
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'question' => $question,
                     'type' => $type,
                     'is_required' => $is_required,

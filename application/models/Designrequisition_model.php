@@ -490,6 +490,7 @@ class Designrequisition_model extends CRM_Model
            $insertdata["remark_ids"] = $remark_ids;
            $insertdata["date"] = date("Y-m-d");
            $insertdata["remark"] = $data["remark"];
+           $insertdata["added_by"] = get_staff_user_id();
            $insertdata["created_at"] = $current_datetime;
            $insertdata["updated_at"] = $current_datetime;
 

@@ -322,27 +322,45 @@ class Tds extends Admin_controller
     }
 
     /* this use for add tds deduction */
-    public function add_tds_desuction(){
+    public function add_tds_deduction($id=''){
         if(!empty($_POST)){
             extract($this->input->post());
 
+            $tds_date = (!empty($tds_date)) ? db_date($tds_date) : date('Y-m-d');
             $sdata = array(
                 'addedby' => get_staff_user_id(),
                 'party_name' => $party_name,
                 'taxable_amount' => $taxable_amount,
                 'tds_amount' => $tds_amount,
                 'pan_no' => $pan_no,
-                'date' => date('Y-m-d'),
+                'date' => $tds_date,
                 'created_at' => date('Y-m-d H:i:s')
             );
 
-            $insert_id = $this->home_model->insert('tbltdsdeduction', $sdata);
-            if ($insert_id){
-                set_alert('success', 'TDS Deduction added succesfully');
-                redirect(admin_url('tds/tds_deduction_report'));
+            if ($id != ''){
+                unset($sdata['addedby']);
+                unset($sdata['created_at']);
+                $insert_id = $this->home_model->update('tbltdsdeduction', $sdata, array('id' => $id));
+                if ($insert_id){
+                    set_alert('success', 'TDS Deduction update succesfully');
+                    redirect(admin_url('tds/tds_deduction_report'));
+                }
+            }else{
+                $insert_id = $this->home_model->insert('tbltdsdeduction', $sdata);
+                if ($insert_id){
+                    set_alert('success', 'TDS Deduction added succesfully');
+                    redirect(admin_url('tds/tds_deduction_report'));
+                }
             }
         }
-        $data['title'] = 'Add TDS Deduction';
+
+        if ($id != ''){
+            $data['title'] = 'Edit TDS Deduction';
+            $data['tds_deduction_info'] = $this->db->query("SELECT * FROM `tbltdsdeduction` WHERE `id` = ".$id." ")->row();
+        }else{
+            $data['title'] = 'Add TDS Deduction';
+        }
+        
         $this->load->view('admin/tds/add_tds_deduction', $data);
     }
 
@@ -489,6 +507,13 @@ class Tds extends Admin_controller
             $this->home_model->update("tbltdsdeduction", array("tds_challan_id" => 0), array("tds_challan_id" => $id));
             set_alert('success', 'TDS challan deleted succesfully');
             redirect(admin_url('tds/tds_challan_list'));
+        }
+    }
+    public function delete_tds_deduction($id){
+        $response = $this->home_model->delete("tbltdsdeduction", array("id" => $id));
+        if ($response){
+            set_alert('success', 'TDS Deduction deleted succesfully');
+            redirect(admin_url('tds/tds_deduction_report'));
         }
     }
 

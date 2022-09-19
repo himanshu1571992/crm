@@ -58,8 +58,9 @@
                                         <thead>
                                             <tr>
                                                 <th>S.No</th>
+                                                <th>Added By</th>
                                                 <th>Title</th>
-                                                <th>Date Time</th>
+                                                <th>Created At</th>
                                                 <th>Status</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
@@ -82,8 +83,9 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo ++$k; ?></td>
+                                                        <td><?php echo ($row->added_by > 0) ? get_employee_fullname($row->added_by) : 'N/A'; ?></td>
                                                         <td><?php echo cc($row->title); ?></td>
-                                                        <td><?php echo _d($row->created_on); ?></td>
+                                                        <td><?php echo ($row->created_on != '0000-00-00 00:00:00') ? _d($row->created_on) : '--'; ?></td>
                                                         <td><?php echo "<span class='".$cls."'>".$status."</span>"?></td>
                                                         <td class="text-center">
                                                             <div class="btn-group">

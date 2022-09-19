@@ -86,6 +86,7 @@
                                           <th>S.No</th>
                                           <th>Request ID</th>
                                           <th>Department</th>
+                                          <th>Expected Date</th>
                                           <th>Remark</th>
                                           <th>Date</th>
                                           <th>Purchase Person Status</th>
@@ -144,21 +145,27 @@
                                                    $cls = "btn-warning";
                                                    $iapprove_status = "Pending";
                                                 }
+
+                                                $expected_date = (!empty($row->expected_date)) ? _d($row->expected_date) : 'N/A';
                                               ?>
                                               <tr>
-                                                  <td><?php echo $i++;?></td>
-                                                  <td><?php echo 'P-REQ-'.str_pad($row->id, 4, '0', STR_PAD_LEFT);?></td>
-                                                  <td><?php echo ($row->department_id > 0) ? value_by_id('tbldepartmentsmaster', $row->department_id, "name") : "--"; ?></td>
-                                                  <td><?php echo cc($row->remark);?></td>
-                                                  <td><?php echo date('d-m-Y h:i a',strtotime($row->created_at));?></td>
-                                                  <td style="color: <?php echo ($row->purchase_person_status == 1) ? 'Green' : 'Orange'; ?>"><?php echo ($row->purchase_person_status == 1) ? 'Taken' : 'Pending'; ?></td>
-                                                  <?php if ($row->approve_status == 0 && $row->purchase_person_status == 1){ ?>
-                                                    <td style="color: <?php echo ($row->approve_status == 1) ? 'Green' : 'Orange'; ?>"><?php echo ($row->approve_status == 1) ? 'Taken' : '<a href="javascript:void(0);" class="text-warning adminstatus" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">Pending</a>'; ?></td>
-                                                  <?php }else{ ?>
-                                                  <td style="color: <?php echo ($row->approve_status == 1) ? 'Green' : 'Orange'; ?>"><?php echo ($row->approve_status == 1) ? 'Taken' : 'Pending'; ?></td>
-                                                  <?php } ?>
-                                                  <td><?php echo $outputType; ?></td>
-                                                  <td>
+                                                    <td><?php echo $i++;?></td>
+                                                    <td>
+                                                        <?php echo 'P-REQ-'.str_pad($row->id, 4, '0', STR_PAD_LEFT);?>
+                                                        <?php echo get_creator_info($row->staff_id, $row->created_at); ?>
+                                                    </td>
+                                                    <td><?php echo ($row->department_id > 0) ? value_by_id('tbldepartmentsmaster', $row->department_id, "name") : "--"; ?></td>
+                                                    <td><?php echo $expected_date; ?></td>
+                                                    <td><?php echo cc($row->remark);?></td>
+                                                    <td><?php echo date('d-m-Y h:i a',strtotime($row->created_at));?></td>
+                                                    <td style="color: <?php echo ($row->purchase_person_status == 1) ? 'Green' : 'Orange'; ?>"><?php echo ($row->purchase_person_status == 1) ? 'Taken' : 'Pending'; ?></td>
+                                                    <?php if ($row->approve_status == 0 && $row->purchase_person_status == 1){ ?>
+                                                        <td style="color: <?php echo ($row->approve_status == 1) ? 'Green' : 'Orange'; ?>"><?php echo ($row->approve_status == 1) ? 'Taken' : '<a href="javascript:void(0);" class="text-warning adminstatus" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">Pending</a>'; ?></td>
+                                                    <?php }else{ ?>
+                                                    <td style="color: <?php echo ($row->approve_status == 1) ? 'Green' : 'Orange'; ?>"><?php echo ($row->approve_status == 1) ? 'Taken' : 'Pending'; ?></td>
+                                                    <?php } ?>
+                                                    <td><?php echo $outputType; ?></td>
+                                                    <td>
                                                         <?php echo '<button type="button" data-type="2" class="btn-sm ' . $cls . ' btn-sm status" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">' . $iapprove_status . '</button>'; ?>
                                                         <div class="btn-group pull-right">
                                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

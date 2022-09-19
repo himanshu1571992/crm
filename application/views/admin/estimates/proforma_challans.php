@@ -60,7 +60,6 @@
                                                 <th>Date</th>
                                                 <th>Customer Name</th>
                                                 <th>Service Type</th>
-                                                <th>Added By</th>
                                                 <th>Approve Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -83,12 +82,14 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $z++; ?></td>
-                                                <td><?php echo 'PC-'.sprintf("%'.05d\n", $row->id);?></td>
+                                                <td>
+                                                    <?php echo 'PC-'.sprintf("%'.05d\n", $row->id);?>
+                                                    <?php echo get_creator_info($row->addedfrom, $row->datecreated); ?>
+                                                </td>
                                                 <td><?php echo $delivery_Challan_no; ?></td>
                                                 <td><?php echo _d($row->date); ?></td>
                                                 <td><?php echo client_info($row->clientid)->client_branch_name; ?></td>
                                                 <td><?php echo $servicetype; ?></td>
-                                                <td><?php echo get_employee_name($row->addedfrom); ?></td>
                                                 <td><?php echo $approve_status; ?></td>
                                                 <td class="text-center">
                                                     <?php if ($row->approve_status != '1'){ ?>

@@ -185,7 +185,10 @@
                                         ?>
                                         <tr>
                                             <td><?php echo $i++; ?></td>
-                                            <td><?php echo '<a target="_blank" href="' . admin_url('estimates/list_estimates/' . $value->id) . '" onclick="init_estimate(' . $value->id . '); ">' . format_estimate_number($value->id) . '</a>'; ?></td>
+                                            <td>
+                                                <?php echo '<a target="_blank" href="' . admin_url('estimates/list_estimates/' . $value->id) . '" onclick="init_estimate(' . $value->id . '); ">' . format_estimate_number($value->id) . '</a>'; ?>
+                                                <?php echo get_creator_info($value->addedfrom, $value->datecreated); ?>
+                                            </td>
                                             <td><?php if(!empty($client_info)){ echo '<a target="_blank" href="' . admin_url('clients/client/' . $value->clientid) . '">' . cc($client_info->client_branch_name) . '</a>'; }else{ echo '--'; } ?></td>
                                             <td><?php echo $value->total; ?></td>
                                             <td><?php echo _d($value->date); ?></td>

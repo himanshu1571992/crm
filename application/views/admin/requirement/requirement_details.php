@@ -55,6 +55,10 @@
                     <span><?php echo 'P-REQ-'.str_pad($requirement_info->id, 4, '0', STR_PAD_LEFT);?></span>
                 </div>
                 <div class="col-md-3">
+                    <h5 style="font-size:15px;color:red;"><u>Expected Date :</u></h5>
+                    <span><?php echo (!empty($row->expected_date)) ? _d($row->expected_date) :'N/A'; ?></span>
+                </div>
+                <div class="col-md-3">
                     <h5 style="font-size:15px;color:red;"><u>Created At :</u></h5>
                     <span><?php echo _d($requirement_info->created_at); ?></span>
                 </div>

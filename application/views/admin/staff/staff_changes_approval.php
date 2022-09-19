@@ -1016,6 +1016,15 @@
                                                 <p class="card-text"><span style="font-size:17px; padding:6px; <?php echo $cls; ?>" class="badge badge-pill"><?php echo (isset($info->relieving_date) && $info->relieving_date != "0000-00-00") ? date('d/m/Y',strtotime($info->relieving_date)) : "";?></span></p>
                                             </div>
                                             <div class="card-body">
+                                                <h5 class="card-title">Resignation Date</h5>
+                                                <?php 
+                                                    if (!empty($curr_staff_info) && $curr_staff_info->resignation_date != $info->resignation_date){
+                                                        $relieving_count++; 
+                                                    }
+                                                    $cls = (!empty($curr_staff_info) && $curr_staff_info->resignation_date != $info->resignation_date) ? "background-color:red;" : ""; ?>
+                                                <p class="card-text"><span style="font-size:17px; padding:6px; <?php echo $cls; ?>" class="badge badge-pill"><?php echo (isset($info->resignation_date) && $info->resignation_date != "0000-00-00") ? date('d/m/Y',strtotime($info->resignation_date)) : "";?></span></p>
+                                            </div>
+                                            <div class="card-body">
                                                 <h5 class="card-title">Relieving Reason</h5>
                                                 <?php 
                                                     if (!empty($curr_staff_info) && $curr_staff_info->relieving_reason != $info->relieving_reason){

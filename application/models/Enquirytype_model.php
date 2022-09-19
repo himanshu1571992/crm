@@ -32,6 +32,7 @@ class Enquirytype_model extends CRM_Model {
      */
     public function add($data) {
 
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $data['updated_at'] = date("Y-m-d H:i:s");
         $this->db->insert($this->table_name, $data);
@@ -87,6 +88,7 @@ class Enquirytype_model extends CRM_Model {
      */
     public function addmainleadstatus($data) {
 
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $data['updated_at'] = date("Y-m-d H:i:s");
         $this->db->insert("tblmainenquirytypemaster", $data);

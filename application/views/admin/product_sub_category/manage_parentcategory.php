@@ -28,6 +28,7 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Root Category</th>
                                         <th>Parent Category</th>
                                         <th>Status</th>
@@ -48,6 +49,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? '<span class="badge badge-info">'.get_employee_fullname($row->added_by).'</span>' : '--'; ?></td>
                                                 <td><?php echo value_by_id('tblproductsubcategory',$row->root_category_id,'name'); ?></td>
                                                 <td><?php echo $row->name;?></td>
                                                 <td><?php echo $toggleActive;?></td>

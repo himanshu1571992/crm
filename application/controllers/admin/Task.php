@@ -1149,20 +1149,26 @@ class Task extends Admin_controller
 
 
 
-    public function activity_log($id = '')
+    public function activity_log($id = '', $from_user_id = "")
     {
     	$data['id'] = $id;
     	$data['activity_log'] = $this->home_model->get_result('tbltask_activity_log', array('task_id'=>$id), '');
     	if(!empty($_POST)){
     		extract($this->input->post());
 
+    		$this->home_model->delete("tblmasterapproval", array("module_id" => 58, "table_id" => $id, "staff_id" => get_staff_user_id()));
+
 			/* this is for check notification update */
-            $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$id."' and staff_id = '".get_staff_user_id()."' and module_id = 60")->result();
-            if (!empty($chk_notification)){
-                foreach ($chk_notification as $value) {
-                    $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
-                }
-            }
+            // $chk_notification = $this->db->query("SELECT `id` FROM `tblmasterapproval` where table_id = '".$id."' and staff_id = '".get_staff_user_id()."' and module_id = 60")->result();
+            // if (!empty($chk_notification)){
+            //     foreach ($chk_notification as $value) {
+            //         $this->home_model->update("tblmasterapproval", array("status" => 1), array("id" => $value->id));
+            //     }
+            // }
+				
+			/* this code use for check tagging information */
+            send_activity_replied(60, $id, $from_user_id, get_staff_user_id());
+
 			if(empty($description)){
 				set_alert('danger', 'Activity cannot be empty!');
 				redirect($_SERVER['HTTP_REFERER']);
@@ -1182,24 +1188,16 @@ class Task extends Admin_controller
 				if (!empty($tag_staff_ids)){
 					$staff_ids = explode(",", $tag_staff_ids);
 					foreach ($staff_ids as $staff_id) {
-						$n_data = array(
-							 'description' => 'You taged in Task activity Log',
-							 'staff_id' => $staff_id,
-							 'fromuserid' => get_staff_user_id(),
-							 'table_id' => $id,
-							 'isread' => 0,
-							 'module_id' => 60,
-							 'link'  => "task/activity_log/".$id,
-							 'date' => date('Y-m-d H:i:s'),
-							 'date_time' => date('Y-m-d H:i:s')
-						 );
-						 $this->home_model->insert('tblmasterapproval', $n_data);
- 
-						//Sending Mobile Intimation
-						$token = get_staff_token($staff_id);
-						$title = 'Schach';
-						$message = 'You taged in Task activity Log';
-						$send_intimation = sendFCM($message, $title, $token, $page = 2);
+						$tag_notification_arr = array(
+                            'activity_id' => $insert_1,
+                            'module_id' => 60,
+                            'table_id' => $id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in Task activity Log',
+                            'link'  => "task/activity_log/".$id
+                        );
+                        send_activitytag_notification($tag_notification_arr);
 					}
 				}
 				set_alert('success', 'New Activity Add Successfully');
@@ -1402,25 +1400,32 @@ class Task extends Admin_controller
 
     	if(!empty($_POST)){
     		extract($this->input->post());
+    		/*echo '<pre/>';
+    		print_r($_POST);
+    		die;*/
 
+			$this->home_model->delete("tblmasterapproval", array("module_id" => 58, "table_id" => $id));
+    		if(!empty($due_date)){
+    			//For Person who have assinged the task
+    			$this->home_model->update('tbltasks', array('due_date'=>db_date($due_date)), array('id'=>$id));
 
-    		$where_arr = array(
-		                    'task_id' => $id,
-		                    'staff_id' => get_staff_user_id()
-		                );
+    			set_alert('success', 'Task updated Successfully');
+		        redirect(admin_url('Task/added_by_me'));
+    		}else{
+    			//For Task Assigned person
+    			$where_arr = array(
+	                'task_id' => $id,
+	                'staff_id' => get_staff_user_id()
+	            );
+	            $udpate = $this->home_model->update('tbltaskassignees',array('task_status'=>$status),$where_arr);
+	            if($udpate){
+			   		update_masterapproval_single(get_staff_user_id(),25,$id,$status);
 
-		    $udpate = $this->home_model->update('tbltaskassignees',array('task_status'=>$status),$where_arr);
-		    /*echo $this->db->last_query();
-		    die;*/
+				   	set_alert('success', 'Task updated Successfully');
+		            redirect(admin_url('Task/added_for_me'));
+			   }
 
-		   if($udpate){
-		   		$this->home_model->delete("tblmasterapproval", array("module_id" => 58, "table_id" => $id));
-		   		update_masterapproval_single(get_staff_user_id(),25,$id,$status);
-
-			   	set_alert('success', 'Task updated Successfully');
-	            redirect(admin_url('Task/added_for_me'));
-		   }
-
+    		}
     	}
 
     	$this->load->view('admin/task/task_details', $data);

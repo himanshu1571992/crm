@@ -58,6 +58,10 @@
                  <span><?php echo (isset($requirement_info) && $requirement_info->department_id > 0) ? value_by_id('tbldepartmentsmaster', $requirement_info->department_id, "name") : "--"; ?></span>
              </div>
              <div class="col-md-3">
+                 <h5 style="font-size:15px;color:red;"><u>Expected Date :</u></h5>
+                 <span><?php echo (!empty($requirement_info->expected_date)) ? _d($requirement_info->expected_date) :'N/A'; ?></span>
+             </div>
+             <div class="col-md-3">
                  <h5 style="font-size:15px;color:red;"><u>Remark :</u></h5>
                  <span><?php echo $requirement_info->remark; ?></span>
              </div>
