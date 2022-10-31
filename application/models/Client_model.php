@@ -62,7 +62,11 @@ class Client_model extends CRM_Model {
             $data["sales_parson"] = implode(",", $data["sales_parson"]);
         }
         $branch_with_location = $data['branch_with_location'];
+        $vendor_id = $data['vendor_id'];
+        unset($data['vendor_id']);
         unset($data['branch_with_location']);
+        $data['addedfrom'] = get_staff_user_id();
+        $data['datecreated'] = date('Y-m-d H:i:s');
         $this->db->insert($this->table_name, $data);
         $insert_id = $this->db->insert_id();
         unset($data['password']);
@@ -75,7 +79,7 @@ class Client_model extends CRM_Model {
         }else{
             $data['client_branch_name']=$data['company'];
         }
-        
+        $data['vendor_id'] = $vendor_id;
 		$this->db->insert('tblclientbranch', $data);
         if ($insert_id) {
 
@@ -95,8 +99,6 @@ class Client_model extends CRM_Model {
 
         $this->db->where('userid', $id);
         $this->db->update($this->table_name, $data);
-
-
 
         if ($this->db->affected_rows() > 0) {
             return true;

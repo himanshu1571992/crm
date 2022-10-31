@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $aColumns = [
 //    '`id`',
     '`id`',
+    '`added_by`',
     '`category_id`',
     '`leave_count`',
     '`status`',
@@ -27,7 +28,8 @@ foreach ($rResult as $aRow) {
 
     // #
     $row[] = $i++;
-    
+    $row[] = ($aRow['added_by'] > 0) ? get_employee_fullname($aRow['added_by']) : 'N/A';
+
     $url = admin_url('leaves/add_setting/' . $aRow['id']);
 
     $user_name_html = '<a href="' . $url . '">' . get_leave_categories_by_ids($aRow['category_id']) . '</a>';

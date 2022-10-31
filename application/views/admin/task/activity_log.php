@@ -54,6 +54,7 @@
                                     <?php //echo render_textarea('description','','',array('placeholder'=>_l('enter_activity')),array(),'mtop15'); ?>
                                     <div class="text-right">
                                        <input type="hidden" name="tag_staff_ids" class="staff_ids">
+                                       <input type="hidden" name="tag_viewstaff_ids" class="view_staff_ids">
                                        <button class="btn btn-info"><?php echo _l('submit'); ?></button>
                                     </div>
                                  </div>

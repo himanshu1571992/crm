@@ -94,6 +94,7 @@
                                                     $ttlqty = 0;
                                                     $ttlrate = 0;
                                     									foreach($quotation_info as $value){
+                                                                            if($value->id > 0){
                                                         $ttlqty += $value->qty;
                                                         $ttlrate += $value->qty*$value->rate;
                                     							?>
@@ -107,6 +108,7 @@
                                     										</tr>
                                     							<?php
                                     									}
+                                                                        }
                                   								?>
                               								 </tbody>
                                                 <tfoot style="background-color:#e5e7eb;">

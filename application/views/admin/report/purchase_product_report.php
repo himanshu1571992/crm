@@ -111,7 +111,7 @@
                                                 if (isset($f_date) && !empty($f_date)) {
                                                     echo $f_date;
                                                 }
-                                                ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                ?>" aria-invalid="false" type="text" required><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -120,7 +120,7 @@
                                                 if (!empty(isset($t_date) && $t_date)) {
                                                     echo $t_date;
                                                 }
-                                                ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                ?>" aria-invalid="false" type="text" required><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                                             </div>
                                         </div>
                                         <div class="form-group col-md-2">
@@ -144,31 +144,68 @@
                                             <th>S.No</th>
                                             <th>Product Name</th>
                                             <th>Product ID</th>
+                                            <th>Product Category</th>
                                             <th>Division</th>
                                             <th>Sub Division</th>
                                             <th>Product Qty</th>
+                                            <th>Avg. Rate</th>
+                                            <th>Min Qty</th>
+                                            <th>Max Qty</th>
+                                            <th>Purchase Qty As Per Year</th>
+                                            <th>Purchase Qty As Per Months</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
+                                            
                                             if (!empty($purchase_product_list)) {
                                                 foreach ($purchase_product_list as $key => $value) {
+                                                    
                                                     $f_date = (isset($f_date) && !empty($f_date)) ? $f_date : "";
                                                     $t_date = (isset($t_date) && !empty($t_date)) ? $t_date : "";
                                                     $vendor_id = (isset($vendor_id) && !empty($vendor_id)) ? $vendor_id : "";
+
+                                                    $diff = abs(strtotime(db_date($f_date)) - strtotime(db_date($t_date)));
+                                                    $years = floor($diff / (365*60*60*24))+1;
+
+
+                                                    //New Code for month calculation
+                                                    $ts1 = strtotime(db_date($f_date));
+                                                    $ts2 = strtotime(db_date($t_date));
+
+                                                    $year1 = date('Y', $ts1);
+                                                    $year2 = date('Y', $ts2);
+
+                                                    $month1 = date('m', $ts1);
+                                                    $month2 = date('m', $ts2);
+
+                                                    $months = (($year2 - $year1) * 12) + ($month2 - $month1);
+                                                    $months += 1;
+
+
+                                                    //$months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24))+1;
+                                                    $purchaseqtyasyear = ($value->total_qty/abs($years));
+                                                    $purchaseqtyasmonth = ($value->total_qty/abs($months));
+                                                    $avg_rate = ($value->ttl_price/$value->ttlproductrow);
                                         ?>
                                                 <tr>
                                                     <td><?php echo ++$key; ?></td>
-                                                    <td><?php echo (!empty($value->product_name)) ? cc($value->product_name). product_code($value->product_id) : "--"; ?></td>
-                                                    <td><?php echo product_code($value->product_id); ?></td>
+                                                    <td><?php echo (!empty($value->product_name)) ? cc($value->product_name) : "--"; ?></td>
+                                                    <td><?php echo 'PRO-'.$value->product_id; ?></td>
+                                                    <td><span class="badge badge-info"><?php echo cc(get_product_category($value->product_cat_id)); ?></span></td>
                                                     <td><?php echo ($value->division_id > 0) ? value_by_id("tbldivisionmaster",$value->division_id, "title") : "--";?></td>
                                                     <td><?php echo ($value->sub_division_id > 0) ? value_by_id("tblsubdivisionmaster",$value->sub_division_id, "title") : "--";?></td>
-                                                    <td><?php echo "<a target='_blank' href='".admin_url("report/get_purchaseorder_list?product_id=".$value->product_id)."&vendor_id=".$vendor_id."&f_date=".$f_date."&t_date=".$t_date."&type=".$type."'><span class='label label-success'>".$value->total_qty."</span></a>"; ?></td>
+                                                    <td><?php echo "<a target='_blank' href='".admin_url("report/get_purchaseorder_list?product_id=".$value->product_id)."&vendor_id=".$vendor_id."&f_date=".$f_date."&t_date=".$t_date."&type=".$type."'><span class='label label-success'>".number_format($value->total_qty, 2, '.', ',')."</span></a>"; ?></td>
+                                                    <td><?php echo number_format($avg_rate, 2, '.', ','); ?></td>
+                                                    <td><?php echo $value->min_qty; ?></td>
+                                                    <td><?php echo $value->max_qty; ?></td>
+                                                    <td><?php echo round($purchaseqtyasyear); ?></td>
+                                                    <td><?php echo round($purchaseqtyasmonth); ?></td>
                                                 </tr>
                                         <?php
                                                 }
                                             } else {
-                                                echo '<tr><td class="text-center" colspan="6"><h5>Record Not Found</h5></td></tr>';
+                                                echo '<tr><td class="text-center" colspan="12"><h5>Record Not Found</h5></td></tr>';
                                             }
                                         ?>
                                     </tbody>

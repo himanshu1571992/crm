@@ -111,8 +111,14 @@
                                                         }
                                                         ?>
                                                         <tr>
-                                                            <td><?php echo $i++;?></td>
-                                                            <td><?php echo cc($row->name);?></td>
+                                                            <td>
+                                                                <?php echo $i++;?>
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                                <?php echo cc($row->name);?>
+                                                            </td>
                                                             <td><?php echo $designationname; ?></td>
                                                             <td><?php echo cc(value_by_id('tblexpensetype',$row->type_id,'name')); ?></td>
                                                             <td class="text-center">

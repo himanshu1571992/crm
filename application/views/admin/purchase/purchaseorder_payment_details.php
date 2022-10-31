@@ -45,7 +45,7 @@
                 <div class="panel_s">
                     <div class="panel-body">
                         <div class="row">
-
+                            
                             <?php
                             $po_info = $this->db->query("SELECT * from tblpurchaseorder where id = '".$payment_info['po_id']."' ")->row();
                             $payment_list = $this->db->query("SELECT * from tblpurchaseorderpayments where po_id = '".$payment_info['po_id']."' and status = 1 ")->result();
@@ -53,6 +53,23 @@
                             $po_debitnote = $this->db->query("SELECT SUM(totalamount) as ttldebit_amt FROM `tblpurchasedabitnote`  WHERE vender_id = '".$po_info->vendor_id."' AND complete = 0")->row();
                             $ttlpaidamount = $this->db->query("SELECT SUM(approved_amount) as ttlamount from tblpurchaseorderpayments where po_id = '".$payment_info['po_id']."' and status = 1 ")->row()->ttlamount;
                             ?>
+
+                            <div class="col-md-12">
+                                <div class="row panelHead">
+                                    <div class="col-xs-12 col-md-6">
+                                        <h4>
+                                        <?php  
+                                            $title = "Purchase Order Payment Approval";
+                                            if ((isset($po_info->order_type)) && $po_info->order_type == 2){
+                                                $title = "Work Order Payment Approval";
+                                            }
+                                            echo $title;
+                                        ?>
+                                     </h4>
+                                    </div>
+                                </div>
+                                <hr class="hr-panel-heading">
+                            </div>
                             <h3 style="text-align:center">Total On Account Amount : <span style="color:red">(<?php echo (!empty($venderpayment->total_amt) ? $venderpayment->total_amt : "0.00"); ?>/-)</span><br>
                             <a style="align:center" title="View PDF" target="_blank" href="<?php  echo admin_url('purchase/download_pdf/'.$payment_info['po_id']); ?>"><?php echo "PO-".value_by_id('tblpurchaseorder',$payment_info['po_id'],'number'); ?> <small>(Click for Pdf)</small></a></h3>
 
@@ -400,6 +417,21 @@
 
 
 
+                            </div>
+                            <div class="col-md-12">
+                            
+                                <?php 
+                                    $html = '';
+                                    if(!empty($po_info->specification)){
+                                        $html .= '<h4 class="no-mtop mrg3"><u>Notes/Special Remarks :</u></h4><hr><div class="termsList">'.$po_info->specification.'</div><br><br>';
+
+                                    }
+                                    if(!empty($purchase_info->product_terms_and_conditions)){
+                                        $html .= '<h4 class="no-mtop mrg3"><u>Product Terms and Conditions:</u></h4><hr><div class="termsList">'.$po_info->product_terms_and_conditions.'</div><br><br>';
+                                    }
+                                    $html .= '<h4 class="no-mtop mrg3"><u>General Terms and Conditions:</u></h4><hr><div class="termsList">'.getAllTermsConditions($po_info->id, "purchase_order").'</div>';
+                                    echo $html;
+                                ?>         
                             </div>
                         </div>
 

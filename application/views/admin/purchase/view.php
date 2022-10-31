@@ -127,7 +127,7 @@
                                                             <input id="t_date" name="t_date" class="form-control datepicker" value="<?php echo (isset($s_tdate) && $section == "purchase_order" && $s_tdate != "") ? $s_tdate : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group col-md-3">
+                                                    <div class="form-group col-md-2">
                                                         <label for="mr_status" class="control-label">Material Status</label>
                                                         <select class="form-control selectpicker" data-live-search="true" name="mr_status">
                                                             <option value=""></option>
@@ -135,7 +135,15 @@
                                                             <option value="0" <?php echo (isset($mtr_status) && $section == "purchase_order" && $mtr_status == 0) ? 'selected' : ''; ?>>Material Not Received</option>
                                                         </select>
                                                     </div>
-                                                    <div class="form-group col-md-3">
+                                                    <div class="form-group col-md-2">
+                                                        <label for="po_for" class="control-label">PO For</label>
+                                                        <select class="form-control selectpicker" data-live-search="true" id="po_for" name="po_for">
+                                                            <option value=""></option>
+                                                            <option value="1" <?php echo (!empty($po_for) && $section == "purchase_order" && $po_for == 1) ? 'selected' : '' ; ?> >Regular</option>
+                                                            <option value="2" <?php echo (!empty($po_for) && $section == "purchase_order" && $po_for == 2) ? 'selected' : '' ; ?>>Special</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
                                                         <label for="payment_percent" class="control-label">Payment Status</label>
                                                         <select class="form-control selectpicker" data-live-search="true" name="payment_percent">
                                                             <option value=""></option>
@@ -163,6 +171,7 @@
                                                                     <th width="15%">Supplier</th>
                                                                     <th width="5%">Warehouse/Site</th>
                                                                     <th width="8%">PO Amount</th>
+                                                                    <th width="8%">PO For</th>
                                                                     <th width="10%">Payment Percent</th>
                                                                     <th width="10%">Payment Status</th>
                                                                     <th width="10%">MR Status</th>
@@ -181,12 +190,14 @@
 
                                                                     foreach ($purchaseorder_list as $row) {
 
+                                                                        $po_renawal_count = 0;
                                                                         if ($row->status == 0) {
                                                                             $status = 'Pending';
                                                                             $cls = 'btn-warning';
                                                                         } elseif ($row->status == 1) {
                                                                             $status = 'Approved';
                                                                             $cls = 'btn-success';
+                                                                            $po_renawal_count += 1;
                                                                         } elseif ($row->status == 2) {
                                                                             $status = 'Rejected';
                                                                             $cls = 'btn-danger';
@@ -197,6 +208,7 @@
                                                                             $status = 'On Hold';
                                                                             $cls = 'btn-warning onholdbtn';
                                                                         }
+                                                                       
                                                                         $po_percent = "";
                                                                         $percent = get_purchase_percent($row->id, $row->totalamount);
 
@@ -206,6 +218,7 @@
                                                                         } elseif (!empty($payment_percent) && $payment_percent == 2 && $percent == 100) {
                                                                             $ttl_amt += ($row->status != 2) ? $row->totalamount : 0;
                                                                             $po_percent = $percent;
+                                                                            
                                                                         } elseif (!empty($payment_percent) && $payment_percent == 3 && $percent < 100 && $percent > 0) {
                                                                             $ttl_amt += ($row->status != 2) ? $row->totalamount : 0;
                                                                             $po_percent = $percent;
@@ -217,9 +230,11 @@
                                                                             $ttl_amt += ($row->status != 2) ? $row->totalamount : 0;
                                                                         }
                                                                         
+                                                                        
                                                                         $percent_cls = "btn-info";
                                                                         if ($percent == 100) {
                                                                             $percent_cls = "btn-success";
+                                                                            $po_renawal_count += 1;
                                                                         } elseif ($percent > 100) {
                                                                             $percent_cls = "btn-danger";
                                                                         } elseif ($percent == '0.00') {
@@ -261,6 +276,7 @@
                                                                                 $pmt_status = "<span class='badge badge-success' style='background-color:#84c529;padding: 6px;'>Request <br> Approved <br> ".$last_approved_payment."</span>";
                                                                             } else {
                                                                                 if ($approved_amount >= $row->totalamount) {
+                                                                                    $po_renawal_count += 1;
                                                                                     $pmt_status = "<span class='badge badge-success' style='background-color:#84c529;padding: 6px;'>Completed</span>";
                                                                                 } else {
                                                                                     $pmt_status = "<span class='badge badge-info' style='background-color:#03a9f4;padding: 6px;'>Partial <br> Payment</span>";
@@ -287,6 +303,7 @@
                                                                                 $mr_info = $this->db->query("SELECT * FROM `tblmaterialreceipt` WHERE `po_id` = '".$row->id."' AND `status` = '1' ORDER BY id DESC")->row();
                                                                                 $mr_status = '<a href="javascript:void(0);" data-toggle="modal" data-id="' . $row->id . '" data-type="material_receipt" class="uploadfilelist" data-target="#uploadfilesmodel"><span class="btn-sm btn-success">Completed</span></a>';
                                                                                 if (!empty($mr_info)){
+                                                                                    $po_renawal_count += 1;
                                                                                     $mr_number = (!empty($mr_info->numer)) ? $mr_info->numer : 'MR-' . $mr_info->id;
                                                                                     $mr_status .= '<br><br><a class="label label-info" href="'.admin_url('purchase/mr_details/' . $mr_info->id).'" target="_blank" >'.$mr_number.'</a>';
                                                                                 }
@@ -295,6 +312,9 @@
                                                                             }
                                                                             $chk_purchase_invoice = $this->db->query("SELECT `id`,`totalamount`,`created_at` FROM `tblpurchaseinvoice` WHERE `po_id` = '" . $row->id . "' ORDER BY id DESC")->row();
                                                                             if (!empty($chk_purchase_invoice)) {
+                                                                                if ($chk_purchase_invoice->totalamount == $row->totalamount){
+                                                                                    $po_renawal_count += 1;
+                                                                                }
                                                                                 
                                                                                 $pi_status = '<a href="javascript:void(0);" data-toggle="modal" data-id="' . $row->id . '" data-type="purchase_invoice" class="uploadfilelist" data-target="#uploadfilesmodel"><span style="font-size: 10px;" class="btn-sm btn-success">Completed</span></a>';
                                                                                 $pi_status .= ($chk_purchase_invoice->totalamount == $row->totalamount) ? '<br><br><span class="btn-sm btn-success" style="font-size: 10px;">Matched</span>' : '<br><br><span class="btn-sm btn-danger" style="font-size: 10px;">Not Matched</span>';
@@ -313,18 +333,38 @@
 
                                                                             $po_number = (is_numeric($row->number)) ? 'PO-' . $row->number : $row->number;
                                                                             $pickup_ho = $this->db->query("SELECT * from `tblchallanprocess` where `type` = 2 and `po_id` = '".$row->id."' and `for` = 2 ")->row();
+
+                                                                            if ($row->complete == 1 && !empty($chk_purchase_invoice)) {
+                                                                                $po_renawal_count += 1;
+                                                                            }
+
+                                                                            $show_renewal_btn = 1;
+                                                                            if ($po_renawal_count == 6){
+                                                                                $show_renewal_btn = 0;
+                                                                                $chk_renewal_approval = $this->db->query("SELECT * from `tblmasterapproval` where `module_id` = '62' and `table_id` = '".$row->id."' ")->row();
+                                                                                if (!empty($chk_renewal_approval) && $chk_renewal_approval->status == 1){
+                                                                                    $show_renewal_btn = 1;
+                                                                                }
+                                                                            }
+                                                                            
+                                                                            
+                                                                            // $creatornotes = "<div class='col-md-12'><span class='text-info'>Note&nbsp;:&nbsp;</span><span>".$row->adminnote."</span></div>";
                                                                             ?>
                                                                             <tr><td>
                                                                                     <?php echo $z++; ?>
-                                                                                    <?php echo get_creator_info($row->staff_id, $row->created_at); ?>
                                                                                 </td>
                                                                                 <td>
                                                                                     <a  title="View" target="_blank" href="<?php echo admin_url('purchase/download_pdf/' . $row->id); ?>"><?php echo $po_number; ?></a>
                                                                                 </td>
-                                                                                <td><?php echo date('d/m/Y', strtotime($row->date)); ?></td>
+                                                                                <td>
+                                                                                    <?php echo date('d/m/Y', strtotime($row->date)); ?>
+                                                                                    <?php echo get_creator_info($row->staff_id, $row->created_at); ?>
+                                                                                    <a href="javascript:void(0);" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="NOTE : <?php echo (!empty($row->adminnote)) ? cc($row->adminnote) : 'N/A'; ?>"><i class="fa fa-sticky-note-o" style="font-size:15px;color:#000" aria-hidden="true"></i></a>
+                                                                                </td>
                                                                                 <td><?php echo cc(value_by_id('tblvendor', $row->vendor_id, 'name')); ?></td>
                                                                                 <td><?php echo $warehouse; ?></td>
                                                                                 <td><?php echo $row->totalamount; ?></td>
+                                                                                <td><?php echo ($row->po_for == 1) ? '<span class="label label-info">Regular</span>':'<span class="label label-success">Special</span>'; ?></td>
                                                                                 <td><button type='button' class='btn-sm <?php echo $percent_cls; ?> percent' value="<?php echo $row->id; ?>" data-toggle='modal' data-target='#myModalpercent'><?php echo $percent . "%"; ?></button></td>
                                                                                 <td><?php echo $pmt_status; ?></td>
                                                                                 <td><?php echo $mr_status; ?></td>
@@ -336,7 +376,7 @@
                                                                                         $invoicecreated_date = date("Y-m-d", strtotime($chk_purchase_invoice->created_at));
                                                                                         if (!empty($row->tentative_complete_date)){
                                                                                             if ($row->tentative_complete_date < $invoicecreated_date){
-                                                                                                $diffdays = dateDiffInDays($row->tentative_complete_date, $invoicecreated_date);
+                                                                                                $diffdays = get_date_diff_indays($row->tentative_complete_date, $invoicecreated_date);
                                                                                                 if ($diffdays >= 1){
                                                                                                     echo "<br><span class='text-danger'>(Overdue by ".$diffdays." days)</span>";
                                                                                                 }
@@ -345,7 +385,7 @@
                                                                                     } else {
                                                                                         echo "<span class='btn-info btn-sm'>Open</span>";
                                                                                         if (!empty($row->tentative_complete_date)){
-                                                                                            $diffdays = dateDiffInDays($row->tentative_complete_date, date('Y-m-d'));
+                                                                                            $diffdays = get_date_diff_indays($row->tentative_complete_date, date('Y-m-d'));
                                                                                             if ($diffdays >= 1){
                                                                                                 echo "<br><span class='text-danger'>(Overdue by ".$diffdays." days)</span>";
                                                                                             }
@@ -395,8 +435,9 @@
                                                                                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                                                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                                                                             </button>
-                                                                                            <ul class="dropdown-menu dropdown-menu-right toggle-menu">
+                                                                                            <ul class="dropdown-menu dropdown-menu-right toggle-menu" style="width: max-content;">
                                                                                                 <li>
+                                                                                                    
                                                                                                     <?php
                                                                                                     if ($row->status == 1) {
                                                                                                         ?>
@@ -416,16 +457,29 @@
 
                                                                                                     <a style="color: red;" class="text-danger _delete" href="<?php echo admin_url('purchase/cancelpo/' . $row->id); ?>" data-status="1">CANCEL</a>
                                                                                                     <?php
-                                                                                                    if ((check_permission_page(40, 'delete')) && (empty($can_edit))) {
-                                                                                                        ?>
-                                                                                                        <a style="color: red;" class="text-danger _delete" href="<?php echo admin_url('purchase/deletepo/' . $row->id); ?>" data-status="1">DELETE</a>
-                                                                                                        <?php
-                                                                                                    }
-                                                                                                    if ($row->status == 1) {
-                                                                                                        ?>
-                                                                                                        <a target="_blank" href="<?php echo admin_url('purchase/purchaseorder_renewal/' . $row->id); ?>" data-status="1">RENEWAL</a>
-                                                                                                        <?php
-                                                                                                    }
+                                                                                                        if ((check_permission_page(40, 'delete')) && (empty($can_edit))) {
+                                                                                                    ?>
+                                                                                                            <a style="color: red;" class="text-danger _delete" href="<?php echo admin_url('purchase/deletepo/' . $row->id); ?>" data-status="1">DELETE</a>
+                                                                                                    <?php
+                                                                                                        }
+
+                                                                                                        if ($row->status == 1) {
+                                                                                                            if ($show_renewal_btn == 1){
+                                                                                                    ?>
+                                                                                                                <a target="_blank" href="<?php echo admin_url('purchase/purchaseorder_renewal/' . $row->id); ?>" data-status="1">RENEWAL</a>
+                                                                                                    <?php
+                                                                                                            }else{
+                                                                                                                $btntitle = 'Renewal For Approval';
+                                                                                                                if ($row->approval_for_renewal == 2){
+                                                                                                                    $btntitle = 'Rejected Renewal Approval';
+                                                                                                                }else if ($row->approval_for_renewal == 5){
+                                                                                                                    $btntitle = 'Hold Renewal Approval';
+                                                                                                                }
+                                                                                                    ?>          
+                                                                                                                <a href="javascript:void(0);" class="renewalapproval" data-id="<?php echo $row->id; ?>"><?php echo $btntitle; ?></a>
+                                                                                                    <?php            
+                                                                                                            }
+                                                                                                        }
                                                                                                     ?>
                                                                                                     <a href="javascript:void(0);" class="btn-with-tooltip send-email" data-id="<?php echo $row->id; ?>" data-vid="<?php echo $row->vendor_id; ?>"  data-target="#send_mainto_customer" id="send_mail" data-toggle="modal">
                                                                                                         Send Mail
@@ -435,6 +489,16 @@
                                                                                                 
                                                                                                 <?php
                                                                                                     if ($row->status == 1){
+                                                                                                        if ($row->proforma_invoice_id > 0){
+                                                                                                ?>
+                                                                                                        
+                                                                                                        <li><a target="_blank" href="<?php echo admin_url('purchase/proforma_invoice_view/' . $row->proforma_invoice_id); ?>"  >Converted TO PI</a></li>
+                                                                                                <?php        
+                                                                                                        }else{
+                                                                                                ?><li><a target="_blank" href="<?php echo admin_url('purchase/convert_proforma_invoice/' . $row->id); ?>"  >Convert To PI</a></li>
+                                                                                                        
+                                                                                                <?php            
+                                                                                                        }    
                                                                                                         if(!empty($pickup_ho)){
                                                                                                         ?>
                                                                                                             <li><button value="<?php echo $row->id; ?>" style="padding-left: 45px;padding-right: 45px;" val="2" type="button" class="btn-sm btn-info handover" data-toggle="modal" data-target="#handover_modal">Pickup HO</button></li>
@@ -474,7 +538,7 @@
                                                                 <tr>
                                                                     <td align="" colspan="5">Total</td>
                                                                     <td align=""><b><?php echo number_format($ttl_amt, 2, '.', ''); ?></b></td>
-                                                                    <td align="center" colspan="7"></td>
+                                                                    <td align="center" colspan="9"></td>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -566,6 +630,14 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-md-2">
+                                                        <label for="po_for" class="control-label">PO For</label>
+                                                        <select class="form-control selectpicker" data-live-search="true" id="po_for" name="po_for">
+                                                            <option value=""></option>
+                                                            <option value="1" <?php echo (!empty($po_for) && $section == "work_order" && $po_for == 1) ? 'selected' : '' ; ?> >Regular</option>
+                                                            <option value="2" <?php echo (!empty($po_for) && $section == "work_order" && $po_for == 2) ? 'selected' : '' ; ?>>Special</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-2">
                                                         <label for="payment_percent" class="control-label">Payment Status</label>
                                                         <select class="form-control selectpicker" data-live-search="true" name="payment_percent">
                                                             <option value=""></option>
@@ -593,6 +665,7 @@
                                                                     <th width="25%">Supplier</th>
                                                                     <th width="5%">Warehouse/Site</th>
                                                                     <th width="8%">PO Amount</th>
+                                                                    <th width="8%">PO For</th>
                                                                     <th width="10%">Payment Percent</th>
                                                                     <th width="10%">Payment Status</th>
                                                                     <th width="10%">MR Status</th>
@@ -610,13 +683,15 @@
                                                                     $z = 1;
 
                                                                     foreach ($workorder_list as $row) {
-
+                                                                        
+                                                                        $po_renawal_count = 0;
                                                                         if ($row->status == 0) {
                                                                             $status = 'Pending';
                                                                             $cls = 'btn-warning';
                                                                         } elseif ($row->status == 1) {
                                                                             $status = 'Approved';
                                                                             $cls = 'btn-success';
+                                                                            $po_renawal_count += 1;
                                                                         } elseif ($row->status == 2) {
                                                                             $status = 'Rejected';
                                                                             $cls = 'btn-danger';
@@ -650,6 +725,7 @@
                                                                         $percent_cls = "btn-info";
                                                                         if ($percent == 100) {
                                                                             $percent_cls = "btn-success";
+                                                                            $po_renawal_count += 1;
                                                                         } elseif ($percent > 100) {
                                                                             $percent_cls = "btn-danger";
                                                                         } elseif ($percent == '0.00') {
@@ -693,6 +769,7 @@
                                                                                 $pmt_status = "<span class='badge badge-success' style='background-color:#84c529;padding: 6px;'>Request <br> Approved <br> ".$last_approved_payment."</span>";
                                                                             } else {
                                                                                 if ($approved_amount >= $row->totalamount) {
+                                                                                    $po_renawal_count += 1;
                                                                                     $pmt_status = "<span class='badge badge-success' style='background-color:#84c529;padding: 6px;'>Completed</span>";
                                                                                 } else {
                                                                                     $pmt_status = "<span class='badge badge-info' style='background-color:#03a9f4;padding: 6px;'>Partial <br> Payment</span>";
@@ -730,12 +807,22 @@
                                                                                 $po_status .= ' <span style="color: green;"><i class="fa fa-registered" aria-hidden="true"></i></span>';
                                                                             }
                                                                             if ($row->complete == 1) {
+                                                                                $mr_info = $this->db->query("SELECT * FROM `tblmaterialreceipt` WHERE `po_id` = '".$row->id."' AND `status` = '1' ORDER BY id DESC")->row();
                                                                                 $mr_status = '<a href="javascript:void(0);" data-toggle="modal" data-id="' . $row->id . '" data-type="material_receipt" class="uploadfilelist" data-target="#uploadfilesmodel"><span class="btn-sm btn-success">Completed</span></a>';
+                                                                                if (!empty($mr_info)){
+                                                                                    $po_renawal_count += 1;
+                                                                                    $mr_number = (!empty($mr_info->numer)) ? $mr_info->numer : 'MR-' . $mr_info->id;
+                                                                                    $mr_status .= '<br><br><a class="label label-info" href="'.admin_url('purchase/mr_details/' . $mr_info->id).'" target="_blank" >'.$mr_number.'</a>';
+                                                                                }
                                                                             } else {
                                                                                 $mr_status = '<span class="btn-sm btn-warning">Pending</span>';
                                                                             }
-                                                                            $chk_purchase_invoice = $this->db->query("SELECT `id` FROM `tblpurchaseinvoice` WHERE `po_id` = '" . $row->id . "'")->row();
+                                                                            $chk_purchase_invoice = $this->db->query("SELECT `id`,`totalamount` FROM `tblpurchaseinvoice` WHERE `po_id` = '" . $row->id . "'")->row();
                                                                             if (!empty($chk_purchase_invoice)) {
+                                                                                if ($chk_purchase_invoice->totalamount == $row->totalamount){
+                                                                                    $po_renawal_count += 1;
+                                                                                }
+
                                                                                 $pi_status = '<a href="javascript:void(0);" data-toggle="modal" data-id="' . $row->id . '" data-type="purchase_invoice" class="uploadfilelist" data-target="#uploadfilesmodel"><span class="btn-sm btn-success" style="font-size: 10px;">Completed</span></a>';
                                                                                 $pi_status .= ($chk_purchase_invoice->totalamount == $row->totalamount) ? '<br><br><span class="btn-sm btn-success" style="font-size: 10px;">Matched</span>' : '<br><br><span style="font-size: 10px;" class="btn-sm btn-danger">Not Matched</span>';
                                                                             } else {
@@ -745,26 +832,43 @@
                                                                             $can_edit = $this->db->query("SELECT * from tblpurchaseorderapproval where po_id = '" . $row->id . "' and (approve_status = 1 || approve_status = 2) ")->row_array();
 
                                                                             $recon_edit = $this->db->query("SELECT * from tblpurchaseorderapproval where po_id = '" . $row->id . "' and approve_status = 4 ")->row_array();
-
+                                                                            $po_number = (is_numeric($row->number)) ? 'PO-' . $row->number : $row->number;
+                                                                            $pickup_ho = $this->db->query("SELECT * from `tblchallanprocess` where `type` = 2 and `po_id` = '".$row->id."' and `for` = 2 ")->row();
+                                                                            
                                                                             if (!empty($row->parent_ids)) {
                                                                                 $sub_po_exist = $this->db->query("SELECT id FROM `tblpurchaseorder` where id IN (" . $row->parent_ids . ") and id != '" . $row->id . "' ")->row();
                                                                             }
 
+                                                                            if ($row->complete == 1 && !empty($chk_purchase_invoice)) {
+                                                                                $po_renawal_count += 1;
+                                                                            }
+                                                                            $show_renewal_btn = 1;
+                                                                            if ($po_renawal_count == 6){
+                                                                                $show_renewal_btn = 0;
+                                                                                $chk_renewal_approval = $this->db->query("SELECT * from `tblmasterapproval` where `module_id` = '62' and `table_id` = '".$row->id."' ")->row();
+                                                                                if (!empty($chk_renewal_approval) && $chk_renewal_approval->status == 1){
+                                                                                    $show_renewal_btn = 1;
+                                                                                }
+                                                                            }
 
-                                                                            $po_number = (is_numeric($row->number)) ? 'PO-' . $row->number : $row->number;
-                                                                            $pickup_ho = $this->db->query("SELECT * from `tblchallanprocess` where `type` = 2 and `po_id` = '".$row->id."' and `for` = 2 ")->row();
+                                                                            
                                                                             ?>
                                                                             <tr><td>
                                                                                     <?php echo $z++; ?>
-                                                                                    <?php echo get_creator_info($row->staff_id, $row->created_at); ?>
+                                                                                    
                                                                                 </td>
                                                                                 <td>
                                                                                     <a  title="View" target="_blank" href="<?php echo admin_url('purchase/download_pdf/' . $row->id); ?>"><?php echo $po_number; ?></a>
                                                                                 </td>
-                                                                                <td><?php echo date('d/m/Y', strtotime($row->date)); ?></td>
+                                                                                <td>
+                                                                                    <?php echo date('d/m/Y', strtotime($row->date)); ?>
+                                                                                    <?php echo get_creator_info($row->staff_id, $row->created_at); ?>
+                                                                                    <a href="javascript:void(0);" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="NOTE : <?php echo (!empty($row->adminnote)) ? cc($row->adminnote) : 'N/A'; ?>"><i class="fa fa-sticky-note-o" style="font-size:15px;color:#000" aria-hidden="true"></i></a>
+                                                                                </td>
                                                                                 <td><?php echo cc(value_by_id('tblvendor', $row->vendor_id, 'name')); ?></td>
                                                                                 <td><?php echo $warehouse; ?></td>
                                                                                 <td><?php echo $row->totalamount; ?></td>
+                                                                                <td><?php echo ($row->po_for == 1) ? '<span class="label label-info">Regular</span>':'<span class="label label-success">Special</span>'; ?></td>
                                                                                 <td><button type='button' class='btn-sm <?php echo $percent_cls; ?> percent' value="<?php echo $row->id; ?>" data-toggle='modal' data-target='#myModalpercent'><?php echo $percent . "%"; ?></button></td>
                                                                                 <td><?php echo $pmt_status; ?></td>
                                                                                 <td><?php echo $mr_status; ?></td>
@@ -772,8 +876,23 @@
                                                                                 <td><?php
                                                                                     if ($row->complete == 1 && !empty($chk_purchase_invoice)) {
                                                                                         echo "<span class='btn-success btn-sm'>Closed</span>";
+                                                                                        $invoicecreated_date = date("Y-m-d", strtotime($chk_purchase_invoice->created_at));
+                                                                                        if (!empty($row->tentative_complete_date)){
+                                                                                            if ($row->tentative_complete_date < $invoicecreated_date){
+                                                                                                $diffdays = get_date_diff_indays($row->tentative_complete_date, $invoicecreated_date);
+                                                                                                if ($diffdays >= 1){
+                                                                                                    echo "<br><span class='text-danger'>(Overdue by ".$diffdays." days)</span>";
+                                                                                                }
+                                                                                            }
+                                                                                        }
                                                                                     } else {
                                                                                         echo "<span class='btn-info btn-sm'>Open</span>";
+                                                                                        if (!empty($row->tentative_complete_date)){
+                                                                                            $diffdays = get_date_diff_indays($row->tentative_complete_date, date('Y-m-d'));
+                                                                                            if ($diffdays >= 1){
+                                                                                                echo "<br><span class='text-danger'>(Overdue by ".$diffdays." days)</span>";
+                                                                                            }
+                                                                                        }
                                                                                     }
                                                                                     ?></td>
                                                                                 <td><?php echo $po_status; ?></td>
@@ -843,13 +962,26 @@
                                                                                                     if ((check_permission_page(40, 'delete')) && (empty($can_edit))) {
                                                                                                         ?>
                                                                                                         <a style="color: red;" class="text-danger _delete" href="<?php echo admin_url('purchase/deletepo/' . $row->id); ?>" data-status="1">DELETE</a>
-                                                                                                        <?php
-                                                                                                    }
-                                                                                                    if ($row->status == 1) {
-                                                                                                        ?>
-                                                                                                        <a target="_blank" href="<?php echo admin_url('purchase/purchaseorder_renewal/' . $row->id); ?>" data-status="1">RENEWAL</a>
-                                                                                                        <?php
-                                                                                                    }
+                                                                                                    <?php
+                                                                                                        }
+
+                                                                                                        if ($row->status == 1) {
+                                                                                                            if ($show_renewal_btn == 1){
+                                                                                                    ?>
+                                                                                                                <a target="_blank" href="<?php echo admin_url('purchase/purchaseorder_renewal/' . $row->id); ?>" data-status="1">RENEWAL</a>
+                                                                                                    <?php
+                                                                                                            }else{
+                                                                                                                $btntitle = 'Renewal For Approval';
+                                                                                                                if ($row->approval_for_renewal == 2){
+                                                                                                                    $btntitle = 'Rejected Renewal Approval';
+                                                                                                                }else if ($row->approval_for_renewal == 5){
+                                                                                                                    $btntitle = 'Hold Renewal Approval';
+                                                                                                                }
+                                                                                                    ?>          
+                                                                                                                <a href="javascript:void(0);" class="renewalapproval" data-id="<?php echo $row->id; ?>"><?php echo $btntitle; ?></a>
+                                                                                                    <?php            
+                                                                                                            }
+                                                                                                        }
                                                                                                     ?>
                                                                                                     <a href="javascript:void(0);" class="btn-with-tooltip send-email" data-id="<?php echo $row->id; ?>" data-vid="<?php echo $row->vendor_id; ?>"  data-target="#send_mainto_customer" id="send_mail" data-toggle="modal">
                                                                                                         Send Mail
@@ -858,6 +990,16 @@
                                                                                                 <li><a target="_blank" href="<?php echo admin_url('follow_up/po_activity/' . $row->id); ?>"  >Activity</a></li>
                                                                                                 <?php
                                                                                                     if ($row->status == 1){
+                                                                                                        if ($row->proforma_invoice_id > 0){
+                                                                                                ?>
+                                                                                                        
+                                                                                                        <li><a target="_blank" href="<?php echo admin_url('purchase/proforma_invoice_view/' . $row->proforma_invoice_id); ?>"  >Converted TO PI</a></li>
+                                                                                                <?php        
+                                                                                                        }else{
+                                                                                                ?><li><a target="_blank" href="<?php echo admin_url('purchase/convert_proforma_invoice/' . $row->id); ?>"  >Convert To PI</a></li>
+                                                                                                        
+                                                                                                <?php            
+                                                                                                        }    
                                                                                                         if(!empty($pickup_ho)){
                                                                                                         ?>
                                                                                                             <li><button value="<?php echo $row->id; ?>" style="padding-left: 45px;padding-right: 45px;" val="2" type="button" class="btn-sm btn-info handover" data-toggle="modal" data-target="#handover_modal">Pickup HO</button></li>
@@ -897,7 +1039,7 @@
                                                                 <tr>
                                                                     <td align="" colspan="5">Total</td>
                                                                     <td align=""><b><?php echo number_format($ttl_amt, 2, '.', ''); ?></b></td>
-                                                                    <td align="center" colspan="7"></td>
+                                                                    <td align="center" colspan="9"></td>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -1087,6 +1229,22 @@ array_push($editors, 'message');
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
+    </div>
+  </div>
+</div>
+<div id="renewalapproval_modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content ">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title handover_title">Renewal Approval</h4>
+        </div>
+        <div class="modal-body renewalapproval_data">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
     </div>
   </div>
 </div>
@@ -1548,6 +1706,27 @@ array_push($editors, 'message');
          $('.action_title').html(title);
          $('#date_type').html(date_type);
 
+    });
+
+
+    $(document).on('click', '.renewalapproval', function(){
+        
+        var po_id = $(this).data('id');
+        if (typeof po_id !== "undefined"){
+           
+            $.ajax({
+                type    : "GET",
+                url     : "<?php echo site_url('admin/purchase/get_renewalapproval_data/'); ?>"+po_id,
+                success : function(response){
+                    if(response != ''){
+                        $('.renewalapproval_data').html(response);
+                        $('.selectpicker').selectpicker('refresh');
+                        $('#renewalapproval_modal').modal('show');
+                    }
+                }
+            })
+        }
+        
     });
 </script>
 </body>

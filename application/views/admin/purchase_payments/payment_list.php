@@ -115,7 +115,10 @@ if(!empty($this->session->userdata('paymentinvoice_search'))){
                                             ?>
                                             <tr>
                                                 <td><?php echo ++$key; ?></td>
-                                                <td><a href="<?php echo admin_url('vendor/vendor/'.$value->vendor_id);?>" target="_blank"><?php echo cc(value_by_id('tblvendor',$value->vendor_id,'name')); ?></a></td>
+                                                <td>
+                                                    <?php echo get_creator_info($value->staff_id, $value->created_date); ?>
+                                                    <a href="<?php echo admin_url('vendor/vendor/'.$value->vendor_id);?>" target="_blank"><?php echo cc(value_by_id('tblvendor',$value->vendor_id,'name')); ?></a>
+                                                </td>
                                                 <td><?php echo $paymentmode; ?></td>
                                                 <td><?php echo $value->reference_no; ?></td>
                                                 <td><?php echo _d($value->date); ?></td> 

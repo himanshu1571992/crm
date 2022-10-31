@@ -171,6 +171,7 @@ if(!empty($s_tdate)){
                                             <th>Status</th>
                                             <th>Send Email</th>
                                             <th>Send Courier</th>
+                                            <th>Accounted Status</th>
                                             <th>Action</th>
                                         </tr>
 									</thead>
@@ -247,6 +248,17 @@ if(!empty($s_tdate)){
                                                         ?>
                                                     </div>
                                                     <a href="javascript:void(0);" data-target="#courierinfo" onclick="getcourierinfo('<?php echo $row->id; ?>');" data-toggle="modal" class="label label-success courier_model"><?php echo (!empty($courier_info)) ? 'VIEW':'SET'; ?></a>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                        $accounted_status = 0;
+                                                        $accounted_text = '<span class="btn-sm btn-warning">Pending</span>';
+                                                        if ($row->accounted_status > 0){
+                                                            $accounted_status = 1;
+                                                            $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
+                                                        }
+                                                    ?>
+                                                    <a href="<?php echo admin_url('debit_note/update_accounted_status/'.$row->id.'/debit_note'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
                                                 </td>
 												<td class="">
                                                     <?php if($row->status == 0){ ?>

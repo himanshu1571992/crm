@@ -74,8 +74,10 @@ if(!empty($s_fdate) && !empty($s_tdate)){
                                 <thead>
                                     <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Date</th>
                                         <th>Remark</th>
+                                        <th>Created At</th>
                                         <th class="text-center">Action</th>
                                       </tr>
                                 </thead>
@@ -88,8 +90,10 @@ if(!empty($s_fdate) && !empty($s_tdate)){
                                     ?>        
                                         <tr>
                                             <td><?php echo $i++; ?></td>
+                                            <td><?php echo get_employee_fullname($value->staff_id); ?></td>
                                             <td><?php echo date('d/m/Y',strtotime($value->salesdate)); ?></td>
                                             <td><?php echo $value->remark; ?></td>
+                                            <td><?php echo  _d($value->created_at); ?></td>
                                             <td class="text-center">                                         
                                                     <a href="<?php echo admin_url('staffSalesReport/view/'.$value->id); ?>" target="_blank" class="btn-sm btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                                     <?php if(check_permission_page(316,'edit')){?>

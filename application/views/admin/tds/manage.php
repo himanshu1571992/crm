@@ -125,7 +125,7 @@ if(!empty($this->session->userdata('invoice_search'))){
                                                     $debit_info = $this->db->query("SELECT * FROM tbldebitnote  where `number` = '".$row->debitnote_no."' ")->row();
                                                     $debitpayment_info = $this->db->query("SELECT * FROM tbldebitnotepayment  where `number` = '".$row->debitnote_no."' ")->row();  
                                                 }
-                                               
+                                                
                                                $client_info = client_info($row->client_id);
 
                                                if($row->status == 1){
@@ -138,10 +138,15 @@ if(!empty($this->session->userdata('invoice_search'))){
                                                     $status = 'Rejected';
                                                     $cls = 'btn-danger';
                                                 }
+                                                $added_by = value_by_id("tbltds_reconciliation", $row->main_id, "staff_id");
+                                                $created_date = value_by_id("tbltds_reconciliation", $row->main_id, "created_date");
                                             ?>                                                                                      
                                             <tr>
                                                 <td><?php echo $z++;?></td>
-                                                <td><a target="_blank" href="<?php echo admin_url('clients/client/'.$row->client_id); ?>"><?php echo (!empty($client_info)) ? cc($client_info->client_branch_name) : '--';  ?> </a></td>
+                                                <td>
+                                                    <?php echo get_creator_info($added_by, $created_date); ?>
+                                                    <a target="_blank" href="<?php echo admin_url('clients/client/'.$row->client_id); ?>"><?php echo (!empty($client_info)) ? cc($client_info->client_branch_name) : '--';  ?> </a>
+                                                </td>
                                                 <td><?php echo ($row->paymentmethod == 2) ? 'Invoice' : 'Debitnote';  ?></td>
                                                 <?php
                                                 if($row->paymentmethod == 2){

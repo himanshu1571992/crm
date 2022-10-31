@@ -34,8 +34,28 @@
                                 <div class="col-xs-12 col-md-6">
                                     <h4><?php echo $title; //if(check_permission_page(40,'create')){  ?></h4>
                                 </div>
+
+                                <?php 
+                                $btn_show = 0;
+                                $chk_poproformainvoice = $this->db->query("SELECT * FROM `tblpurchaseproformainvoice` WHERE `po_id`= '".$purchaseorder_info->id."' ")->row();
+                                $chk_mr = $this->db->query("SELECT * FROM `tblmaterialreceipt` WHERE `po_id`= '".$purchaseorder_info->id."' ")->row();
+                                $chk_invoice = $this->db->query("SELECT * FROM `tblpurchaseinvoice` WHERE `po_id`= '".$purchaseorder_info->id."' ")->row();
+                                $chk_payment_percent = $this->db->query("SELECT `value1` FROM `tbltermsandconditionsdetails` WHERE `master_id`= '1' AND `rel_id`= '".$purchaseorder_info->id."' AND `document_name` = 'purchase_order'")->row();
+                                $chk_payment_dispatch = $this->db->query("SELECT `value1` FROM `tbltermsandconditionsdetails` WHERE `master_id`= '2' AND `rel_id`= '".$purchaseorder_info->id."' AND `document_name` = 'purchase_order'")->row();
+                                if (empty($chk_payment_percent) && !empty($chk_invoice) && !empty($chk_mr)){
+                                    $btn_show = 1;
+                                }else if (!empty($chk_payment_percent) && !empty($chk_poproformainvoice)){
+                                    $btn_show = 1;
+                                }else if (!empty($chk_payment_dispatch->value1)){
+                                    $btn_show = 1;
+                                }else if ($purchaseorder_info->po_type == 2){
+                                    $btn_show = 1;
+                                }
+                                    
+                                ?>
                                 <div class="col-xs-12 col-md-6 text-right">
                                   <?php
+                                  if ($btn_show == 1){
                                       $percent = get_purchase_percent($purchaseorder_info->id, $purchaseorder_info->totalamount);
                                       if($percent > 100){
                                           $chk_refund_payment = $this->db->query("SELECT `id` FROM `tblpurchaseorderrefundpayment` WHERE `po_id` = '".$purchaseorder_info->id."' ")->row();
@@ -57,7 +77,13 @@
                                   <?php }else{ ?>
                                         <a href="<?php echo admin_url('purchase/purchaseorder_payment_add/' . $purchaseorder_info->id); ?>" class="btn btn-info">Add Payment Request</a>
                                   <?php } ?>
+                                  <?php 
+                                    }else{
+                                        echo '<span class="text-danger pull-right" style="font-size:15px;" >Can\'t Raise Payment Request</span>';
+                                    }
+                                ?>
                                 </div>
+                                
                             </div>
 
                             <hr class="hr-panel-heading">

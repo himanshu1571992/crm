@@ -81,15 +81,17 @@
                                     <table class="table" id="newtable">
                                         <thead>
                                             <tr>
-                                                <th>S.No.</th>
+                                                <th width="1%">S.No.</th>
                                                 <th>Name of Party</th>
                                                 <th>Type</th>                               
-                                                <th>Taxable Amount</th>                               
-                                                <th>TDS Amount</th>
+                                                <th width="10%">Paid Amount</th>                               
+                                                <th width="10%">Taxable Amount</th>                               
+                                                <th width="10%">TDS Amount</th>
+                                                <th>Booking Date</th>
                                                 <th>Date of Trasaction</th>
                                                 <th>PAN No of Party</th>
                                                 <th width="15%">TDS Section</th>
-                                                <th width="20%">TDS Challan</th>
+                                                <th width="30%">TDS Challan</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -117,9 +119,9 @@
                                                     <tr>
                                                         <td>
                                                             <?php echo $z++;?>
-                                                            <?php echo get_creator_info($row->addedby, $row->created_at); ?>
                                                         </td>
                                                         <td>
+                                                            <?php echo get_creator_info($row->addedby, $row->created_at); ?>
                                                             <?php echo cc($row->party_name).' '.$newrowflag.$yearmonth;  ?>
                                                         </td>
                                                         <td>
@@ -135,15 +137,41 @@
                                                                 }
                                                             ?>
                                                         </td>
-                                                        <td><?php echo $row->taxable_amount;?></td>
+                                                        <td><?php echo $row->paid_amount;?></td>
+                                                        <td><?php 
+                                                            if (!empty($row->taxable_amount) && $row->taxable_amount > 0){
+                                                                echo $row->taxable_amount;
+                                                            }else{
+                                                                echo '<a href="javascript:void(0);" data-target="#taxableamt_modal" data-tds_id="'.$row->id.'" data-toggle="modal" class="label label-info taxable_amt"><i class="fa fa-plus"></i> Add Amount</a>';
+                                                            }
+                                                        ?></td>
                                                         <td><?php echo $row->tds_amount;?></td>
+                                                        <td>
+                                                            <?php 
+                                                                if ($row->rel_type == '1'){
+                                                                    $chk_payment = $this->db->query("SELECT `po_id` FROM `tblpurchaseorderpayments` WHERE `id` ='".$row->rel_id."' ")->row();
+                                                                    if (!empty($chk_payment)){
+                                                                        $chk_invoice = $this->db->query("SELECT `date` FROM `tblpurchaseinvoice` WHERE `po_id` = '".$chk_payment->po_id."' ")->row();
+                                                                        echo (!empty($chk_invoice)) ? _d($chk_invoice->date) : '<span class="label label-warning">Invoice Pending</span>';
+                                                                    }else{
+                                                                        echo '<span class="label label-warning">Invoice Pending</span>';
+                                                                    }
+                                                                }else{
+                                                                    if (!empty($row->booking_date)){
+                                                                        echo _d($row->booking_date);
+                                                                    }else{
+                                                                        echo '<a href="javascript:void(0);" data-target="#bookingdate_modal" data-tds_id="'.$row->id.'" data-toggle="modal" class="label label-info bookingdate"><i class="fa fa-plus"></i> Add Booking Date</a>';
+                                                                    }
+                                                                }     
+                                                            ?>    
+                                                        </td>
                                                         <td><?php echo _d($row->date);?></td>
                                                         <td>
                                                             <?php
                                                                 if (!empty($row->pan_no)){
                                                                     echo $row->pan_no;
                                                                 }else{
-                                                                    echo '<a href="javascript:void(0);" data-target="#pancard_modal" data-tds_id="'.$row->id.'" data-toggle="modal" class="btn-sm btn-info pencard_no"><i class="fa fa-plus"></i> Add Number</a>';
+                                                                    echo '<a href="javascript:void(0);" data-target="#pancard_modal" data-tds_id="'.$row->id.'" data-toggle="modal" class="label label-info pencard_no"><i class="fa fa-plus"></i> Add Number</a>';
                                                                 }
                                                                 
                                                             ?>
@@ -153,7 +181,7 @@
                                                                 if (!empty($row->section_id) && $row->section_id > 0){
                                                                     echo '<a href="javascript:void(0);" data-target="#tdssection_model" data-toggle="modal" class="btn-sm btn-success tdssection_id" data-sectionid="'.$row->section_id.'" data-tds_id="'.$row->id.'" >'.value_by_id("tbltdssections", $row->section_id, "code").'</a>';
                                                                 }else{
-                                                                    echo '<a href="javascript:void(0);" data-target="#tdssection_model" data-toggle="modal" data-sectionid="0" data-tds_id="'.$row->id.'"  class="btn-sm btn-info tdssection_id"><i class="fa fa-plus"></i> Add Section</a>';
+                                                                    echo '<a href="javascript:void(0);" data-target="#tdssection_model" data-toggle="modal" data-sectionid="0" data-tds_id="'.$row->id.'"  class="label label-info tdssection_id"><i class="fa fa-plus"></i> Add Section</a>';
                                                                 }
                                                                 
                                                             ?>
@@ -162,20 +190,20 @@
                                                             <?php
                                                             if ($row->section_id > 0){
                                                                 if (!empty($row->tds_challan_id) && $row->tds_challan_id > 0){
-                                                                    echo '<a href="javascript:void(0);"  class="btn-sm btn-success tdschallan_id" data-tdschallan_id="'.$row->tds_challan_id.'" data-tds_id="'.$row->id.'" >'.value_by_id("tbltdschallans", $row->tds_challan_id, "challan_no").'</a>';
+                                                                    echo '<a href="javascript:void(0);"  class="label label-success tdschallan_id" data-tdschallan_id="'.$row->tds_challan_id.'" data-tds_id="'.$row->id.'" >'.value_by_id("tbltdschallans", $row->tds_challan_id, "challan_no").'</a>';
                                                                 }else{
-                                                                    echo '<a href="javascript:void(0);" data-tdschallan_id="0" data-tds_id="'.$row->id.'"  class="btn-sm btn-info tdschallan_id"><i class="fa fa-plus"></i> Link To Challan</a>';
+                                                                    echo '<a href="javascript:void(0);" data-tdschallan_id="0" data-tds_id="'.$row->id.'"  class="label label-info tdschallan_id"><i class="fa fa-plus"></i> Link To Challan</a>';
                                                                 }
                                                             }else{
                                                                 $linkalert = "alert('Please add TDS section first')";
-                                                                echo '<a href="javascript:void(0);" onclick="'.$linkalert.'" class="btn-sm btn-info"><i class="fa fa-plus"></i> Link To Challan</a>';
+                                                                echo '<a href="javascript:void(0);" onclick="'.$linkalert.'" class="label label-info"><i class="fa fa-plus"></i> Link To Challan</a>';
                                                             }   
                                                             
                                                             if ($row->rel_type == 0){
-                                                                echo '&nbsp;<a href="'.admin_url('tds/add_tds_deduction/'.$row->id).'" class="btn-sm btn-info"><i class="fa fa-edit"></i></a>';
+                                                                echo '&nbsp;<a href="'.admin_url('tds/add_tds_deduction/'.$row->id).'" class="label label-info"><i class="fa fa-edit"></i></a>';
                                                             }
                                                             if ($row->section_id == 0 && $row->tds_challan_id == 0){
-                                                                echo '&nbsp;<a href="'.admin_url('tds/delete_tds_deduction/'.$row->id).'" class="btn-sm btn-danger _delete"><i class="fa fa-trash"></i></a>';
+                                                                echo '&nbsp;<a href="'.admin_url('tds/delete_tds_deduction/'.$row->id).'" class="label label-danger _delete"><i class="fa fa-trash"></i></a>';
                                                             }
                                                             ?>
                                                         </td>
@@ -225,7 +253,62 @@
         <?php echo form_close(); ?>
     </div>
 </div>
-
+<div id="taxableamt_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <?php echo form_open_multipart(admin_url("tds/addTaxableAmount"), array('id' => 'taxableamt-form', 'class' => 'taxableamt_form')); ?>                                    
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Taxable Amount</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="taxable_amount" class="control-label">Taxable Amount</label>
+                            <input type="number" step="any" id="taxable_amount" name="taxable_amount" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="tds_id" value="0" id="tdsdeductionrow_id">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        <?php echo form_close(); ?>
+    </div>
+</div>
+<div id="bookingdate_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <?php echo form_open_multipart(admin_url("tds/addBookingdate"), array('id' => 'taxableamt-form', 'class' => 'taxableamt_form')); ?>                                    
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Booking Date</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group" app-field-wrapper="date">
+                                <label for="booking_date" class="control-label">Booking Date</label>
+                                <div class="input-group date">
+                                    <input id="booking_date" name="booking_date" class="form-control datepicker" aria-invalid="false" type="text" required=''><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="tds_id" value="0" id="tds_deductionid">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        <?php echo form_close(); ?>
+    </div>
+</div>
 <div id="tdssection_model" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <?php echo form_open_multipart(admin_url("tds/addTdsSection"), array('id' => 'tds-form', 'class' => 'tds_form')); ?>                                    
@@ -355,6 +438,14 @@ $(document).ready(function() {
     $('.pencard_no').click(function(){
         var tds_id = $(this).data("tds_id");
         $("#tds_deduction_id").val(tds_id);
+    });
+    $('.taxable_amt').click(function(){
+        var tds_id = $(this).data("tds_id");
+        $("#tdsdeductionrow_id").val(tds_id);
+    });
+    $('.bookingdate').click(function(){
+        var tds_id = $(this).data("tds_id");
+        $("#tds_deductionid").val(tds_id);
     });
 
     $('.tdssection_id').click(function(){

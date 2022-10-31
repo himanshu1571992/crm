@@ -13,7 +13,9 @@ $aColumns = [
     'tblclients.company as `companyname`',
     'tblclients.email_id as `email_id`',
     'tblclients.phone_no_1 as `phone_no_1`',
-    'tblclients.followup as `followup`'
+    'tblclients.followup as `followup`',
+    'tblclients.datecreated as `datecreated`',
+    'tblclients.addedfrom as `addedfrom`',
 ];
 
 $sIndexColumn = 'userid';
@@ -59,10 +61,12 @@ foreach ($rResult as $aRow) {
         <label class="onoffswitch-label" for="' . $aRow['userid'] . '"></label>
     </div>';
 
+    $row[] = ($aRow['addedfrom'] > 0) ? get_employee_fullname($aRow['addedfrom']) : '--';
     $row[] = $user_name_html;
     $row[] = $aRow['location'];
     $row[] = $aRow['email_id'];
     $row[] = $aRow['phone_no_1'];
+    $row[] = ($aRow['datecreated'] > 0) ? _d($aRow['datecreated']) : '--';
     $row[] = $toggleActive;
 
     

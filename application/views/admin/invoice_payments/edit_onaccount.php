@@ -318,7 +318,7 @@ init_head();
                                         if (!empty($file_info)) {
                                             foreach ($file_info as $file_key) {
                                                 ?>
-                                                <a target="_blank" href="<?php echo base_url('uploads/Payment/' . $onaccount_data->id . '/' . $file_key->file_name); ?>" ><b><?php echo $file_key->file_name; ?></b></a> <br>       
+                                                <a target="_blank" href="<?php echo base_url('uploads/payment/' . $onaccount_data->id . '/' . $file_key->file_name); ?>" ><b><?php echo $file_key->file_name; ?></b></a> <br>       
                                                 <?php
                                             }
                                         }

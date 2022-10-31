@@ -3,7 +3,7 @@
     <div class="content accounting-template">
         
 
-           <form action="<?= base_url();?>staff/staff_form" method="post" enctype="multipart/form-data" id="myForm">
+           
         
                 <div class="panel_s">
                     <div class="panel-body">
@@ -48,12 +48,12 @@
 			<div class="col-12 col-sm-4">
 				<span id="errmsg"></span>
 				<div class="form-group">
-				<label for="gender" class="control-label">Gender</label>
-				<select class="form-control"   id="gender" name="gender"  data-live-search="true" readonly>
-				<option value="" disabled selected>--Select One--</option>
-				<option value="1" <?php if($value['gender']==1){ echo 'selected';}?>>Male</option>
-				<option value="2"  <?php if($value['gender']==2){ echo 'selected';}?>>Female</option>
-				</select>
+                    <label for="gender" class="control-label">Gender</label>
+                    <select class="form-control"   id="gender" name="gender"  data-live-search="true" readonly>
+                        <option value="" disabled selected>--Select One--</option>
+                        <option value="1" <?php if($value['gender']==1){ echo 'selected';}?>>Male</option>
+                        <option value="2"  <?php if($value['gender']==2){ echo 'selected';}?>>Female</option>
+                    </select>
 				</div>
 
 			</div>
@@ -208,7 +208,83 @@
                     <?php }} ?> 
 
 		<hr>
-
+        <br/>  <br/> 
+        
+            <h4 class="no-margin" >Company Details</h4>
+            <hr class="hr-panel-heading">
+            <div class="row">
+                <?php echo form_open($this->uri->uri_string(), array('id' => 'proposal-form', 'class' => '_propsal_form proposal-form')); ?>
+                    <div class="col-12 col-sm-4">
+                        <label class="control-label">Designation</label>
+                        <div class="form-group">
+                            <select class="form-control selectpicker" id="designation_id" name="designation_id" data-live-search="true" required>
+                                <option value=""></option>
+                                <?php
+                                    if (isset($designation_data) && count($designation_data) > 0) {
+                                        foreach ($designation_data as $designation_key => $designation_value) {
+                                            $designation_id = $value['designation_id'];
+                                ?>
+                                            <option value="<?php echo $designation_value['id'] ?>" <?php echo (isset($designation_id) && $designation_id == $designation_value['id']) ? 'selected' : "" ?>><?php echo cc($designation_value['designation']); ?></option>
+                                <?php
+                                        }
+                                    }
+                                ?>
+                            </select>       
+                        </div>
+                    </div>  
+                    <div class="col-12 col-sm-4">
+                        <label for="branch_id" class="control-label">Branch</label>
+                        <div class="form-group">
+                            <select class="form-control selectpicker" required="" id="branch_id" name="branch_id"  data-live-search="true">
+                                <option value=""></option>
+                                <?php
+                                if (isset($company_branch_list) && count($company_branch_list) > 0) {
+                                    foreach ($company_branch_list as $key => $branch) {
+                                        ?>
+                                        <option value="<?php echo $branch['id'] ?>" <?php echo (isset($value['branch_id']) && $value['branch_id'] == $branch['id']) ? 'selected' : "" ?>><?php echo cc($branch['comp_branch_name']); ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <label for="superior_id" class="control-label">Superior</label>
+                        <div class="form-group">
+                            <select class="form-control selectpicker" required="" id="superior_id" name="superior_id"  data-live-search="true">
+                                <option value=""></option>
+                                <?php
+                                if (isset($superior_info) && count($superior_info) > 0) {
+                                    foreach ($superior_info as $superior_key => $superior_value) {
+                                        ?>
+                                        <option value="<?php echo $superior_value['staffid'] ?>" <?php echo (isset($value['superior_id']) && $value['superior_id'] == $superior_value['staffid']) ? 'selected' : "" ?>><?php echo cc($superior_value['firstname']); ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>        
+                    <div class="col-12 col-sm-4">
+                        <span id="errmsg1"></span>
+                        <div class="form-group">
+                            <label for="Date of Birth">Net Salary</label>
+                            <input type="text" id="net_salary" name="net_salary" class="form-control" value="<?php echo $value['net_salary']; ?>" required>
+                        </div>   
+                    </div>   
+                    <div class="col-12 col-sm-4">
+                        <span id="errmsg1"></span>
+                        <div class="form-group">
+                            <label for="Date of Birth">Date of Joining</label>
+                            <input type="text" name="joining_date" class="form-control datepicker" value="<?php echo _d($value['joining_date']); ?>" required>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-info pull-right">Submit</button>
+                    </div>
+                <?php echo form_close(); ?>
+            </div>    
          <br/>  <br/> 
         
        <h4 class="no-margin">Address Details</h4>

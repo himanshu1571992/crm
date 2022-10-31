@@ -88,7 +88,7 @@ $session_id = $this->session->userdata();
                                     <th>Remark</th>
                                     <th>Date</th>
                                     <th>Total Amount</th>
-                                    <th>Accept Status</th>
+                                    <th width="15%">Accept Status</th>
                                     <th>Payfile Status</th>
                                     <th class="text-center">Action</th>
                                 </tr>
@@ -140,7 +140,7 @@ $session_id = $this->session->userdata();
                                         ?>
                                             <tr>
                                                 <td><?php echo $i; ?></td>
-                                                <td><?php echo 'REQ-' . $row->id; ?></td>
+                                                <td><a target="_blank" href="<?php echo admin_url('company_expense/paymentrequest_view/'.$row->id); ?>"><?php echo 'REQ-' . $row->id; ?></a></td>
                                                     <!-- <td><?php echo get_employee_name($row->user_id); ?></td> -->
                                                 <td><?php echo value_by_id('tblcompanyexpensecatergory', $row->category_id, 'name'); ?></td>
                                                 <td><?php echo $party_name; ?></td>
@@ -170,7 +170,7 @@ $session_id = $this->session->userdata();
                                                     </td>
                                                 <?php 
                                                     }else{
-                                                        echo '<td class="text-center"><span class="badge badge-info">Approval Pending</span></td>';
+                                                        echo '<td class="text-center"><span style="cursor: pointer;" class="badge badge-info status" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">Approval Pending</span></td>';
                                                         echo '<td class="text-center">--</td>';
                                                         echo '<td class="text-center">--</td>';
                                                     }
@@ -532,7 +532,7 @@ $session_id = $this->session->userdata();
                             ?>
                         </td>
                       <?php }else{
-                            echo '<td class="text-center"><span class="badge badge-info">Approval Pending</span></td>';
+                            echo '<td class="text-center"><span style="cursor: pointer;" class="badge badge-info postatus" data-section="po_payment" value="' . $row->id . '" data-toggle="modal" data-target="#myModal">Approval Pending</span></td>';
                             echo '<td class="text-center">--</td>';
                             echo '<td class="text-center">--</td>';
                         } ?>
@@ -1120,6 +1120,42 @@ $session_id = $this->session->userdata();
         </div>
     </div>
 </div>
+
+<div id="statusModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Payment Request Status</h4>
+            </div>
+            <div class="modal-body" id="approval_html">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Assigned Person</h4>
+            </div>
+            <div class="modal-body">
+                <div id="poapproval_html"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
 <!-- /.modal -->
 <?php init_tail(); ?>
 
@@ -1239,5 +1275,34 @@ $(document).ready(function() {
         }
     }
 </script>
+<script type="text/javascript">
+	$('.status').click(function(){
+	var id = $(this).attr("value");  
+		$.ajax({
+			type    : "POST",
+			url     : "<?php echo base_url('admin/company_expense/get_status'); ?>",
+			data    : {'id' : id},
+			success : function(response){
+				if(response != ''){
+					$("#approval_html").html(response);
+				}
+			}
+		})
+	});
+    $('.postatus').click(function () {
+        var pay_id = $(this).attr("value");
+        var section = $(this).data("section");
 
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('admin/purchase/get_purchasePayment_approval_info'); ?>",
+            data: {'pay_id': pay_id, 'section': section},
+            success: function (response) {
+                if (response != '') {
+                    $("#poapproval_html").html(response);
+                }
+            }
+        })
+    });
+</script>
 </html>

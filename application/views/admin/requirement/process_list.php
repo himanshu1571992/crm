@@ -149,9 +149,13 @@
                                                         }
                                                        //$approve_status = ($row->approve_status == 1) ? 'Approved':'Pending';
                                                        //$status_cls = ($row->approve_status == 1) ? 'btn-success':'btn-warning';
-                                                       echo '<a href="javascript:void(0);" class="btn-sm '.$status_cls.' adminstatus" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">'.$approve_status.'</a>&nbsp;';
+                                                        if ($row->approve_status == 6){
+                                                            echo '<a href="javascript:void(0);" class="btn-sm btn-info" value="' . $row->id . '">Partially Approved</a>&nbsp;';
+                                                        }else{
+                                                            echo '<a href="javascript:void(0);" class="btn-sm '.$status_cls.' adminstatus" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">'.$approve_status.'</a>&nbsp;';
+                                                        }
                                                     }
-                                                    if($row->purchase_person_status == 1 && ($row->approve_status == 0 || $row->approve_status == 2)){
+                                                    if($row->purchase_person_status == 1 && $row->approve_status != 0){
                                                        echo '<a style="width:86px"  href="'.admin_url('requirement/edit_purchase_process/'.$row->id).'" class="btn-sm btn-info" >Edit</a>&nbsp;';
                                                     }
                                                     if(!empty($approval_send)){

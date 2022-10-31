@@ -7,6 +7,7 @@ $sTable = 'tblsitemanager';
 $aColumns = [
 //    '`id`',
     '`id`',
+    '`added_by`',
     '`name`',
     '`id`',
     '`location`',
@@ -28,6 +29,7 @@ foreach ($rResult as $aRow) {
 
     // #
     $row[] = $aRow['id'];
+    $row[] = ($aRow['added_by'] > 0) ? get_employee_fullname($aRow['added_by']) : '--';;
     
     $url = admin_url('site_manager/site_manager/' . $aRow['id']);
 

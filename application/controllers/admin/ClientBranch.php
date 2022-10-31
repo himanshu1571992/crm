@@ -268,7 +268,7 @@ class ClientBranch extends Admin_controller {
         $data['client_status'] = $this->db->query("SELECT * FROM `tblclientstatus` where status = 1 order by name asc  ")->result_array();  
         $data['client_data'] = $this->db->query("SELECT * FROM `tblclients` where active = 1 order by company asc  ")->result_array();
         $data['sales_person_info'] = $this->db->query("SELECT `sales_person_id` from `tblleadstaffgroup` where status = 1  ")->result();
-
+        $data['vendor_list'] = $this->db->query("SELECT * FROM `tblvendor` WHERE `status` = 1 ORDER BY name ASC")->result();
         $this->load->view('admin/clients/client', $data);
     }
 
@@ -1416,22 +1416,21 @@ class ClientBranch extends Admin_controller {
 
     public function add_client_status($id="")
     {
-
         check_permission('86,250','create');
 
         if(!empty($_POST)){
             extract($this->input->post());
 
             $ad_data = array(
+                'added_by' => get_staff_user_id(),
                 'name' => $name,
                 'color' => $color,
                 'description' => $description,
-                'status' => 1
+                'status' => 1,
+                'created_at' => date('Y-m-d H:i:s')
             );
 
-
             $insert = $this->home_model->insert('tblclientstatus', $ad_data);
-
             if($insert){
 
                 set_alert('success', 'Client status added Successfully');
@@ -1448,7 +1447,6 @@ class ClientBranch extends Admin_controller {
         }
 
         $this->load->view('admin/clients/add_client_status', $data);
-
     }
 
 

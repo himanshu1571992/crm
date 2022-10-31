@@ -113,7 +113,7 @@
 			<div class="col-12 col-sm-4">
 				<span id="lblError" style="color: red"></span>
 				<label>ESIC and EPF Deduction</label>
-                <select class="form-control select2" readonly name="epf_esicdeduct_id" id="epf_esicdeduct_id"  required>
+                <select class="form-control select2" readonly name="epf_esicdeduct_id" id="epf_esicdeduct_id">
                   <option  value="">Select</option>
 				  
                      <option value="1"<?php if($value['epf_esicdeduct_id']==1){ echo 'selected';}?>>Yes</option>
@@ -133,7 +133,7 @@
 			<div class="col-12 col-sm-4">
 				<span id="lblError" style="color: red"></span>
 				<label>Working </label>
-                <select class="form-control select2" readonly name="workingbasis_id" id="workingbasis_id"  required>
+                <select class="form-control select2" readonly name="workingbasis_id" id="workingbasis_id">
                   <option  value="">Select</option>
 				  
                      <option value="1"<?php if($value['workingbasis_id']==1){ echo 'selected';}?>>Daily Basis</option>

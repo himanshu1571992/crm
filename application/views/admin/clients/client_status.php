@@ -71,8 +71,14 @@
                                         foreach($status_info as $row){  
                                             ?>
                                             <tr>
-                                                <td><?php echo $i++;?></td>
-                                                <td><?php echo cc($row->name);?></td>
+                                                <td>
+                                                    <?php echo $i++;?>
+                                                    
+                                                </td>
+                                                <td>
+                                                <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                    <?php echo cc($row->name);?>
+                                                </td>
                                                 <td><?php echo $row->color . '&nbsp;&nbsp;&nbsp;<div style="height : 30px; width: 30px; background-color : ' .$row->color. '; border : 1px solid #000;"></div>'; ?></td>
                                                 <td><?php echo cc($row->description);?></td>
                                                 <td class="text-center">

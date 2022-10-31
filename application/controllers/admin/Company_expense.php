@@ -35,10 +35,12 @@ class Company_expense extends Admin_controller
 
 
             $ad_data = array(
+                            'added_by' => get_staff_user_id(),
                             'name' => $name,
                             'show_date' => $show_date,
                             'show_deposit' => $show_deposit,
-                            'status' => 1
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s')
                         );
 
 
@@ -292,8 +294,10 @@ class Company_expense extends Admin_controller
             if ($id == '') {
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'category_id' => $category_id,
-                    'name' => $name
+                    'name' => $name,
+                    'created_at' => date("Y-m-d H:i:s")
                 );
 
                 $insert = $this->home_model->insert('tblheads',$ad_data);
@@ -392,8 +396,10 @@ class Company_expense extends Admin_controller
             if ($id == '') {
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'head_id' => $head_id,
-                    'name' => $name
+                    'name' => $name,
+                    'created_at' => date("Y-m-d H:i:s")
                 );
 
                 $insert = $this->home_model->insert('tblsubheads',$ad_data);
@@ -583,6 +589,8 @@ class Company_expense extends Admin_controller
                     'party_name'        => $party_name,
                     'amount'            => $amount,
                     'tds_amt'           => $tds_amt,
+                    'taxable_amount'    => $taxable_amount,
+                    'booking_date'      => db_date($booking_date),
                     'remark'            => $remark,
                     'created_at'        => date('Y-m-d H:i:s')
                 );
@@ -685,6 +693,8 @@ class Company_expense extends Admin_controller
                     'party_name'        => $party_name,
                     'amount'            => $amount,
                     'tds_amt'           => $tds_amt,
+                    'taxable_amount'    => $taxable_amount,
+                    'booking_date'      => db_date($booking_date),
                     'remark'            => $remark,
                 );
 
@@ -779,7 +789,6 @@ class Company_expense extends Admin_controller
         $data['approved_by'] = $this->db->query("SELECT * FROM `tblpaymentrequestapproval` where payment_id = '".$id."' ")->result_array();
 
         $this->load->view('admin/company_expense/add_paymentrequest', $data);
-
     }
 
     public function get_type()
@@ -987,10 +996,12 @@ class Company_expense extends Admin_controller
                         $tds_data["party_name"] = $party_name;
                         $tds_data["rel_type"] = 2;
                         $tds_data["rel_id"] = $id;
-                        $tds_data["taxable_amount"] = $payrequest->amount;
+                        $tds_data["paid_amount"] = $payrequest->amount;
+                        $tds_data["taxable_amount"] = $payrequest->taxable_amount;
                         $tds_data["tds_amount"] = $payrequest->tds_amt;
                         $tds_data["pan_no"] = $party_pan_no;
                         $tds_data["date"] = db_date($payrequest->created_at);
+                        $tds_data["booking_date"] = db_date($payrequest->booking_date);
                         $tds_data["created_at"] = date("Y-m-d h:i:s");
                         $this->home_model->insert("tbltdsdeduction", $tds_data);
                     }
@@ -1183,18 +1194,25 @@ class Company_expense extends Admin_controller
             }
 
             $data["bank_statement"] = array();
-            $chk_fdate = $this->db->query("SELECT `id`,`date`,`opening_bal`,`staff_id` FROM `tbldailyopeningclosingbalance` WHERE bank_id = ".$bank_id." AND date = '".$f_date."' AND opening_bal > '0.00'")->row();
-            $chk_tdate = $this->db->query("SELECT `id`,`date`,`closing_bal`,`staff_id` FROM `tbldailyopeningclosingbalance` WHERE bank_id = ".$bank_id." AND date = '".$t_date."' AND closing_bal > '0.00'")->row();
-            if (!empty($chk_fdate) && !empty($chk_tdate)){
+            $chk_fdate = $this->db->query("SELECT `id`,`date`,`opening_bal`,`staff_id` FROM `tbldailyopeningclosingbalance` WHERE bank_id = ".$bank_id." AND date = '".$f_date."' ")->row();
+            $chk_tdate = $this->db->query("SELECT `id`,`date`,`closing_bal`,`staff_id` FROM `tbldailyopeningclosingbalance` WHERE bank_id = ".$bank_id." AND date = '".$t_date."' ")->row();
+           
+            $data["opening_bal"] = 0;
+                $data["closing_bal"] = 0;
+                $data["opening_added_by"] = 0;
+                $data["closing_added_by"] = 0;
+            if (!empty($chk_fdate) ){
 
                 $data["opening_bal"] = $chk_fdate->opening_bal;
-                $data["closing_bal"] = $chk_tdate->closing_bal;
                 $data["opening_added_by"] = $chk_fdate->staff_id;
+            }
+            if ( !empty($chk_tdate)){                
+                $data["closing_bal"] = $chk_tdate->closing_bal;
                 $data["closing_added_by"] = $chk_tdate->staff_id;
+            }
 
                 $breceiving_list = $this->db->query("SELECT * FROM `tblclientpayment` WHERE `bank_id` = ".$bank_id." AND `date` BETWEEN '".$f_date."' and '".$t_date."' AND `status` = 1 ORDER BY date ASC")->result();
                 $bsend_list = $this->db->query("SELECT bp.* FROM `tblbankpayment` as b LEFT JOIN `tblbankpaymentdetails` as bp ON b.id = bp.main_id WHERE bp.`bank_id` = ".$bank_id." AND bp.`utr_date` BETWEEN '".$f_date."' and '".$t_date."' AND b.`status` = 1 ORDER BY bp.`utr_date` ASC")->result();
-
                 if (!empty($breceiving_list)){
                     foreach ($breceiving_list as $rval) {
                         $data["bank_statement"][strtotime($rval->date)][] = array(
@@ -1208,6 +1226,21 @@ class Company_expense extends Admin_controller
                     }
                 }
 
+                $bankentries = $this->db->query("SELECT * FROM `tblbankstatemententries` WHERE `bank_id` = ".$bank_id." AND `date` BETWEEN '".$f_date."' and '".$t_date."' AND `status` = 1 ORDER BY date ASC")->result();
+                if (!empty($bankentries)){
+                    foreach ($bankentries as $bval) {
+                        $debit_amt = ($bval->type == 1) ? $bval->amount : 0.00;
+                        $credit_amt = ($bval->type == 2) ? $bval->amount : 0.00;
+                        $data["bank_statement"][strtotime($bval->date)][] = array(
+                                                            "id" => $bval->id,
+                                                            "date" => $bval->date,
+                                                            "description" => $bval->description,
+                                                            "ref" => $bval->utr_no,
+                                                            "debit_amt" => $debit_amt,
+                                                            "credit_amt" => $credit_amt
+                                                        );
+                    }
+                }
                 if (!empty($bsend_list)){
                     foreach ($bsend_list as $sval) {
 
@@ -1241,10 +1274,10 @@ class Company_expense extends Admin_controller
                     }
                 }
                 ksort($data["bank_statement"]);
-            }else{
+            /*}else{
                 set_alert('warning', 'Record not found beetween date');
                 redirect(admin_url('company_expense/bank_statement'));
-            }
+            }*/
         }
 
         $data["bank_list"] = $this->db->query("SELECT * FROM `tblbankmaster` WHERE id != 1 AND status = 1")->result();
@@ -1286,6 +1319,7 @@ class Company_expense extends Admin_controller
             extract($this->input->post());
 
             $ad_data = array(
+                            'added_by' => get_staff_user_id(),
                             'bank_id' => $bank_id,
                             'chequebook_name' => $chequebook_name,
                             'from_page' => $from_page,
@@ -1296,6 +1330,7 @@ class Company_expense extends Admin_controller
                             'updated_at' => date("Y-m-d H:i:s"),
                         );
             if ($id != ''){
+                unset($ad_data["added_by"]);
                 unset($ad_data["created_at"]);
                 $update = $this->home_model->update('tblchequebook', $ad_data,array('id'=>$id));
                 if($update){
@@ -1842,5 +1877,89 @@ class Company_expense extends Admin_controller
             set_alert("danger", "Something went wroung.");
         }
         redirect(admin_url('company_expense/transport_overhead_list'));
+    }
+
+    public function bankstatement_entries_list(){
+        $where = " id > 0 and status = 1";
+        if (!empty($_POST)) {
+            extract($this->input->post());
+            
+            if (!empty($f_date) && !empty($t_date)) {
+
+                $data['f_date'] = $f_date;
+                $data['t_date'] = $t_date;
+
+                $where .= " and date  BETWEEN  '" . db_date($f_date) . "' and  '" . db_date($t_date) . "' ";
+            }
+            if (!empty($bank_id)){
+                $data["sbank_id"] = $bank_id;
+                $where .= " and bank_id = '" . $bank_id . "'";
+            }
+        }
+
+        $data['bankenteries_list'] = $this->db->query("SELECT * from tblbankstatemententries where  " . $where . " order by id desc ")->result();
+        $data["bank_list"] = $this->db->query("SELECT * FROM `tblbankmaster` WHERE id != 1 AND status = 1")->result();
+        $data['title'] = 'Bank Statement Entries List';
+        $this->load->view('admin/bankstatement_entries/list', $data);
+    }
+
+    /* this function uas for transport overhead add */
+    public function add_bankstatement_entries($id = ''){
+
+        if(!empty($_POST)){
+            extract($this->input->post());
+            
+            $remark = (!empty($remark)) ? $remark : '';
+            $insert_data["bank_id"] = $bank_id;
+            $insert_data["date"] = db_date($date);
+            $insert_data["type"] = $type;
+            $insert_data["utr_no"] = $utr_no;
+            $insert_data["amount"] = $amount;
+            $insert_data["description"] = $remark;
+            $insert_data["status"] = 1;
+            
+            if ($id !=''){
+                
+                $insert_id = $this->home_model->update("tblbankstatemententries", $insert_data, array("id" => $id));
+                if ($insert_id){
+                    set_alert("success", "Bank Entries update successfully");
+                }else{
+                    set_alert("danger", "Something went wroung.");
+                }
+            }else{
+                $insert_data["added_by"] = get_staff_user_id();
+                $insert_data["created_at"] = date("Y-m-d H:i:s");
+               
+                $insert_id = $this->home_model->insert("tblbankstatemententries", $insert_data);
+                // echo $this->db->last_query();
+                // exit;
+                if ($insert_id){
+                    set_alert("success", "Bank Entries Add successfully");
+                }else{
+                    set_alert("danger", "Something went wroung.");
+                }
+            }
+            
+            redirect(admin_url('company_expense/bankstatement_entries_list'));
+        }
+
+        $data['title'] = 'Add Statement Entries';
+        if ($id != ''){
+            $data['title'] = 'Edit Statement Entries';
+            $data["entries_info"] = $this->db->query("SELECT * FROM tblbankstatemententries WHERE id =".$id."")->row();
+        }
+        $data["bank_list"] = $this->db->query("SELECT * FROM `tblbankmaster` WHERE id != 1 AND status = 1")->result();
+        $this->load->view('admin/bankstatement_entries/add', $data);
+    }
+
+    /* this is function use for delete Statement Entries */
+    public function delete_bankstatement_entries($id){
+        $response = $this->home_model->delete('tblbankstatemententries', array('id'=>$id));
+        if ($response == true) {
+            set_alert('success', 'Statement Entries Deleted Successfully');
+        } else {
+            set_alert("danger", "Something went wroung.");
+        }
+        redirect(admin_url('company_expense/bankstatement_entries_list'));
     }
 }

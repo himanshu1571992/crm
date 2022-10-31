@@ -854,7 +854,7 @@ function perfoma_infoice_pdf($estimate){
 
         $isOtherCharge = value_by_id('tblproducts',$value['pro_id'],'isOtherCharge');
         $show_qty = ($isOtherCharge == 0) ? $qty : '--';
-        $ttl_rate += ($show_rate*$qty*$totalmonths);
+        $ttl_rate += ($show_rate*$qty*$totalmonths*$weight);
 
         //getting material vlaue
         $ttl_value += get_material_value($value['pro_id'],$qty);
@@ -1212,10 +1212,37 @@ function infoice_pdf($invoice){
       </td>
     </tr>
   </table>
-  <!--Header Section End-->
+  <!--Header Section End-->';
 
+  if (!empty($invoice->einvoice_irn) && !empty($invoice->einvoice_ack_date) && !empty($invoice->einvoice_ack_number)){
+      $qrcodepath = INVOICE_ATTACHMENTS_FOLDER.'qr_images/'.$invoice->id.'/qrcode.jpg';
+      $qrcodeimage = '';
+      if (file_exists($qrcodepath)){
+        $qrcodeimage = '<img src="'.$qrcodepath.'" width="100" height="100" >';
+      }
+      
+      $html .= '<!--E INVOICE SECTION START-->
+        <table border="0" cellspacing="0" cellpadding="0" class="fromToTable mb-15">
+          <thead>
+            <tr>
+              <th class="no" colspan="2"><b>E - Invoice Details</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr >
+              <td width="95%" style="text-align: left;">
+                  <p><b>IRN : </b>'.$invoice->einvoice_irn.'</p>
+                  <p><b>Ack. No : </b>'.$invoice->einvoice_ack_number.'</p>
+                  <p><b>Ack. Date : </b>'._d($invoice->einvoice_ack_date).'</p>
+              </td>
+              <td style="text-align: center;padding-left: 1px;padding-right: 1px;">'.$qrcodeimage.'</td>
+            </tr>
+          </tbody>
+        </table>  
+      <!--E INVOICE SECTION END-->';
+  }
 
-  <!--shipping Area-->
+  $html .= '<!--shipping Area-->
 
   <table border="0" cellspacing="0" cellpadding="0" class="fromToTable mb-15">
         <thead>
@@ -1489,9 +1516,18 @@ function infoice_pdf($invoice){
 
        }
 
-      $final_amount = ($total_price - $discount);
+      /* this code use for calculate charges of tcs */ 
+      $ttltcs_charges = 0;
+      $tcs_charges_data = $CI->db->query("SELECT `tcs_amount` FROM tblinvoicetcscharges WHERE `invoice_id`= '".$invoice->id."' ")->row();
+      if (!empty($tcs_charges_data)){
+        $html .= '<tr>
+                    <td>TCS CHARGES</td>
+                    <td>'.number_format($tcs_charges_data->tcs_amount, 2).'</td>
+                  </tr>';
+        $ttltcs_charges = $tcs_charges_data->tcs_amount;
+      }
 
-
+      $final_amount = ($total_price - $discount) + $ttltcs_charges;
 	$html .= '<tr>
 				<td>GRAND TOTAL</td>
 				<td>'.number_format(round($final_amount), 2).'</td>
@@ -1908,6 +1944,11 @@ function ledger_pdf($data){
   $service_type = $data['service_type'];
   $year_id = $data['year_id'];
 
+   /* this code use for get multiple client outstanding amount */
+   $vendordata = $CI->db->query("SELECT GROUP_CONCAT(vendor_id) as vendor_ids FROM `tblclientbranch` WHERE `userid` IN (".$branch_str.") ")->row();
+   $vendorids_str = (!empty($vendordata)) ? $vendordata->vendor_ids : 0;
+   $vendor_outstanding_amount = get_vendor_ledger_amount($vendorids_str);
+   
   if($service_type == 1){
       $ledger_for = 'Rental Ledger';
     }else{
@@ -2484,7 +2525,7 @@ function ledger_pdf($data){
 
             //Getting Debit Notes againt parent invoice
             if (!empty($year_id)){
-              $debit_note_info = $CI->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and year_id = '".$year_id."' and status = '1' order by dabit_note_date ".$flow." ")->result();
+                $debit_note_info = $CI->db->query("SELECT * FROM tbldebitnote where invoice_id > '0' and clientid IN (".$branch_str.") and year_id = '".$year_id."' and status = '1' order by dabit_note_date ".$flow." ")->result();
             }else{
               $debit_note_info = $CI->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by dabit_note_date ".$flow." ")->result();
             }
@@ -2655,7 +2696,7 @@ function ledger_pdf($data){
 
 			      //Getting Credit Notes againt parent invoice
             if (!empty($year_id)){
-              $credit_note_info = $CI->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' and year_id = '".$year_id."' order by date ".$flow." ")->result();
+                $credit_note_info = $CI->db->query("SELECT * FROM tblcreditnote where  invoice_id > '0' and clientid IN (".$branch_str.") and status = '1' and year_id = '".$year_id."' order by date ".$flow." ")->result();
             }else{
               $credit_note_info = $CI->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by date ".$flow." ")->result();
             }
@@ -2773,9 +2814,9 @@ function ledger_pdf($data){
 
 	//Payment Debit Notes
     $financialyearwhere = (!empty($year_id)) ? 'and dn.year_id='.$year_id : '';
-    $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 ".$financialyearwhere." GROUP by dn.id ")->result();
+    $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 and dn.status > 0 ".$financialyearwhere." GROUP by dn.id ")->result();
     if(empty($payment_debitnote)){
-      $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 ".$financialyearwhere." GROUP by dn.id ")->result();
+      $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 and dn.status > 0 ".$financialyearwhere." GROUP by dn.id ")->result();
     }
     
 	  if(!empty($payment_debitnote)){
@@ -2972,7 +3013,7 @@ function ledger_pdf($data){
     $waveoff_info = $CI->db->query("SELECT * FROM `tblclientwaveoff`  where client_id IN (".$data['client_branch'].") and status = 1 and service_type = '".$service_type."' ".$createdatefilter." ")->result();
     $clientrefund_amt = $CI->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (".$data['client_branch'].") and pd.utr_no != '' and service_type = '".$service_type."' ".$refubddatefilter." order by r.id desc")->row()->ttl_amount;
 
-    $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt));
+    $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt)) - $vendor_outstanding_amount;
 
 
   $html .='<table border="0" cellspacing="0" cellpadding="0">
@@ -3009,7 +3050,15 @@ function ledger_pdf($data){
                <td>Client Refund</td>
                <td>'.round($clientrefund_amt).'.00</td>
             </tr>';
+            
         }
+        if ($vendor_outstanding_amount > 0){
+          $html .= '<tr>
+                      <td>- Vendor Outstanding</td>
+                      <td>'.$vendor_outstanding_amount.'.00</td>
+                  </tr>';
+        }
+  
   $html .='<tr>
             <td>Final Balance</td>
             <td>'.round($final_balance).'.00</td>
@@ -3830,7 +3879,7 @@ function purchase_order_pdf($purchase){
   $html .= '<table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td style="text-align:right"><b>Amount In Words :</b></td>
-            <td style="text-align:right"><b>'.convert_number_to_words(round($final_amount)).'</b></td>
+            <td style="text-align:right"><b>'.convert_number_to_words(round($final_amount), $purchase->currency).'</b></td>
           </tr></table>';
 
 
@@ -7605,7 +7654,7 @@ function staff_exprience_certificate($staff_info, $format){
     }
     $html .= '<u><h2 style="text-align:center;" class="name">Experience Letter</h2></u><br><br><br><br>';
     $html .= '<p style="text-align:left;"><b>Date: </b>'.date("d-M-Y").'</p><br><br><br>';
-    $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{from_date}" => date("d-M-Y", strtotime($staff_info->joining_date)), "{to_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)), "{designation}" => $designation_name);
+    $splvars = array("{employee_name}" => strtoupper(get_employee_fullname($staff_info->staffid)), "{from_date}" => date("d-M-Y", strtotime($staff_info->joining_date)), "{to_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)), "{designation}" => strtoupper($designation_name));
     $contect = strtr($format->content, $splvars);
   $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p>';
 //
@@ -7668,7 +7717,7 @@ function staff_intent_letter($staff_info, $format){
     $html .= '<p style="text-align:left;"><b>Address: </b>'.$staff_info->permenent_address.'</p>';
     $html .= '<u><h2 style="text-align:center;" class="name">Letter of Intent</h2></u>';
 
-    $splvars = array("{brance}" => $comp_branch_name, "{designation}" => $designation_name);
+    $splvars = array("{brance}" => strtoupper($comp_branch_name), "{designation}" => strtoupper($designation_name));
     $contect = strtr($format->content, $splvars);
   $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p>';
 //
@@ -7699,7 +7748,7 @@ function staff_joining_letter($staff_info, $format){
   // echo "<pre>";
   // print_r($staff_info);exit;
   $company_info = get_company_details();
-  $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
+  $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : $staff_info->employee_id;
   $designation_name = value_by_id("tbldesignation", $staff_info->designation_id, "designation");
 
   $branch = $CI->db->query("SELECT GROUP_CONCAT(`comp_branch_name`) as name FROM tblcompanybranch WHERE id IN (".$staff_info->branch_id.")")->row();
@@ -7732,17 +7781,24 @@ function staff_joining_letter($staff_info, $format){
       $emp_address = ($emp_address != '') ? $emp_address.', '.$empstate : $empstate;
     }
     
-    $html .= '<p style="text-align:left;"><b>Date: </b>'.date("d-M-Y").'</p>';
-    $html .= '<p style="text-align:left;"><b>Employee Code: </b>'.$employee_code.'</p>';
-    $html .= '<p style="text-align:left;"><b>Employee Name: </b>'.get_employee_fullname($staff_info->staffid).'</p>';
-    $html .= '<p style="text-align:left;"><b>Employee Address: </b>'.$emp_address.'</p>';
+    $html .= '<p style="text-align:left;"><b>Date: </b>'._d($staff_info->joining_date).'</p>';
+    $html .= '<p style="text-align:left;"><b>Employee Code: </b>'.strtoupper($employee_code).'</p>';
+    $html .= '<p style="text-align:left;"><b>Employee Name: </b>'.strtoupper(get_employee_fullname($staff_info->staffid)).'</p>';
+    $html .= '<p style="text-align:left;"><b>Employee Address: </b>'.strtoupper($emp_address).'</p>';
     
     $html .= '<u><h2 style="text-align:center;" class="name">Sub: Letter of Appointment</h2></u>';
 
     $ctc = number_format(round(($staff_info->monthly_salary*12)), 2, '.', '');
-    $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{date}" => date("d-M-Y"), "{joining_date}" => date("d-M-Y", strtotime($staff_info->joining_date)), "{salary}" => $ctc, "{designation}" => $designation_name,
-    "{location}" => value_by_id("tbllocationmaster", $staff_info->location_id,"name"), "{working_from}"=> $staff_info->working_from, "{working_to}"=> $staff_info->working_to,
-    "{probation_period}" => $staff_info->paid_leave_time
+    $splvars = array(
+      "{employee_name}" => strtoupper(get_employee_fullname($staff_info->staffid)),
+      "{date}" => date("d-M-Y"),
+      "{joining_date}" => date("d-M-Y", strtotime($staff_info->joining_date)),
+      "{salary}" => $ctc,
+      "{designation}" => strtoupper($designation_name),
+      "{location}" => (!empty($staff_info->location_id)) ? strtoupper(value_by_id("tbllocationmaster", $staff_info->location_id,"name")) : '______', 
+      "{working_from}"=> $staff_info->working_from, 
+      "{working_to}"=> $staff_info->working_to,
+      "{probation_period}" => $staff_info->paid_leave_time
     );
     $contect = strtr($format->content, $splvars);
   $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p>';
@@ -7844,11 +7900,17 @@ function staff_relieving_letter($staff_info, $format){
     }
     
     $html .= '<br><br><p style="text-align:left;"><b>Dated: </b>'.date("d-M-Y").'</p><br><br><br>';
-    $html .= '<p style="text-align:left;"><b>Mr./Ms: </b>'.get_employee_fullname($staff_info->staffid).'</p>';
-    $html .= '<p style="text-align:left;">'.$emp_address.'</p><br><br>';
+    $html .= '<p style="text-align:left;"><b>Mr./Ms: </b>'.strtoupper(get_employee_fullname($staff_info->staffid)).'</p>';
+    $html .= '<p style="text-align:left;">'.strtoupper($emp_address).'</p><br><br>';
     $html .= '<u><h2 style="text-align:center;" class="name">Sub: Relieving Letter</h2></u>';
 
-    $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{date}" => date("d-M-Y"), "{relieving_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)), "{resignation_date}" => date("d-M-Y", strtotime($staff_info->resignation_date)),  "{designation}" => $designation_name);
+    $splvars = array(
+      "{employee_name}" => strtoupper(get_employee_fullname($staff_info->staffid)),
+      "{date}" => date("d-M-Y"),
+      "{relieving_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)),
+      "{resignation_date}" => date("d-M-Y", strtotime($staff_info->resignation_date)),
+      "{designation}" => strtoupper($designation_name)
+    );
     $contect = strtr($format->content, $splvars);
   $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p><br><br><br>';
 
@@ -7900,12 +7962,18 @@ function confirmation_letter($staff_info, $format){
   </table>';
   $html .= '<u><h2 style="text-align:center;" class="name">Confirmation letter</h2></u>';
   $html .= '<br><br><p style="text-align:left;"><b>Date: </b>'.date("d-M-Y").'</p><br><br><br>';
-    $html .= '<p style="text-align:left;"><b>'.get_employee_fullname($staff_info->staffid).'</b></p>';
-    $html .= '<p style="text-align:left;"><b>'.$designation_name.'<b></p><br><br>';
+    $html .= '<p style="text-align:left;"><b>'.strtoupper(get_employee_fullname($staff_info->staffid)).'</b></p>';
+    $html .= '<p style="text-align:left;"><b>'.strtoupper($designation_name).'<b></p><br><br>';
     
 
-    $splvars = array("{employee_name}" => get_employee_fullname($staff_info->staffid), "{date}" => date("d-M-Y"), "{relieving_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)), "{resignation_date}" => date("d-M-Y", strtotime($staff_info->resignation_date)),  "{designation}" => $designation_name
-    , "{joining_date}" => date("d-M-Y", strtotime($staff_info->joining_date)));
+    $splvars = array(
+      "{employee_name}" => strtoupper(get_employee_fullname($staff_info->staffid)),
+      "{date}" => date("d-M-Y"),
+      "{relieving_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)),
+      "{resignation_date}" => date("d-M-Y", strtotime($staff_info->resignation_date)),
+      "{designation}" => strtoupper($designation_name),
+      "{joining_date}" => date("d-M-Y", strtotime($staff_info->joining_date))
+  );
     $contect = strtr($format->content, $splvars);
   $html .= '<p style="margin-bottom: 5px; margin-top: 5px;">'.$contect.'</p><br><br><br>';
 
@@ -7933,13 +8001,14 @@ function confirmation_letter($staff_info, $format){
   return $html;
 }
 
-function offer_letter($staff_info, $format){
+function registered_staff_offer_letter($staff_info, $format){
   $CI =& get_instance();
 // echo "<pre>";
 // print_r($staff_info);exit;
   $company_info = get_company_details();
-  $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
+  // $employee_code = 'SCHACH '.$staff_info->staffid;
   $designation_name = value_by_id("tbldesignation", $staff_info->designation_id, "designation");
+  $notice_period = value_by_id("tbldesignation", $staff_info->designation_id, "notice_period");
 
   $html = '<html><title>Offer letter</title><head><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet"><style type="text/css">@page{margin:20px auto}@font-face{font-family:SourceSansPro;src:url(uploads/SourceSansPro-Regular.ttf)}.clearfix:after{content:"";display:table;clear:both}a{color:#0087C3;text-decoration:none}body{position:relative;width:18cm;height:29.7cm;margin:0 auto;color:#555;background:#FFF;font-family: Source Sans Pro, sans-serif;font-size:12px;font-family: Source Sans Pro, sans-serif;text-transform:capitalize;  overflow-wrap: break-word; word-wrap:break-word;}table{width:100%}table th, table td{padding:5px 10px;font-size:9.5px;background:#EEE;text-align:left;border-bottom:1px solid #FFF}table th{white-space:nowrap;font-weight:normal}table td h3{color:#000;font-size:1.1em;font-weight:600;margin:0;margin-bottom:5px}p{margin:0 0 5px 0}table .no{color:#fff;font-size:13px;background:#626F80}table .desc{text-align:left}.desc h3{font-size:10px;font-weight:600}.desc p{font-size:10px;margin-bottom:0;line-height:11px;}table .unit{background:#DDD}#company{text-align:right}#company .name{text-transform:uppercase;margin:0;margin-bottom:5px;color:#df2c2c;font-weight:600}.align-left{text-align:left}.text-right{text-align:right !important}.vertical-align-top{vertical-align:top}.bg-transparent{background:transparent}.mb-15{margin-bottom:8px}.main-table td{vertical-align:top}#notices{padding-left:6px; }#notices div{font-weight:600;font-size:11px;letter-spacing:1px;color:#df2c2c}.notice{margin-top:8px;font-size:14px;font-weight:600;color:#282929;line-height:30px;border-bottom:1px solid #282929;letter-spacing:0.5px}.fromToTable td{vertical-align:top}.termsList{margin-top:8px;font-size:11px;text-transform: none;}.note{text-align:center;background:#df2c2c;color:#fff;margin:10px 0;}.padding-remove{padding:7px 0px}.fromToTable tr th{width:50%;}</style></head><body>';
 
@@ -7954,7 +8023,7 @@ function offer_letter($staff_info, $format){
       </td>
     </tr>
   </table>';
-  $emp_address = '';
+    $emp_address = '';
     if (!empty($staff_info->permenent_address)){
         $emp_address = $staff_info->permenent_address;
     }
@@ -7967,26 +8036,24 @@ function offer_letter($staff_info, $format){
       $empstate = value_by_id('tblstates', $staff_info->permenent_state, 'name');
       $emp_address = ($emp_address != '') ? $emp_address.', '.$empstate : $empstate;
     }
-    $check_superior = $CI->db->query("SELECT staffid FROM `tblstaff` where superior_id  = ".$staff_info->staffid." and active = 1")->row();
-    $notice_period = (!empty($check_superior)) ? 'Three' : 'One';
-    $ctcsalary = ($staff_info->monthly_salary*12);
-    $reporting_branch = value_by_id('tblcompanybranch', $staff_info->reporting_branch_id, "comp_branch_name");
+    // $check_superior = $CI->db->query("SELECT staffid FROM `tblstaff` where superior_id  = ".$staff_info->staffid." and active = 1")->row();
+    $notice_period = ($notice_period == 3) ? 'Three' : 'One';
+    $ctcsalary = ($staff_info->net_salary*12);
+    $reporting_branch = value_by_id('tblcompanybranch', $staff_info->branch_id, "comp_branch_name");
     $superior_name = get_employee_fullname($staff_info->superior_id);
   // $html .= '<u><h2 style="text-align:center;" class="name">Offer letter</h2></u>';
   $html .= '<br><br><p style="text-align:left;"><b>Date: </b>'.date("d-M-Y").'</p><br><br><br>';
-    $html .= '<p style="text-align:left;"><b>Name Of the Candidate: </b>'.get_employee_fullname($staff_info->staffid).'</p>';
-    $html .= '<p style="text-align:left;"><b>Address: </b>'.$emp_address.'</p><br><br>';
+    $html .= '<p style="text-align:left;"><b>Name Of the Candidate: </b>'.strtoupper($staff_info->employee_name).'</p>';
+    $html .= '<p style="text-align:left;"><b>Address: </b>'.strtoupper($emp_address).'</p><br><br>';
     
 
     $splvars = array(
-      "{employee_name}" => get_employee_fullname($staff_info->staffid),
+      "{employee_name}" => strtoupper($staff_info->employee_name),
       "{date}" => date("d-M-Y"),
-      "{relieving_date}" => date("d-M-Y", strtotime($staff_info->relieving_date)),
-      "{resignation_date}" => date("d-M-Y", strtotime($staff_info->resignation_date)),
-      "{designation}" => $designation_name,
+      "{designation}" => strtoupper($designation_name),
       "{joining_date}" => date("d-M-Y", strtotime($staff_info->joining_date)),
-      "{reporting_branch}" => $reporting_branch,
-      "{superior}" => $superior_name,
+      "{reporting_branch}" => strtoupper($reporting_branch),
+      "{superior}" => strtoupper($superior_name),
       "{salary}" => $ctcsalary,
     );
     $contect = strtr($format->content, $splvars);
@@ -8001,7 +8068,7 @@ function offer_letter($staff_info, $format){
   $html .= '<br><br>
             <ul>
                 <li>Always arrive on time, stay on task no complaints should come from client end.</li>
-                <li>If you decide to leave the company, then you have to serve the notice period of <b>'.$notice_period.'</b> month if case you fail then your salary will not be payable.</li>
+                <li>If you decide to leave the company, then you have to serve the notice period of <b>'.$notice_period.'</b> Days if case you fail then your salary will not be payable.</li>
                 <li>If you want to apply for leave then apply one week before, leave should be approved by your reporting manager. If your leave is not approve it will consider as pay without leave.</li>
                 <li>Coming late half an hour for 3 consecutive days will be consider full day loss of pay.</li>
                 <li>Employees are prohibited from making threats or engaging in violent activities such as consumption of alcoholic beverages during working hours using abusive language, threatening, and theft.</li>
@@ -8119,12 +8186,12 @@ function hr_policy($staff_info){
                 <thead><tr><th colspan="2"><p style="text-align:center;font-size:20px;">Personal Detail Sheet</p></th></thead>
                 <tbody class="main-table">';
 
-    $html .= '<tr><th class="desc">Full Name</th><td class="desc">'.get_employee_fullname($staff_info->staffid).'</td></tr>';
-    $html .= '<tr><th class="desc">Father/Husband</th><td class="desc">'.$staff_info->father_husband_name.'</td></tr>';
+    $html .= '<tr><th class="desc">Full Name</th><td class="desc">'.strtoupper(get_employee_fullname($staff_info->staffid)).'</td></tr>';
+    $html .= '<tr><th class="desc">Father/Husband</th><td class="desc">'.strtoupper($staff_info->father_husband_name).'</td></tr>';
     $html .= '<tr><th class="desc">Date of Birth</th><td class="desc">'.date("d-M-Y", strtotime($staff_info->birth_date)).'</td></tr>';
-    $html .= '<tr><th class="desc">Address</th><td class="desc">'.$staff_info->permenent_address.'</td></tr>';
-    $html .= '<tr><th class="desc">City</th><td class="desc">'.value_by_id("tblcities", $staff_info->permenent_city, "name").'</td></tr>';
-    $html .= '<tr><th class="desc">State</th><td class="desc">'.value_by_id("tblstates", $staff_info->permenent_state, "name").'</td></tr>';
+    $html .= '<tr><th class="desc">Address</th><td class="desc">'.strtoupper($staff_info->permenent_address).'</td></tr>';
+    $html .= '<tr><th class="desc">City</th><td class="desc">'.strtoupper(value_by_id("tblcities", $staff_info->permenent_city, "name")).'</td></tr>';
+    $html .= '<tr><th class="desc">State</th><td class="desc">'.strtoupper(value_by_id("tblstates", $staff_info->permenent_state, "name")).'</td></tr>';
     $html .= '<tr><th class="desc">Country</th><td class="desc">India</td></tr>';
     $html .= '<tr><th class="desc">Mobile Number</th><td class="desc">'.$staff_info->phonenumber.'</td></tr>';
     $html .= '<tr><th class="desc">PAN Number</th><td class="desc">'.$staff_info->pan_card_no.'</td></tr>';
@@ -8743,13 +8810,17 @@ function purchase_debitnote_pdf($debitnote_info){
 }
 
 function vendor_ledger_pdf($data){
-  $CI =& get_instance();
+    $CI =& get_instance();
     $vendor_id = $data["vendor_id"];
 
-
     $where = "vendor_id = 0";
+    $client_outstanding = 0;
     if(!empty($data["vendor_id"])){
-        $where = "vendor_id ='".$vendor_id."' and po_id > 0";
+      $client_id = value_by_id_empty("tblvendor", $vendor_id, "client_id");
+      if ($client_id > 0){
+        $client_outstanding = client_balance_amt($client_id);
+      }
+      $where = "vendor_id ='".$vendor_id."' and po_id > 0";
     }
 
     if(isset($data["f_date"]) && isset($data["t_date"])){
@@ -9081,10 +9152,16 @@ function vendor_ledger_pdf($data){
                                         <tr>
                                             <td colspan='4' class='text-center'><b>Onaccount</b></td>
                                             <td colspan='4' class='text-center'>-". number_format(round($onaccout_amt), 2)."</td>
-                                        </tr>
-                                        <tr>
+                                        </tr>";
+                              if ($client_outstanding > 0){
+                                $html.="<tr>
+                                            <td colspan='4' class='text-center'><b>- Client Outstanding</b></td>
+                                            <td colspan='4' class='text-center'>". number_format($client_outstanding, 2)."</td>
+                                        </tr>";
+                              }          
+                                $html.="<tr>
                                             <td colspan='4' class='text-center'><b>Final Balance</b></td>
-                                            <td colspan='4' class='text-center'>". number_format((round($grand_bal) - round($onaccout_amt)), 2)."</td>
+                                            <td colspan='4' class='text-center'>". number_format((round($grand_bal) - round($onaccout_amt) - $client_outstanding), 2)."</td>
                                         </tr>
                                     </tfoot>
                                 </table>";

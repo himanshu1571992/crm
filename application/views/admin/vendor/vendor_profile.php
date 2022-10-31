@@ -208,19 +208,40 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="status" class="control-label"><?php echo _l('vendor_status'); ?> *</label>
-                                        <select class="form-control selectpicker" name="status" required="">
+                                        <label for="vendor_id" class="control-label">Select Client <span data-toggle="tooltip" data-placement="right" title="If Vendor is our Client"><i class="fa fa-info-circle" aria-hidden="true"></i></span></label>
+                                        <select class="form-control selectpicker" id="client_id" name="client_id" data-live-search="true">
                                             <option value=""></option>
-                                            <option value="1" <?php echo (isset($vendor['status']) && $vendor['status'] == 1) ? 'selected' : "" ?>>Enable</option>
-                                            <option value="0" <?php echo (isset($vendor['status']) && $vendor['status'] == 0) ? 'selected' : "" ?>>Disable</option>
+                                            <?php
+                                            if (isset($client_data) && count($client_data) > 0) {
+                                                foreach ($client_data as $client_key => $client_value) {
+                                                    ?>
+                                                    <option value="<?php echo $client_value->userid; ?>" <?php echo (isset($vendor['client_id']) && $vendor['client_id'] == $client_value->userid) ? 'selected' : "" ?>><?php echo cc($client_value->company); ?></option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="status" class="control-label"><?php echo _l('vendor_status'); ?> *</label>
+                                            <select class="form-control selectpicker" name="status" required="">
+                                                <option value=""></option>
+                                                <option value="1" <?php echo (isset($vendor['status']) && $vendor['status'] == 1) ? 'selected' : "" ?>>Enable</option>
+                                                <option value="0" <?php echo (isset($vendor['status']) && $vendor['status'] == 0) ? 'selected' : "" ?>>Disable</option>
+                                            </select>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>
+                            
 
 
                             <div>

@@ -113,6 +113,7 @@ class Purchase_model extends CRM_Model {
        $terms_and_conditions = (isset($data['terms_and_conditions']) && !empty($data['terms_and_conditions'])) ? $data['terms_and_conditions'] : "";
         $expected_mr_date = (isset($data['expected_mr_date']) && $data['expected_mr_date'] != '') ? db_date($data['expected_mr_date']) : '';
         $tentative_complete_date = (isset($data['tentative_complete_date']) && $data['tentative_complete_date'] != '') ? db_date($data['tentative_complete_date']) : '';
+        $currency = (isset($data['currency']) && $data['currency'] != '') ? $data['currency'] : 0;
        $ad_data = array(
                         'staff_id' => get_staff_user_id(),
                         'vendor_id' => $data['vendor_id'],
@@ -136,6 +137,7 @@ class Purchase_model extends CRM_Model {
                         'confirm_by' => $data['confirm_by'],
                         'tax_type' => $data['tax_type'],
                         'order_type' => $data['order_type'],
+                        'po_for' => $data['po_for'],
                         'po_number' => $po_number,
                         'year_id' => financial_year(),
                         'number' => $data['number'],
@@ -143,6 +145,7 @@ class Purchase_model extends CRM_Model {
                         'reference_no' => $data['reference_no'],
                         'assignid' => $staff_str,
                         'adminnote' => $data['adminnote'],
+                        'currency' => $currency,
                         'terms_and_conditions' => $terms_and_conditions,
                         'product_terms_and_conditions' => $data['product_terms_and_conditions'],
                         'specification' => $data['specification'],
@@ -375,6 +378,7 @@ public function update($data,$id) {
         $terms_and_conditions = (isset($data['terms_and_conditions']) && !empty($data['terms_and_conditions'])) ? $data['terms_and_conditions'] : NULL;
         $expected_mr_date = (isset($data['expected_mr_date']) && $data['expected_mr_date'] != '') ? db_date($data['expected_mr_date']) : '';
         $tentative_complete_date = (isset($data['tentative_complete_date']) && $data['tentative_complete_date'] != '') ? db_date($data['tentative_complete_date']) : '';
+        $currency = (isset($data['currency']) && $data['currency'] != '') ? $data['currency'] : 0;
         $ad_data = array(
                         'staff_id' => get_staff_user_id(),
                         'vendor_id' => $data['vendor_id'],
@@ -397,6 +401,7 @@ public function update($data,$id) {
                         'confirm_by' => $data['confirm_by'],
                         'tax_type' => $data['tax_type'],
                         'order_type' => $data['order_type'],
+                        'po_for' => $data['po_for'],
                         'po_number' => $po_number,
                         'year_id' => financial_year(),
                         'number' => $data['number'],
@@ -415,6 +420,7 @@ public function update($data,$id) {
                         'status' => $status,
                         'roundoff_amount' => $roundoff_amt,
                         'roundoff_remark' => $roundoff_remark,
+                        'currency' => $currency,
                         'transportation_charges' => $transportation_charges,
                         'division_id' => $data['division_id'],
                         'expected_mr_date' => $expected_mr_date,
@@ -424,7 +430,7 @@ public function update($data,$id) {
                         'billing_contact_name' => $data["billing_contact_name"],
                         'billing_contact_email' => $data["billing_contact_email"],
                         'tentative_complete_date' => $tentative_complete_date,
-                  );
+                    );
 
         $this->db->where('id', $id);
         $this->db->update('tblpurchaseorder', $ad_data);
@@ -2188,5 +2194,167 @@ public function update($data,$id) {
         // $message = 'Material receipt ('.$data['number'].') send to you for Approval';
         $title = 'Schach';
         $send_intimation = sendFCM($message, $title, $token, $page = 2);
+    }
+
+    /* this function use for add Proforma Invoice */
+    public function addPurchaseProformaInvoice($po_id, $data) {
+        
+        $warehouse_id = (!empty($data['warehouse_id'])) ? $data['warehouse_id'] : 0;
+        $site_id = (!empty($data['site_id'])) ? $data['site_id'] : 0;
+        $pi_number = '0';
+        $number_arr = explode("/",$data['number']);
+        if(APP_BASE_URL == 'https://schachengineers.com/nturm/'){
+            if(!empty($number_arr[0])){
+                $pi_number = $number_arr[0];
+            }
+        }else{
+            if(!empty($number_arr[0])){
+                $pi_number = $number_arr[0];
+            }
+        }
+       
+        $purchase_invoice_remark = (isset($data['purchase_invoice_remark']) && !empty($data['purchase_invoice_remark'])) ? $data['purchase_invoice_remark'] : "";
+        $roundoff_remark = (isset($data['roundoff_remark']) && !empty($data['roundoff_remark'])) ? $data['roundoff_remark'] : "";
+        $roundoff_amount = (isset($data['roundoff_amount']) && !empty($data['roundoff_amount'])) ? $data['roundoff_amount'] : "";
+        $expected_mr_date = (isset($data['expected_mr_date']) && $data['expected_mr_date'] != '') ? db_date($data['expected_mr_date']) : '';
+        $ad_data = array(
+                        'staff_id' => get_staff_user_id(),
+                        'po_id' => $po_id,
+                        'vendor_id' => $data['vendor_id'],
+                        'source_type' => $data['source_type'],
+                        'warehouse_id' => $warehouse_id,
+                        'site_id' => $site_id,
+                        'date' => db_date($data['date']),
+                        'po_number' => $pi_number,
+                        'year_id' => financial_year(),
+                        'number' => $data['number'],
+                        'prefix' => 'PO-PI',
+                        'pi_remark' => $purchase_invoice_remark,
+                        'finalsubtotalamount' => $data['saleproposal']['finalsubtotalamount'],
+                        'finaldiscountpercentage' => $data['saleproposal']['finaldiscountpercentage'],
+                        'finaldiscountamount' => $data['saleproposal']['finaldiscountamount'],
+                        'totalamount' => $data['saleproposal']['totalamount'],
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'expected_mr_date' => $expected_mr_date,
+                        'roundoff_remark'=> $roundoff_remark,
+                        'roundoff_amount'=> $roundoff_amount,
+                    );
+
+        $this->db->insert('tblpurchaseproformainvoice', $ad_data);
+        $insert_id = $this->db->insert_id();
+        if ($insert_id) {
+
+            unset($data['saleproposal']['finalsubtotalamount']);
+            unset($data['saleproposal']['finaldiscountpercentage']);
+            unset($data['saleproposal']['finaldiscountamount']);
+            unset($data['saleproposal']['totalamount']);
+            foreach ($data['saleproposal'] as $singlesalepro) {
+                $saleitemdata['po_id'] = 0;
+                $saleitemdata['proforma_invoice_id'] = $insert_id;
+                $saleitemdata['unit_id'] = $singlesalepro['unit_id'];
+                $saleitemdata['product_id'] = $singlesalepro['product_id'];
+                $saleitemdata['product_name'] = $singlesalepro['product_name'];
+                $saleitemdata['pro_id'] = $singlesalepro['pro_id'];
+                $saleitemdata['hsn_code'] = $singlesalepro['hsn_code'];
+                $saleitemdata['qty'] = $singlesalepro['qty'];
+                $saleitemdata['price'] = $singlesalepro['price'];
+                $saleitemdata['ttl_price'] = $singlesalepro['ttl_price'];
+                $saleitemdata['discount'] = $singlesalepro['discount'];
+                $saleitemdata['prodtax'] = $singlesalepro['prodtax'];
+                $saleitemdata['tax_amt'] = $singlesalepro['tax_amt'];
+                $saleitemdata['remark'] = $singlesalepro['remark'];
+                $saleitemdata['is_temp'] = $singlesalepro['is_temp'];
+                $saleitemdata['type'] = 2;
+                $this->db->insert('tblpurchaseorderproduct', $saleitemdata);
+                $saleitemid = $this->db->insert_id();
+            }
+
+
+            return $insert_id;
+        }
+
+        return false;
+    }
+
+    /* this function use for edit Proforma Invoice */
+    public function editPurchaseProformaInvoice($proformainvoice_id, $data) {
+        
+        $warehouse_id = (!empty($data['warehouse_id'])) ? $data['warehouse_id'] : 0;
+        $site_id = (!empty($data['site_id'])) ? $data['site_id'] : 0;
+        $pi_number = '0';
+        $number_arr = explode("/",$data['number']);
+        if(APP_BASE_URL == 'https://schachengineers.com/nturm/'){
+            if(!empty($number_arr[0])){
+                $pi_number = $number_arr[0];
+            }
+        }else{
+            if(!empty($number_arr[0])){
+                $pi_number = $number_arr[0];
+            }
+        }
+       
+        $purchase_invoice_remark = (isset($data['purchase_invoice_remark']) && !empty($data['purchase_invoice_remark'])) ? $data['purchase_invoice_remark'] : "";
+        $expected_mr_date = (isset($data['expected_mr_date']) && $data['expected_mr_date'] != '') ? db_date($data['expected_mr_date']) : '';
+        $roundoff_remark = (isset($data['roundoff_remark']) && !empty($data['roundoff_remark'])) ? $data['roundoff_remark'] : "";
+        $roundoff_amount = (isset($data['roundoff_amount']) && !empty($data['roundoff_amount'])) ? $data['roundoff_amount'] : "";
+        $ad_data = array(
+                        'staff_id' => get_staff_user_id(),
+                        'vendor_id' => $data['vendor_id'],
+                        'source_type' => $data['source_type'],
+                        'warehouse_id' => $warehouse_id,
+                        'site_id' => $site_id,
+                        'date' => db_date($data['date']),
+                        'po_number' => $pi_number,
+                        'year_id' => financial_year(),
+                        'number' => $data['number'],
+                        'prefix' => 'PO-PI',
+                        'pi_remark' => $purchase_invoice_remark,
+                        'finalsubtotalamount' => $data['saleproposal']['finalsubtotalamount'],
+                        'finaldiscountpercentage' => $data['saleproposal']['finaldiscountpercentage'],
+                        'finaldiscountamount' => $data['saleproposal']['finaldiscountamount'],
+                        'totalamount' => $data['saleproposal']['totalamount'],
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'expected_mr_date' => $expected_mr_date,
+                        'roundoff_remark'=> $roundoff_remark,
+                        'roundoff_amount'=> $roundoff_amount,
+                    );
+        $this->db->where('id', $proformainvoice_id);
+        $response = $this->db->update('tblpurchaseproformainvoice', $ad_data);
+        if ($response) {
+
+            /* This code use for purchase proforma invoice delete */
+            $this->db->where('proforma_invoice_id', $proformainvoice_id);
+            $this->db->delete('tblpurchaseorderproduct');
+
+            unset($data['saleproposal']['finalsubtotalamount']);
+            unset($data['saleproposal']['finaldiscountpercentage']);
+            unset($data['saleproposal']['finaldiscountamount']);
+            unset($data['saleproposal']['totalamount']);
+            foreach ($data['saleproposal'] as $singlesalepro) {
+                $saleitemdata['po_id'] = 0;
+                $saleitemdata['proforma_invoice_id'] = $proformainvoice_id;
+                $saleitemdata['unit_id'] = $singlesalepro['unit_id'];
+                $saleitemdata['product_id'] = $singlesalepro['product_id'];
+                $saleitemdata['product_name'] = $singlesalepro['product_name'];
+                $saleitemdata['pro_id'] = $singlesalepro['pro_id'];
+                $saleitemdata['hsn_code'] = $singlesalepro['hsn_code'];
+                $saleitemdata['qty'] = $singlesalepro['qty'];
+                $saleitemdata['price'] = $singlesalepro['price'];
+                $saleitemdata['ttl_price'] = $singlesalepro['ttl_price'];
+                $saleitemdata['discount'] = $singlesalepro['discount'];
+                $saleitemdata['prodtax'] = $singlesalepro['prodtax'];
+                $saleitemdata['tax_amt'] = $singlesalepro['tax_amt'];
+                $saleitemdata['remark'] = $singlesalepro['remark'];
+                $saleitemdata['is_temp'] = $singlesalepro['is_temp'];
+                $saleitemdata['type'] = 2;
+                $this->db->insert('tblpurchaseorderproduct', $saleitemdata);
+                $saleitemid = $this->db->insert_id();
+            }
+
+
+            return $proformainvoice_id;
+        }
+
+        return false;
     }
 }

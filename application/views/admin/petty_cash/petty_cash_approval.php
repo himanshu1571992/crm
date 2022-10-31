@@ -97,8 +97,8 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="remark" required class="control-label"><?php echo 'Remark'; ?></label>
-											<textarea id="remark" name="remark" class="form-control" rows="3"></textarea>
+											<label for="remark"  class="control-label"><?php echo 'Remark'; ?></label>
+											<textarea id="remark" required name="remark" class="form-control" rows="3"></textarea>
 										</div>
 									</div>
 								</div>
@@ -177,7 +177,11 @@
 		var status_val = $(this).val();
 		$("#approved_amount").val("");
 		if (status_val == 1){
+			$(".amount_div").show();
 			$("#approved_amount").val(request_amount);
+		}else{
+			$(".amount_div").hide();
+			$("#approved_amount").removeAttr("required", "");
 		}
 	});											
 

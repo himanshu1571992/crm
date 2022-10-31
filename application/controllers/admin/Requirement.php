@@ -17,21 +17,40 @@ class Requirement extends Admin_controller
     public function index()
     {
         check_permission(36,'view');
+
         $where = "save=0 ";
         if(!empty($_POST)){
             extract($this->input->post());
+            
             if(!empty($department_id)){
                 $data['sdepartment_id'] = $department_id;
-                $where .= " and department_id = '".$department_id."'";
+                $where .= " and r.department_id = '".$department_id."'";
+            }
+
+            if (!empty($product_name)){
+            	$data["sproduct_name"] = $product_name;
+            	$where .= " and rp.product_name LIKE '%".$product_name."%'";
+            }
+
+            if(!empty($reason_for_request)){
+                $data['reason_for_request'] = $reason_for_request;
+                $where .= " and r.reason_for_request = '".$reason_for_request."'";
+            }
+
+            if(strlen($po_status) > 0){
+                $data['po_status'] = $po_status;
+                $where .= " and r.po_status = '".$po_status."'";
             }
         }
+
+
         /*if(is_admin() == 1){
         	$data['requirement_info']  = $this->db->query("SELECT * FROM tblrequirement WHERE $where order by id desc ")->result();
         }else{
         	$data['requirement_info']  = $this->db->query("SELECT * FROM tblrequirement where $where and staff_id = '".get_staff_user_id()."' order by id desc ")->result();
         }*/
-        $data['requirement_info']  = $this->db->query("SELECT * FROM tblrequirement WHERE $where order by id desc ")->result();
-
+        $data['requirement_info']  = $this->db->query("SELECT r.* FROM tblrequirement as r LEFT JOIN tblrequirement_products as rp ON r.id = rp.req_id WHERE $where GROUP BY r.id ORDER BY id DESC ")->result();
+       
          $running_data[] = array(
                 'id' => 1,
                 'name' => 'Created'
@@ -48,6 +67,8 @@ class Requirement extends Admin_controller
 
         $data['title'] = 'Requirement List (SEPL/ST/02)';
         $data['department_list'] = $this->db->query("SELECT * FROM `tbldepartmentsmaster` WHERE `status`=1")->result();
+        $data['productlist'] = $this->db->query("SELECT `product_name` FROM `tblrequirement_products` GROUP BY `product_name` ORDER BY product_name ASC")->result();
+
         $this->load->view('admin/requirement/requirement', $data);
 
     }
@@ -137,9 +158,10 @@ class Requirement extends Admin_controller
                 if ($save == 0){
                     /* assign to staff code */
                     if(!empty($staff_id)){
+                        
+                        /* this code use for delete old requirement approval data */
+                        $this->home_model->delete("tblrequirement_approval", array("req_id" => $req_id));
                         foreach ($staff_id as $staffid) {
-                            /* this code use for delete old requirement approval data */
-                            $this->home_model->delete("tblrequirement_approval", array("req_id" => $req_id));
 
                             $ad_field = array(
                                 'staff_id' => $staffid,
@@ -444,9 +466,9 @@ class Requirement extends Admin_controller
         if(!empty($_POST)){
             extract($this->input->post());
 
-            /* echo '<pre/>';
-            print_r($_POST);
-            die;*/
+            // echo '<pre/>';
+            // print_r($_POST);
+            // die;
             $assignstaff=$assign['assignid'];
             $staff_id = array();
             if(!empty($assignstaff)){
@@ -457,14 +479,31 @@ class Requirement extends Admin_controller
   	               }
   	            }
             }
+            
+            /* this condition use for check product rate is added or not */
+            $ttlproductrate = 0;
+            $requirement_products  = $this->db->query("SELECT * FROM tblrequirement_products WHERE req_id =  '".$req_id."' ")->result();
+            foreach ($requirement_products as $k => $row) {
+                if(!empty($_POST['vendor_'.$row->id])){
+                    foreach ($_POST['vendor_'.$row->id] as $key => $vendor_name) {
+                        $rate =  $_POST['rate_'.$row->id][$key];
+                        $vendorname =  $_POST['vendor_'.$row->id][$key];
+                        if (!empty($rate) && !empty($vendorname)){
+                            ++$ttlproductrate;
+                        }
+                    }
+                }
+            }
+
+            if ($ttlproductrate == 0){
+                set_alert('warning', 'Requirement not process, Product rate is required');
+                redirect($_SERVER['HTTP_REFERER']);
+            }
 
             $staff_id=array_unique($staff_id);
-            if (isset($save) && $save == 1){
-               $save = 1;
-            }else{
-               $save = 0;
-            }
+            $save = (isset($save) && $save == 1) ? 1 : 0;
             if ($save == 0){
+                
                if(!empty($staff_id)){
                   update_masterapproval_single(get_staff_user_id(),7,$req_id,1);
                   update_masterapproval_all(7,$req_id,1);
@@ -517,6 +556,9 @@ class Requirement extends Admin_controller
                   }
 
                   $this->home_model->update('tblrequirement',array('purchase_person_status'=>1),array('id'=>$req_id));
+               }else{
+                    set_alert('warning', 'Please select approval parson');
+                    redirect($_SERVER['HTTP_REFERER']);
                }
             }
 
@@ -526,6 +568,7 @@ class Requirement extends Admin_controller
 
                 if(!empty($_POST['vendor_'.$row->id])){
                     foreach ($_POST['vendor_'.$row->id] as $key => $vendor_name) {
+
                         $vendor_info  = $this->db->query("SELECT * FROM tblvendor WHERE name =  '".$vendor_name."' ")->row();
                         $vendor_id = (!empty($vendor_info)) ? $vendor_info->id : 0;
 
@@ -534,21 +577,30 @@ class Requirement extends Admin_controller
                         $remark =  $_POST['vendorremark_'.$row->id][$key];
                         $tax =  $_POST['tax_'.$row->id][$key];
 
-                         $data_1 = array(
-                            'staff_id' => get_staff_user_id(),
-                            'req_id' => $req_id,
-                            'reqpro_id' => $row->id,
-                            'vendor_name' => $vendor_name,
-                            'vendor_id' => $vendor_id,
-                            'unit_id' => $unit_id,
-                            'rate' => $rate,
-                            'tax' => $tax,
-                            'remark' => $remark,
-                            'save' => $save,
-                            'created_at' => date('Y-m-d')
-                        );
+                        if (!empty($rate) && $rate > 0){
 
-                        $vendor_insert = $this->home_model->insert('tblrequirement_productvendors', $data_1);
+                            $approve = (isset($_POST['approve_'.$row->id][$key])) ? $_POST['approve_'.$row->id][$key] : 0;
+                            $data_1 = array(
+                                'staff_id' => get_staff_user_id(),
+                                'req_id' => $req_id,
+                                'reqpro_id' => $row->id,
+                                'vendor_name' => $vendor_name,
+                                'vendor_id' => $vendor_id,
+                                'unit_id' => $unit_id,
+                                'rate' => $rate,
+                                'tax' => $tax,
+                                'remark' => $remark,
+                                'save' => $save,
+                                'approve' => $approve,
+                                'created_at' => date('Y-m-d')
+                            );
+
+                            $vendor_insert = $this->home_model->insert('tblrequirement_productvendors', $data_1);
+
+                            /* this code use for requirement product rate given */
+                            $this->home_model->update('tblrequirement_products',array('rate_given'=> 1),array('id'=> $row->id));
+                        }
+                        
                     }
                 }
 
@@ -654,38 +706,76 @@ class Requirement extends Admin_controller
         if(!empty($_POST)){
             extract($this->input->post());
 
-            // echo '<pre/>';
-            // print_r($_POST);
-            // die;
             $atLeastOneApproval = 0;
             if(!empty($row)){
 
+                $ttlcount = $this->db->query("SELECT COUNT(*) as ttlcount FROM tblrequirement_products WHERE req_id = '".$req_id."' ")->row()->ttlcount;
+                $ttlgivenrate = $this->db->query("SELECT COUNT(*) as ttlcount FROM `tblrequirement_products` WHERE `req_id` = '".$req_id."' AND `rate_given`='1' ")->row()->ttlcount;
+                
+                foreach ($row as $r) {
+                    if(!empty($_POST['approve_'.$r])){
+                        $approve = 1;
+                        $atLeastOneApproval = 1;
+                    }else{
+                        $approve = 2;
+                    }
+                    $this->home_model->update('tblrequirement_productvendors',array('approve'=>$approve),array('id'=>$r));
+                }
 
-                    foreach ($row as $r) {
-        	            	if(!empty($_POST['approve_'.$r])){
-          	            		$approve = 1;
-                            $atLeastOneApproval = 1;
-        	            	}else{
-        	            		   $approve = 2;
-        	            	}
-        					      $this->home_model->update('tblrequirement_productvendors',array('approve'=>$approve),array('id'=>$r));
-      	            }
-                    $f_approval = ($atLeastOneApproval == 1) ? 1 : 2;
+                $f_approval = 2;
+                $approval_status = 2;
+                if ($atLeastOneApproval == 1){
+                    $f_approval = 1;
 
-                    $this->home_model->update('tblrequirement',array('approve_status'=>$f_approval, "purchase_person_remark"=> $remark),array('id'=>$req_id));
-                    $ad_data = array(
-                         'approvereason' => $remark,
-                         'approve_status' => $f_approval,
-                         'updated_at' => date('Y-m-d H:i:s')
-                     );
+                    /* this is for check its purchase approval is partially approved or not */
+                    $approval_status = 6;
+                    if ($ttlcount == $ttlgivenrate){
+                        $approval_status = 1;
+                    }
+                }
+                
+                $this->home_model->update('tblrequirement',array('approve_status'=>$approval_status, "purchase_person_remark"=> $remark),array('id'=>$req_id));
+                $ad_data = array(
+                    'approvereason' => $remark,
+                    'approve_status' => $f_approval,
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
 
-                     $this->home_model->update('tblrequirementprocess_approval', $ad_data,array('req_id'=>$req_id,'staff_id'=>get_staff_user_id()));
+                $this->home_model->update('tblrequirementprocess_approval', $ad_data,array('req_id'=>$req_id,'staff_id'=>get_staff_user_id()));
 
-                    update_masterapproval_single(get_staff_user_id(),7,$req_id,$f_approval);
-                    update_masterapproval_all(7,$req_id,$f_approval);
+                update_masterapproval_single(get_staff_user_id(),7,$req_id,$f_approval);
+                update_masterapproval_all(7,$req_id,$f_approval);
 
-      	            set_alert('success', 'Record updated Successfully');
-                  	redirect(admin_url('requirement/approval_list'));
+                /* send revert notification */
+                $get_from_user_info = $this->db->query("SELECT fromuserid FROM tblmasterapproval WHERE `staff_id` = '".get_staff_user_id()."' and `module_id` = '7' and `table_id` = '".$req_id."'")->row();
+                if (!empty($get_from_user_info)){
+                    $fromuserid = $get_from_user_info->fromuserid;
+                    $apstatus = ($f_approval == 1) ? 'Approved':'Rejected';
+                    $message = 'Purchase Product Rate is '.$apstatus;
+                    $adata = array(
+                        'staff_id' => $fromuserid,
+                        'fromuserid' => get_staff_user_id(),
+                        'module_id' => 7,
+                        'table_id' => $req_id,
+                        'approve_status' => 0,
+                        'status' => 0,
+                        'description'     => $message,
+                        'link' => 'requirement/requirement_process_view/'.$req_id,
+                        'date' => date('Y-m-d'),
+                        'date_time' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                        'activity_replied' => 1
+                    );
+                    $this->db->insert('tblmasterapproval', $adata);
+
+                    //Sending Mobile Intimation
+                    $token = get_staff_token($fromuserid);
+                    $title = 'Schach';
+                    $send_intimation = sendFCM($message, $title, $token, $page = 2);
+                }
+
+                set_alert('success', 'Record updated Successfully');
+                redirect(admin_url('requirement/approval_list'));
             }
         }
     }
@@ -693,13 +783,18 @@ class Requirement extends Admin_controller
 
     public function requirement_process_view($id)
     {
+        /* this code use for remove revert notification */
+        $get_from_user_info = $this->db->query("SELECT `fromuserid` FROM `tblmasterapproval` WHERE `staff_id` = '".get_staff_user_id()."' and `module_id` = '7' and `table_id` = '".$id."' and `activity_replied`='1' ")->row();
+        if (!empty($get_from_user_info)){
+            $this->home_model->delete("tblmasterapproval", array("staff_id" => get_staff_user_id(), "module_id" => 7, "table_id" => $id, "activity_replied" => 1));
+        }
+
         $data['requirement_products']  = $this->db->query("SELECT * FROM tblrequirement_products WHERE req_id =  '".$id."' ")->result();
         $data['requirement_info']  = $this->db->query("SELECT * FROM tblrequirement WHERE id =  '".$id."' ")->row();
 
         $data['id'] = $id;
         $data['title'] = 'Purchase Process';
         $this->load->view('admin/requirement/requirement_process_view', $data);
-
     }
 
 
@@ -967,6 +1062,7 @@ class Requirement extends Admin_controller
         $data['title'] = 'Requirement Approval';
         $data['appvoal_info'] = $this->db->query("SELECT * from tblrequirement_approval where req_id = '".$req_id."' and type=2 and staff_id = '".get_staff_user_id()."' and approve_status != 0 ")->row();
         
+        $data['assign_info'] = $this->db->query("SELECT * from tblrequirement_approval  where req_id = '".$req_id."' and type='2' ")->result();    
         $this->load->view('admin/requirement/requirment_approval', $data);
     }
 
@@ -1018,7 +1114,7 @@ class Requirement extends Admin_controller
                 $insert_id = $this->home_model->insert('tblrequirmentactivity',$ad_data);
                 if (!empty($tag_staff_ids)){
                     
-                    $staff_ids = explode(",", $tag_staff_ids);
+                    $staff_ids = array_unique(explode(",", $tag_staff_ids));
                     foreach ($staff_ids as $staff_id) {
 
                         /*send single notification to tag person */
@@ -1029,6 +1125,27 @@ class Requirement extends Admin_controller
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
                             'description' => 'You taged in requirment activity',
+                            'readonly' => 0,
+                            'link'  => "requirement/requirement_activity/".$id
+                        );
+                        send_activitytag_notification($tag_notification_arr);
+                    }
+                }
+
+                /* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        /*send single notification to tag person */
+                        $tag_notification_arr = array(
+                            'activity_id' => $insert_id,
+                            'module_id' => 45,
+                            'table_id' => $id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in requirment activity',
+                            'readonly' => 1,
                             'link'  => "requirement/requirement_activity/".$id
                         );
                         send_activitytag_notification($tag_notification_arr);
@@ -1141,9 +1258,9 @@ class Requirement extends Admin_controller
         if(!empty($_POST)){
           extract($this->input->post());
 
-          // echo '<pre/>';
-          // print_r($_POST);
-          // die;
+         // echo '<pre/>';
+          //print_r($_POST);
+          //die;
           $assignstaff=$assign['assignid'];
           $staff_id = array();
           if(!empty($assignstaff)){
@@ -1156,6 +1273,31 @@ class Requirement extends Admin_controller
           }
 
           $staff_id=array_unique($staff_id);
+
+
+          
+        /* this condition use for check product rate is added or not */
+        $ttlproductrate = 0;
+        $requirement_products  = $this->db->query("SELECT * FROM tblrequirement_products WHERE req_id =  '".$req_id."' ")->result();
+        foreach ($requirement_products as $k => $row) {
+            if(!empty($_POST['vendor_'.$row->id])){
+                foreach ($_POST['vendor_'.$row->id] as $key => $vendor_name) {
+                    $rate =  $_POST['rate_'.$row->id][$key];
+                    $vendorname =  $_POST['vendor_'.$row->id][$key];
+                    
+                    if (!empty($rate) && $rate > 0 && !empty($vendorname)){
+                        ++$ttlproductrate;
+                    }
+                }
+            }
+        }
+        
+
+        if ($ttlproductrate == 0){
+            set_alert('warning', 'Requirement not process, Product rate is required');
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+
           if(!empty($staff_id)){
             $this->home_model->delete("tblrequirementprocess_approval", array('req_id' => $req_id));
             $this->home_model->delete("tblmasterapproval", array('module_id' => 7,'table_id' => $req_id));
@@ -1209,7 +1351,6 @@ class Requirement extends Admin_controller
              }
 
               $this->home_model->update('tblrequirement',array('approve_status'=>0),array('id'=>$req_id));
-              
           }
 
           $this->home_model->delete('tblrequirement_productvendors', array('req_id'=>$req_id));
@@ -1219,34 +1360,39 @@ class Requirement extends Admin_controller
           // exit;
           foreach ($requirement_products as $row) {
 
-              if(!empty($_POST['vendor_'.$row->id])){
-                  foreach ($_POST['vendor_'.$row->id] as $key => $vendor_name) {
-                      $vendor_info  = $this->db->query("SELECT * FROM tblvendor WHERE name =  '".$vendor_name."' ")->row();
-                      $vendor_id = (!empty($vendor_info)) ? $vendor_info->id : $vendor_id;
+                if(!empty($_POST['vendor_'.$row->id])){
+                    foreach ($_POST['vendor_'.$row->id] as $key => $vendor_name) {
+                        $vendor_info  = $this->db->query("SELECT * FROM tblvendor WHERE name =  '".$vendor_name."' ")->row();
+                        $vendor_id = (!empty($vendor_info)) ? $vendor_info->id : $vendor_id;
 
-                      $rate =  $_POST['rate_'.$row->id][$key];
-                      $unit_id =  $_POST['unit_id_'.$row->id][$key];
-                      $remark =  $_POST['vendorremark_'.$row->id][$key];
-                      $tax =  $_POST['tax_'.$row->id][$key];
+                        $rate =  $_POST['rate_'.$row->id][$key];
+                        $unit_id =  $_POST['unit_id_'.$row->id][$key];
+                        $remark =  $_POST['vendorremark_'.$row->id][$key];
+                        $tax =  $_POST['tax_'.$row->id][$key];
 
-                       $data_1 = array(
-                          'staff_id' => get_staff_user_id(),
-                          'req_id' => $req_id,
-                          'reqpro_id' => $row->id,
-                          'vendor_name' => $vendor_name,
-                          'vendor_id' => $vendor_id,
-                          'unit_id' => $unit_id,
-                          'rate' => $rate,
-                          'tax' => $tax,
-                          'remark' => $remark,
-                          'created_at' => date('Y-m-d')
-                      );
-                      // echo "<pre>";
-                      // print_r($data_1);
-                      // exit;
-                      $vendor_insert = $this->home_model->insert('tblrequirement_productvendors', $data_1);
-                  }
-              }
+                        if (!empty($rate) && $rate > 0){
+
+                            $approve = (isset($_POST['approve_'.$row->id][$key])) ? $_POST['approve_'.$row->id][$key] : 0;
+                            $data_1 = array(
+                                'staff_id' => get_staff_user_id(),
+                                'req_id' => $req_id,
+                                'reqpro_id' => $row->id,
+                                'vendor_name' => $vendor_name,
+                                'vendor_id' => $vendor_id,
+                                'unit_id' => $unit_id,
+                                'rate' => $rate,
+                                'tax' => $tax,
+                                'approve' => $approve,
+                                'remark' => $remark,
+                                'created_at' => date('Y-m-d')
+                            );
+                            
+                            $vendor_insert = $this->home_model->insert('tblrequirement_productvendors', $data_1);
+                            
+                            $this->home_model->update('tblrequirement_products',array('rate_given'=> 1),array('id'=> $row->id));
+                        }
+                    }
+                }
           }
           set_alert('success', 'Product vendor Edit Successfully');
           redirect(admin_url('requirement/process_list'));

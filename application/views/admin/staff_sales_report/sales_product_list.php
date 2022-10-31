@@ -94,7 +94,10 @@
 
                                     <td><?php echo ++$key; ?></td>                                                
 
-                                    <td><?php echo cc($value->product_name); ?></td>
+                                    <td>
+                                        <?php echo get_creator_info($value->added_by, $value->created_at); ?>
+                                        <?php echo cc($value->product_name); ?>
+                                    </td>
 
                                     <td><?php echo cc($value->description); ?></td>
 

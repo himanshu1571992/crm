@@ -286,7 +286,7 @@ fieldset.for-panel p span.badge-success {
                             <?php if(!empty($paymentrequest_info->amount)) { ?>
                             <div class="col-md-6">
                                 <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Amount :</label>
+                                <label class="col-xs-4 control-label">Paid Amount :</label>
                                     <p class="form-control-static">
                                         <?php 
                                             echo $paymentrequest_info->amount;
@@ -295,7 +295,18 @@ fieldset.for-panel p span.badge-success {
                                 </div>
                             </div>
                             <?php } ?>
-
+                            <?php if(!empty($paymentrequest_info->taxable_amount)) { ?>
+                            <div class="col-md-6">
+                                <div class="form-horizontal">
+                                <label class="col-xs-4 control-label">Taxable Amount :</label>
+                                    <p class="form-control-static">
+                                        <?php 
+                                            echo $paymentrequest_info->amount;
+                                        ?>
+                                    </p>
+                                </div>
+                            </div>
+                            <?php } ?>    
                             <?php if(!empty($paymentrequest_info->tds_amt)) { ?>
                             <div class="col-md-6">
                                 <div class="form-horizontal">
@@ -308,7 +319,18 @@ fieldset.for-panel p span.badge-success {
                                 </div>
                             </div>
                             <?php } ?>
-
+                            <?php if(!empty($paymentrequest_info->booking_date)) { ?>
+                            <div class="col-md-6">
+                                <div class="form-horizontal">
+                                <label class="col-xs-4 control-label">Booking Date :</label>
+                                    <p class="form-control-static">
+                                        <?php 
+                                            echo _d($paymentrequest_info->booking_date);
+                                        ?>
+                                    </p>
+                                </div>
+                            </div>
+                            <?php } ?>
                             <?php if(!empty($paymentrequest_info->remark)) { ?>
                             <div class="col-md-6">
                                 <div class="form-horizontal">

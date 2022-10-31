@@ -101,7 +101,10 @@
                                             ?>                                                                                      
                                                     <tr>
                                                         <td><?php echo $z++;?></td>
-                                                        <td><?php echo cc(get_employee_fullname($row->employee_id));  ?></td>
+                                                        <td>
+                                                            <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                            <?php echo cc(get_employee_fullname($row->employee_id));  ?>
+                                                        </td>
                                                         <td><?php echo $yearmonth; ?></td>
                                                         <td><a href="javascript:void(0);" class="btn-sm btn-info up_emp_deduction" data-rid="<?php echo $row->id; ?>" data-ftype="employee_contribution" data-fval="<?php echo $row->employee_contribution;?>"><?php echo $row->employee_contribution;?></a></td>
                                                         <td><a href="javascript:void(0);" class="btn-sm btn-info up_emp_deduction" data-rid="<?php echo $row->id; ?>" data-ftype="employer_contribution" data-fval="<?php echo $row->employer_contribution;?>"><?php echo $row->employer_contribution;?></a></td>

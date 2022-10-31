@@ -46,11 +46,8 @@ class Tds_model extends CRM_Model {
             'remark' => $data['remark'],
             'assignid' => $staff_str,
             'pay_id' => $pay_id_str,
-            'created_date' => date('Y-m-d'),
+            'created_date' => date('Y-m-d H:i:s'),
         );
-
-      
-       
 
         $this->db->insert('tbltds_reconciliation', $ad_data);
         $insert_id = $this->db->insert_id();

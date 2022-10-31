@@ -13,7 +13,7 @@
    <div class="content">
       <div class="row">
         <?php //echo form_open_multipart($this->uri->uri_string(),array('id'=>'expense-form','class'=>'dropzone dropzone-manual')) ;?>
-		 <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'unit-form', 'class' => 'proposal-form')); ?>
+		 <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'unit-form', 'class' => 'proposal-form', "onsubmit" => "return confirm('Do you really want to take action ?');")); ?>
          <div class="col-md-6">
             <div class="panel_s">
 				<div class="panel-body">
@@ -28,9 +28,11 @@
 					<div class="col-md-12">
 						<label for="id" class="control-label title-panel col-md-6">Leave Type :</label> <span class="text-content"><?php echo $request_info["category_name"]; ?></span>
 					</div>
-					<div class="col-md-12">
-						<label for="id" class="control-label title-panel col-md-6">On Behalf Of :</label> <span class="text-content"><?php echo $request_info["on_behalf"]; ?></span>
-					</div>
+					<?php if (!empty($request_info["on_behalf_name"])){ ?>
+						<div class="col-md-12">
+							<label for="id" class="control-label title-panel col-md-6">On Behalf Of :</label> <span class="text-content"><?php echo $request_info["on_behalf"]; ?></span>
+						</div>
+					<?php } ?>
 					<div class="col-md-12">
 						<label for="id" class="control-label title-panel col-md-6">Added By :</label> <span class="text-content"><?php echo $request_info["added_by"]; ?></span>
 					</div>
@@ -103,27 +105,29 @@
 					</div>
 				</div>	
 			</div>
-            <div class="panel_s">
-                <div class="panel-body">
-                  	<h4 class="no-margin"><?php echo 'Leave Action'; ?></h4>
-                  	<hr class="hr-panel-heading" />
-                  	<div class="clearfix mtop15"></div>
-					<div class="col-md-12">
-						<div class="form-group">
-							<label for="approve_status" class="control-label"><?php echo _l('unit_status'); ?> *</label>
-							<select class="form-control selectpicker" name="approve_status" required="">
-								<option value=""></option>
-								<option value="1" <?php echo (isset($request_info["approved_status"]) && $request_info["approved_status"] == 1) ? 'selected' : "" ?>>Approved</option>
-								<option value="2" <?php echo (isset($request_info["approved_status"]) && $request_info["approved_status"] == 2) ? 'selected' : "" ?>>Reject</option>
-							</select>
-						</div>
-						<div class="form-group">
-							<label for="remark" required class="control-label"><?php echo 'Remark'; ?></label>
-							<textarea id="remark" name="remark" class="form-control" rows="3"><?php if(!empty($request_info["approved_remark"])){ echo $request_info["approved_remark"]; }?></textarea>
-						</div>
-					</div>									
-                </div>
-            </div>
+			<?php if ($request_info["approved_status"] == 0){ ?>
+				<div class="panel_s">
+					<div class="panel-body">
+						<h4 class="no-margin"><?php echo 'Leave Action'; ?></h4>
+						<hr class="hr-panel-heading" />
+						<div class="clearfix mtop15"></div>
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="approve_status" class="control-label"><?php echo _l('unit_status'); ?> *</label>
+								<select class="form-control selectpicker" name="approve_status" required="">
+									<option value=""></option>
+									<option value="1" <?php echo (isset($request_info["approved_status"]) && $request_info["approved_status"] == 1) ? 'selected' : "" ?>>Approved</option>
+									<option value="2" <?php echo (isset($request_info["approved_status"]) && $request_info["approved_status"] == 2) ? 'selected' : "" ?>>Reject</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="remark" required class="control-label"><?php echo 'Remark'; ?></label>
+								<textarea id="remark" name="remark" class="form-control" rows="3"><?php if(!empty($request_info["approved_remark"])){ echo $request_info["approved_remark"]; }?></textarea>
+							</div>
+						</div>									
+					</div>
+				</div>
+			<?php } ?>
         </div>
 		 
          <?php echo form_close(); ?>

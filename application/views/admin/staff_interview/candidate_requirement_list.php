@@ -135,8 +135,13 @@
                                                         }
                                                         ?>
                                                         <tr>
-                                                            <td><?php echo ++$key; ?></td>
-                                                            <td><span class="label label-info"><?php echo ($value->department_id > 0) ? value_by_id("tbldepartmentsmaster", $value->department_id, "name") : "--"; ?></span></td>
+                                                            <td>
+                                                                <?php echo ++$key; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo get_creator_info($value->added_by, $value->created_on); ?>
+                                                                <span class="label label-info"><?php echo ($value->department_id > 0) ? value_by_id("tbldepartmentsmaster", $value->department_id, "name") : "--"; ?></span>
+                                                            </td>
                                                             <td><span class="label label-success"><?php echo ($value->designation_id > 0) ? value_by_id("tbldesignation", $value->designation_id, "designation") : "--"; ?></span></td>
                                                             <td><?php echo _d($value->deadline_date); ?></td>
                                                             <td>

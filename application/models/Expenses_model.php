@@ -776,6 +776,7 @@ class Expenses_model extends CRM_Model
      */
     public function add_category($data)
     {
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $data['updated_at'] = date("Y-m-d H:i:s");
 	  // $data['description'] = nl2br($data['description']);
@@ -792,7 +793,9 @@ class Expenses_model extends CRM_Model
 	
 	public function add_purpose($data)
     {
+        $data["added_by"] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
+        
 	  // $data['description'] = nl2br($data['description']);
         $this->db->insert('tblpurpose', $data);
         $insert_id = $this->db->insert_id();
@@ -912,6 +915,7 @@ class Expenses_model extends CRM_Model
 	
 	public function add_tempo($data)
     {
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $data['updated_at'] = date("Y-m-d H:i:s");
 	  // $data['description'] = nl2br($data['description']);
@@ -984,6 +988,7 @@ class Expenses_model extends CRM_Model
 
     public function add_billtype($data)
     {
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $data['updated_at'] = date("Y-m-d H:i:s");
       // $data['description'] = nl2br($data['description']);

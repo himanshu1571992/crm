@@ -88,7 +88,10 @@
 												?>
 												<tr>
 													<td><?php echo ++$key; ?></td>
-													<td><?php echo cc(value_by_id('tblvendor',$value->vendor_id,'name')); ?></td>
+													<td>
+                                                        <?php echo get_creator_info($value->staff_id, $value->created_date); ?>
+                                                        <?php echo cc(value_by_id('tblvendor',$value->vendor_id,'name')); ?>
+                                                    </td>
 													<td><?php echo cc($paymentmode); ?></td>
 													<td><?php echo $value->reference_no; ?></td>
 													<td><?php echo date('d/m/Y',strtotime($value->date)); ?></td>

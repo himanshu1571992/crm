@@ -88,20 +88,24 @@ if(!empty($service_type)){
 										}elseif($service_type == 3){
 											$service_type_name = 'Rent & Sale Both';
 										}
-                    if ($used_for == 'proposal'){
-                       $client_name = trim($row->proposal_to);
-                       $client_info = $this->db->query("SELECT `userid` FROM `tblclientbranch` where `client_branch_name`='".$client_name."' ")->row();
-                       $client_id = (!empty($client_info)) ? $client_info->userid : 0;
-                    }else{
-                       $client_info = $this->db->query("SELECT `client_branch_name` FROM `tblclientbranch` where `userid`='".$row->clientid."' ")->row();
-                       $client_name = (!empty($client_info)) ? $client_info->client_branch_name : '--';
-                       $client_id = $row->clientid;
-                    }
-                    if ($client_id > 0){
-						            $sale_qty = get_product_sales_quantity_client($f_date,$t_date,$service_type,$product_id,$client_id, $used_for);
-                    }else{
-                        $sale_qty = get_product_sales_quantity_client($f_date,$t_date,$service_type,$product_id,$client_name, $used_for);
-                    }
+                                            if ($used_for == 'proposal'){
+                                               $client_name = trim($row->proposal_to);
+                                               $client_info = $this->db->query("SELECT `userid` FROM `tblclientbranch` where `client_branch_name`='".$client_name."' ")->row();
+                                               $client_id = (!empty($client_info)) ? $client_info->userid : 0;
+                                            }elseif ($used_for == 'material_receipt'){
+                                               $vendore_info = $this->db->query("SELECT `name` FROM `tblvendor` where `id`='".$row->vendor_id."' ")->row();
+                                               $client_name = (!empty($vendore_info)) ? $vendore_info->name : '--';
+                                               $client_id = $row->vendor_id;
+                                            }else{
+                                               $client_info = $this->db->query("SELECT `client_branch_name` FROM `tblclientbranch` where `userid`='".$row->clientid."' ")->row();
+                                               $client_name = (!empty($client_info)) ? $client_info->client_branch_name : '--';
+                                               $client_id = $row->clientid;
+                                            }
+                                            if ($client_id > 0){
+                        						            $sale_qty = get_product_sales_quantity_client($f_date,$t_date,$service_type,$product_id,$client_id, $used_for);
+                                            }else{
+                                                $sale_qty = get_product_sales_quantity_client($f_date,$t_date,$service_type,$product_id,$client_name, $used_for);
+                                            }
 										$ttl_qty += $sale_qty;
 										?>
 											<tr>
@@ -109,7 +113,11 @@ if(!empty($service_type)){
 												<td align="center"><a target="_blank" href="<?php echo admin_url('product_new/view/'.$product_id); ?>"><?php echo value_by_id('tblproducts',$product_id,'name'); ?></a></td>
 												<td align="center"><?php echo $service_type_name; ?></td>
 												<td align="center">
-                          <?php if ($client_id > 0){ ?>
+                          <?php  if ($used_for == 'material_receipt'){
+                            ?>
+                            <a target="_blank" href="<?php echo admin_url('vendor/vendor_profile/'.$client_id); ?>"><?php echo $client_name; ?></a>
+                            <?php
+                          } else if ($client_id > 0){ ?>
                             <a target="_blank" href="<?php echo admin_url('ClientBranch/branch/'.$client_id); ?>"><?php echo $client_name; ?></a>
                           <?php }else{
                             echo $client_name;

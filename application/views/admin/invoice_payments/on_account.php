@@ -124,7 +124,12 @@
 												?>
 												<tr>
 													<td><?php echo ++$key; ?></td>
-													<td><?php echo cc($client_info->client_branch_name); ?></td>
+													<td>
+														<?php 
+															echo get_creator_info($value->staff_id, $value->created_date);
+															echo cc($client_info->client_branch_name);
+														?>
+													</td>
 													<td><?php echo $paymentmode; ?></td>
 													<td><?php echo $value->reference_no; ?></td>
 													<td><?php echo date('d/m/Y',strtotime($value->date)); ?></td>

@@ -137,424 +137,416 @@
                                                 <div class="col-md-12">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="employee_id" class="control-label">Employee ID*</label>
-                                                                
-                                                                <input type="text" id="employee_id" name="employee_id" required="" <?php  echo (isset($member['employee_id']) && $member['employee_id'] != "") ? '' : 'onchange="checkuniqueemployee_id(this.value);"'; ?> class="form-control employee_info" data-tab="parsonal_details" value="<?php echo (isset($member['employee_id']) && $member['employee_id'] != "") ? $member['employee_id'] : get_next_employeeid(); ?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <div class="form-group">
-                                                                <?php
-                                                                $attendance_from = "";
-                                                                if (isset($member['attendance_from']) && $member['attendance_from'] != "") {
-                                                                    $attendance_from = $member['attendance_from'];
-                                                                }
-                                                                ?>
-                                                                <label for="attendance_from" class="control-label">Attendance From</label>
-                                                                <select class="form-control selectpicker employee_info" data-tab="parsonal_details" id="attendance_from" name="attendance_from"  data-live-search="true">
-                                                                    <option value="1" <?php
-                                                                    if ($attendance_from == 1) {
-                                                                        echo 'selected';
-                                                                    }
-                                                                    ?>>App</option>
-                                                                    <option value="2" <?php
-                                                                    if ($attendance_from == 2) {
-                                                                        echo 'selected';
-                                                                    }
-                                                                    ?>>BioMax</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <div class="form-group">
-                                                                <?php
-                                                                $company_facilities = "";
-                                                                if (isset($member['company_facilities']) && $member['company_facilities'] != "") {
-                                                                    $company_facilities = $member['company_facilities'];
-                                                                }
-                                                                ?>
-                                                                <label for="company_facilities" class="control-label">Company Facilities</label>
-                                                                <select class="form-control selectpicker employee_info" required="" data-tab="parsonal_details" id="company_facilities" name="company_facilities"  data-live-search="true">
-                                                                    <option value="1" <?php echo ($company_facilities == 1) ? 'selected' : ''; ?>>Given</option>
-                                                                    <option value="2" <?php echo ($company_facilities == 2) ? 'selected' : ''; ?>>Not Given</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="firstname" class="control-label"><?php echo _l('staff_namee'); ?>*</label>
-                                                        <?php
-                                                        $name = "";
-                                                        if (isset($registeredstaff) && !empty($registeredstaff)) {
-                                                            $name = $registeredstaff->employee_name;
-                                                        } elseif (isset($member['firstname']) && $member['firstname'] != "") {
-                                                            $name = $member['firstname'];
-                                                        }
-                                                        ?>
-                                                        <input type="text" id="firstname" name="firstname" required="" class="form-control employee_info" data-tab="parsonal_details" value="<?php echo $name; ?>">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="working_to" class="control-label"><?php echo _l('staff_father_name'); ?>*</label>
-                                                        <?php
-                                                            $father_husband_name = "";
-                                                            if (isset($registeredstaff) && !empty($registeredstaff)) {
-                                                                $staffid = $registeredstaff->staffid;
-                                                                $familydata = $this->db->query("SELECT full_name FROM `tblregistrationstafffamily` WHERE `staff_id`=".$staffid." AND `relationship_id`=1")->row();
-                                                                if(!empty($familydata)){
-                                                                    $father_husband_name = $familydata->full_name;
-                                                                }else{
-                                                                    $familydata = $this->db->query("SELECT full_name FROM `tblregistrationstafffamily` WHERE `staff_id`=".$staffid." AND `relationship_id`=4")->row();
-                                                                    if(!empty($familydata)){
-                                                                        $father_husband_name = $familydata->full_name;
-                                                                    }
-                                                                }
-                                                            }else{
-                                                                $father_husband_name = (isset($member['father_husband_name']) && $member['father_husband_name'] != "") ? $member['father_husband_name'] : "";
-                                                            }
-                                                        ?>
-                                                        <input type="text" id="father_husband_name" required="" name="father_husband_name" class="form-control employee_info" data-tab="parsonal_details"  value="<?php echo $father_husband_name; ?>">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                  <div class="row">
-                                                      <div class="col-md-6">
-                                                        <div class="form-group">
-                                                              <?php
-                                                                  $gender = "";
-                                                                  if (isset($registeredstaff) && $registeredstaff != "") {
-                                                                      $gender = $registeredstaff->gender;
-                                                                  } elseif (isset($member['gender']) && $member['gender'] != "") {
-                                                                      $gender = $member['gender'];
-                                                                  }
-                                                              ?>
-                                                              <label for="gender" class="control-label">Gender*</label>
-                                                              <select class="form-control selectpicker employee_info" data-tab="parsonal_details"  required="" id="gender" name="gender"  data-live-search="true">
-                                                                  <option value="" disabled selected>--Select One--</option>
-                                                                  <option value="1" <?php if ($gender == 1) {echo 'selected';} ?>>Male</option>
-                                                                  <option value="2" <?php if ($gender == 2) {echo 'selected';} ?>>Female</option>
-                                                              </select>
-                                                          </div>
-                                                      </div>
-                                                      <div class="col-md-6">
-                                                        <div class="form-group">
-                                                              <?php
-                                                                  $gender = "";
-                                                                  if (isset($registeredstaff) && $registeredstaff != "") {
-                                                                      $gender = $registeredstaff->gender;
-                                                                  } elseif (isset($member['gender']) && $member['gender'] != "") {
-                                                                      $gender = $member['gender'];
-                                                                  }
-                                                              ?>
-                                                              <label for="religion" class="control-label">Religion*</label>
-                                                              <select class="form-control selectpicker employee_info" data-tab="parsonal_details"  required="" id="religion_id" name="religion_id"  data-live-search="true">
-                                                                  <option value="" disabled selected>--Select One--</option>
-                                                                  <?php
-                                                                      if (isset($religion_list) && !empty($religion_list)){
-                                                                         foreach ($religion_list as $religion) {
-                                                                              $selectedcls = "";
-                                                                              if (isset($member['religion_id']) && $member['religion_id'] != "") {
-                                                                                  $selectedcls = ($member['religion_id'] == $religion->id) ? "selected='selected'": "";
-                                                                              }
-                                                                              echo "<option value='".$religion->id."' ".$selectedcls." >".cc($religion->name)."</option>";
-                                                                         }
-                                                                      }
-                                                                  ?>
-                                                              </select>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group date">
-                                                                <?php
-                                                                    $birth_date = date('d/m/Y');
-                                                                    if (isset($registeredstaff) && $registeredstaff != "0000-00-00") {
-                                                                        $birth_date = date('d/m/Y', strtotime($registeredstaff->birth_date));
-                                                                    } elseif (isset($member['birth_date']) && $member['birth_date'] != "0000-00-00") {
-                                                                        $birth_date = date('d/m/Y', strtotime($member['birth_date']));
-                                                                    }
-                                                                ?>
-                                                                <label for="birth_date" class="control-label"><?php echo _l('staff_birth_date'); ?>*</label>
-                                                                <input type="text" id="birth_date" required="" name="birth_date" class="form-control datepicker employee_info" data-tab="parsonal_details"  value="<?php echo $birth_date; ?>">
-                                                            </div>          
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group date">
-                                                                <?php
-                                                                    $actual_birth_date = "";
-                                                                    if (isset($member['actual_birth_date']) && $member['actual_birth_date'] != "0000-00-00") {
-                                                                        $actual_birth_date = date('d/m/Y', strtotime($member['actual_birth_date']));
-                                                                    }
-                                                                ?>
-                                                                <label for="actual_birth_date" class="control-label">Actual Birth Date</label>
-                                                                <input type="text" id="actual_birth_date" required="" name="actual_birth_date" class="form-control datepicker employee_info" data-tab="parsonal_details"  value="<?php echo $actual_birth_date; ?>">
-                                                            </div>          
-                                                        </div>
-                                                    </div>
-                                                	
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                	<div class="form-group">
-                                                        <?php
-                                                        $email_id = "";
-                                                        if (isset($registeredstaff) && !empty($registeredstaff)) {
-                                                            $email_id = $registeredstaff->email;
-                                                        } elseif (isset($member['email']) && $member['email'] != "") {
-                                                            $email_id = $member['email'];
-                                                        }
-                                                        ?>
-                                                        <label for="email" class="control-label"><?php echo _l('staff_mail_id'); ?>*</label>
-                                                        <input type="email" id="email" name="email" required="" class="form-control employee_info" data-tab="parsonal_details" value="<?php echo $email_id; ?>">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-3">
-                                                	<div class="form-group">
-                                                        <?php
-                                                        $phonenumber = "";
-                                                        if (isset($registeredstaff) && $registeredstaff != "") {
-                                                            $phonenumber = $registeredstaff->contact_no;
-                                                        } elseif (isset($member['phonenumber']) && $member['phonenumber'] != "") {
-                                                            $phonenumber = $member['phonenumber'];
-                                                        }
-                                                        ?>
-                                                        <label for="phonenumber" class="control-label"><?php echo _l('staff_cont_no'); ?>*</label>
-                                                        <input type="text" id="phonenumber" name="phonenumber"  required=""class="form-control digits employee_info" data-tab="parsonal_details" maxlength="12" minlength="10" value="<?php echo $phonenumber; ?>">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                	<div class="form-group">
-                                                        <?php
-                                                        $alternatenumber = "";
-                                                        if (isset($member['alternatenumber']) && $member['alternatenumber'] != "") {
-                                                            $alternatenumber = $member['alternatenumber'];
-                                                        }
-                                                        ?>
-                                                        <label for="alternatenumber" class="control-label">Alternate Contact No</label>
-                                                        <input type="text" id="alternatenumber" name="alternatenumber"  required=""class="form-control digits employee_info" data-tab="parsonal_details" maxlength="12" minlength="10" value="<?php echo $alternatenumber; ?>">
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-md-6">
-                                                	<div class="form-group">
-                                                        <?php
-                                                        $adhar_no = "";
-                                                        if (isset($registeredstaff) && $registeredstaff != "") {
-                                                            $adhar_no = $registeredstaff->adhar_no;
-                                                        } elseif (isset($member['adhar_no']) && $member['adhar_no'] != "") {
-                                                            $adhar_no = $member['adhar_no'];
-                                                        }
-                                                        ?>
-                                                        <label for="adhar_no" class="control-label"><?php echo _l('staff_adhaar_card_no'); ?>*</label>
-                                                        <input type="text" minlength="12" maxlength="12" id="adhar_no" required="" name="adhar_no" class="form-control digits employee_info" data-tab="parsonal_details"  value="<?php echo $adhar_no; ?>">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                	<div class="form-group">
-                                                        <?php
-                                                        $pan_card_no = "";
-                                                        if (isset($registeredstaff) && $registeredstaff != "") {
-                                                            $pan_card_no = $registeredstaff->pan_card_no;
-                                                        } elseif (isset($member['pan_card_no']) && $member['pan_card_no'] != "") {
-                                                            $pan_card_no = $member['pan_card_no'];
-                                                        }
-                                                        ?>
-                                                        <label for="pan_card_no" class="control-label"><?php echo _l('staff_pan_no'); ?>*</label>
-                                                        <input type="text" id="pan_card_no" required="" name="pan_card_no" class="form-control employee_info" data-tab="parsonal_details"  value="<?php echo $pan_card_no; ?>">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                	<div class="form-group">
-                                                        <?php
-                                                        $epf_no = "";
-                                                        if (isset($registeredstaff) && $registeredstaff != "") {
-                                                            $epf_no = $registeredstaff->epf_no;
-                                                        } elseif (isset($member['epf_no']) && $member['epf_no'] != "") {
-                                                            $epf_no = $member['epf_no'];
-                                                        }
-
-                                                        ?>
-                                                        <label for="epf_no" class="control-label"><?php echo _l('staff_epf_no'); ?></label>
-                                                        <input type="text" id="epf_no" name="epf_no" class="form-control digits employee_info" data-tab="parsonal_details" value="<?php echo $epf_no; ?>">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                	<div class="form-group">
-                                                        <?php
-                                                        $epic_no = "";
-                                                        if (isset($registeredstaff) && $registeredstaff != "") {
-                                                            $epic_no = $registeredstaff->esic_no;
-                                                        } elseif (isset($member['epic_no']) && $member['epic_no'] != "") {
-                                                            $epic_no = $member['epic_no'];
-                                                        }
-                                                        ?>
-                                                        <label for="epic_no" class="control-label"><?php echo _l('staff_esic_no'); ?></label>
-                                                        <input type="text" id="epic_no" name="epic_no" class="form-control employee_info" data-tab="parsonal_details" value="<?php echo $epic_no; ?>">
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="col-md-6">
-                                                	<div class="form-group">
-	                                                    <label for="designation_id" class="control-label"><?php echo _l('staff_designation'); ?>*</label>
-	                                                    <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="designation_id" name="designation_id"  data-live-search="true">
-	                                                            <option value=""></option>
-	                                                            <?php
-	                                                            if (isset($designation) && count($designation) > 0) {
-	                                                                    foreach ($designation as $designation_key => $designation_value)
-	                                                                    {
-	                                                                        $selectedcls = "";
-	                                                                        if (isset($registeredstaff)&& !empty($registeredstaff)){
-	                                                                            $selectedcls = (isset($registeredstaff->designation_id) && $registeredstaff->designation_id == $designation_value['id']) ? 'selected' : "";
-	                                                                        }else{
-	                                                                            $selectedcls = (isset($member['designation_id']) && $member['designation_id'] == $designation_value['id']) ? 'selected' : "";
-	                                                                        }
-	                                                            ?>
-	                                                                            <option value="<?php echo $designation_value['id'] ?>" <?php echo $selectedcls ?>><?php echo cc($designation_value['designation']); ?></option>
-	                                                            <?php
-	                                                                    }
-	                                                            }
-	                                                            ?>
-	                                                    </select>
-	                                                </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                	<div class="form-group date">
-	                                                    <label for="joining_date" class="control-label"><?php echo _l('staff_joining_date'); ?>*</label>
-	                                                    <input type="text" id="joining_date" required="" name="joining_date" class="form-control datepicker employee_info" data-tab="parsonal_details" value="<?php if(isset($member['joining_date']) && $member['joining_date'] != "0000-00-00"){ echo date('d/m/Y',strtotime($member['joining_date'])); }else{echo date('d/m/Y');}?>">
-	                                                </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-	                                                <div class="form-group">
-	                                                    <label for="staff_type_id" class="control-label"><?php echo _l('staff_type'); ?>*</label>
-	                                                    <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="staff_type_id" name="staff_type_id" data-live-search="true">
-	                                                            <option value=""></option>
-	                                                            <option value="1" <?php if(isset($member['staff_type_id']) && $member['staff_type_id']=='1') echo"selected=selected";?>>Permanent</option>
-	                                                            <option value="2" <?php if(isset($member['staff_type_id']) && $member['staff_type_id']=='2') echo"selected=selected";?>>Contract</option>
-	                                                    </select>
-	                                                </div>
-                                                </div>
-
-                                                <div class="col-md-3">
-	                                                <div class="form-group contract" hidden="">
-	                                                    <label for="contract_from_date" class="control-label">Contract From Date </label>
-	                                                    <input type="text" id="contract_from_date" required="" name="contract_from_date" class="form-control datepicker employee_info" data-tab="parsonal_details" value="<?php if(isset($member['contract_from_date']) && $member['contract_from_date'] != "0000-00-00"){ echo date('d/m/Y',strtotime($member['contract_from_date'])); }else{echo date('d/m/Y');}?>">
-	                                                </div>
-	                                            </div>
-	                                            <div class="col-md-3">
-	                                                <div class="form-group contract" hidden="">
-	                                                    <label for="contract_to_date" class="control-label">Contract To Date </label>
-	                                                    <input type="text" id="contract_to_date" required="" name="contract_to_date" class="form-control datepicker employee_info" data-tab="parsonal_details" value="<?php if(isset($member['contract_to_date']) && $member['contract_to_date'] != "0000-00-00"){ echo date('d/m/Y',strtotime($member['contract_to_date'])); }else{echo date('d/m/Y');}?>">
-	                                                </div>
-	                                            </div>
-
-	                                            <div class="col-md-6">
-                                                	<div class="form-group">
-	                                                    <label for="paid_leave_time" class="control-label">Paid Leave After*</label>
-	                                                    <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="paid_leave_time" name="paid_leave_time"  data-live-search="true">
-	                                                            <option value="" disabled selected>--Select One--</option>
-	                                                            <?php
-	                                                            for($month=1; $month<=12; $month++){
-                                                                        $paid_leave_time = (!empty($member) && !empty($member['paid_leave_time'])) ? $member['paid_leave_time'] : 6;
-
-	                                                                    ?>
-	                                                                    <option value="<?php echo $month ?>" <?php if($paid_leave_time == $month){ echo 'selected';}?>><?php echo $month.' Month' ?></option>
-	                                                                    <?php
-	                                                            }
-	                                                            ?>
-	                                                    </select>
-	                                                </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                	<div class="form-group">
-	                                                    <label for="working_from" class="control-label"><?php echo _l('staff_working_from'); ?>*</label>
-	                                                    <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="working_from" name="working_from"  data-live-search="true">
-	                                                        <option value="" disabled selected>--Select One--</option>
-	                                                        <?php
-	                                                        for ($hours = 0; $hours < 24; $hours++) {
-	                                                            for ($mins = 0; $mins < 60; $mins+=30) {
-	                                                                $value = str_pad($hours, 2, '0', STR_PAD_LEFT) . ':' . str_pad($mins, 2, '0', STR_PAD_LEFT);
-	                                                                ?>
-	                                                                <option value="<?php echo $value ?>" <?php echo (isset($member['working_from']) && $member['working_from'] == $value) ? 'selected' : "" ?>><?php echo $value ?></option>
-	                                                                <?php
-	                                                            }
-	                                                        }
-	                                                        ?>
-	                                                    </select>
-	                                                </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                	<div class="form-group">
-	                                                    <label for="working_to" class="control-label"><?php echo _l('staff_working_to'); ?>*</label>
-	                                                    <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="working_to" name="working_to"  data-live-search="true">
-	                                                            <option value="" disabled selected>--Select One--</option>
-	                                                            <?php
-	                                                            for($hours=0; $hours<24; $hours++){
-	                                                                    for($mins=0; $mins<60; $mins+=30){
-	                                                                            $value = str_pad($hours,2,'0',STR_PAD_LEFT).':'.str_pad($mins,2,'0',STR_PAD_LEFT);
-	                                                                            ?>
-	                                                                            <option value="<?php echo $value ?>" <?php echo (isset($member['working_to']) && $member['working_to'] == $value) ? 'selected' : "" ?>><?php echo $value ?></option>
-	                                                                            <?php
-	                                                                    }
-	                                                            }
-
-	                                                            ?>
-	                                                    </select>
-	                                                </div>
-                                                </div>
-
-
-
-
-
-                                                <div class="col-md-6">
-                                                	<?php if (isset($member)){ ?>
-                                                    <div class="form-group">
-                                                        <label for="Assigned" class="control-label">Assigned for Approval</label>
-                                                        <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" multiple data-live-search="true" id="assign" name="assignid[]">
-                                                        <?php
-                                                            if (isset($allStaffdata) && count($allStaffdata) > 0) {
-                                                                foreach ($allStaffdata as $Staffgroup_key => $Staffgroup_value) {
-                                                                    ?>
-                                                                    <optgroup class="<?php echo 'group' . $Staffgroup_value['id'] ?>">
-                                                                        <option value="<?php echo 'group' . $Staffgroup_value['id'] ?>"><?php echo $Staffgroup_value['name'] ?></option>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="employee_id" class="control-label">Employee ID*</label>
+                                                                        <input type="text" id="employee_id" name="employee_id" required="" <?php  echo (isset($member['employee_id']) && $member['employee_id'] != "") ? '' : 'onchange="checkuniqueemployee_id(this.value);"'; ?> class="form-control employee_info" data-tab="parsonal_details" value="<?php echo (isset($member['employee_id']) && $member['employee_id'] != "") ? $member['employee_id'] : get_next_employeeid(); ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="firstname" class="control-label"><?php echo _l('staff_namee'); ?>*</label>
                                                                         <?php
-                                                                            foreach ($Staffgroup_value['staffs'] as $singstaff) {
-                                                                            ?>
-                                                                            <option style="margin-left: 3%;" value="<?php echo 'staff' . $singstaff['staffid'] ?>" <?php
-                                                                            if (isset($staffassigndata) && in_array($singstaff['staffid'], $staffassigndata)) {
-                                                                                echo'selected';
-                                                                            }
-                                                                            ?>><?php echo $singstaff['firstname'] ?></option>
-
-                                                                        <?php }
-                                                                        ?>
-                                                                    </optgroup>
-                                                                                <?php
-                                                                            }
+                                                                        $name = "";
+                                                                        if (isset($registeredstaff) && !empty($registeredstaff)) {
+                                                                            $name = $registeredstaff->employee_name;
+                                                                        } elseif (isset($member['firstname']) && $member['firstname'] != "") {
+                                                                            $name = $member['firstname'];
                                                                         }
                                                                         ?>
-                                                        </select>
+                                                                        <input type="text" id="firstname" name="firstname" required="" class="form-control employee_info" data-tab="parsonal_details" value="<?php echo $name; ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="working_to" class="control-label"><?php echo _l('staff_father_name'); ?>*</label>
+                                                                        <?php
+                                                                            $father_husband_name = "";
+                                                                            if (isset($registeredstaff) && !empty($registeredstaff)) {
+                                                                                $staffid = $registeredstaff->staffid;
+                                                                                $familydata = $this->db->query("SELECT full_name FROM `tblregistrationstafffamily` WHERE `staff_id`=".$staffid." AND `relationship_id`=1")->row();
+                                                                                if(!empty($familydata)){
+                                                                                    $father_husband_name = $familydata->full_name;
+                                                                                }else{
+                                                                                    $familydata = $this->db->query("SELECT full_name FROM `tblregistrationstafffamily` WHERE `staff_id`=".$staffid." AND `relationship_id`=4")->row();
+                                                                                    if(!empty($familydata)){
+                                                                                        $father_husband_name = $familydata->full_name;
+                                                                                    }
+                                                                                }
+                                                                            }else{
+                                                                                $father_husband_name = (isset($member['father_husband_name']) && $member['father_husband_name'] != "") ? $member['father_husband_name'] : "";
+                                                                            }
+                                                                        ?>
+                                                                        <input type="text" id="father_husband_name" required="" name="father_husband_name" class="form-control employee_info" data-tab="parsonal_details"  value="<?php echo $father_husband_name; ?>">
+                                                                    </div>   
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                        $email_id = "";
+                                                                        if (isset($registeredstaff) && !empty($registeredstaff)) {
+                                                                            $email_id = $registeredstaff->email;
+                                                                        } elseif (isset($member['email']) && $member['email'] != "") {
+                                                                            $email_id = $member['email'];
+                                                                        }
+                                                                        ?>
+                                                                        <label for="email" class="control-label"><?php echo _l('staff_mail_id'); ?>*</label>
+                                                                        <input type="email" id="email" name="email" required="" class="form-control employee_info" data-tab="parsonal_details" value="<?php echo $email_id; ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                            $adhar_no = "";
+                                                                            if (isset($registeredstaff) && $registeredstaff != "") {
+                                                                                $adhar_no = $registeredstaff->adhar_no;
+                                                                            } elseif (isset($member['adhar_no']) && $member['adhar_no'] != "") {
+                                                                                $adhar_no = $member['adhar_no'];
+                                                                            }
+                                                                        ?>
+                                                                        <label for="adhar_no" class="control-label"><?php echo _l('staff_adhaar_card_no'); ?>*</label>
+                                                                        <input type="text" minlength="12" maxlength="12" id="adhar_no" required="" name="adhar_no" class="form-control digits employee_info" data-tab="parsonal_details"  value="<?php echo $adhar_no; ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                        $epf_no = "";
+                                                                        if (isset($registeredstaff) && $registeredstaff != "") {
+                                                                            $epf_no = $registeredstaff->epf_no;
+                                                                        } elseif (isset($member['epf_no']) && $member['epf_no'] != "") {
+                                                                            $epf_no = $member['epf_no'];
+                                                                        }
+
+                                                                        ?>
+                                                                        <label for="epf_no" class="control-label"><?php echo _l('staff_epf_no'); ?></label>
+                                                                        <input type="text" id="epf_no" required="" name="epf_no" class="form-control digits employee_info" data-tab="parsonal_details" value="<?php echo $epf_no; ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="designation_id" class="control-label"><?php echo _l('staff_designation'); ?>*</label>
+                                                                        <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="designation_id" name="designation_id"  data-live-search="true">
+                                                                            <option value=""></option>
+                                                                            <?php
+                                                                            if (isset($designation) && count($designation) > 0) {
+                                                                                    foreach ($designation as $designation_key => $designation_value)
+                                                                                    {
+                                                                                        $selectedcls = "";
+                                                                                        if (isset($registeredstaff)&& !empty($registeredstaff)){
+                                                                                            $selectedcls = (isset($registeredstaff->designation_id) && $registeredstaff->designation_id == $designation_value['id']) ? 'selected' : "";
+                                                                                        }else{
+                                                                                            $selectedcls = (isset($member['designation_id']) && $member['designation_id'] == $designation_value['id']) ? 'selected' : "";
+                                                                                        }
+                                                                            ?>
+                                                                                            <option value="<?php echo $designation_value['id'] ?>" <?php echo $selectedcls ?>><?php echo cc($designation_value['designation']); ?></option>
+                                                                            <?php
+                                                                                    }
+                                                                            }
+                                                                            ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="staff_type_id" class="control-label"><?php echo _l('staff_type'); ?>*</label>
+                                                                        <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="staff_type_id" name="staff_type_id" data-live-search="true">
+                                                                            <option value=""></option>
+                                                                            <option value="1" <?php if(isset($member['staff_type_id']) && $member['staff_type_id']=='1') echo"selected=selected";?>>Permanent</option>
+                                                                            <option value="2" <?php if(isset($member['staff_type_id']) && $member['staff_type_id']=='2') echo"selected=selected";?>>Contract</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="working_from" class="control-label"><?php echo _l('staff_working_from'); ?>*</label>
+                                                                        <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="working_from" name="working_from"  data-live-search="true">
+                                                                            <option value="" disabled selected>--Select One--</option>
+                                                                            <?php
+                                                                                for ($hours = 0; $hours < 24; $hours++) {
+                                                                                    for ($mins = 0; $mins < 60; $mins+=30) {
+                                                                                        $value = str_pad($hours, 2, '0', STR_PAD_LEFT) . ':' . str_pad($mins, 2, '0', STR_PAD_LEFT);
+                                                                                        ?>
+                                                                                        <option value="<?php echo $value ?>" <?php echo (isset($member['working_from']) && $member['working_from'] == $value) ? 'selected' : "" ?>><?php echo $value ?></option>
+                                                                                        <?php
+                                                                                    }
+                                                                                }
+                                                                            ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <?php if (isset($member)){ ?>
+                                                                        <div class="form-group">
+                                                                            <label for="Assigned" class="control-label">Assigned for Approval</label>
+                                                                            <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" multiple data-live-search="true" id="assign" name="assignid[]">
+                                                                            <?php
+                                                                                if (isset($allStaffdata) && count($allStaffdata) > 0) {
+                                                                                    foreach ($allStaffdata as $Staffgroup_key => $Staffgroup_value) {
+                                                                                        ?>
+                                                                                        <optgroup class="<?php echo 'group' . $Staffgroup_value['id'] ?>">
+                                                                                            <option value="<?php echo 'group' . $Staffgroup_value['id'] ?>"><?php echo $Staffgroup_value['name'] ?></option>
+                                                                                            <?php
+                                                                                                foreach ($Staffgroup_value['staffs'] as $singstaff) {
+                                                                                                ?>
+                                                                                                <option style="margin-left: 3%;" value="<?php echo 'staff' . $singstaff['staffid'] ?>" <?php
+                                                                                                if (isset($staffassigndata) && in_array($singstaff['staffid'], $staffassigndata)) {
+                                                                                                    echo'selected';
+                                                                                                }
+                                                                                                ?>><?php echo $singstaff['firstname'] ?></option>
+
+                                                                                            <?php }
+                                                                                            ?>
+                                                                                        </optgroup>
+                                                                                        <?php
+                                                                                    }
+                                                                                }
+                                                                                ?>
+                                                                            </select>
+                                                                        </div>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                        $attendance_from = "";
+                                                                        if (isset($member['attendance_from']) && $member['attendance_from'] != "") {
+                                                                            $attendance_from = $member['attendance_from'];
+                                                                        }
+                                                                        ?>
+                                                                        <label for="attendance_from" class="control-label">Attendance From</label>
+                                                                        <select class="form-control selectpicker employee_info" data-tab="parsonal_details" id="attendance_from" name="attendance_from"  data-live-search="true">
+                                                                            <option value="1" <?php
+                                                                            if ($attendance_from == 1) {
+                                                                                echo 'selected';
+                                                                            }
+                                                                            ?>>App</option>
+                                                                            <option value="2" <?php
+                                                                            if ($attendance_from == 2) {
+                                                                                echo 'selected';
+                                                                            }
+                                                                            ?>>BioMax</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                        $company_facilities = "";
+                                                                        if (isset($member['company_facilities']) && $member['company_facilities'] != "") {
+                                                                            $company_facilities = $member['company_facilities'];
+                                                                        }
+                                                                        ?>
+                                                                        <label for="company_facilities" class="control-label">Company Facilities</label>
+                                                                        <select class="form-control selectpicker employee_info" required="" data-tab="parsonal_details" id="company_facilities" name="company_facilities"  data-live-search="true">
+                                                                            <option value="1" <?php echo ($company_facilities == 1) ? 'selected' : ''; ?>>Given</option>
+                                                                            <option value="2" <?php echo ($company_facilities == 2) ? 'selected' : ''; ?>>Not Given</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                            $gender = "";
+                                                                            if (isset($registeredstaff) && $registeredstaff != "") {
+                                                                                $gender = $registeredstaff->gender;
+                                                                            } elseif (isset($member['gender']) && $member['gender'] != "") {
+                                                                                $gender = $member['gender'];
+                                                                            }
+                                                                        ?>
+                                                                        <label for="gender" class="control-label">Gender*</label>
+                                                                        <select class="form-control selectpicker employee_info" data-tab="parsonal_details"  required="" id="gender" name="gender"  data-live-search="true">
+                                                                            <option value="" disabled selected>--Select One--</option>
+                                                                            <option value="1" <?php if ($gender == 1) {echo 'selected';} ?>>Male</option>
+                                                                            <option value="2" <?php if ($gender == 2) {echo 'selected';} ?>>Female</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label for="religion" class="control-label">Religion*</label>
+                                                                        <select class="form-control selectpicker employee_info" data-tab="parsonal_details"  required="" id="religion_id" name="religion_id"  data-live-search="true">
+                                                                            <option value="" disabled selected>--Select One--</option>
+                                                                            <?php
+                                                                                if (isset($religion_list) && !empty($religion_list)){
+                                                                                    foreach ($religion_list as $religion) {
+                                                                                        $selectedcls = "";
+                                                                                        if (isset($member['religion_id']) && $member['religion_id'] != "") {
+                                                                                            $selectedcls = ($member['religion_id'] == $religion->id) ? "selected='selected'": "";
+                                                                                        }
+                                                                                        echo "<option value='".$religion->id."' ".$selectedcls." >".cc($religion->name)."</option>";
+                                                                                    }
+                                                                                }
+                                                                            ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group date">
+                                                                        <?php
+                                                                            $birth_date = date('d/m/Y');
+                                                                            if (isset($registeredstaff) && $registeredstaff != "0000-00-00") {
+                                                                                $birth_date = date('d/m/Y', strtotime($registeredstaff->birth_date));
+                                                                            } elseif (isset($member['birth_date']) && $member['birth_date'] != "0000-00-00") {
+                                                                                $birth_date = date('d/m/Y', strtotime($member['birth_date']));
+                                                                            }
+                                                                        ?>
+                                                                        <label for="birth_date" class="control-label"><?php echo _l('staff_birth_date'); ?>*</label>
+                                                                        <input type="text" id="birth_date" required="" name="birth_date" class="form-control datepicker employee_info" data-tab="parsonal_details"  value="<?php echo $birth_date; ?>">
+                                                                    </div>          
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group date">
+                                                                        <?php
+                                                                            $actual_birth_date = "";
+                                                                            if (isset($registeredstaff) && $registeredstaff != "0000-00-00") {
+                                                                                $actual_birth_date = date('d/m/Y', strtotime($registeredstaff->birth_date));
+                                                                            } elseif (isset($member['actual_birth_date']) && $member['actual_birth_date'] != "0000-00-00") {
+                                                                                $actual_birth_date = date('d/m/Y', strtotime($member['actual_birth_date']));
+                                                                            }
+                                                                        ?>
+                                                                        <label for="actual_birth_date" class="control-label">Actual Birth Date</label>
+                                                                        <input type="text" id="actual_birth_date" required="" name="actual_birth_date" class="form-control datepicker employee_info" data-tab="parsonal_details"  value="<?php echo $actual_birth_date; ?>">
+                                                                    </div>          
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                        $phonenumber = "";
+                                                                        if (isset($registeredstaff) && $registeredstaff != "") {
+                                                                            $phonenumber = $registeredstaff->contact_no;
+                                                                        } elseif (isset($member['phonenumber']) && $member['phonenumber'] != "") {
+                                                                            $phonenumber = $member['phonenumber'];
+                                                                        }
+                                                                        ?>
+                                                                        <label for="phonenumber" class="control-label"><?php echo _l('staff_cont_no'); ?>*</label>
+                                                                        <input type="text" id="phonenumber" name="phonenumber"  required=""class="form-control digits employee_info" data-tab="parsonal_details" maxlength="12" minlength="10" value="<?php echo $phonenumber; ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                        $alternatenumber = "";
+                                                                        if (isset($member['alternatenumber']) && $member['alternatenumber'] != "") {
+                                                                            $alternatenumber = $member['alternatenumber'];
+                                                                        }
+                                                                        ?>
+                                                                        <label for="alternatenumber" class="control-label">Alternate Contact No</label>
+                                                                        <input type="text" id="alternatenumber" name="alternatenumber"  required=""class="form-control digits employee_info" data-tab="parsonal_details" maxlength="12" minlength="10" value="<?php echo $alternatenumber; ?>">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                        $pan_card_no = "";
+                                                                        if (isset($registeredstaff) && $registeredstaff != "") {
+                                                                            $pan_card_no = $registeredstaff->pan_card_no;
+                                                                        } elseif (isset($member['pan_card_no']) && $member['pan_card_no'] != "") {
+                                                                            $pan_card_no = $member['pan_card_no'];
+                                                                        }
+                                                                        ?>
+                                                                        <label for="pan_card_no" class="control-label"><?php echo _l('staff_pan_no'); ?>*</label>
+                                                                        <input type="text" id="pan_card_no" required="" name="pan_card_no" class="form-control employee_info" data-tab="parsonal_details"  value="<?php echo $pan_card_no; ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <?php
+                                                                        $epic_no = "";
+                                                                        if (isset($registeredstaff) && $registeredstaff != "") {
+                                                                            $epic_no = $registeredstaff->esic_no;
+                                                                        } elseif (isset($member['epic_no']) && $member['epic_no'] != "") {
+                                                                            $epic_no = $member['epic_no'];
+                                                                        }
+                                                                        ?>
+                                                                        <label for="epic_no" class="control-label"><?php echo _l('staff_esic_no'); ?></label>
+                                                                        <input type="text" id="epic_no" required="" name="epic_no" class="form-control employee_info" data-tab="parsonal_details" value="<?php echo $epic_no; ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group date">
+                                                                        <?php
+                                                                            $joining_date = "";
+                                                                            if (isset($registeredstaff) && $registeredstaff != "") {
+                                                                                $joining_date = _d($registeredstaff->joining_date);
+                                                                            } elseif (isset($member['joining_date']) && $member['joining_date'] != "0000-00-00"){
+                                                                                $joining_date = date('d/m/Y',strtotime($member['joining_date'])); 
+                                                                            }else{
+                                                                                $joining_date = date('d/m/Y');
+                                                                            }
+                                                                        ?>
+                                                                        <label for="joining_date" class="control-label"><?php echo _l('staff_joining_date'); ?>*</label>
+                                                                        <input type="text" id="joining_date" required="" name="joining_date" class="form-control datepicker employee_info" data-tab="parsonal_details" value="<?php echo $joining_date; ?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 contract" hidden="">
+                                                                            <div class="form-group " >
+                                                                                <label for="contract_from_date" class="control-label">Contract From Date </label>
+                                                                                <input type="text" id="contract_from_date" required="" name="contract_from_date" class="form-control datepicker employee_info" data-tab="parsonal_details" value="<?php if(isset($member['contract_from_date']) && $member['contract_from_date'] != "0000-00-00"){ echo date('d/m/Y',strtotime($member['contract_from_date'])); }else{echo date('d/m/Y');}?>">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 contract" hidden="">
+                                                                            <div class="form-group">
+                                                                                <label for="contract_to_date" class="control-label">Contract To Date </label>
+                                                                                <input type="text" id="contract_to_date" required="" name="contract_to_date" class="form-control datepicker employee_info" data-tab="parsonal_details" value="<?php if(isset($member['contract_to_date']) && $member['contract_to_date'] != "0000-00-00"){ echo date('d/m/Y',strtotime($member['contract_to_date'])); }else{echo date('d/m/Y');}?>">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="paid_leave_time" class="control-label">Paid Leave After*</label>
+                                                                        <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="paid_leave_time" name="paid_leave_time"  data-live-search="true">
+                                                                            <option value="" disabled selected>--Select One--</option>
+                                                                            <?php
+                                                                                for($month=1; $month<=12; $month++){
+                                                                                        $paid_leave_time = (!empty($member) && !empty($member['paid_leave_time'])) ? $member['paid_leave_time'] : 6;
+
+                                                                                        ?>
+                                                                                        <option value="<?php echo $month ?>" <?php if($paid_leave_time == $month){ echo 'selected';}?>><?php echo $month.' Month' ?></option>
+                                                                                        <?php
+                                                                                }
+                                                                            ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="working_to" class="control-label"><?php echo _l('staff_working_to'); ?>*</label>
+                                                                        <select class="form-control selectpicker employee_info" data-tab="parsonal_details" required="" id="working_to" name="working_to"  data-live-search="true">
+                                                                            <option value="" disabled selected>--Select One--</option>
+                                                                            <?php
+                                                                                for($hours=0; $hours<24; $hours++){
+                                                                                    for($mins=0; $mins<60; $mins+=30){
+                                                                                        $value = str_pad($hours,2,'0',STR_PAD_LEFT).':'.str_pad($mins,2,'0',STR_PAD_LEFT);
+                                                                            ?>
+                                                                                        <option value="<?php echo $value ?>" <?php echo (isset($member['working_to']) && $member['working_to'] == $value) ? 'selected' : "" ?>><?php echo $value ?></option>
+                                                                            <?php
+                                                                                    }
+                                                                                }
+                                                                            ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <?php } ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -783,312 +775,317 @@
                                             <div class="col-md-12">
                                                 <a href="javascript:void(0);" class="btn-sm btn-info pull-right ctc_calculate"><i class="fa fa-calculator"> CALCULATE GROSS</i></a>        
                                             </div>
-                                        	<div class="form-group col-md-6">
-	                                        	<div class="form-group">
-	                                                <label for="taxable" class="control-label">Is Taxable*</label>
-	                                                <select class="form-control selectpicker employee_info" data-tab="salary_details" required="" id="taxable" name="taxable"  data-live-search="true">
-	                                                        <option value="" disabled selected>--Select One--</option>
-	                                                        <option value="1" <?php if(!empty($member) && $member['taxable'] == 1){ echo 'selected';}?>>Taxable</option>
-	                                                        <option value="2" <?php if(!empty($member) && $member['taxable'] == 2){ echo 'selected';}?>>Non Taxable</option>
-	                                                </select>
-	                                            </div>
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                            	<div class="form-group">
-                                                    <?php
-                                                    $monthly_salary = "";
-                                                    if (isset($registeredstaff) && $registeredstaff != "") {
-                                                        $monthly_salary = $registeredstaff->gross_salary;
-                                                    } elseif (isset($member['monthly_salary']) && $member['monthly_salary'] != "") {
-                                                        $monthly_salary = $member['monthly_salary'];
-                                                    }
-                                                    ?>
-                                                    <label for="monthly_salary" class="control-label">Cost to Company (CTC)*</label>
-                                                    <input type="text" id="monthly_salary" required="" name="monthly_salary" class="form-control employee_info" data-tab="salary_details" value="<?php echo $monthly_salary; ?>" >
-                                                </div>
-                                            </div>
-
                                             <div class="col-md-6">
-                                            	 <div class="form-group">
-                                                    <?php
-                                                        $gross_salary = "";
-                                                        if (isset($registeredstaff)&& $registeredstaff != ""){
-                                                            $gross_salary = $registeredstaff->gross_salary;
-                                                        }elseif (isset($member['gross_salary']) && $member['gross_salary'] != "") {
-                                                            $gross_salary = $member['gross_salary'];
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="form-group">
+                                                            <label for="taxable" class="control-label">Is Taxable*</label>
+                                                            <select class="form-control selectpicker employee_info" data-tab="salary_details" required="" id="taxable" name="taxable"  data-live-search="true">
+                                                                    <option value="" disabled selected>--Select One--</option>
+                                                                    <option value="1" <?php if(!empty($member) && $member['taxable'] == 1){ echo 'selected';}?>>Taxable</option>
+                                                                    <option value="2" <?php if(!empty($member) && $member['taxable'] == 2){ echo 'selected';}?>>Non Taxable</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>    
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <?php
+                                                            $gross_salary = "";
+                                                            if (isset($registeredstaff)&& $registeredstaff != ""){
+                                                                $gross_salary = $registeredstaff->gross_salary;
+                                                            }elseif (isset($member['gross_salary']) && $member['gross_salary'] != "") {
+                                                                $gross_salary = $member['gross_salary'];
+                                                            }
+
+                                                        ?>
+                                                            <label for="gross_salary" class="control-label"><?php echo _l('staff_monthly_salary'); ?>*</label>
+                                                            <input type="text" id="gross_salary" required="" name="gross_salary" class="form-control employee_info" data-tab="salary_details" value="<?php echo $gross_salary; ?>" >
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-12">
+                                                    <div class="form-group mode_details" hidden>
+                                                        <?php
+                                                        $ifsc_code = "";
+                                                        if (isset($registeredstaff) && $registeredstaff != "") {
+                                                            $ifsc_code = $registeredstaff->ifc_code;
+                                                        } elseif (isset($member['ifsc_code']) && $member['ifsc_code'] != "") {
+                                                            $ifsc_code = $member['ifsc_code'];
                                                         }
-
-                                                    ?>
-                                                        <label for="gross_salary" class="control-label"><?php echo _l('staff_monthly_salary'); ?>*</label>
-                                                        <input type="text" id="gross_salary" required="" name="gross_salary" class="form-control employee_info" data-tab="salary_details" value="<?php echo $gross_salary; ?>" >
-                                                </div>
+                                                        ?>
+                                                        <label for="ifsc_code" class="control-label">IFSC Code</label>
+                                                        <input type="text" id="ifsc_code" name="ifsc_code" class="form-control bank_field employee_info" data-tab="salary_details" value="<?php echo $ifsc_code; ?>">
+                                                    </div>
+                                                </div> 
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <?php 
+                                                            $required_cls = "required=''";
+                                                            if (isset($member) && $member != "") {
+                                                                $staffdocument = $this->db->query("SELECT * FROM tblfiles WHERE rel_id = '".$member['staffid']."' and rel_type = 'staff_document'")->result_array();
+                                                                if (!empty($staffdocument)){
+                                                                    $required_cls = "";
+                                                                }
+                                                            }    
+                                                        ?>        
+                                                        <label for="staff_document" class="control-label"><?php echo _l('staff_document'); ?></label>
+                                                        <input type="file" id="staff_document" class="form-control employee_info" <?php echo $required_cls; ?>  data-tab="salary_details" multiple=""  name="file[]">
+                                                    </div>
+                                                </div> 
                                             </div>
-
-
-                                            <div class="form-group col-md-6">
-                                            	<div class="form-group">
-                                                    <label for="payment_mode" class="control-label">Salary Payment Mode*</label>
-                                                    <select class="form-control selectpicker employee_info" data-tab="salary_details" required="" id="payment_mode" name="payment_mode"  data-live-search="true">
-                                                        <option value="" disabled selected>--Select One--</option>
-                                                        <option value="1" <?php if (!empty($member) && $member['payment_mode'] == 1) {echo 'selected';} ?>>Salary Bank A/c</option>
-                                                        <option value="2" <?php if (!empty($member) && $member['payment_mode'] == 2) {echo 'selected';} ?>>Other Bank A/c</option>
-                                                        <option value="3" <?php if (!empty($member) && $member['payment_mode'] == 3) {echo 'selected';} ?>>Cash Salary</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
                                             <div class="col-md-6">
-                                                <div class="form-group mode_details" hidden>
-                                                    <label for="bank_name" class="control-label">Bank Name</label>
-                                                    <?php
-                                                    $bank_name = "";
-                                                    if (isset($registeredstaff) && $registeredstaff != "") {
-                                                        $bank_name = $registeredstaff->bank_name;
-                                                    } elseif (isset($member['bank_name']) && $member['bank_name'] != "") {
-                                                        $bank_name = $member['bank_name'];
-                                                    }
-                                                    ?>
-                                                    <input type="text" name="bank_name" class="form-control" value="<?php echo $bank_name; ?>">
+                                                
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <?php
+                                                        $monthly_salary = "";
+                                                        if (isset($registeredstaff) && $registeredstaff != "") {
+                                                            $monthly_salary = $registeredstaff->net_salary;
+                                                        } elseif (isset($member['monthly_salary']) && $member['monthly_salary'] != "") {
+                                                            $monthly_salary = $member['monthly_salary'];
+                                                        }
+                                                        ?>
+                                                        <label for="monthly_salary" class="control-label">Cost to Company (CTC)*</label>
+                                                        <input type="text" id="monthly_salary" required="" name="monthly_salary" class="form-control employee_info" data-tab="salary_details" value="<?php echo $monthly_salary; ?>" >
+                                                    </div>
+                                                </div> 
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="payment_mode" class="control-label">Salary Payment Mode*</label>
+                                                        <select class="form-control selectpicker employee_info" data-tab="salary_details" required="" id="payment_mode" name="payment_mode"  data-live-search="true">
+                                                            <option value="" disabled selected>--Select One--</option>
+                                                            <option value="1" <?php if (!empty($member) && $member['payment_mode'] == 1) {echo 'selected';} ?>>Salary Bank A/c</option>
+                                                            <option value="2" <?php if (!empty($member) && $member['payment_mode'] == 2) {echo 'selected';} ?>>Other Bank A/c</option>
+                                                            <option value="3" <?php if (!empty($member) && $member['payment_mode'] == 3) {echo 'selected';} ?>>Cash Salary</option>
+                                                        </select>
+                                                    </div>
+                                                </div>    
+                                                <div class="col-md-12">
+                                                    <div class="form-group mode_details" hidden>
+                                                        <label for="bank_name" class="control-label">Bank Name</label>
+                                                        <?php
+                                                        $bank_name = "";
+                                                        if (isset($registeredstaff) && $registeredstaff != "") {
+                                                            $bank_name = $registeredstaff->bank_name;
+                                                        } elseif (isset($member['bank_name']) && $member['bank_name'] != "") {
+                                                            $bank_name = $member['bank_name'];
+                                                        }
+                                                        ?>
+                                                        <input type="text" name="bank_name" class="form-control bank_field employee_info" value="<?php echo $bank_name; ?>">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                            	<div class="form-group mode_details" hidden>
-                                                    <?php
-                                                    $account_no = "";
-                                                    if (isset($registeredstaff) && $registeredstaff != "") {
-                                                        $account_no = $registeredstaff->account_no;
-                                                    } elseif (isset($member['account_no']) && $member['account_no'] != "") {
-                                                        $account_no = $member['account_no'];
-                                                    }
-                                                    ?>
-                                                    <label for="account_no" class="control-label">A/c Number</label>
-                                                    <input type="text" id="account_no" name="account_no" class="form-control employee_info" data-tab="salary_details" value="<?php echo $account_no; ?>" >
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                            	<div class="form-group mode_details" hidden>
-                                                    <?php
-                                                    $ifsc_code = "";
-                                                    if (isset($registeredstaff) && $registeredstaff != "") {
-                                                        $ifsc_code = $registeredstaff->ifc_code;
-                                                    } elseif (isset($member['ifsc_code']) && $member['ifsc_code'] != "") {
-                                                        $ifsc_code = $member['ifsc_code'];
-                                                    }
-                                                    ?>
-                                                    <label for="ifsc_code" class="control-label">IFSC Code</label>
-                                                    <input type="text" id="ifsc_code" name="ifsc_code" class="form-control employee_info" data-tab="salary_details" value="<?php echo $ifsc_code; ?>">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="staff_document" class="control-label"><?php echo _l('staff_document'); ?></label>
-                                                    <input type="file" id="staff_document" multiple="" name="file[]" style="width: 100%;">
+                                                <div class="col-md-12">
+                                                    <div class="form-group mode_details" hidden>
+                                                        <?php
+                                                        $account_no = "";
+                                                        if (isset($registeredstaff) && $registeredstaff != "") {
+                                                            $account_no = $registeredstaff->account_no;
+                                                        } elseif (isset($member['account_no']) && $member['account_no'] != "") {
+                                                            $account_no = $member['account_no'];
+                                                        }
+                                                        ?>
+                                                        <label for="account_no" class="control-label">A/c Number</label>
+                                                        <input type="text" id="account_no" name="account_no" class="form-control bank_field employee_info" data-tab="salary_details" value="<?php echo $account_no; ?>" >
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="branch_details">
                                         <div class="row">
-
-                                            <div class="form-group col-md-6">
-                                                <div class="form-group">
-                                                    <label for="branch_id" class="control-label"><?php echo _l('staff_branch_name'); ?>*</label>
-                                                    <select class="form-control selectpicker employee_info" data-tab="branch_details" required="" id="branch_id" name="branch_id[]" multiple  data-live-search="true">
-                                                        <option value=""></option>
-                                                        <?php
-                                                        if (isset($registeredstaff) && $registeredstaff != "") {
-                                                            $memb_branch = explode(',', $registeredstaff->branch_id);
-                                                        } elseif (isset($member['branch_id']) && $member['branch_id'] != '') {
-                                                            $memb_branch = explode(',', $member['branch_id']);
-                                                        }
-                                                        if (isset($companybranchdata) && count($companybranchdata) > 0) {
-                                                            foreach ($companybranchdata as $companybranch_key => $companybranch_value) {
-                                                                $selected = "";
-                                                                if (isset($registeredstaff) && !empty($registeredstaff)) {
-                                                                    $selected = (isset($registeredstaff->branch_id) && $registeredstaff->branch_id == $companybranch_value['id']) ? 'selected' : "";
-                                                                } else {
-                                                                    $selected = (isset($member['branch_id']) && in_array($companybranch_value['id'], $memb_branch)) ? 'selected' : "";
-                                                                }
-                                                                ?>
-                                                                <option value="<?php echo $companybranch_value['id'] ?>"  <?php echo $selected; ?>><?php echo cc($companybranch_value['comp_branch_name']); ?></option>
-                                                                <?php
+                                            <div class="col-md-6">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="branch_id" class="control-label"><?php echo _l('staff_branch_name'); ?>*</label>
+                                                        <select class="form-control selectpicker employee_info" data-tab="branch_details" required="" id="branch_id" name="branch_id[]" multiple  data-live-search="true">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($registeredstaff) && $registeredstaff != "") {
+                                                                $memb_branch = explode(',', $registeredstaff->branch_id);
+                                                            } elseif (isset($member['branch_id']) && $member['branch_id'] != '') {
+                                                                $memb_branch = explode(',', $member['branch_id']);
                                                             }
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <div class="form-group">
-                                                    <label for="location_id" class="control-label">Location </label>
-                                                    <select class="form-control selectpicker"  id="location_id" name="location_id" data-tab="branch_details" data-live-search="true">
-                                                        <option value=""></option>
-                                                        <?php
-                                                        if (isset($location_info) && count($location_info) > 0) {
-                                                            foreach ($location_info as $location_value) {
-                                                                $selectedcls = (isset($member['location_id']) && $member['location_id'] == $location_value['id']) ? 'selected' : "";
-                                                                ?>
-                                                                <option value="<?php echo $location_value['id'] ?>" <?php echo $selectedcls ?>><?php echo cc($location_value['name']); ?></option>
-                                                                <?php
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <div class="form-group">
-                                                    <label for="reporting_branch_id" class="control-label">Employee Reporting Branch*</label>
-                                                    <select class="form-control selectpicker employee_info" data-tab="branch_details" required="" id="reporting_branch_id" name="reporting_branch_id" data-live-search="true">
-                                                        <option value=""></option>
-                                                        <?php
-                                                        if (isset($member['reporting_branch_id']) && $member['reporting_branch_id'] != '') {
-                                                            $memb_branch = explode(',', $member['reporting_branch_id']);
-                                                        }
-                                                        if (isset($companybranchdata) && count($companybranchdata) > 0) {
-                                                            foreach ($companybranchdata as $companybranch_key => $companybranch_value) {
-                                                                $selected = "";
-                                                                if (isset($registeredstaff) && !empty($registeredstaff)) {
-                                                                    $selected = (isset($registeredstaff->reporting_branch_id) && $registeredstaff->reporting_branch_id == $companybranch_value['id']) ? 'selected' : "";
-                                                                } else {
-                                                                    $selected = (isset($member['reporting_branch_id']) && in_array($companybranch_value['id'], $memb_branch)) ? 'selected' : "";
-                                                                }
-                                                                ?>
-                                                                <option value="<?php echo $companybranch_value['id'] ?>"  <?php echo $selected; ?>><?php echo cc($companybranch_value['comp_branch_name']); ?></option>
-                                                                <?php
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                      <div class="form-group">
-                                                          <label for="department_id" class="control-label">Select Department</label>
-                                                          <select class="form-control selectpicker" id="department_id" name="department_id" data-tab="branch_details" data-live-search="true">
-                                                              <option value=""></option>
-                                                              <?php
-                                                              if (isset($departments_info) && count($departments_info) > 0) {
-                                                                  foreach ($departments_info as $departments_key => $departments_value) {
-                                                                      $selected = "";
-                                                                      if (isset($registeredstaff) && !empty($registeredstaff)) {
-                                                                          $selected = (isset($registeredstaff->department_id) && $registeredstaff->department_id == $departments_value['id']) ? 'selected' : "";
-                                                                      } else {
-                                                                          $selected = (isset($member['department_id']) && $member['department_id'] == $departments_value['id']) ? 'selected' : "";
-                                                                      }
-                                                                      ?>
-                                                                      <option value="<?php echo $departments_value['id'] ?>" <?php echo $selected; ?>><?php echo cc($departments_value['name']); ?></option>
-                                                                      <?php
-                                                                  }
-                                                              }
-                                                              ?>
-                                                          </select>
-                                                      </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                      <div class="form-group">
-                                                            <label for="division" class="control-label">Division*</label>
-                                                            <select class="form-control selectpicker" data-tab="branch_details"  required="" id="division_id" name="division_id"  data-live-search="true">
-                                                                <option value="" disabled selected>--Select One--</option>
-                                                                <?php
-                                                                    if (isset($division_list) && !empty($division_list)){
-                                                                       foreach ($division_list as $division) {
-                                                                            $selectedcls = "";
-                                                                            if (isset($member['division_id']) && $member['division_id'] != "") {
-                                                                                $selectedcls = ($member['division_id'] == $division->id) ? "selected='selected'": "";
-                                                                            }
-                                                                            echo "<option value='".$division->id."' ".$selectedcls." >".cc($division->title)."</option>";
-                                                                       }
+                                                            if (isset($companybranchdata) && count($companybranchdata) > 0) {
+                                                                foreach ($companybranchdata as $companybranch_key => $companybranch_value) {
+                                                                    $selected = "";
+                                                                    if (isset($registeredstaff) && !empty($registeredstaff)) {
+                                                                        $selected = (isset($registeredstaff->branch_id) && $registeredstaff->branch_id == $companybranch_value['id']) ? 'selected' : "";
+                                                                    } else {
+                                                                        $selected = (isset($member['branch_id']) && in_array($companybranch_value['id'], $memb_branch)) ? 'selected' : "";
                                                                     }
-                                                                ?>
-                                                            </select>
+                                                                    ?>
+                                                                    <option value="<?php echo $companybranch_value['id'] ?>"  <?php echo $selected; ?>><?php echo cc($companybranch_value['comp_branch_name']); ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="reporting_branch_id" class="control-label">Employee Reporting Branch*</label>
+                                                        <select class="form-control selectpicker employee_info" data-tab="branch_details" required="" id="reporting_branch_id" name="reporting_branch_id" data-live-search="true">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($member['reporting_branch_id']) && $member['reporting_branch_id'] != '') {
+                                                                $memb_branch = explode(',', $member['reporting_branch_id']);
+                                                            }
+                                                            if (isset($companybranchdata) && count($companybranchdata) > 0) {
+                                                                foreach ($companybranchdata as $companybranch_key => $companybranch_value) {
+                                                                    $selected = "";
+                                                                    if (isset($registeredstaff) && !empty($registeredstaff)) {
+                                                                        $selected = (isset($registeredstaff->branch_id) && $registeredstaff->branch_id == $companybranch_value['id']) ? 'selected' : "";
+                                                                    } else {
+                                                                        $selected = (isset($member['reporting_branch_id']) && in_array($companybranch_value['id'], $memb_branch)) ? 'selected' : "";
+                                                                    }
+                                                                    ?>
+                                                                    <option value="<?php echo $companybranch_value['id'] ?>"  <?php echo $selected; ?>><?php echo cc($companybranch_value['comp_branch_name']); ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>   
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="superior_id" class="control-label">Select Superior</label>
+                                                        <select class="form-control selectpicker" id="superior_id" name="superior_id" required="" data-tab="branch_details" data-live-search="true">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($superior_info) && count($superior_info) > 0) {
+                                                                foreach ($superior_info as $superior_key => $superior_value) {
+                                                                    $selectedcls1 = "";
+                                                                    if (isset($registeredstaff) && !empty($registeredstaff)) {
+                                                                        $selectedcls1 = (isset($registeredstaff->superior_id) && $registeredstaff->superior_id == $superior_value['staffid']) ? 'selected' : "";
+                                                                    } else {
+                                                                        $selectedcls1 = (isset($member['superior_id']) && $member['superior_id'] == $superior_value['staffid']) ? 'selected' : "";
+                                                                    }
+                                                                    ?>
+                                                                    <option value="<?php echo $superior_value['staffid'] ?>" <?php echo $selectedcls1; ?>><?php echo cc($superior_value['firstname']); ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>                
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="gender" class="control-label">Warehouse </label>
+                                                        <select class="form-control selectpicker" id="warehouse_id" name="warehouse_id" required="" data-live-search="true">
+                                                            <option value="" disabled selected>--Select One--</option>
+                                                            <?php
+                                                            if (!empty($warehouse_info)) {
+                                                                foreach ($warehouse_info as $row) {
+                                                                    ?>
+                                                                    <option value="<?php echo $row->id; ?>" <?php if (!empty($member) && $member['warehouse_id'] == $row->id) {
+                                                                echo 'selected';
+                                                            } ?>><?php echo $row->name; ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="location_id" class="control-label">Location </label>
+                                                        <select class="form-control selectpicker"  id="location_id" name="location_id" required="" data-tab="branch_details" data-live-search="true">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($location_info) && count($location_info) > 0) {
+                                                                foreach ($location_info as $location_value) {
+                                                                    $selectedcls = (isset($member['location_id']) && $member['location_id'] == $location_value['id']) ? 'selected' : "";
+                                                                    ?>
+                                                                    <option value="<?php echo $location_value['id'] ?>" <?php echo $selectedcls ?>><?php echo cc($location_value['name']); ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>        
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="department_id" class="control-label">Select Department</label>
+                                                                <select class="form-control selectpicker" id="department_id" name="department_id" required="" data-tab="branch_details" data-live-search="true">
+                                                                    <option value=""></option>
+                                                                    <?php
+                                                                    if (isset($departments_info) && count($departments_info) > 0) {
+                                                                        foreach ($departments_info as $departments_key => $departments_value) {
+                                                                            $selected = "";
+                                                                            if (isset($registeredstaff) && !empty($registeredstaff)) {
+                                                                                $selected = (isset($registeredstaff->department_id) && $registeredstaff->department_id == $departments_value['id']) ? 'selected' : "";
+                                                                            } else {
+                                                                                $selected = (isset($member['department_id']) && $member['department_id'] == $departments_value['id']) ? 'selected' : "";
+                                                                            }
+                                                                            ?>
+                                                                            <option value="<?php echo $departments_value['id'] ?>" <?php echo $selected; ?>><?php echo cc($departments_value['name']); ?></option>
+                                                                            <?php
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="division" class="control-label">Division*</label>
+                                                                <select class="form-control selectpicker" data-tab="branch_details"  required="" id="division_id" name="division_id"  data-live-search="true">
+                                                                    <option value="" disabled selected>--Select One--</option>
+                                                                    <?php
+                                                                        if (isset($division_list) && !empty($division_list)){
+                                                                        foreach ($division_list as $division) {
+                                                                                $selectedcls = "";
+                                                                                if (isset($member['division_id']) && $member['division_id'] != "") {
+                                                                                    $selectedcls = ($member['division_id'] == $division->id) ? "selected='selected'": "";
+                                                                                }
+                                                                                echo "<option value='".$division->id."' ".$selectedcls." >".cc($division->title)."</option>";
+                                                                        }
+                                                                        }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="employee_group" class="control-label">Select Group</label>
+                                                        <select class="form-control selectpicker employee_info" data-tab="branch_details" required="" id="employee_group" name="employee_group[]" multiple  data-live-search="true">
+                                                            <option value=""></option>
 
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <div class="form-group">
-                                                    <label for="superior_id" class="control-label">Select Superior</label>
-                                                    <select class="form-control selectpicker" id="superior_id" name="superior_id" data-tab="branch_details" data-live-search="true">
-                                                        <option value=""></option>
-                                                        <?php
-                                                        if (isset($superior_info) && count($superior_info) > 0) {
-                                                            foreach ($superior_info as $superior_key => $superior_value) {
-                                                                $selectedcls1 = "";
-                                                                if (isset($registeredstaff) && !empty($registeredstaff)) {
-                                                                    $selectedcls1 = (isset($registeredstaff->superior_id) && $registeredstaff->superior_id == $superior_value['staffid']) ? 'selected' : "";
-                                                                } else {
-                                                                    $selectedcls1 = (isset($member['superior_id']) && $member['superior_id'] == $superior_value['staffid']) ? 'selected' : "";
+                                                            <?php
+                                                            $group_arr = array();
+                                                            if (isset($member['employee_group']) && $member['employee_group'] != '') {
+                                                                $group_arr = explode(',', $member['employee_group']);
+                                                            }
+                                                            if (isset($group_info) && count($group_info) > 0) {
+                                                                foreach ($group_info as $group_value) {
+                                                                    ?>
+                                                                    <option value="<?php echo $group_value['id'] ?>"  <?php echo (isset($member['employee_group']) && in_array($group_value['id'], $group_arr)) ? 'selected' : "" ?>><?php echo cc($group_value['name']); ?></option>
+                                                                    <?php
                                                                 }
-                                                                ?>
-                                                                <option value="<?php echo $superior_value['staffid'] ?>" <?php echo $selectedcls1; ?>><?php echo cc($superior_value['firstname']); ?></option>
-                                                                <?php
                                                             }
-                                                        }
-                                                        ?>
-                                                    </select>
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="last_expense_date_limit" class="control-label">Expense Days Limit*</label>
+                                                        <input required="" type="text" id="last_expense_date_limit" name="last_expense_date_limit" class="form-control employee_info" data-tab="branch_details" value="<?php echo (isset($member['last_expense_date_limit']) && $member['last_expense_date_limit'] != "") ? $member['last_expense_date_limit'] : "" ?>">
+                                                    </div>
                                                 </div>
                                             </div>
-
-                                            <div class="form-group col-md-6">
-                                                <div class="form-group">
-                                                    <label for="employee_group" class="control-label">Select Group</label>
-                                                    <select class="form-control selectpicker employee_info" data-tab="branch_details" required="" id="employee_group" name="employee_group[]" multiple  data-live-search="true">
-                                                        <option value=""></option>
-
-                                                        <?php
-                                                        $group_arr = array();
-                                                        if (isset($member['employee_group']) && $member['employee_group'] != '') {
-                                                            $group_arr = explode(',', $member['employee_group']);
-                                                        }
-                                                        if (isset($group_info) && count($group_info) > 0) {
-                                                            foreach ($group_info as $group_value) {
-                                                                ?>
-                                                                <option value="<?php echo $group_value['id'] ?>"  <?php echo (isset($member['employee_group']) && in_array($group_value['id'], $group_arr)) ? 'selected' : "" ?>><?php echo cc($group_value['name']); ?></option>
-                                                                <?php
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <div class="form-group">
-                                                    <label for="gender" class="control-label">Warehouse </label>
-                                                    <select class="form-control selectpicker" id="warehouse_id" name="warehouse_id"  data-live-search="true">
-                                                        <option value="" disabled selected>--Select One--</option>
-                                                        <?php
-                                                        if (!empty($warehouse_info)) {
-                                                            foreach ($warehouse_info as $row) {
-                                                                ?>
-                                                                <option value="<?php echo $row->id; ?>" <?php if (!empty($member) && $member['warehouse_id'] == $row->id) {
-                                                            echo 'selected';
-                                                        } ?>><?php echo $row->name; ?></option>
-                                                                <?php
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <div class="form-group">
-                                                    <label for="last_expense_date_limit" class="control-label">Expense Days Limit*</label>
-                                                    <input required="" type="text" id="last_expense_date_limit" name="last_expense_date_limit" class="form-control employee_info" data-tab="branch_details" value="<?php echo (isset($member['last_expense_date_limit']) && $member['last_expense_date_limit'] != "") ? $member['last_expense_date_limit'] : "" ?>">
-                                                </div>
-                                            </div>
-
                                         </div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="relieving_details">
@@ -1360,7 +1357,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="width:5%">S.No</th>
-                                                        <th style="width:95%">Document</th>
+                                                        <th style="width:90%">Document</th>
+                                                        <th style="width:5%">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -1371,6 +1369,7 @@
                                                             <tr>
                                                                     <td><?php echo ++$key; ?></td>
                                                                     <td><?php echo '<a download href="'.site_url('uploads/staff_profile_images/document/'.$member['staffid'].'/'.$doc['file_name']).'">'.$doc['file_name'].'</a><br>'; ?></td>
+                                                                    <td><?php echo '<a class="btn-sm btn-danger _delete" href="'.admin_url('staff/delete_staff_document/'.$doc['id']).'"><i class="fa fa-trash"></i></a>';?></td>
                                                                 </tr>
                                                             <?php
                                                     }
@@ -1424,33 +1423,77 @@
                                                 <thead>
                                                     <tr>
                                                         <th style="width:5%">S.No</th>
-                                                        <th style="width:95%">Document</th>
+                                                        <th>Document</th>
+                                                        <th>Generated By</th>
+                                                        <th>Generated At</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php
-                                                    $t = 0;
+                                                    <?php 
                                                         $staff_id = $member["staffid"];
+                                                        
+                                                        $t = 0;
+                                                        if (!empty($staff_letter_list)){
+                                                            foreach ($staff_letter_list as $key => $value) {
+                                                                ++$t;
+
+                                                                $letter_created = (isset($member["letter_created_".$value->id])) ? $member["letter_created_".$value->id] : '--';
+                                                                $letter_added = (isset($member["letter_added_".$value->id])) ? $member["letter_added_".$value->id] : '--';
+                                                                $showletter = 1;
+                                                                if ($value->id == 3 && $member["relieving_date"] == "0000-00-00" && $member["resignation_date"] == NULL){
+                                                                    $showletter = 0;
+                                                                }else if ($value->id == 6 && $member["reg_id"] == 0){
+                                                                    $showletter = 0;
+                                                                }
+                                                                $generated_at = (isset($member["letter_created_".$value->id]) && !empty($member["letter_created_".$value->id])) ? _d($member["letter_created_".$value->id]) : '--';
+                                                                $generated_by = (isset($member["letter_added_".$value->id]) && $member["letter_added_".$value->id] > 0) ? get_employee_fullname($member["letter_added_".$value->id]) : '--';
+                                                                if ($value->id == 6 && $member["reg_id"] > 0){
+                                                                    $staff_id = $member["reg_id"];
+                                                                    $rstaffdata = $this->db->query("SELECT offer_letter_generated_at, offer_letter_generated_by FROM tblregisteredstaff WHERE staffid = ".$member["reg_id"])->row();
+                                                                    $generated_at = (!empty($rstaffdata) && !empty($rstaffdata->offer_letter_generated_at)) ? _d($rstaffdata->offer_letter_generated_at) : '--';
+                                                                    $generated_by = (!empty($rstaffdata) && !empty($rstaffdata->offer_letter_generated_by)) ? get_employee_fullname($rstaffdata->offer_letter_generated_by) : '--';
+                                                                }
+
+                                                                if ($showletter == 1){
+                                                    ?>
+                                                                    <tr>
+                                                                        <td><?php echo $t;?></td>
+                                                                        <td><?php echo $value->title; ?></td>
+                                                                        <td><?php echo $generated_by; ?></td>
+                                                                        <td><?php echo $generated_at; ?></td>
+                                                                        <td><a class="btn-sm btn-info" href="<?php echo admin_url($value->link.$staff_id);?>" target='_blank'>Generate</a></td>
+                                                                    </tr>
+                                                    <?php            
+                                                                }
+                                                            }
+                                                        }
+                                                    ?>
+                                                    <?php
+                                                        
                                                         $items = $this->db->query("SELECT COUNT(*) as count_item FROM tblstaffitemsdetails WHERE staff_id = '".$staff_id."' AND remark=1 AND receive_status=1 AND status=1")->row();
                                                         if ($items->count_item > 0){
                                                             echo "<tr><td>".++$t."</td>";
-                                                            echo "<td><a href='". admin_url("letters_format/download_items_pdf/").$staff_id."' target='_blank'>Alloted Items</a></td></tr>";
+                                                            echo "<td>Alloted Items</td>";
+                                                            echo "<td>--</td>";
+                                                            echo "<td>--</td>";
+                                                            echo "<td><a href='". admin_url("letters_format/download_items_pdf/").$staff_id."' target='_blank'>Generate</a></td></tr>";
                                                         }
                                                     ?>
-
-                                                    <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_intent_letter/'.$staff_id);?>" target='_blank'>Intent Letter</a></td></tr>
-                                                    <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_joining_letter/'.$staff_id);?>" target='_blank'>Joining Letter</a></td></tr>
+                                                    <!-- <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_intent_letter/'.$staff_id);?>" target='_blank'>Intent Letter</a></td></tr>
+                                                    <!-- <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_joining_letter/'.$staff_id);?>" target='_blank'>Joining Letter</a></td></tr> --> 
                                                     <?php
                                                         if ($member["relieving_date"] != "0000-00-00" && $member["resignation_date"] != NULL){
                                                     ?>
-                                                    <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_exprience_certificate/'.$staff_id);?>" target='_blank'>Experience Letter</a></td></tr>
-                                                    <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_relieving_letter/'.$staff_id);?>" target='_blank'>Relieving Letter</a></td></tr>
+                                                    <!-- <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_exprience_certificate/'.$staff_id);?>" target='_blank'>Experience Letter</a></td></tr>
+                                                    <!-- <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_relieving_letter/'.$staff_id);?>" target='_blank'>Relieving Letter</a></td></tr> --> 
                                                     <?php
                                                         }
                                                     ?>
-                                                    <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_confirmation_letter/'.$staff_id);?>" target='_blank'>Confirmation Letter</a></td></tr>
+                                                    <!-- <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_confirmation_letter/'.$staff_id);?>" target='_blank'>Confirmation Letter</a></td></tr>
                                                     <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_offer_letter/'.$staff_id);?>" target='_blank'>Offer Letter</a></td></tr>
-                                                    <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_hr_policy/'.$staff_id);?>" target='_blank'>HR Policy</a></td></tr>
+                                                    <tr><td><?php echo ++$t;?></td><td><a href="<?php echo admin_url('letters_format/download_hr_policy/'.$staff_id);?>" target='_blank'>HR Policy</a></td></tr> -->
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>
@@ -1825,8 +1868,10 @@ init_selectpicker();
        var mode = $(this).val();
 	   if(mode != 3){
 		   $('.mode_details').show();
+           $(".bank_field").attr("required", "");
 	   }else{
 		   $('.mode_details').hide();
+           $(".bank_field").removeAttr("required", "");
 	   }
     });
 

@@ -8,6 +8,7 @@ $custom_fields = get_table_custom_fields('customers');
 
 $aColumns = [
     '1',
+    'tblclientbranch.addedfrom as addedfrom',
     'tblclientbranch.userid as userid',
     'client_branch_name',
     'CONCAT(firstname, " ", lastname) as contact_fullname',
@@ -181,6 +182,8 @@ foreach ($rResult as $aRow) {
     $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['userid'] . '"><label></label></div>';
     // User id
     $row[] = $aRow['userid'];
+    $row[] = ($aRow['addedfrom'] > 0) ? get_employee_fullname($aRow['addedfrom']) : '--';
+    
 
     // Company
     $company  = $aRow['client_branch_name'];

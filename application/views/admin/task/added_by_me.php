@@ -127,9 +127,12 @@
 													<tr>
 														<td>
 															<?php echo ++$key; ?>
-															<?php echo get_creator_info($value->added_by, $value->created_at); ?>
+															
 														</td>
-														<td><?php echo $value->title; ?></td>
+														<td>
+															<?php echo get_creator_info($value->added_by, $value->created_at); ?>
+															<?php echo $value->title; ?>
+														</td>
 														<td><?php echo $assign_name; ?></td>
 														<td><?php echo ($value->is_repeat == 1) ? 'Yes' : 'No'; ?></td>
 														<td><?php if($value->is_repeat == 1){ echo ($value->repeat_type == 1) ? 'Weekly' : 'Monthly'; }else{ echo $value->start_date.' to '.$value->due_date; }  ?></td>

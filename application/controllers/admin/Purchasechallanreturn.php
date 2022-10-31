@@ -476,7 +476,7 @@ class Purchasechallanreturn extends Admin_controller
         $temp_product_data = $this->db->query("SELECT * FROM `tbltemperoryproduct` where status = 1 order by product_name asc ")->result_array();
         if(!empty($product_data)){
             foreach ($product_data as $r) {
-                $data['product_data'][] = array('id'=>$r['id'],'name'=>$r['name'],'is_temp'=>0);
+                $data['product_data'][] = array('id'=>$r['id'],'name'=>$r['sub_name'],'is_temp'=>0);
             }
         }
         if(!empty($temp_product_data)){

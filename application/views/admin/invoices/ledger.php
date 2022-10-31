@@ -601,7 +601,7 @@ if(!empty($client_branch)){
 
 											//Getting Debit Notes againt parent invoice
 											if (!empty($year_id)){
-												$debit_note_info = $this->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and year_id = '".$year_id."' and status = '1' order by dabit_note_date ".$flow." ")->result();
+												$debit_note_info = $this->db->query("SELECT * FROM tbldebitnote where invoice_id > '0' and clientid IN (".$branch_str.") and year_id = '".$year_id."' and status = '1' order by dabit_note_date ".$flow." ")->result();
 											}else{
 												$debit_note_info = $this->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by dabit_note_date ".$flow." ")->result();
 											}
@@ -707,7 +707,7 @@ if(!empty($client_branch)){
 
 											//Getting Credit Notes againt parent invoice
 											if (!empty($year_id)){
-												$credit_note_info = $this->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' and year_id = '".$year_id."' order by date ".$flow." ")->result();
+												$credit_note_info = $this->db->query("SELECT * FROM tblcreditnote where  invoice_id > '0' and clientid IN (".$branch_str.") and status = '1' and year_id = '".$year_id."' order by date ".$flow." ")->result();
 											}else{
 												$credit_note_info = $this->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by date ".$flow." ")->result();
 											}
@@ -786,9 +786,9 @@ if(!empty($client_branch)){
 					<?php
 
 					$financialyearwhere = (!empty($year_id)) ? 'and dn.year_id='.$year_id : '';
-					$payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 ".$financialyearwhere." GROUP by dn.id ")->result();
+					$payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 and dn.status > 0 ".$financialyearwhere." GROUP by dn.id ")->result();
 					if(empty($payment_debitnote)){
-						$payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 ".$financialyearwhere." GROUP by dn.id ")->result();
+						$payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 and dn.status > 0 ".$financialyearwhere." GROUP by dn.id ")->result();
 					}
 
 					/*echo "SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") GROUP by dn.id ";
@@ -942,7 +942,7 @@ if(!empty($client_branch)){
                     $clientrefund_info = $this->db->query("SELECT r.*, pd.utr_no, pd.utr_date,pd.method from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (" . $branch_str . ") and pd.utr_no != '' and service_type = '".$service_type."' ".$refubddatefilter." order by r.id desc")->result();
 
 					$clientrefund_amt = $this->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (" . $branch_str . ") and pd.utr_no != '' and service_type = '".$service_type."' ".$refubddatefilter." order by r.id desc")->row()->ttl_amount;
-                    $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt));
+                    $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt)) - $vendor_outstanding_amount;
 					
                     ?>
                     <table class="table details-table">
@@ -995,7 +995,14 @@ if(!empty($client_branch)){
 							<?php
 							}
 						}
+						if (isset($vendor_outstanding_amount) && $vendor_outstanding_amount > 0){
 						?>
+						<tr>
+							<td colspan="4" class="text-center"><b>- Vendor Outstanding</b></td>
+							<td colspan="4" class="text-center"><?php echo $vendor_outstanding_amount.'.00'; ?></td>
+							<td colspan="4"></td>
+						</tr>
+						<?php } ?>
 						<tr>
 							<td colspan="4" class="text-center"><b>Final Balance</b></td>
 							<td colspan="4" class="text-center"><?php echo round($final_balance).'.00'; ?></td>

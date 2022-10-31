@@ -71,8 +71,14 @@
                                         foreach($category_info as $row){  
                                             ?>
                                             <tr>
-                                                <td><?php echo $i++;?></td>
-                                                <td><?php echo cc($row->name);?></td>
+                                                <td>
+                                                    <?php echo $i++;?>
+                                                    
+                                                </td>
+                                                <td>
+                                                    <?php echo get_creator_info($row->added_by, $row->created_at)?>
+                                                    <?php echo cc($row->name);?>
+                                                </td>
                                                 <td><?php echo ($row->show_date == 1) ? 'Yes' : 'No';?></td>
                                                 <td><?php echo ($row->show_deposit == 1) ? 'Yes' : 'No';?></td>
                                                 <td class="text-center">

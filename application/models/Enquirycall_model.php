@@ -94,7 +94,9 @@ class Enquirycall_model extends CRM_Model
 
         $sub_category_id = (is_array($data["sub_category_id"]) && !empty($data["sub_category_id"])) ? implode(",", $data["sub_category_id"]) : 0;
         $company_name = (!empty($data["company_name"])) ? $data["company_name"] : "";
+        $remark = (!empty($data["remark"])) ? $data["remark"] : "";
         $clientid = (!empty($data["clientid"])) ? $data["clientid"] : "";
+
         $insertdata['staff_id'] = get_staff_user_id();
         $insertdata['lead_category_id'] = $data["lead_category_id"];
         $insertdata['call_id'] = $data["call_id"];
@@ -112,6 +114,7 @@ class Enquirycall_model extends CRM_Model
         $insertdata['state_id'] = $data["state_id"];
         $insertdata['city_id'] = $data["city_id"];
         $insertdata['address'] = $data["address"];
+        $insertdata['remark'] = $remark;
         $insertdata['sub_category_id'] = $sub_category_id;
         $insertdata['unverified_status_id'] =  (isset($data["unverified_status_id"])) ? $data["unverified_status_id"] : 0;
         $insertdata['unverified_order_remark'] = (isset($data["unverified_order_remark"])) ? $data["unverified_order_remark"] : NULL;
@@ -221,7 +224,7 @@ class Enquirycall_model extends CRM_Model
         }*/
 
         $sub_category_id = (is_array($data["sub_category_id"]) && !empty($data["sub_category_id"])) ? implode(",", $data["sub_category_id"]) : $data["sub_category_id"];
-        
+        $remark = (!empty($data["remark"])) ? $data["remark"] : "";
         $company_name = (!empty($data["company_name"])) ? $data["company_name"] : "";
         $clientid = (!empty($data["clientid"])) ? $data["clientid"] : "";
         $updatedata['staff_id'] = get_staff_user_id();
@@ -239,6 +242,7 @@ class Enquirycall_model extends CRM_Model
         $updatedata['state_id'] = $data["state_id"];
         $updatedata['city_id'] = $data["city_id"];
         $updatedata['address'] = $data["address"];
+        $updatedata['remark'] = $remark;
         $updatedata['sub_category_id'] = $sub_category_id;
         $updatedata['unverified_status_id'] =  (isset($data["unverified_status_id"])) ? $data["unverified_status_id"] : 0;
         $updatedata['unverified_order_remark'] = (isset($data["unverified_order_remark"])) ? $data["unverified_order_remark"] : NULL;

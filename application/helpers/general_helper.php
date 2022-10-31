@@ -1044,6 +1044,9 @@ function send_activitytag_notification($requestdata){
     $module_id = $requestdata['module_id'];
     $link = $requestdata['link'];
     $activity_id = $requestdata['activity_id'];
+    /* this parameter only check staff have only read permission or reply permission*/
+    $readonly = $requestdata['readonly'];
+
     $n_data = array(
         'description' => $description,
         'staff_id' => $touserid,
@@ -1052,6 +1055,7 @@ function send_activitytag_notification($requestdata){
         'isread' => 0,
         'module_id' => $module_id,
         'link'  => $link,
+        'activity_replied' => $readonly,
         'date' => date('Y-m-d H:i:s'),
         'date_time' => date('Y-m-d H:i:s')
     );
@@ -1063,16 +1067,20 @@ function send_activitytag_notification($requestdata){
         $title = 'Schach';
         $send_intimation = sendFCM($description, $title, $token, $page = 2);
 
-    /* store tagging information in the db */   
-    $tagged_data = array(
-        'module_id' => $module_id,
-        'table_id' => $table_id,
-        'activity_id' => $activity_id,
-        'tagged_from' => $fromuserid,
-        'tagged_to' => $touserid,
-        'created_at' => date('Y-m-d H:i:s')
-    );
-    $CI->home_model->insert('tblactivitytagged', $tagged_data);    
+        /* this code execute in the case of activty read and reply both permission */
+    if ($readonly == 0){
+        /* store tagging information in the db */   
+        $tagged_data = array(
+            'module_id' => $module_id,
+            'table_id' => $table_id,
+            'activity_id' => $activity_id,
+            'tagged_from' => $fromuserid,
+            'tagged_to' => $touserid,
+            'created_at' => date('Y-m-d H:i:s')
+        );
+        $CI->home_model->insert('tblactivitytagged', $tagged_data);    
+    }    
+    
 }
 
 /* this function use for send activity replied */
@@ -1107,7 +1115,7 @@ function send_activity_replied($module_id, $table_id, $tagged_from, $tagged_to){
         $link = "follow_up/candidate_requirement_activity/".$table_id;
         $description = 'You got replied on candidate requirement activity follow up';
     }else if ($module_id == 42){
-        $link = "designrequisition/designrequisition_activity".$table_id;
+        $link = "designrequisition/designrequisition_activity/".$table_id;
         $description = 'You got replied on design requisition activity follow up';
     }else if ($module_id == 45){
         $link = "requirement/requirement_activity/".$table_id;
@@ -1149,4 +1157,98 @@ function send_activity_replied($module_id, $table_id, $tagged_from, $tagged_to){
             }
         }
     }
+}
+
+/* this function use for get activity data */
+function get_activity_tagdata($module_id, $table_id, $activity_id){
+    if ($module_id == 30){
+        $link = "follow_up/lead_activity/".$table_id;
+        $message = value_by_id("tblfollowupleadactivity", $activity_id, "message");
+    }else if ($module_id == 18){
+        $link = "enquirycall/enquirycall_activity/".$table_id;
+        $message = value_by_id("tblenquirycall_activity", $activity_id, "message");
+    }else if ($module_id == 31){
+        $link = "follow_up/client_activity/".$table_id;
+        $message = value_by_id("tblfollowupclientactivity", $activity_id, "message");
+    }else if ($module_id == 33){
+        $link = "follow_up/po_activity/".$table_id;
+        $message = value_by_id("tblpurchaseorderactivity", $activity_id, "message");
+    }else if ($module_id == 37){
+        $link = "follow_up/estimates_activity/".$table_id;
+        $message = value_by_id("tblproformainvoiceactivity", $activity_id, "message");
+    }else if ($module_id == 39){
+        $link = "follow_up/candidate_requirement_activity/".$table_id;
+        $message = value_by_id("tblcandidaterequirementactivity", $activity_id, "message");
+    }else if ($module_id == 42){
+        $link = "designrequisition/designrequisition_activity".$table_id;
+        $message = value_by_id("tbldesignrequisitionactivity", $activity_id, "message");
+    }else if ($module_id == 45){
+        $link = "requirement/requirement_activity/".$table_id;
+        $message = value_by_id("tblrequirmentactivity", $activity_id, "message");
+    }else if ($module_id == 48){
+        $link = "designrequisition/design_activity/".$table_id;
+        $message = value_by_id("tbldesignactivity", $activity_id, "message");
+    }else if ($module_id == 60){
+        $link = "task/activity_log/".$table_id;
+        $message = value_by_id("tbltask_activity_log", $activity_id, "message");
+    }
+    return array('link' => $link, 'message' => $message);
+}
+
+/* this function get vendor ledger amount */
+function get_vendor_ledger_amount($vendor_id){
+    $CI = & get_instance();
+
+    $grand_bal = 0;
+    $invoicelist = $CI->db->query("SELECT * FROM `tblpurchaseinvoice` WHERE vendor_id IN (".$vendor_id.") and po_id > 0 ORDER BY id DESC ")->result();
+    if(isset($invoicelist) && !empty($invoicelist)){
+        foreach ($invoicelist as $invoice_row) {
+            $payment_info = $CI->db->query("SELECT`pop`.`id`,`pop`.`amount` FROM `tblpurchaseorderpayments` as pop LEFT JOIN `tblbankpaymentdetails` as bpd ON bpd.`pay_type_id` = pop.`id` AND bpd.`pay_type`='po_payment'  LEFT JOIN `tblbankpayment` as bp ON bp.`id` = bpd.`main_id` WHERE `pop`.`po_id` = '".$invoice_row->po_id."' AND `bp`.`status` = 1")->result();
+            $received = 0;
+            if(!empty($payment_info)){
+                foreach ($payment_info as $value) {
+                    $received += $value->amount;
+                }
+            }
+            $grand_bal += ($invoice_row->totalamount - $received);
+            $debitnoteinfo = $CI->db->query("SELECT `pdn`.totalamount FROM `tblpurchasedabitnote` as pdn LEFT JOIN `tblpurchasechallanreturn` as pcr ON `pcr`.id = `pdn`.parchasechallanreturn_id WHERE `pcr`.`po_id` = '".$invoice_row->po_id."' ")->result();
+            if (!empty($debitnoteinfo)){
+                foreach ($debitnoteinfo as $dvalue) {
+                    $grand_bal -= $dvalue->totalamount;
+                }
+            }
+        }
+    }
+    
+    $onaccout_amt = 0.00;
+    $onaccout_info = $CI->db->query("SELECT * FROM `tblvendorpayment`  where vendor_id IN (".$vendor_id.") and payment_behalf = 1 and status = 1 ")->result();
+    if(!empty($onaccout_info)){
+        foreach ($onaccout_info as $on_am) {
+            $to_see = ($on_am->payment_mode == 1 && $on_am->chaque_status != 1) ? '0' : '1';
+            if($to_see == 1){
+                $onaccout_amt += $on_am->ttl_amt;
+            }
+        }
+    }
+    return (round($grand_bal) - round($onaccout_amt));
+}
+
+/* this function use for production status of proposals */
+function check_proposals_production_assign($proposal_id){
+    $CI = & get_instance();
+    $assign_status = '<span class="btn-sm btn-info">Assign</span>';
+    $chk_data = $CI->db->query("SELECT id FROM `tblmasterapproval` WHERE `module_id`='61' AND `table_id`='".$proposal_id."' ")->row();
+    if (!empty($chk_data)){
+        $assign_status = '<span class="btn-sm btn-warning">Pending</span>';
+    }
+    return $assign_status;
+}
+
+/* this function use for yearly client invoice values */
+function yearly_client_invoice_values($invoice_id, $client_id){
+    $CI = & get_instance();
+
+    $year_id = value_by_id_empty('tblinvoices', $invoice_id, 'year_id');
+    $total_amt = $CI->db->query("SELECT SUM(total) as total FROM `tblinvoices` WHERE year_id = '".$year_id."' AND clientid = '".$client_id."' AND status != 5")->row()->total;
+    return $total_amt;
 }

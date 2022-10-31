@@ -109,7 +109,10 @@
                                                     ?>																						
                                                         <tr>
                                                             <td><?php echo $z++; ?></td>
-                                                            <td><?php echo cc(get_employee_name($row->staff_id)); ?></td>
+                                                            <td>
+                                                                <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                                <?php echo cc(get_employee_name($row->staff_id)); ?>
+                                                            </td>
                                                             <!-- <td><?php echo cc(get_product_category($row->product_category_id)); ?></td> -->
                                                             <td><?php echo cc(value_by_id("tbldivisionmaster", $row->product_category_id, "title")); ?></td>
                                                             <td><?php echo number_format($row->amount, 2); ?></td>

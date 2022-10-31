@@ -226,18 +226,22 @@ class Approval extends Admin_controller
     /* this is for staff notification list */
     public function staff_notification_list($id = '')
     {
-        $module_ids = array(1,2,3,9);
-        $where = "n.id > 0";
+        $module_ids = array(1,2,3,8,9);
+        $where = "n.id > 0 ";
+        $approve_status = 0;
         if(!empty($_POST)){
             extract($this->input->post());
+
             if($status != ''){
                 $data['s_status'] = $status;
-                $where .= " and r.approved_status = '".$status."'";
+                $approve_status = $status;
             }
 
             if($module_id != ''){
                 $data['s_module'] = $module_id;
-                $module_ids = [$module_id];
+                $where .= " and n.module_id IN (".$module_id.")";
+            }else{
+                $where .= " and n.module_id IN (1,2,3,8,9)";
             }
             
             if(!empty($f_date) && !empty($t_date)){
@@ -246,52 +250,79 @@ class Approval extends Admin_controller
                 $where .= " and n.date between '".db_date($f_date)." 00:00:00' and '".db_date($t_date)." 23:59:59'";
             }
         }else{
-            $where .= " and r.approved_status = '0'";
+            $where .= " and n.module_id IN (1,2,3,8,9)";
         }
         
         $notification_info = array();
         $pending_request = array();
-        
-        if (!empty($module_ids) && in_array(1, $module_ids)){
-            $pending_request = $this->db->query("SELECT n.*,r.approved_status from `tblnotifications` as n LEFT JOIN tblrequests as r ON n.table_id = r.id LEFT JOIN tblrequestapproval as ra ON r.id = ra.request_id WHERE $where and ra.staff_id = '".get_staff_user_id()."' and n.touserid = '".get_staff_user_id()."' and n.module_id = 1 ORDER BY n.id DESC")->result();
-            if(!empty($pending_request)){
-                foreach($pending_request as $row){
-                    $notification_info[] = $row;
-                }
-            }
-        }
-        
-        if (!empty($module_ids) && in_array(2, $module_ids)){
-            $pending_request = $this->db->query("SELECT n.*,r.approved_status from `tblnotifications` as n LEFT JOIN tblexpenses as r ON n.table_id = r.id LEFT JOIN tblexpensesapproval as ea ON r.id = ea.expense_id WHERE $where and ea.staff_id = '".get_staff_user_id()."' and n.touserid = '".get_staff_user_id()."' and n.module_id = 2 ORDER BY n.id DESC")->result();
-            if(!empty($pending_request)){
-                foreach($pending_request as $row){
-                    $notification_info[] = $row;
-                }
-            }
-        }
-        
-        if (!empty($module_ids) && in_array(3, $module_ids)){
-            $pending_request = $this->db->query("SELECT n.*,r.approved_status from `tblnotifications` as n LEFT JOIN tblleaves as r ON n.table_id = r.id LEFT JOIN tblleaveapproval as la ON r.id = la.leave_id WHERE $where and la.staff_id = '".get_staff_user_id()."' and n.touserid = '".get_staff_user_id()."' and n.module_id = 3 ORDER BY n.id DESC")->result();
-            if(!empty($pending_request)){
-                foreach($pending_request as $row){
-                    $notification_info[] = $row;
-                }
-            }
-        }
 
-        if (!empty($module_ids) && in_array(8, $module_ids)){
-            $pending_request = $this->db->query("SELECT n.*,r.staff_confirmed as approved_status from `tblnotifications` as n LEFT JOIN tblpettycashmaster as r ON n.table_id = r.id where $where and r.staff_id = '".get_staff_user_id()."' and n.touserid = '".get_staff_user_id()."' and n.module_id = 8 ORDER BY n.id DESC")->result();
-            if(!empty($pending_request)){
-                foreach($pending_request as $row){
-                    $notification_info[] = $row;
-                }
-            }
-        }
-        if (!empty($module_ids) && in_array(9, $module_ids)){
-            $pending_request = $this->db->query("SELECT n.*,r.approved_status from `tblnotifications` as n LEFT JOIN tblpettycashrequest as r ON n.table_id = r.id LEFT JOIN tblpettycashrequestapproval as pa ON r.id = pa.pettycash_id where $where and pa.staff_id = '".get_staff_user_id()."' and n.touserid = '".get_staff_user_id()."' and n.module_id = 9 ORDER BY n.id DESC")->result();
-            if(!empty($pending_request)){
-                foreach($pending_request as $row){
-                    $notification_info[] = $row;
+        $getallnotification = $this->db->query("SELECT n.* from `tblnotifications` as n WHERE $where and n.touserid = '".get_staff_user_id()."'  ORDER BY n.id DESC")->result();
+        
+        if (!empty($getallnotification)){
+            foreach ($getallnotification as $noti) {
+
+                if($noti->module_id == 1){
+                    if ($noti->type == 1){
+                        $pending_request = $this->db->query("SELECT r.approved_status from tblrequests as r LEFT JOIN tblrequestapproval as ra ON r.id = ra.request_id WHERE r.id = '".$noti->table_id."' and r.approved_status = '".$approve_status."' and ra.staff_id = '".get_staff_user_id()."' ")->row();
+                    }else{
+                        $rwhere = "r.id = '".$noti->table_id."' and r.approved_status = '1' and r.confirmed_by_user = '".$approve_status."'";
+                        $rselect = "r.confirmed_by_user as approved_status";
+                        if ($approve_status == '2'){
+                            $rwhere = "r.id = '".$noti->table_id."' and r.approved_status = '2' and r.confirmed_by_user = '0'";
+                            $rselect = "r.approved_status";
+                        }
+
+                        $pending_request = $this->db->query("SELECT ".$rselect." from tblrequests as r LEFT JOIN tblrequestapproval as ra ON r.id = ra.request_id WHERE ".$rwhere." ")->row();
+                    }
+                    
+                    if(!empty($pending_request)){
+                        $noti->approved_status = $pending_request->approved_status;
+                        $notification_info[] = $noti;
+                    }
+                }elseif($noti->module_id == 2){
+                    $pending_request = $this->db->query("SELECT r.approved_status from tblexpenses as r LEFT JOIN tblexpensesapproval as ea ON r.id = ea.expense_id WHERE r.id = '".$noti->table_id."' and r.approved_status = '".$approve_status."' and ea.staff_id = '".get_staff_user_id()."' ")->row();
+                    if(!empty($pending_request)){
+                        $noti->approved_status = $pending_request->approved_status;
+                        $notification_info[] = $noti;
+                    }
+                }elseif($noti->module_id == 3){
+                    $pending_request = $this->db->query("SELECT r.approved_status from tblleaves as r LEFT JOIN tblleaveapproval as la ON r.id = la.leave_id WHERE r.approved_status = '".$approve_status."' and r.id = '".$noti->table_id."' and la.staff_id = '".get_staff_user_id()."' ")->row();
+                    
+                    if(!empty($pending_request)){
+                        /*echo $this->db->last_query();
+                        echo '<br>';*/
+                        $noti->approved_status = $pending_request->approved_status;
+                        $notification_info[] = $noti;
+                    }
+                }elseif($noti->module_id == 8){
+                    $pending_request = $this->db->query("SELECT r.staff_confirmed as approved_status FROM tblpettycashmaster as r where r.id = '".$noti->table_id."' and r.staff_confirmed = '".$approve_status."' and r.staff_id = '".get_staff_user_id()."'")->row();
+                    if(!empty($pending_request)){
+                        $noti->approved_status = $pending_request->approved_status;
+                        $notification_info[] = $noti;
+                    }
+                }elseif($noti->module_id == 9){
+
+                    if($noti->for_manager_approval == 1){
+                        $pending_request = $this->db->query("SELECT r.approved_status from tblpettycashapproved as r where r.id = '".$noti->table_id."' and r.approved_status = '".$approve_status."' ")->row();
+                    }else{
+                        if ($noti->type == 1){
+                            $pending_request = $this->db->query("SELECT r.approved_status from tblpettycashrequest as r LEFT JOIN tblpettycashrequestapproval as pa ON r.id = pa.pettycash_id where r.id = '".$noti->table_id."' and r.approved_status = '".$approve_status."' and pa.staff_id = '".get_staff_user_id()."' ")->row();
+                        }else{
+                            $rwhere = "r.id = '".$noti->table_id."' and r.approved_status = '1' and r.confirmed_by_user = '".$approve_status."'";
+                            $rselect = "r.confirmed_by_user as approved_status";
+                            if ($approve_status == '2'){
+                                $rwhere = "r.id = '".$noti->table_id."' and r.approved_status = '2' and r.confirmed_by_user = '0'";
+                                $rselect = "r.approved_status";
+                            }
+                            $pending_request = $this->db->query("SELECT ".$rselect." from tblpettycashrequest as r LEFT JOIN tblpettycashrequestapproval as pa ON r.id = pa.pettycash_id WHERE ".$rwhere." ")->row();
+                            // $pending_request = $this->db->query("SELECT r.approved_status from tblpettycashrequest as r LEFT JOIN tblpettycashrequestapproval as pa ON r.id = pa.pettycash_id where r.id = '".$noti->table_id."' and r.approved_status = '".$approve_status."' and pa.staff_id = '".get_staff_user_id()."' ")->row();
+                        }
+                    }
+                    
+                    if(!empty($pending_request)){
+                        $noti->approved_status = $pending_request->approved_status;
+                        $notification_info[] = $noti;
+                    }
                 }
             }
         }

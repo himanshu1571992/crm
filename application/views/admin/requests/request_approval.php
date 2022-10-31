@@ -62,7 +62,7 @@
 							?>
 							<label for="id" class="control-label title-panel col-md-6">Transfer Type :</label> <span class="text-content"><?php echo $transfer_type; ?></span>
 						</div>
-						<?php if ($request_info["category_id"] == 1){ ?>
+						<?php if (!empty($request_info["on_behalf_name"])){ ?>
 							<div class="col-md-12">
 								<label for="id" class="control-label title-panel col-md-6">On Behalf Of :</label> <span class="text-content text-danger"><?php echo $request_info["on_behalf_name"]; ?></span>
 							</div>
@@ -97,14 +97,12 @@
 							<label for="id" class="control-label title-panel col-md-6">Category :</label> <span class="text-content"><?php echo get_request_category($request_info["category_id"]); ?></span>
 						</div>
 						<div class="col-md-12">
-							<label for="id" class="control-label title-panel col-md-6">Reason :</label> <span class="col-md-6"><?php echo cc($request_info["reason"]); ?></span>
+							<label for="id" class="control-label title-panel col-md-6">Reason :</label> <span class="col-md-6" style="overflow-wrap: break-word;"><?php echo cc($request_info["reason"]); ?></span>
 						</div>
 						<div class="col-md-12">
-							<br>
-							<label for="id" class="control-label title-panel col-md-6">Description :</label> <span class="col-md-6"><?php echo cc($request_info["description"]); ?></span>
+							<label for="id" class="control-label title-panel col-md-6">Description :</label> <span class="col-md-6" style="overflow-wrap: break-word;"><?php echo cc($request_info["description"]); ?></span>
 						</div>
 						<div class="col-md-12">
-							<br>
 							<label for="id" class="control-label title-panel col-md-6">Request Route :</label> <span class="text-content"><?php echo $request_info["approved_via"]; ?></span>
 						</div>
 						<div class="col-md-12">
@@ -181,11 +179,11 @@
 							<label for="approved_remark" class="control-label title-panel">Approved / Rejected Remark :</label> <span class="text-content"><?php echo $request_info["remark"]; ?></span>
 						</div>
 						<?php
-							if ($request_info["payment_type"] != 0){
+							if ($request_info["payment_status"] != 0){
 								
-								if ($request_info["payment_type"] == 1){
+								if ($request_info["payment_status"] == 1){
 									$paymenttype = "Accepted";
-								}else if ($request_info["payment_type"] == 2){
+								}else if ($request_info["payment_status"] == 2){
 									$paymenttype = "Payment Done";
 								}
 						?>
@@ -301,13 +299,13 @@
 												}
 											?>
 											<label for="approved_amount" class="control-label"><?php echo 'Approved Amount'; ?></label>
-											<input id="approved_amount" min="0" step="any" required name="approved_amount" class="form-control" value="" type="number" <?php echo $amountcls; ?>>
+											<input id="approved_amount" min="0" step="any" required name="approved_amount" class="form-control approved_amount" value="" type="number" <?php echo $amountcls; ?>>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
-											<label for="remark" required class="control-label"><?php echo 'Remark'; ?></label>
-											<textarea id="remark" name="remark" class="form-control" rows="3"></textarea>
+											<label for="remark"  class="control-label"><?php echo 'Remark'; ?></label>
+											<textarea id="remark" required name="remark" class="form-control" rows="3"></textarea>
 										</div>
 									</div>
 								</div>
@@ -338,6 +336,7 @@
 		if (status_val == 2){
 			$(".amount_div").hide();
 		}
+		$(".approved_amount").attr("required", "");
 		if (status_val == 1){
 			$("#approved_amount").val(request_amount);
 			$(".pay_mode_div").show();
@@ -346,9 +345,11 @@
 			$("#payment_type").val("");
 			$('.selectpicker').selectpicker('refresh');
 			$(".payment_type").removeAttr("required", "");
+			$(".approved_amount").removeAttr("required", "");
 			$(".pay_mode_div").hide();
 		}
 		if (status_val == 3){
+			$("#approved_amount").val(request_amount);
 			$(".petty_cash_div").show();
 			$(".petty_cash_id").attr("required", "");
 		}else{

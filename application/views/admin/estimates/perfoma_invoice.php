@@ -1425,48 +1425,36 @@
 
 
                                     <div class="row">
-
                                         <div class="col-md-6">
-
-                                            <?php
-
-                                            $s_attrs = array('disabled' => true, 'data-show-subtext' => true);
-
-                                            $s_attrs = do_action('estimate_currency_disabled', $s_attrs);
-
-                                            foreach ($currencies as $currency) {
-
-                                                if ($currency['isdefault'] == 1) {
-
-                                                    $s_attrs['data-base'] = $currency['id'];
-
-                                                }
-
-                                                if (isset($estimate)) {
-
-                                                    if ($currency['id'] == $estimate->currency) {
-
-                                                        $selected = $currency['id'];
-
-                                                    }
-
-                                                } else {
-
-                                                    if ($currency['isdefault'] == 1) {
-
-                                                        $selected = $currency['id'];
-
-                                                    }
-
-                                                }
-
-                                            }
-
-                                            ?>
-
-                                            <?php echo render_select('currency', $currencies, array('id', 'name', 'symbol'), 'estimate_add_edit_currency', $selected, $s_attrs); ?>
-
+                                            <div class="form-group">
+                                                <label for="currency" class="control-label">Currency</label>
+                                                <select required="" class="form-control selectpicker" id="currency" required="" name="currency" data-live-search="true">
+                                                    <option value="0" <?php echo (!empty($estimate->currency) && $estimate->currency == 0) ? 'selected' : '' ; ?> >INR</option>
+                                                    <option value="1" <?php echo (!empty($estimate->currency) && $estimate->currency == 1) ? 'selected' : '' ; ?> >USD</option>
+                                                </select>
+                                            </div>
                                         </div>
+                                        <!-- <div class="col-md-6">
+                                            <?php
+                                                // $s_attrs = array('disabled' => true, 'data-show-subtext' => true);
+                                                // $s_attrs = do_action('estimate_currency_disabled', $s_attrs);
+                                                // foreach ($currencies as $currency) {
+                                                //     if ($currency['isdefault'] == 1) {
+                                                //         $s_attrs['data-base'] = $currency['id'];
+                                                //     }
+                                                //     if (isset($estimate)) {
+                                                //         if ($currency['id'] == $estimate->currency) {
+                                                //             $selected = $currency['id'];
+                                                //         }
+                                                //     } else {
+                                                //         if ($currency['isdefault'] == 1) {
+                                                //             $selected = $currency['id'];
+                                                //         }
+                                                //     }
+                                                // }
+                                            ?>
+                                            <?php //echo render_select('currency', $currencies, array('id', 'name', 'symbol'), 'estimate_add_edit_currency', $selected, $s_attrs); ?>
+                                        </div> -->
 
                                         <div class="col-md-6">
 

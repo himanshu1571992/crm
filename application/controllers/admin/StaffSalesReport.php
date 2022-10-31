@@ -167,7 +167,8 @@ class StaffSalesReport extends Admin_controller {
             extract($this->input->post());
             if ($id == '') {
 
-                $ad_data = array(                            
+                $ad_data = array(     
+                    'added_by' => get_staff_user_id(),                       
                     'product_name' => $product_name,
                     'description' => $description,
                     'created_at' => date('Y-m-d H:i:s')

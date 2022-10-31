@@ -780,4 +780,220 @@ class Staff_API extends CI_Controller {
     }
 
 
+    public function addEmployeeComplain()
+    {
+       $return_arr = array();
+
+        if(!empty($_GET)){
+            extract($this->input->get());
+        }
+
+        elseif(!empty($_POST)){
+            extract($this->input->post());  
+        }
+
+
+        if(!empty($user_id) && !empty($description)){
+
+           $ad_data = array(
+                'added_by' => $user_id,
+                'complain_to' => $complain_to,
+                'description' => $description,
+                'created_at' => date('Y-m-d H:i:s'),
+            );
+
+            $insert = $this->home_model->insert('tblemployee_complains',$ad_data);
+
+            $complain_id = $this->db->insert_id();
+
+            employee_complains_image_upload($complain_id);
+
+            
+            if($insert == true){
+
+
+                $designation_id = ($complain_to == 1) ? 4 : 34;
+
+                $staff_info = $this->db->query("SELECT `staffid`  FROM `tblstaff` WHERE `designation_id` = '".$designation_id."' and active = 1 and token_id != '' ")->row();
+                
+
+                //Sending Mobile Intimation
+                if(!empty($staff_info)){
+                    $token = get_staff_token($staff_info->staffid);
+                    $title = 'Schach';
+                    $message = 'You got new Employee Complain';
+                    $send_intimation = sendFCM($message, $title, $token, $page = 3);
+                }
+                
+
+
+                $return_arr['status'] = true;   
+                $return_arr['message'] = "Complain added Successfully";
+                $return_arr['data'] = [];
+            }else{
+                $return_arr['status'] = false;  
+                $return_arr['message'] = "Fail to add Complain";
+                $return_arr['data'] = [];
+            }
+
+        }else{
+
+            $return_arr['status'] = false;  
+            $return_arr['message'] = "Required Parameters are messing";
+            $return_arr['data'] = [];
+        }
+
+        
+        header('Content-type: application/json');
+        echo json_encode($return_arr);
+
+
+        //http://mustafa-pc/crm/Staff_API/addEmployeeComplain?user_id=27&complain_to=2&description=description
+
+    }
+
+    public function employeeComplainList()
+    {
+       $return_arr = array();
+
+        if(!empty($_GET)){
+            extract($this->input->get());
+        }
+
+        elseif(!empty($_POST)){
+            extract($this->input->post());  
+        }
+
+        if(!empty($designation_id)){
+            if($designation_id == 4){
+                $where = "complain_to = '1' ";
+            }elseif($designation_id == 34){
+                $where = "complain_to = '2' ";
+            }
+            
+        }else{
+            $where = "added_by = '".$user_id."' ";  
+        }
+        
+
+
+        if(!empty($where)){
+          $complain_info = $this->db->query("SELECT * FROM `tblemployee_complains` where ".$where."  order by id desc")->result();   
+        }
+
+        
+        if(!empty($complain_info)){
+            foreach ($complain_info as $value) {
+
+                $image_path = '';
+                if(!empty($value->file)){
+                    $image_path = base_url('uploads/employee_complains/'.$value->id.'/'.$value->file);
+                }
+
+                $arr[] = array(
+                    'id' => $value->id,
+                    'added_by' => get_employee_name($value->added_by),
+                    'complain_to' => $value->complain_to,
+                    'complain_to_name' => ($value->complain_to == 1) ? 'HR' : 'MD',
+                    'description' => $value->description,
+                    'image_path' => $image_path,
+                    'created_at' => _d($value->created_at),                   
+                );
+            }
+
+            $return_arr['status'] = true;
+            $return_arr['message'] = "Success";
+            $return_arr['data'] = $arr;
+
+        }else{
+            $return_arr['status'] = false;  
+            $return_arr['message'] = "Records Not found!";
+            $return_arr['data'] = [];
+        }
+
+        
+        header('Content-type: application/json');
+        echo json_encode($return_arr);
+        //http://mustafa-pc/crm/Staff_API/employeeComplainList?user_id=27&designation_id=0
+
+    }
+
+
+    public function addRegisterStaff()
+    {
+       $return_arr = array();
+
+        if(!empty($_GET)){
+            extract($this->input->get());
+        }
+
+        elseif(!empty($_POST)){
+            extract($this->input->post());  
+        }
+
+        if(!empty($user_id) && !empty($employee_name)){
+
+           $ad_data = array(
+                'type' => 2,
+                'added_by' => $user_id,
+                'branch_id' => get_employee_info($user_id)->reporting_branch_id,
+                'employee_name' => $employee_name,
+                'email' => $email,
+                'birth_date' => db_date($birth_date),
+                'contact_no' => $contact_no,
+                'gender' => $gender,
+                'pan_card_no' => $pan_card_no,
+                'adhar_no' => $adhar_no,
+                'bank_name' => $bank_name,
+                'account_no' => $account_no,
+                'ifc_code' => $ifc_code,
+                'residential_pincode' => $pincode,
+                'residential_address' => $address,
+                'residential_state' => $state,
+                'residential_city' => $city,
+                'permenent_pincode' => $pincode,
+                'permenent_address' => $address,
+                'permenent_state' => $state,
+                'permenent_city' => $city,
+                'created_at' => date('Y-m-d'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            );
+
+            $insert = $this->home_model->insert('tblregisteredstaff',$ad_data);
+            $id = $this->db->insert_id();
+
+            registered_staff_photo_attachments($id);
+            registered_staff_pan_attachments($id);
+            registered_staff_adhar_attachments($id);
+
+            
+            if($insert == true){  
+
+                $return_arr['status'] = true;   
+                $return_arr['message'] = "Employee Registered Successfully";
+                $return_arr['data'] = [];
+
+            }else{
+                $return_arr['status'] = false;  
+                $return_arr['message'] = "Fail to add Employee";
+                $return_arr['data'] = [];
+            }
+
+        }else{
+
+            $return_arr['status'] = false;  
+            $return_arr['message'] = "Required Parameters are messing";
+            $return_arr['data'] = [];
+        }
+
+        
+        header('Content-type: application/json');
+        echo json_encode($return_arr);
+
+
+        //http://mustafa-pc/crm/Staff_API/addRegisterStaff?user_id=27&employee_name=Mustafa&email=test@gmail.com&contact_no=7223864233&birth_date=15/06/1993&gender=1&pan_card_no=1123&adhar_no=525351&bank_name=Bank of Baroda&account_no=1000055335511&ifc_code=TRANBOB01&pincode=452012&address=b-32 Shivalaya&state=21&city=364
+
+    }
+
+
 }

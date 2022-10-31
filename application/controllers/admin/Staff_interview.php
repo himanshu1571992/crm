@@ -241,9 +241,9 @@ class Staff_interview extends Admin_controller
 
     public function confirm_employee_list($designation_id=""){
 
-        $where = "confirm_status = 1 and staffregistration_id = 0";
+        $where = "confirm_status = 1 and staffregistration_id = 0 ";
         if(!is_admin() == 1){
-            $where .= "and branch_id=".  get_login_branch() ."";
+            $where .= " and branch_id=".  get_login_branch() ."";
         }
         if(!empty($designation_id)){
             $where .= " and designation_id = ".  $designation_id ."";
@@ -269,7 +269,7 @@ class Staff_interview extends Admin_controller
 
         $data['candidate_list'] = $this->db->query("SELECT * from `tblstaffinterviewdetails` where " . $where . " order by id desc")->result();
         $data["designation_id"] = $designation_id;
-        $data['title'] = 'Conform Employee List';
+        $data['title'] = 'Confirmed Employee List';
         $this->load->view('admin/staff_interview/confirm_employee_list', $data);
     }
 
@@ -339,9 +339,9 @@ class Staff_interview extends Admin_controller
 
     public function registered_employee_list($designation_id=""){
 
-        $where = "si.confirm_status = 1 and si.staffregistration_id > 0";
+        $where = "si.confirm_status = 1 and si.staffregistration_id > 0 ";
         if(!is_admin() == 1){
-            $where .= "and si.branch_id=".  get_login_branch() ."";
+            $where .= " and si.branch_id=".  get_login_branch() ."";
         }
         if(!empty($designation_id)){
             $where .= " and si.designation_id = ".  $designation_id ."";

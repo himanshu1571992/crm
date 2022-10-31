@@ -79,7 +79,6 @@ class Staff_iteams extends Admin_controller {
 
                     $f_date = str_replace("/","-",$f_date);
                     $f_date = date("Y-m-d",strtotime($f_date));
-
                     $t_date = str_replace("/","-",$t_date);
                     $t_date = date("Y-m-d",strtotime($t_date));
 
@@ -146,6 +145,7 @@ class Staff_iteams extends Admin_controller {
                 $cdate = date("Y-m-d",strtotime($sdate));
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'staff_id' => $staff_id,
                     'assignid' => $staff_str,
                     'item_id' => $item_id,
@@ -216,6 +216,7 @@ class Staff_iteams extends Admin_controller {
                 $cdate = date("Y-m-d",strtotime($sdate));
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'staff_id' => $staff_id,
                     'assignid' => $staff_str,
                     'item_id' => $item_id,

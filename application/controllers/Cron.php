@@ -358,6 +358,7 @@ class Cron extends CRM_Controller
                 $diffdays = dateDiffInDays($register_date, $current_date);
                 
                 if ($diffdays >= 3){
+
                     $check_notification = $this->db->query("SELECT * FROM `tblmasterapproval` WHERE `module_id`='53' AND `table_id`= '".$value->staffid."' AND `date`='".date("Y-m-d")."' ")->row();
                     if (empty($check_notification)){
 
@@ -373,13 +374,20 @@ class Cron extends CRM_Controller
                         }else{
                             $message = "Employee ESIC update Pending";
                         }*/
+                        $send_notification = 1;
                         if (empty($value->epf_no) && empty($value->epic_no)){
                             $message = "Employee ESIC and EPF update Pending";
                         }else{
                             $message = "Employee ESIC update Pending";
+                            if($value->gross_salary >= 21000){
+                                $send_notification = 0;
+                            }
                         }
 
-                        $adata = array(
+                        if($send_notification == 1){                       
+
+
+                          $adata = array(
                             'staff_id' => $value->added_by,
                             'fromuserid'      => 0,
                             'module_id' => 53,
@@ -397,7 +405,9 @@ class Cron extends CRM_Controller
                         //Sending Mobile Intimation
                         $token = get_staff_token($value->added_by);
                         $title = 'Schach';
-                        $send_intimation = sendFCM($message, $title, $token, $page = 2);
+                        $send_intimation = sendFCM($message, $title, $token, $page = 2);  
+                        }
+                        
                     }
                 }
             }
@@ -464,7 +474,7 @@ class Cron extends CRM_Controller
     private function send_suspense_receipts_notification(){
         $this->load->model('home_model');
 
-        $get_suspense_account = $this->db->query("SELECT *  FROM `tblclientpayment` WHERE `is_suspense_account` = 1 AND `status` = 1")->result();
+        $get_suspense_account = $this->db->query("SELECT *  FROM `tblclientpayment` WHERE `is_suspense_account` = 1 and `unknown_suspense` = 0 AND `status` = 1")->result();
         if (!empty($get_suspense_account)){
             foreach ($get_suspense_account as $value) {
                 
@@ -505,17 +515,20 @@ class Cron extends CRM_Controller
     }
 
     /* this function use for send notification for over due over by me */
-    private function send_task_overdue_notification(){
+    public function send_task_overdue_notification(){
         $this->load->model('home_model');
 
-        $get_overdue_task = $this->db->query("SELECT t.*  FROM `tbltasks` as t LEFT JOIN tbltaskassignees as ta ON t.id = ta.task_id WHERE t.added_by > 0 AND ta.task_status = 0 GROUP BY t.id")->result();
+        $get_overdue_task = $this->db->query("SELECT t.*  FROM `tbltasks` as t LEFT JOIN tbltaskassignees as ta ON t.id = ta.task_id WHERE t.added_by > 0  AND ta.task_status = 0 GROUP BY t.id")->result();
         if (!empty($get_overdue_task)){
             foreach ($get_overdue_task as $value) {
                 
+                
                 $current_date = date("Y-m-d");
-                $diffdays = dateDiffInDays($value->due_date, $current_date);
+                $diff =  strtotime($current_date) - strtotime($value->due_date);
+                $diffdays = (round($diff / 86400));
+
+               //echo $diffdays = dateDiffInDays($value->due_date, $current_date);
                 if ($diffdays >= 1){
-                    
                     $staff_ids = array();
                     if ($value->task_for == 1){
                         $staff_ids[] = $value->added_by;

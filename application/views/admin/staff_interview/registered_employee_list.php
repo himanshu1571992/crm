@@ -41,33 +41,19 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">  <div>                                                    
-
                                         <table class="table" id="newtable">
-
                                             <thead>
-
                                                 <tr>
-
                                                     <th>S.No</th>
-
                                                     <th>Employee Name</th>
-
                                                     <th>Email Id</th>
-
                                                     <th>Contact Number</th>
-
                                                     <th>Registration Date</th>
-
                                                     <th>Status</th>
-
                                                     <th class="text-center">Action</th>
-
                                                 </tr>
-
                                             </thead>
-
                                             <tbody>
-
                                                 <?php
                                                 if (!empty($employee_list)) {
                                                     foreach ($employee_list as $key => $value) {
@@ -95,27 +81,32 @@
                                                         ?>
 
                                                         <tr>
-
-                                                            <td><?php echo ++$key; ?></td>                                                
-
-                                                            <td><?php echo cc($value->employee_name); ?></td>
-
+                                                            <td>
+                                                                <?php echo ++$key; ?>
+                                                                
+                                                            </td>                                                
+                                                            <td>
+                                                                <?php echo get_creator_info($value->added_by, $value->created_at); ?>
+                                                                <?php echo cc($value->employee_name); ?>
+                                                            </td>
                                                             <td><?php echo $value->email; ?></td>
-
                                                             <td><?php echo $value->contact_no; ?></td>
-
                                                             <td><?php echo _d($value->created_at); ?></td>
                                                             <td>
                                                                 <?php
-                                                                if ($value->approval_status == 1) {
-                                                                    echo '<button type="button" class="' . $cls . ' btn-sm approve" id="' . $id . '" value="' . $value->staffid . '" data-toggle="modal" data-target="#' . $datatarget . '">' . $status . '</button>';
-                                                                } elseif ($value->approval_status == 2) {
-                                                                    echo '<button type="button" class="' . $cls . ' btn-sm reject" id="' . $id . '" value="' . $value->staffid . '" data-toggle="modal" data-target="#' . $datatarget . '">' . $status . '</button>';
-                                                                } elseif ($value->approval_status == 4) {
-                                                                    echo '<a href="' . admin_url() . 'staff/registered_employee_process/' . $value->staffid . '" target="_blank" class="btn-info btn-sm" >Form Pending</a>';
-                                                                } else {
-                                                                    echo '<button type="button" class="' . $cls . ' btn-sm status" id="' . $id . '" value="' . $value->staffid . '" data-toggle="modal" data-target="#' . $datatarget . '">' . $status . '</button>';
-                                                                }
+                                                                    if ($value->approval_status == 1) {
+                                                                        echo '<button type="button" class="' . $cls . ' btn-sm approve" id="' . $id . '" value="' . $value->staffid . '" data-toggle="modal" data-target="#' . $datatarget . '">' . $status . '</button>';
+                                                                    } elseif ($value->approval_status == 2) {
+                                                                        echo '<button type="button" class="' . $cls . ' btn-sm reject" id="' . $id . '" value="' . $value->staffid . '" data-toggle="modal" data-target="#' . $datatarget . '">' . $status . '</button>';
+                                                                    } elseif ($value->approval_status == 4) {
+                                                                        echo '<a href="' . admin_url() . 'staff/registered_employee_process/' . $value->staffid . '" target="_blank" class="btn-info btn-sm" >Form Pending</a>';
+                                                                    } else {
+                                                                        if (!empty($value->employee_name) && $value->designation_id > 0 && $value->branch_id > 0 && !empty($value->net_salary) && $value->superior_id > 0 && !empty($value->joining_date)){
+                                                                            echo '<button type="button" class="' . $cls . ' btn-sm status" id="' . $id . '" value="' . $value->staffid . '" data-toggle="modal" data-target="#' . $datatarget . '">' . $status . '</button>';
+                                                                        }else{
+                                                                            echo '<a href="javascript:void(0);" class="btn-sm btn-info">Updated Company Details</a>';
+                                                                        }
+                                                                    }
                                                                 ?>
                                                             </td> 
                                                             <td class="text-center">
@@ -131,24 +122,22 @@
                                                                         <li>
                                                                             <a href="<?php echo site_url('staff/employee_print/' . $value->staffid); ?>" target="_blank" title="PRINT">PRINT</a>                                                  
                                                                             <a href="<?php echo admin_url('staff/employee_view/' . $value->staffid); ?>"  target="_blank" title="VIEW"></i>VIEW</a>
-                                                                <?php
-                                                                $chk_emp = $this->db->query("SELECT `staffid` FROM tblstaff WHERE reg_id=" . $value->staffid . "")->row();
-                                                                if ($value->approval_status == 1 && empty($chk_emp)) {
-                                                                    ?>
+                                                                            <?php
+                                                                                $chk_emp = $this->db->query("SELECT `staffid` FROM tblstaff WHERE reg_id=" . $value->staffid . "")->row();
+                                                                                if ($value->approval_status == 1 && empty($chk_emp)) {
+                                                                            ?>
+                                                                                <a href="<?php echo admin_url('letters_format/generate_offer_letter/' . $value->staffid); ?>" target="_blank" title="generate offer letter">GENERATE OFFER LETTER</a>                                                  
                                                                                 <a href="<?php echo admin_url('staff/convert_to_employee/' . $value->staffid); ?>" target="_blank" title="Convert To Employee">CONVERT TO EMPLOYEE</a>                                                  
-        <?php } ?>
+                                                                            <?php } ?>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                                            <?php
-                                                                        }
-                                                                    }
-                                                                    ?>
-
-
-
+                                                <?php
+                                                        }
+                                                    }
+                                                ?>
                                             </tbody>
 
                                         </table>

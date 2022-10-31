@@ -4235,107 +4235,111 @@ if(!function_exists('get_groups_name'))
 
 if(!function_exists('client_balance_amt'))
 {
-    function client_balance_amt($client_id,$service_type='')
+    function client_balance_amt($client_id,$service_type='',$vendor_outstanding=1)
     {
-		$CI =& get_instance();
+			$CI =& get_instance();
 
-		$parent_ids = 0;
+			$parent_ids = 0;
 
-		if(!empty($service_type)){
-			$where = "clientid = '".$client_id."' and status != '5' and service_type = '".$service_type."' ";
-		}else{
-			$where = "clientid = '".$client_id."' and status != '5' ";
-		}
-
-
-
-		$invoice_info = $CI->db->query("SELECT `id`,`total`,`parent_id` from `tblinvoices` where ".$where."  ")->result();
-		$invoice_amt = 0;
-		$paid_amt = 0;
-		if(!empty($invoice_info)){
-			foreach ($invoice_info as $invoice) {
-				if($invoice->parent_id == 0){
-					$parent_ids .= ','.$invoice->id;
-				}
-				$invoice_amt += $invoice->total;
-				$paid_amt += invoice_received($invoice->id);
-				$paid_amt += invoice_tds_received($invoice->id);
-			}
-		}
-
-
-		$debit_note_info = $CI->db->query("SELECT `id`,`totalamount`,`number` FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' ")->result();
-		if(!empty($debit_note_info)){
-			foreach ($debit_note_info as $debitnote) {
-				$invoice_amt += $debitnote->totalamount;
-				$paid_amt += debitnote_received($debitnote->number);
-				$paid_amt += debitnote_tds_received($debitnote->number);
-			}
-		}
-
-		$credit_note_info = $CI->db->query("SELECT `id`,`totalamount`,`number` FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' ")->result();
-		if(!empty($credit_note_info)){
-			foreach ($credit_note_info as $creditnote) {
-				$paid_amt += $creditnote->totalamount;
-			}
-		}
-
-		//if($service_type == 3 || $service_type == 1){
 			if(!empty($service_type)){
-				$payment_debitnote = $CI->db->query("SELECT d.id,d.amount,d.number FROM tbldebitnotepayment as d LEFT JOIN tbldebitnotepaymentitems as di ON d.id = di.debitnote_id LEFT JOIN tblinvoices as i ON di.invoice_id = i.id  where d.clientid = '".$client_id."' and d.status = '1' and i.service_type = '".$service_type."' group by d.id  ")->result();
-
+				$where = "clientid = '".$client_id."' and status != '5' and service_type = '".$service_type."' ";
 			}else{
-				$payment_debitnote = $CI->db->query("SELECT `id`,`amount`,`number` FROM tbldebitnotepayment where clientid = '".$client_id."' and status = '1' ")->result();
+				$where = "clientid = '".$client_id."' and status != '5' ";
 			}
 
-			if(!empty($payment_debitnote)){
-				foreach ($payment_debitnote as $debitnote) {
-					$invoice_amt += $debitnote->amount;
+
+			$invoice_info = $CI->db->query("SELECT `id`,`total`,`parent_id` from `tblinvoices` where ".$where."  ")->result();
+			$invoice_amt = 0;
+			$paid_amt = 0;
+			if(!empty($invoice_info)){
+				foreach ($invoice_info as $invoice) {
+					if($invoice->parent_id == 0){
+						$parent_ids .= ','.$invoice->id;
+					}
+					$invoice_amt += $invoice->total;
+					$paid_amt += invoice_received($invoice->id);
+					$paid_amt += invoice_tds_received($invoice->id);
+				}
+			}
+
+
+			$debit_note_info = $CI->db->query("SELECT `id`,`totalamount`,`number` FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' ")->result();
+			if(!empty($debit_note_info)){
+				foreach ($debit_note_info as $debitnote) {
+					$invoice_amt += $debitnote->totalamount;
 					$paid_amt += debitnote_received($debitnote->number);
 					$paid_amt += debitnote_tds_received($debitnote->number);
 				}
 			}
 
-		//}
-
-		//getting all client branches in order to match balace amount with ledger balance amount
-		$main_client_id = client_info($client_id)->client_id;	
-		$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientbranch`  where client_id = '".$main_client_id."' and active = 1")->result();
-		$client_ids = 0;
-		if(!empty($onaccout_amt_info)){
-			foreach ($onaccout_amt_info as $r) {
-				$client_ids .= ','.$r->userid;
-			}
-		}
-
-
-		if(!empty($service_type)){
-			//$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientpayment`  where client_id = '".$client_id."' and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ")->result();
-			$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_ids.") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ")->result();
-			$waveoff_amt = $CI->db->query("SELECT COALESCE(SUM(amount),0) AS ttl_amount FROM `tblclientwaveoff`  where client_id = '".$client_id."' and status = 1 and service_type = '".$service_type."' ")->row()->ttl_amount;
-		}else{
-			//$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientpayment`  where client_id = '".$client_id."' and payment_behalf = 1 and status = 1")->result();
-			$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_ids.") and payment_behalf = 1 and status = 1")->result();
-			$waveoff_amt = $CI->db->query("SELECT COALESCE(SUM(amount),0) AS ttl_amount FROM `tblclientwaveoff`  where client_id = '".$client_id."' and status = 1 ")->row()->ttl_amount;
-		}
-
-		$onaccout_amt = 0;
-        if(!empty($onaccout_amt_info)){
-        	foreach ($onaccout_amt_info as $on_am) {
-        		$to_see = ($on_am->payment_mode == 1 && $on_am->chaque_status != 1) ? '0' : '1';
-				if($to_see == 1){
-					$onaccout_amt += $on_am->ttl_amt;
+			$credit_note_info = $CI->db->query("SELECT `id`,`totalamount`,`number` FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' ")->result();
+			if(!empty($credit_note_info)){
+				foreach ($credit_note_info as $creditnote) {
+					$paid_amt += $creditnote->totalamount;
 				}
-        	}
-        }
-	
-	if(!empty($service_type)){
-		$where_refund = "r.client_id = '".$client_id."' and r.service_type = '".$service_type."' and pd.utr_no != ''";
-	}else{
-		$where_refund = "r.client_id = '".$client_id."' and pd.utr_no != ''";
-	}
-    $clientrefund_amt = $CI->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where ".$where_refund." order by r.id desc")->row()->ttl_amount;
+			}
+
+			//if($service_type == 3 || $service_type == 1){
+				if(!empty($service_type)){
+					$payment_debitnote = $CI->db->query("SELECT d.id,d.amount,d.number FROM tbldebitnotepayment as d LEFT JOIN tbldebitnotepaymentitems as di ON d.id = di.debitnote_id LEFT JOIN tblinvoices as i ON di.invoice_id = i.id  where d.clientid = '".$client_id."' and d.status = '1' and i.service_type = '".$service_type."' group by d.id  ")->result();
+
+				}else{
+					$payment_debitnote = $CI->db->query("SELECT `id`,`amount`,`number` FROM tbldebitnotepayment where clientid = '".$client_id."' and status = '1' ")->result();
+				}
+
+				if(!empty($payment_debitnote)){
+					foreach ($payment_debitnote as $debitnote) {
+						$invoice_amt += $debitnote->amount;
+						$paid_amt += debitnote_received($debitnote->number);
+						$paid_amt += debitnote_tds_received($debitnote->number);
+					}
+				}
+
+			//}
+
+			//getting all client branches in order to match balace amount with ledger balance amount
+			$main_client_id = client_info($client_id)->client_id;	
+			$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientbranch`  where client_id = '".$main_client_id."' and active = 1")->result();
+			$client_ids = $vendor_ids = 0;
+			if(!empty($onaccout_amt_info)){
+				foreach ($onaccout_amt_info as $r) {
+					$client_ids .= ','.$r->userid;
+					$vendor_ids .= ','.$r->vendor_id;
+				}
+			}
+
+
+			if(!empty($service_type)){
+				//$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientpayment`  where client_id = '".$client_id."' and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ")->result();
+				$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_ids.") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ")->result();
+				$waveoff_amt = $CI->db->query("SELECT COALESCE(SUM(amount),0) AS ttl_amount FROM `tblclientwaveoff`  where client_id = '".$client_id."' and status = 1 and service_type = '".$service_type."' ")->row()->ttl_amount;
+			}else{
+				//$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientpayment`  where client_id = '".$client_id."' and payment_behalf = 1 and status = 1")->result();
+				$onaccout_amt_info = $CI->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_ids.") and payment_behalf = 1 and status = 1")->result();
+				$waveoff_amt = $CI->db->query("SELECT COALESCE(SUM(amount),0) AS ttl_amount FROM `tblclientwaveoff`  where client_id = '".$client_id."' and status = 1 ")->row()->ttl_amount;
+			}
+
+			$onaccout_amt = 0;
+			if(!empty($onaccout_amt_info)){
+				foreach ($onaccout_amt_info as $on_am) {
+					$to_see = ($on_am->payment_mode == 1 && $on_am->chaque_status != 1) ? '0' : '1';
+					if($to_see == 1){
+						$onaccout_amt += $on_am->ttl_amt;
+					}
+				}
+			}
+		
+		if(!empty($service_type)){
+			$where_refund = "r.client_id = '".$client_id."' and r.service_type = '".$service_type."' and pd.utr_no != ''";
+		}else{
+			$where_refund = "r.client_id = '".$client_id."' and pd.utr_no != ''";
+		}
+		$clientrefund_amt = $CI->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where ".$where_refund." order by r.id desc")->row()->ttl_amount;
 		$balance_amt = ($invoice_amt - $paid_amt - $onaccout_amt - $waveoff_amt + $clientrefund_amt);
+
+		if ($vendor_outstanding == 1){
+			$balance_amt = ($balance_amt - get_vendor_ledger_amount($vendor_ids));
+		}
 		return number_format($balance_amt, 2, '.', '');
 
 		//$invoice_info = $CI->db->query("SELECT COALESCE(SUM(total),0) as ttl_amt FROM `tblinvoices` where  `status` != '2' and `clientid` = '".$client_id."' ")->row();
@@ -6185,8 +6189,13 @@ if(!function_exists('update_invoice_final_amount'))
 		}
 
 		}
-
-      	$final_amount = ($total_price - $discount);
+		
+		$tcs_charges = 0;
+		$tcscharges_data = $CI->db->query("SELECT tcs_amount FROM tblinvoicetcscharges WHERE `invoice_id`= '".$id."' ")->row();
+		if (!empty($tcscharges_data)){
+			$tcs_charges = $tcscharges_data->tcs_amount;
+		}
+      	$final_amount = ($total_price - $discount) + $tcs_charges;
         $update = $CI->db->query("Update `tblinvoices` set total_tax = '".$ttl_tax_amt."', total = '".$final_amount."' where id = '".$id."' ");
 
     }
@@ -7994,16 +8003,20 @@ function get_product_sales_quantity($from_date,$to_date,$service_type,$product_i
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblestimates as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
     }else if($used_for == 'proposal'){
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
-    }else{
+    }else if($used_for == 'invoice'){
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
+    }else if($used_for == 'material_receipt'){
+        $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where p.product_id = '".$product_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
     }
   }else{
     if ($used_for == 'estimate') {
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblestimates as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
     }else if($used_for == 'proposal'){
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.service_type = '".$service_type."' and (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
-    }else{
+    }else if($used_for == 'invoice'){
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
+    }else if($used_for == 'material_receipt'){
+        $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where p.product_id = '".$product_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
     }
   }
   return $sale_qty;
@@ -8017,8 +8030,10 @@ function get_product_sales_value($from_date,$to_date,$service_type,$product_id,$
         $product_info = $CI->db->query("SELECT p.qty,p.rate from tblitems_in as p LEFT JOIN tblestimates as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->result();
     }else if($used_for == 'proposal'){
         $product_info = $CI->db->query("SELECT p.qty,p.rate from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->result();
-    }else{
+    }else if($used_for == 'invoice'){
         $product_info = $CI->db->query("SELECT p.qty,p.rate from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->result();
+    }else if($used_for == 'material_receipt'){
+        $product_info = $CI->db->query("SELECT p.qty,p.price as rate from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where p.product_id = '".$product_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->result();
     }
 
   }else{
@@ -8026,8 +8041,10 @@ function get_product_sales_value($from_date,$to_date,$service_type,$product_id,$
         $product_info = $CI->db->query("SELECT p.qty,p.rate from tblitems_in as p LEFT JOIN tblestimates as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->result();
     }else if($used_for == 'proposal'){
         $product_info = $CI->db->query("SELECT p.qty,p.rate from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.service_type = '".$service_type."' and (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->result();
-    }else{
+    }else if($used_for == 'invoice'){
         $product_info = $CI->db->query("SELECT p.qty,p.rate from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->result();
+    }else if($used_for == 'material_receipt'){
+        $product_info = $CI->db->query("SELECT p.qty,p.price as rate from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where p.product_id = '".$product_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->result();
     }
   }
   if(!empty($product_info)){
@@ -8046,16 +8063,20 @@ function get_product_sales_quantity_client($from_date,$to_date,$service_type,$pr
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblestimates as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.clientid = '".$client_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
     }else if($used_for == 'proposal'){
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.proposal_to = '".$client_id."' and (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
-    }else{
+    }else if($used_for == 'invoice'){
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.clientid = '".$client_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
+    }else if($used_for == 'material_receipt'){
+        $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where  p.product_id = '".$product_id."' and i.vendor_id = '".$client_id."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
     }
   }else{
     if ($used_for == 'estimate') {
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblestimates as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.clientid = '".$client_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
     }else if($used_for == 'proposal'){
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.proposal_to = '".$client_id."' and i.service_type = '".$service_type."' and (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
-    }else{
+    }else if($used_for == 'invoice'){
         $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.clientid = '".$client_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
+    }else if($used_for == 'material_receipt'){
+        $sale_qty = $CI->db->query("SELECT COALESCE(SUM(p.qty),0) as ttl_qty from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where p.product_id = '".$product_id."' and i.vendor_id = '".$client_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($from_date)."' and '".db_date($to_date)."')  ")->row()->ttl_qty;
     }
   }
 
@@ -8648,6 +8669,65 @@ if(!function_exists('get_activitytag_counts'))
 		$user_id = get_staff_user_id();
 		$query_1 = $CI->db->query("SELECT COALESCE(count(id),0) as ttl_rows FROM `tblmasterapproval` where staff_id = '".$user_id."' and status = 0 and approve_status = 0 and `module_id` IN (18,30,31,33,37,39,42,45,48,58,59,60)")->row();
 		return $query_1->ttl_rows;
+	}
+}
+
+if(!function_exists('get_staff_notification_counts'))
+{
+    function get_staff_notification_counts()
+    {
+		$CI =& get_instance();
+		// $user_id = get_staff_user_id();
+
+		$ttl_rows = 0;
+		$i = 0;
+        $getallnotification = $CI->db->query("SELECT n.* from `tblnotifications` as n WHERE n.id > 0 and n.module_id IN (1,2,3,8,9) and n.touserid = '".get_staff_user_id()."'  ORDER BY n.id DESC")->result();
+        if (!empty($getallnotification)){
+            foreach ($getallnotification as $noti) {
+                if($noti->module_id == 1){
+                    if ($noti->type == 1){
+                        $pending_request = $CI->db->query("SELECT r.approved_status from tblrequests as r LEFT JOIN tblrequestapproval as ra ON r.id = ra.request_id WHERE r.id = '".$noti->table_id."' and r.approved_status = '0' and ra.staff_id = '".get_staff_user_id()."' ")->row();
+                    }else{
+                        $rwhere = "r.id = '".$noti->table_id."' and r.approved_status = '1' and r.confirmed_by_user = '0'";
+                        $pending_request = $CI->db->query("SELECT r.id from tblrequests as r LEFT JOIN tblrequestapproval as ra ON r.id = ra.request_id WHERE ".$rwhere." ")->row();
+                    }
+                    if(!empty($pending_request)){
+                        $i++;
+                    }
+                }elseif($noti->module_id == 2){
+                    $pending_request = $CI->db->query("SELECT r.approved_status from tblexpenses as r LEFT JOIN tblexpensesapproval as ea ON r.id = ea.expense_id WHERE r.id = '".$noti->table_id."' and r.approved_status = '0' and ea.staff_id = '".get_staff_user_id()."' ")->row();
+                    if(!empty($pending_request)){
+                        $i++;
+                    }
+                }elseif($noti->module_id == 3){    
+                    $pending_request = $CI->db->query("SELECT r.approved_status from tblleaves as r LEFT JOIN tblleaveapproval as la ON r.id = la.leave_id WHERE r.approved_status = '0' and r.id = '".$noti->table_id."' and la.staff_id = '".get_staff_user_id()."' ")->row();
+                    if(!empty($pending_request)){
+                        $i++;
+                    }
+                }elseif($noti->module_id == 8){    
+                    $pending_request = $CI->db->query("SELECT r.staff_confirmed as approved_status FROM tblpettycashmaster as r where r.id = '".$noti->table_id."' and r.staff_confirmed = '0' and r.staff_id = '".get_staff_user_id()."'")->row();
+                    if(!empty($pending_request)){
+                        $i++;
+                    }
+                }elseif($noti->module_id == 9){
+                    if($noti->for_manager_approval == 1){
+                        $pending_request = $CI->db->query("SELECT r.approved_status from tblpettycashapproved as r where r.id = '".$noti->table_id."' and r.approved_status = '0' ")->row();
+                    }else{
+                        if ($noti->type == 1){
+                            $pending_request = $CI->db->query("SELECT r.approved_status from tblpettycashrequest as r LEFT JOIN tblpettycashrequestapproval as pa ON r.id = pa.pettycash_id where r.id = '".$noti->table_id."' and r.approved_status = '0' and pa.staff_id = '".get_staff_user_id()."' ")->row();
+                        }else{
+                            $rwhere = "r.id = '".$noti->table_id."' and r.approved_status = '1' and r.confirmed_by_user = '0'";
+                            $pending_request = $CI->db->query("SELECT r.id from tblpettycashrequest as r LEFT JOIN tblpettycashrequestapproval as pa ON r.id = pa.pettycash_id WHERE ".$rwhere." ")->row();
+                        }
+                    }
+                    
+                    if(!empty($pending_request)){
+                        $i++;
+                    }
+                }
+            }
+        }
+		return $i;
 	}
 }
 
@@ -9364,6 +9444,19 @@ if(!function_exists('dateDiffInDays'))
 	}
 }
 
+if(!function_exists('get_date_diff_indays'))
+{
+	function get_date_diff_indays($date1, $date2)
+	{
+	    // Calculating the difference in timestamps
+	    $diff = strtotime($date2) - strtotime($date1);
+
+	    // 1 day = 24 hours
+	    // 24 * 60 * 60 = 86400 seconds
+	    return round($diff / 86400);
+	}
+}
+
 /* this is function use for get product categories */
 function get_product_category_list($type, $id = 0) {
     $CI =& get_instance();
@@ -9832,9 +9925,9 @@ function get_product_list_by_category($type, $id = 0) {
                 }
             }
 
-            $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (" . $allinvoice_ids . ") and i.invoice_id > 0 and i.type = 1 GROUP by dn.id ")->result();
+            $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (" . $allinvoice_ids . ") and i.invoice_id > 0 and i.type = 1 and dn.status > 0 GROUP by dn.id ")->result();
             if (empty($payment_debitnote)) {
-                $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (" . $alldn_ids . ") and i.invoice_id > 0 and i.type = 2 GROUP by dn.id ")->result();
+                $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (" . $alldn_ids . ") and i.invoice_id > 0 and i.type = 2 and dn.status > 0 GROUP by dn.id ")->result();
             }
             if (!empty($payment_debitnote)) {
                 foreach ($payment_debitnote as $debitnote) {
@@ -10112,13 +10205,27 @@ function get_product_list_by_category($type, $id = 0) {
 		if($type == 'production'){
 			$designation_id = [2,3,8,18,34,49,11,13,14,20,21,22,29,30,54,55,5,19,45];
 		}elseif($type == 'on_behalf'){
-			$designation_id = [28,18,42,27,9];
+			$designation_id = [28,18,27,9,64,19];
 		}elseif($type == 'edit_production'){
 			$designation_id = [2,3,8,18,34,49];
 		}
 		$userDesignationId = get_staff_info($user_id)->designation_id;
 
 		if(in_array($userDesignationId,$designation_id)){
+			return '1';
+		}else{
+			return '0';
+		}
+
+	}
+
+	function checkMenuPermissionByUser($user_id,$type){
+        $CI =& get_instance();	
+		if($type == 'employee_registration'){
+			$user_ids = [1,25];
+		}
+
+		if(in_array($user_id,$user_ids)){
 			return '1';
 		}else{
 			return '0';

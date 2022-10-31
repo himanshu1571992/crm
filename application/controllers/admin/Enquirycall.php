@@ -556,7 +556,7 @@ class Enquirycall extends Admin_controller
                 $insert_id = $this->home_model->insert('tblenquirycall_activity',$ad_data);
 
                 if (!empty($tag_staff_ids)){
-                   $staff_ids = explode(",", $tag_staff_ids);
+                   $staff_ids = array_unique(explode(",", $tag_staff_ids));
                    foreach ($staff_ids as $staff_id) {
 
                         $tag_notification_arr = array(
@@ -566,11 +566,31 @@ class Enquirycall extends Admin_controller
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
                             'description' => 'You taged in enquirycall activity',
+                            'readonly' => 0,
                             'link'  => "enquirycall/enquirycall_activity/".$enquirycall_id
                         );
                         send_activitytag_notification($tag_notification_arr);
 
                    }
+                }
+
+                /* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        $read_notification_arr = array(
+                            'activity_id' => $insert_id,
+                            'module_id' => 18,
+                            'table_id' => $enquirycall_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in enquirycall activity',
+                            'readonly' => 1,
+                            'link'  => "enquirycall/enquirycall_activity/".$enquirycall_id
+                        );
+                        send_activitytag_notification($read_notification_arr);
+                    }
                 }
 
                 set_alert('success', 'Activity Added successfully');

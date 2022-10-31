@@ -46,7 +46,7 @@
                   <div class="panel_s">
                     <div class="panel-body">
                       <h4 class="no-margin">Lead Form Activities</h4>
-                      <h4 style="color:red;"><?php echo "ENQ-".str_pad($enquirycall_id, 4, '0', STR_PAD_LEFT); ?></h4>
+                      <h4 style="color:red;"><a target="_blank" href="<?php echo admin_url('enquirycall/view/'.$enquirycall_id); ?>"><?php echo "ENQ-".str_pad($enquirycall_id, 4, '0', STR_PAD_LEFT); ?></a></h4>
                       <hr class="hr-panel-heading">
                       <div class="row">
                         <div role="tabpanel" class="tab-pane" id="lead_activity">
@@ -210,7 +210,7 @@
                   <div class="panel_s">
                     <div class="panel-body">
                       <h4 class="no-margin">Design Requisition Activities</h4>
-                      <h4 style="color:red;"><?php echo "DR-".str_pad($designrequision_id, 3, '0', STR_PAD_LEFT); ?></h4>
+                      <h4 style="color:red;"><a target="_blank" href="<?php echo admin_url('designrequisition/view/'.$designrequision_id); ?>"><?php echo "DR-".str_pad($designrequision_id, 3, '0', STR_PAD_LEFT); ?></a></h4>
                       <hr class="hr-panel-heading">
                       <div class="row">
                         <div role="tabpanel" class="tab-pane" id="lead_activity">
@@ -293,7 +293,7 @@
                   <div class="panel_s">
                     <div class="panel-body">
                       <h4 class="no-margin">Proforma Invoice Activities</h4>
-                      <h4 style="color:red;"><?php echo $estimate_number; ?></h4>
+                      <h4 style="color:red;"><a target="_blank" href="<?php echo admin_url('estimates/download_pdf/'.$estimate_id); ?>"><?php echo $estimate_number; ?></a></h4>
                       <hr class="hr-panel-heading">
                       <div class="row">
                         <div role="tabpanel" class="tab-pane" id="lead_activity">
@@ -395,6 +395,7 @@
                     <input type="hidden" value="<?php echo $designrequision_id; ?>" id="design_requisition_id" name="design_requisition_id">                                
                     <input type="hidden" value="<?php echo $estimate_id; ?>" id="estimate_id" name="estimate_id">                                
                     <input type="hidden" name="tag_staff_ids" class="staff_ids">
+                    <input type="hidden" name="tag_viewstaff_ids" class="view_staff_ids">
                     <input type="hidden" name="parent_id" class="reply_parent_id" value="0">
                     <button class="btn btn-info"><?php echo _l('submit'); ?></button>
                   </div>

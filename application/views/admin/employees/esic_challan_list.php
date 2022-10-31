@@ -97,7 +97,10 @@
                                             ?>                                                                                      
                                                     <tr>
                                                         <td><?php echo $z++;?></td>
-                                                        <td><?php echo $row->challan_no;?></td>
+                                                        <td>
+                                                            <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                            <?php echo $row->challan_no;?>
+                                                        </td>
                                                         <td><?php echo _d($row->challan_date);?></td>
                                                         <td><?php echo $row->employee_contribution; ?></td>
                                                         <td><?php echo $row->employer_contribution; ?></td>

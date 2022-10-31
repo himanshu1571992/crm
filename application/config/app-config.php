@@ -32,7 +32,7 @@ define('APP_BASE_URL', 'http://localhost/crm/');
   |
   | http://codeigniter.com/user_guide/libraries/encryption.html
   |
-  | Auto updated added on install
+  | Auto updated added on installs
  */
 
 define('APP_ENC_KEY', 'dceea6646c44e81e967613f12f241774');

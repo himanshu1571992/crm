@@ -66,8 +66,13 @@
                                                     foreach ($generalquestion_list as $key => $value) {
                                                 ?>
                                                         <tr>
-                                                            <td><?php echo ++$key; ?></td>
-                                                            <td><?php echo cc($value->question); ?></td>
+                                                            <td>
+                                                                <?php echo ++$key; ?>
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <?php echo get_creator_info($value->staff_id, $value->created_at); ?>
+                                                                <?php echo cc($value->question); ?></td>
                                                             <td><?php echo _d($value->date); ?></td>
                                                             <td><div class="onoffswitch">
                                                                     <input type="checkbox" data-switch-url="<?php echo admin_url('staff_interview/changegeneralquestionStatus'); ?>" name="onoffswitch" class="onoffswitch-checkbox" id="<?php echo $value->id; ?>" data-id="<?php echo $value->id; ?>" <?php echo ($value->status == 1) ? "checked" : ""; ?>>

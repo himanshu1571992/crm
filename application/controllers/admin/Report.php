@@ -87,16 +87,20 @@ class Report extends Admin_controller
                 $data['client_list'] = $this->db->query("SELECT i.clientid from tblitems_in as p LEFT JOIN tblestimates as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') GROUP by i.clientid ")->result();
             }else if($used_for == 'proposal'){
                 $data['client_list'] = $this->db->query("SELECT i.proposal_to from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') GROUP by i.proposal_to ")->result();
-            }else{
+            }else if($used_for == 'invoice'){
                 $data['client_list'] = $this->db->query("SELECT i.clientid from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') GROUP by i.clientid ")->result();
+            }else if($used_for == 'material_receipt'){
+                $data['client_list'] = $this->db->query("SELECT i.vendor_id from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where p.product_id = '".$product_id."' and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') GROUP by i.vendor_id ")->result();
             }
         }else{
             if ($used_for == 'estimate') {
                 $data['client_list'] = $this->db->query("SELECT i.clientid from tblitems_in as p LEFT JOIN tblestimates as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.service_type = '".$service_type."'  and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') GROUP by i.clientid ")->result();
             }else if($used_for == 'proposal'){
                 $data['client_list'] = $this->db->query("SELECT i.proposal_to from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.service_type = '".$service_type."'  and (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') GROUP by i.proposal_to ")->result();
-            }else{
+            }else if($used_for == 'invoice'){
                 $data['client_list'] = $this->db->query("SELECT i.clientid from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.service_type = '".$service_type."'  and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') GROUP by i.clientid ")->result();
+            }else if($used_for == 'material_receipt'){
+                $data['client_list'] = $this->db->query("SELECT i.vendor_id from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where  p.product_id = '".$product_id."' and i.service_type = '".$service_type."'  and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') GROUP by i.vendor_id ")->result();
             }
         }
 
@@ -122,8 +126,10 @@ class Report extends Admin_controller
             }else if($used_for == 'proposal'){
               $client_name = (!empty($client_info)) ? $client_info->client_branch_name : $client_id;;
               $rate_info = $this->db->query("SELECT p.rel_id,p.rate,p.qty,i.state,i.city from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.proposal_to = '".$client_id."'  and (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') ")->result();
-            }else{
+            }else if($used_for == 'invoice'){
               $rate_info = $this->db->query("SELECT p.rel_id,p.rate,p.qty from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.clientid = '".$client_id."' and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."')  ")->result();
+            }else if($used_for == 'material_receipt'){
+              $rate_info = $this->db->query("SELECT p.mr_id as rel_id,p.price as rate,p.qty from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where p.product_id = '".$product_id."' and i.vendor_id = '".$client_id."' and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."')  ")->result();
             }
         }else{
             $client_name = (!empty($client_info)) ? $client_info->client_branch_name : '--';
@@ -132,8 +138,10 @@ class Report extends Admin_controller
             }else if($used_for == 'proposal'){
               $client_name = $client_id;
               $rate_info = $this->db->query("SELECT p.rel_id,p.rate,p.qty,i.state,i.city from tblitems_in as p LEFT JOIN tblproposals as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.proposal_to = '".$client_id."'  and i.service_type = '".$service_type."' and (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."') ")->result();
-            }else{
+            }else if($used_for == 'invoice'){
               $rate_info = $this->db->query("SELECT p.rel_id,p.rate,p.qty from tblitems_in as p LEFT JOIN tblinvoices as i ON p.rel_id = i.id where p.rel_type = '".$used_for."' and p.pro_id = '".$product_id."' and i.clientid = '".$client_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."')  ")->result();
+            }else if($used_for == 'material_receipt'){
+              $rate_info = $this->db->query("SELECT p.mr_id as rel_id,p.price as rate,p.qty from tblmaterialreceiptproduct as p LEFT JOIN tblmaterialreceipt as i ON p.mr_id = i.id where p.product_id = '".$product_id."' and i.vendor_id = '".$client_id."' and i.service_type = '".$service_type."' and  (i.date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."')  ")->result();
             }
         }
 
@@ -177,6 +185,8 @@ class Report extends Admin_controller
                                   echo "PI";
                                 }else if($used_for == "invoice"){
                                   echo "Invoice";
+                                }else if($used_for == "material_receipt"){
+                                  echo "Material Receipt";
                                 }else{
                                   echo "Quote";
                                 }
@@ -205,12 +215,19 @@ class Report extends Admin_controller
                                 $state_name = value_by_id_empty('tblstates',$row->state, "name");
                                 $city_name = value_by_id_empty('tblcities',$row->city, "name");
                                 $location = $state_name.', '.$city_name;
-                            }else{
+                            }else if($used_for == 'invoice'){
                                 $site_id = value_by_id('tblinvoices',$row->rel_id,'site_id');
                                 $number = '<a href="'.admin_url('invoices/download_pdf/'.$row->rel_id ).'" target="_blank">' .format_invoice_number($row->rel_id). '</a>';
                                 $tdate = '<a href="'.admin_url('invoices/download_pdf/'.$row->rel_id ).'" target="_blank">' ._d(value_by_id('tblinvoices',$row->rel_id,'date')). '</a>';
                                 $shipto_info = get_ship_to_array($site_id);
                                 $location = (!empty($shipto_info)) ? $shipto_info['state'].', '.$shipto_info['city'].', '.$shipto_info['landmark'] : '--';
+                            }else if($used_for == 'material_receipt'){
+                                $mr_number = value_by_id('tblmaterialreceipt',$row->rel_id,'numer');
+                                $mr_number = (!empty($mr_number)) ? $mr_number : 'MR-' . $row->rel_id;
+                                $number = '<a href="'.admin_url('purchase/mr_details/'.$row->rel_id ).'" target="_blank">' .$mr_number. '</a>';
+                                $tdate = '<a href="'.admin_url('purchase/mr_details/'.$row->rel_id ).'" target="_blank">' ._d(value_by_id('tblmaterialreceipt',$row->rel_id,'date')). '</a>';
+                                $shipto_info = '';
+                                $location =  '--';
                             }
                             ?>
                             <tr>
@@ -1160,6 +1177,7 @@ class Report extends Admin_controller
             if ($id == '') {
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'name' => $name,
                     'created_at' => date('Y-m-d H:i:s'),
                     'status' => $status
@@ -1398,40 +1416,6 @@ class Report extends Admin_controller
                 $data["year"] = $year;
             }
 
-//            if (!empty($gsttype) && !empty($year) && !empty($month)){
-//                $invoice = $dn = $dnp = $cn = [0];
-//                $gettax = $this->db->query("SELECT `id` FROM `tblclienttaxstatus` WHERE `gst_typ`=".$gsttype." AND `year`=".$year." AND `month`=".$month."")->result();
-//                if ($gettax){
-//                    foreach ($gettax as $val) {
-//                        $taxdetails = $this->db->query("SELECT document_id, tabel_type FROM `tblclienttaxstatusdetails` WHERE `main_id`=".$val->id."")->result();
-//                        if (!empty($taxdetails)){
-//                            foreach ($taxdetails as $cval) {
-//                                if ($cval->tabel_type == 1){
-//                                    $invoice[] = $cval->document_id;
-//                                }
-//                                if ($cval->tabel_type == 2){
-//                                    $dn[] = $cval->document_id;
-//                                }
-//                                if ($cval->tabel_type == 3){
-//                                    $dnp[] = $cval->document_id;
-//                                }
-//                                if ($cval->tabel_type == 4){
-//                                    $cn[] = $cval->document_id;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                $data["gsttype"] = $gsttype;
-//                $data["year"] = $year;
-//                $data["month"] = $month;
-//                $iwhere .= " and in.id IN (".implode(',', array_unique($invoice)).") ";
-//                $dwhere .= " and in.id IN (".implode(',', array_unique($dn)).") ";
-//                $dpwhere .= " and in.id IN (".implode(',', array_unique($dnp)).") ";
-//                $where .= " and in.id IN (".implode(',', array_unique($cn)).") ";
-//            }
-
         }
         else{
             $where .= " and YEAR(date) = '".date('Y')."' AND MONTH(date) = '".date('m')."' ";
@@ -1444,7 +1428,7 @@ class Report extends Admin_controller
 
         $data["total_taxable_value"] = $data["totalsgst"] = $data["totalcgst"] = $data["totaligst"] = $data["total_amt"] = 0;
         /* this is for get invoice data */
-        $invoice_data = $this->db->query("SELECT `in`.*,`cb`.`state` as `branch_state`,`cb`.`gst_no` as `branch_gst_no` FROM `tblinvoices` as `in` LEFT JOIN `tblcompanybranch` as `cb` ON `in`.`billing_branch_id` = `cb`.`id` WHERE ".$iwhere." ORDER BY in.id DESC ")->result();
+        $invoice_data = $this->db->query("SELECT `in`.*,`cb`.`state` as `branch_state`,`cb`.`gst_no` as `branch_gst_no` FROM `tblinvoices` as `in` LEFT JOIN `tblcompanybranch` as `cb` ON `in`.`billing_branch_id` = `cb`.`id` WHERE ".$iwhere." and in.status != 5 ORDER BY in.id DESC ")->result();
         if (!empty($invoice_data)){
             foreach ($invoice_data as $value) {
                 $type = ($value->service_type == 2) ? "Sales Invoice" : "Rent Invoice";
@@ -1523,17 +1507,17 @@ class Report extends Admin_controller
         }
 
         /* this is for get debitnote data */
-        $debitnote_data = $this->db->query("SELECT `in`.*,`cb`.`state` as `branch_state`,`cb`.`gst_no` as `branch_gst_no` FROM `tbldebitnote` as `in` JOIN `tblcompanybranch` as `cb` ON `in`.`branch_id` = `cb`.`id` WHERE ".$dwhere." ORDER BY in.id DESC ")->result();
+        $debitnote_data = $this->db->query("SELECT `in`.*,`cb`.`state` as `branch_state`,`cb`.`gst_no` as `branch_gst_no` FROM `tbldebitnote` as `in` JOIN `tblcompanybranch` as `cb` ON `in`.`branch_id` = `cb`.`id` WHERE ".$dwhere." and in.status = 1  ORDER BY in.id DESC ")->result();
         if (!empty($debitnote_data)){
             foreach ($debitnote_data as $value) {
                 $client_info = $this->db->query("SELECT `client_branch_name`,`vat` from `tblclientbranch` where userid = '".$value->clientid."'  ")->row();
                 $taxable_value = ($value->totalamount-$value->total_tax);
-                $tax_type = get_client_gst_type($value->clientid);
+                //$tax_type = get_client_gst_type($value->clientid);
 
                 $tax = ($value->total_tax/2);
-                $sgst = ($tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
-                $cgst = ($tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
-                $igst = ($tax_type == 1) ? 0.00 : $value->total_tax;
+                $sgst = ($value->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                $cgst = ($value->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                $igst = ($value->tax_type == 1) ? 0.00 : $value->total_tax;
 
                 $tally = $gstr1 = $gstr3b = "--";
                 $vtally = $vgstr1 = $vgstr3b = "--";
@@ -1610,7 +1594,7 @@ class Report extends Admin_controller
 
                 $tally = $gstr1 = $gstr3b = "--";
                 $vtally = $vgstr1 = $vgstr3b = "--";
-                $clienttaxstatus = $this->db->query("SELECT `year`,`month`,`gst_typ`,`approve_status` FROM `tblclienttaxstatus` as ct JOIN `tblclienttaxstatusdetails` as ctd ON `ct`.`id` = `ctd`.`main_id` WHERE `tabel_type` = 2 AND `document_id` = ".$value->id."")->result();
+                $clienttaxstatus = $this->db->query("SELECT `year`,`month`,`gst_typ`,`approve_status` FROM `tblclienttaxstatus` as ct JOIN `tblclienttaxstatusdetails` as ctd ON `ct`.`id` = `ctd`.`main_id` WHERE `tabel_type` = 3 AND `document_id` = ".$value->id."")->result();
 
                 if (!empty($clienttaxstatus)){
                     foreach ($clienttaxstatus as $val) {
@@ -1674,16 +1658,16 @@ class Report extends Admin_controller
             foreach ($creditnote_data as $value) {
                 $client_info = $this->db->query("SELECT `client_branch_name`,`vat` from `tblclientbranch` where userid = '".$value->clientid."'  ")->row();
                 $taxable_value = ($value->totalamount-$value->total_tax);
-                $tax_type = get_client_gst_type($value->clientid);
+                //$tax_type = get_client_gst_type($value->clientid);
 
                 $tax = ($value->total_tax/2);
-                $sgst = ($tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
-                $cgst = ($tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
-                $igst = ($tax_type == 1) ? 0.00 : $value->total_tax;
+                $sgst = ($value->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                $cgst = ($value->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                $igst = ($value->tax_type == 1) ? 0.00 : $value->total_tax;
 
                 $tally = $gstr1 = $gstr3b = "--";
                 $vtally = $vgstr1 = $vgstr3b = "--";
-                $clienttaxstatus = $this->db->query("SELECT `year`,`month`,`gst_typ`,`approve_status` FROM `tblclienttaxstatus` as ct JOIN `tblclienttaxstatusdetails` as ctd ON `ct`.`id` = `ctd`.`main_id` WHERE `tabel_type` = 2 AND `document_id` = ".$value->id."")->result();
+                $clienttaxstatus = $this->db->query("SELECT `year`,`month`,`gst_typ`,`approve_status` FROM `tblclienttaxstatus` as ct JOIN `tblclienttaxstatusdetails` as ctd ON `ct`.`id` = `ctd`.`main_id` WHERE `tabel_type` = 4 AND `document_id` = ".$value->id."")->result();
 
                 if (!empty($clienttaxstatus)){
                     foreach ($clienttaxstatus as $val) {
@@ -1966,7 +1950,7 @@ class Report extends Admin_controller
                             'table_id' => $insert_id,
                             'approve_status' => 0,
                             'status' => 0,
-                            'description' => 'Clint Tax Status approval assign you',
+                            'description' => 'Client Tax Status approval assign you',
                             'link' => 'report/clienttaxstatus_approval/'.$insert_id,
                             'date' => date('Y-m-d'),
                             'date_time' => date('Y-m-d H:i:s'),
@@ -2282,7 +2266,7 @@ class Report extends Admin_controller
     public function purchase_product(){
         check_permission(369,'view');
         $data['title'] = 'Purchase Product Report';
-        $year_id = financial_year();
+        // $year_id = financial_year();
         $type = 1;
         $where = "pop.po_id > 0 AND pop.qty > 0 AND po.show_list = 1";
         if(!empty($_POST)){
@@ -2332,15 +2316,16 @@ class Report extends Admin_controller
                 $where .= " and p.child_category_id = '".$child_category_id."' ";
                 $data['child_category_id'] = $child_category_id;
             }
-        }else{
-           $where .= " and po.year_id = '".financial_year()."'";
+
+            if ($type == 2){
+                $data['purchase_product_list'] = $this->db->query("SELECT  count(pop.id) as ttlproductrow, SUM(pop.qty) as total_qty, SUM(pop.price) as ttl_price, p.sub_name as product_name, pop.product_id, p.unit_id, p.division_id, p.sub_division_id,p.product_cat_id,p.min_qty,p.max_qty FROM tblpurchaseinvoiceproduct as pop RIGHT JOIN tblpurchaseinvoice as po ON po.id = pop.invoice_id RIGHT JOIN tblproducts as p ON pop.product_id = p.id WHERE ".$where." GROUP BY pop.product_id ORDER BY total_qty DESC ")->result();
+            }else{
+                $data['purchase_product_list'] = $this->db->query("SELECT count(pop.id) as ttlproductrow, SUM(pop.qty) as total_qty, SUM(pop.price) as ttl_price, p.sub_name as product_name, pop.product_id, pop.unit_id, pop.is_temp,p.division_id, p.sub_division_id,p.product_cat_id,p.min_qty,p.max_qty FROM tblpurchaseorderproduct as pop RIGHT JOIN tblpurchaseorder as po ON po.id = pop.po_id RIGHT JOIN tblproducts as p ON pop.product_id = p.id WHERE ".$where." GROUP BY pop.product_id ORDER BY total_qty DESC ")->result();
+            }
+            
         }
 
-        if ($type == 2){
-            $data['purchase_product_list'] = $this->db->query("SELECT SUM(pop.qty) as total_qty, p.sub_name as product_name, pop.product_id, p.unit_id, p.division_id, p.sub_division_id FROM tblpurchaseinvoiceproduct as pop RIGHT JOIN tblpurchaseinvoice as po ON po.id = pop.invoice_id RIGHT JOIN tblproducts as p ON pop.product_id = p.id WHERE ".$where." GROUP BY pop.product_id ORDER BY total_qty DESC ")->result();
-        }else{
-            $data['purchase_product_list'] = $this->db->query("SELECT SUM(pop.qty) as total_qty, p.sub_name as product_name, pop.product_id, pop.unit_id, pop.is_temp,p.division_id, p.sub_division_id FROM tblpurchaseorderproduct as pop RIGHT JOIN tblpurchaseorder as po ON po.id = pop.po_id RIGHT JOIN tblproducts as p ON pop.product_id = p.id WHERE ".$where." GROUP BY pop.product_id ORDER BY total_qty DESC ")->result();
-        }
+        
         $data['product_list'] = $this->db->query("SELECT * from `tblproducts` where status = 1 ORDER BY name ASC")->result();
         $data['vendor_list'] = $this->db->query("SELECT * from `tblvendor` where status = 1 ORDER BY name ASC ")->result();
         $data['category_list'] = $this->db->query("SELECT * from `tblproductcategory` where status = 1 ORDER BY name ASC ")->result();
@@ -2391,5 +2376,33 @@ class Report extends Admin_controller
             redirect(admin_url('report/purchase_product'));
         }
 
+    }
+
+    /* this function use for get advance salary request report */
+    public function advance_salary_report(){
+
+        $where = "category = 1 and cancel = 0 and is_taken = 0 and MONTH(`date`) = '".date("m")."' and YEAR(`date`) = '".date("Y")."'";
+        $data["month"] = date("m");
+        $data["year_id"] = date("Y");
+        if(!empty($_POST)){
+            extract($this->input->post());
+            
+            if(!empty($month) && !empty($year_id)){
+                $data["month"] = $month;
+                $data["year_id"] = $year_id;
+                $where = "category = 1 and cancel = 0 and is_taken = 0 and MONTH(`date`) = '".$month."' and YEAR(`date`) = '".$year_id."'";
+            }
+        }
+
+        /* this code use for update salary details of staff */
+        file_get_contents(base_url()."Salary_cron/generate_salary?month=".$data["month"]."&year=".$data["year_id"]);
+
+        $data['title'] = 'Advance Salary Report';
+        
+        $data["advance_salary_list"] = $this->db->query("SELECT Max(id) as id FROM `tblrequests` WHERE ".$where."  GROUP BY addedfrom")->result();
+        
+        // $data["advance_salary_list"] = $this->db->query("SELECT * FROM `tblrequests` WHERE ".$where." ORDER BY id DESC")->result();
+        $data['month_info'] = $this->home_model->get_result('tblmonths', '', '');
+        $this->load->view("admin/reports/advance_salary_report", $data);
     }
 }

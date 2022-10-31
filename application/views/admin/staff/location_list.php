@@ -7,28 +7,21 @@
             <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'attendance_form', 'class' => 'proposal-form')); ?>
             <div class="col-md-12">
                 <div class="panel_s">
-
                     <div class="panel-body">
-
-                    <h4 class="no-margin"><?php echo $title; ?> <a href="<?php echo admin_url('staff/location'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Location</a></h4>
-
-
-
-                    <hr class="hr-panel-heading">
-
+                        <h4 class="no-margin"><?php echo $title; ?> <a href="<?php echo admin_url('staff/location'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Location</a></h4>
+                        <hr class="hr-panel-heading">
                     <div class="row">
-                    
                         <div class="">
-                            
                             <div class="col-md-12 table-responsive">                                                             
                                 <table class="table" id="newtable">
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Location Name</th>
                                         <th>Company Branch</th>
                                         <th>Status</th>
-                                        <th>Date</th>
+                                        <th>Date Time</th>
                                         <th class="text-center">Action</th>
                                       </tr>
                                     </thead>
@@ -47,6 +40,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? get_employee_fullname($row->added_by) : 'N/A';?></td>
                                                 <td><?php echo cc($row->name);?></td>
                                                 <td><?php echo value_by_id('tblcompanybranch',$row->branch_id,'comp_branch_name');?></td>
                                                 <td><?php echo $toggleActive;?></td>

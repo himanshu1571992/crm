@@ -11,7 +11,7 @@
 <div id="wrapper">
     <div class="content accounting-template">
         <div class="row">
-            <form  action="<?php echo site_url($this->uri->uri_string()); ?>"  class="proposal-form" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+            <form  action="<?php echo site_url($this->uri->uri_string()); ?>"  class="proposal-form" enctype="multipart/form-data" method="post" accept-charset="utf-8" onsubmit ="return confirm('Do you really want to take action ?');">
                 <div class="col-md-6">
                     <div class="panel_s">
                         <div class="panel-body">
@@ -64,15 +64,15 @@
                                         <label for="staff_confirmed" class="control-label">Confirmation *</label>
                                         <select class="form-control selectpicker" required="" id="staff_confirmed" name="staff_confirmed">
                                             <option value="" disabled="" selected="">--Select One-</option>
-                                            <option value="1" <?php echo ($request_info["staff_confirmed"] == 1) ? 'selected':''; ?>>Confirmed</option>
-                                            <option value="2" <?php echo ($request_info["staff_confirmed"] == 2) ? 'selected':''; ?>>Rejected</option>
+                                            <option value="1" <?php echo ($request_info["staff_confirmed"] == 1) ? 'selected':''; ?>>Received</option>
+                                            <option value="2" <?php echo ($request_info["staff_confirmed"] == 2) ? 'selected':''; ?>>Not Received</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-12 confirmation_payment_mode_div">
                                     <div class="form-group">
                                         <label for="confirmation_payment_mode" class="control-label"><?php echo 'Payment Mode'; ?> *</label>
-                                        <select class="form-control selectpicker selectpicker" id="payment_mode" name="payment_mode" required="">
+                                        <select class="form-control selectpicker confirmation_payment_mode" id="payment_mode" name="payment_mode" required="">
                                             <option value="" disabled selected >--Select One-</option>
                                             <?php
                                             if(!empty($payment_mode_info)){
@@ -111,7 +111,18 @@
         $('#color-group').colorpicker({horizontal: true});
     });
 
-});	
+    $(document).on("change", "#staff_confirmed", function(){
+		var status_val = $(this).val();
+		if(status_val == 1){
+			$('#staff_remark').val('Yes, Received with Thanks.');
+			$(".confirmation_payment_mode_div").show();
+			$("#confirmation_payment_mode").attr("required", "");
+		}else{
+			$('#staff_remark').val('Not, Received yet');
+			$(".confirmation_payment_mode_div").hide();
+			$("#confirmation_payment_mode").removeAttr("required", "");
+		}
+	});			
 </script>
 
 

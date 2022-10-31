@@ -1,18 +1,18 @@
 <?php init_head(); ?>
 <style>
     fieldset.scheduler-border {
-    border: 1px groove #ddd !important;
-    padding: 0 1.4em 1.4em 1.4em !important;
-    margin: 0 0 1.5em 0 !important;
-    -webkit-box-shadow:  0px 0px 0px 0px #000;
-            box-shadow:  0px 0px 0px 0px #000;
-}
-legend.scheduler-border {
-    font-size: 1.2em !important;
-    font-weight: bold !important;
-    text-align: left !important;
-    border-bottom: blue;
-}
+        border: 1px groove #ddd !important;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        -webkit-box-shadow:  0px 0px 0px 0px #000;
+                box-shadow:  0px 0px 0px 0px #000;
+    }
+    legend.scheduler-border {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        border-bottom: blue;
+    }
 </style>
 <div id="wrapper">
     <div class="content accounting-template">
@@ -29,7 +29,49 @@ legend.scheduler-border {
                             <hr class="hr-panel-heading">
                             <div class="row">
                                 <div class="col-md-12"> 
-                                    <div>                                                    
+                                    <div>
+                                        <fieldset class="scheduler-border"><br>
+                                            <div class="col-md-12">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <h4 style="color: red; text-align: center;" class="control-label">Total Taxable Value</h4>
+                                                        <p style="color: red; text-align: center;" id="ttl_taxable_val">0.00</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <h4 style="color: red; text-align: center;" class="control-label">Total SGST</h4>
+                                                        <p style="color: red; text-align: center;" id="ttl_sgst_val">0.00</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <h4 style="color: red; text-align: center;" class="control-label">Total CGST</h4>
+                                                        <p style="color: red; text-align: center;" id="ttl_cgst_val">0.00</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <h4 style="color: red; text-align: center;" class="control-label">Total IGST</h4>
+                                                        <p style="color: red; text-align: center;" id="ttl_igst_val">0.00</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <h4 style="color: red; text-align: center;" class="control-label">Total Amount</h4>
+                                                        <p style="color: red; text-align: center;" id="ttl_amount_val">0.00</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <h4 style="color: red; text-align: center;" class="control-label">Total Count</h4>
+                                                        <p style="color: red; text-align: center;" id="ttl_counts_val">0.00</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div>               
                                         <fieldset class="scheduler-border">
                                             <br>
                                             <div class="col-md-12">
@@ -43,8 +85,6 @@ legend.scheduler-border {
                                                                     echo ++$k.") ".$gst_types[$val];
                                                                     echo '<br>';
                                                                 }
-                                                               
-                                                                
 //                                                                if ($clienttax_info->gst_typ == 1){
 //                                                                    echo "GSTR1";
 //                                                                }elseif($clienttax_info->gst_typ == 2){
@@ -80,17 +120,37 @@ legend.scheduler-border {
                                                 <th>Invoice Type</th>
                                                 <th>Document Number</th>
                                                 <th>Client Name</th>
+                                                <th align="center">Total Invoice Value</th>
+                                                <th align="center">Total Taxable Value</th>
+                                                <th align="center">CGST</th>
+                                                <th align="center">SGST</th>
+                                                <th align="center">IGST</th>
                                                 <th>Action</th>
                                             </thead>
                                             <tbody>
                                                 <?php
+                                                    $total_taxable_value = $total_sgst_value = $total_cgst_value = $total_igst_value = $total_amt = $ttl_count = 0;
                                                     if ($clienttax_details){
                                                         foreach ($clienttax_details as $key => $value) {
-                                                            $type = $date = $number = "--";
+                                                            $type = $date = $number = $taxable_value = $sgst_value = $cgst_value = $igst_value = $invoice_amount = "--";
                                                             switch ($value->tabel_type) {
                                                                 case 1:
                                                                     $invoice_data = $this->db->query("SELECT * FROM `tblinvoices` WHERE `id` = ".$value->document_id."")->row();
                                                                     if(!empty($invoice_data)){
+                                                                        $ttl_count++;
+                                                                        $tax = ($invoice_data->total_tax/2);
+                                                                        $taxable_value = ($invoice_data->total-$invoice_data->total_tax);
+                                                                        $sgst_value = ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $cgst_value = ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $igst_value = ($invoice_data->tax_type == 1) ? 0.00 : $invoice_data->total_tax;
+                                                                        $invoice_amount = $invoice_data->total;
+
+                                                                        $total_taxable_value += ($invoice_data->total-$invoice_data->total_tax);
+                                                                        $total_sgst_value += ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $total_cgst_value += ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $total_igst_value += ($invoice_data->tax_type == 1) ? 0.00 : $invoice_data->total_tax;
+                                                                        $total_amt += $invoice_data->total;
+
                                                                         $type = ($invoice_data->service_type == 2) ? "Sales Invoice" : "Rent Invoice";
                                                                         $date = _d($invoice_data->invoice_date);
                                                                         $number = "<a href='".admin_url("invoices/download_pdf/".$value->document_id."/?output_type=I")."'>".$invoice_data->number."</a>";
@@ -99,6 +159,20 @@ legend.scheduler-border {
                                                                 case 2:
                                                                     $invoice_data = $this->db->query("SELECT * FROM `tbldebitnote` WHERE `id` = ".$value->document_id."")->row();
                                                                     if(!empty($invoice_data)){
+                                                                        $ttl_count++;
+                                                                        $tax = ($invoice_data->total_tax/2);
+                                                                        $taxable_value = ($invoice_data->totalamount-$invoice_data->total_tax);
+                                                                        $sgst_value = ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $cgst_value = ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $igst_value = ($invoice_data->tax_type == 1) ? 0.00 : $invoice_data->total_tax;
+                                                                        $invoice_amount = $invoice_data->totalamount;
+
+                                                                        $total_taxable_value += ($invoice_data->totalamount-$invoice_data->total_tax);
+                                                                        $total_sgst_value += ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $total_cgst_value += ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $total_igst_value += ($invoice_data->tax_type == 1) ? 0.00 : $invoice_data->total_tax;
+                                                                        $total_amt += $invoice_data->totalamount;
+
                                                                         $date = _d($invoice_data->dabit_note_date);
                                                                         $number = "<a href='".admin_url("debit_note/download_pdf/".$value->document_id."")."'>".$invoice_data->number."</a>";
                                                                     }
@@ -107,6 +181,20 @@ legend.scheduler-border {
                                                                 case 3:
                                                                     $invoice_data = $this->db->query("SELECT * FROM `tbldebitnotepayment` WHERE `id` = ".$value->document_id."")->row();
                                                                     if(!empty($invoice_data)){
+                                                                        $ttl_count++;
+                                                                        $tax = ($value->total_tax/2);
+                                                                        $taxable_value = ($value->amount-$value->total_tax);
+                                                                        $sgst_value = ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $cgst_value = ($invoice_data->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $igst_value = ($invoice_data->tax_type == 1) ? 0.00 : $invoice_data->total_tax;
+                                                                        $invoice_amount = $invoice_data->amount;
+
+                                                                        $total_taxable_value += ($value->amount-$value->total_tax);
+                                                                        $total_sgst_value += ($value->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $total_cgst_value += ($value->tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $total_igst_value += ($value->tax_type == 1) ? 0.00 : $value->total_tax;
+                                                                        $total_amt += $invoice_data->amount;
+
                                                                         $date = _d($invoice_data->date);
                                                                         $number = "<a href='".admin_url("debit_note/download_paymentpdf/".$value->document_id."")."'>".$invoice_data->number."</a>";
                                                                     }
@@ -115,6 +203,21 @@ legend.scheduler-border {
                                                                 case 4:
                                                                     $invoice_data = $this->db->query("SELECT * FROM `tblcreditnote` WHERE `id` = ".$value->document_id."")->row();
                                                                     if(!empty($invoice_data)){
+                                                                        $ttl_count++;
+                                                                        $tax_type = get_client_gst_type($value->clientid);
+                                                                        $taxable_value = ($value->totalamount-$value->total_tax);
+                                                                        $sgst_value = ($tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $cgst_value = ($tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $igst_value = ($tax_type == 1) ? 0.00 : $value->total_tax;
+                                                                        $invoice_amount = $invoice_data->totalamount;
+
+                                                                        $total_taxable_value += ($value->totalamount-$value->total_tax);
+                                                                        $tax = ($value->total_tax/2);
+                                                                        $total_sgst_value += ($tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $total_cgst_value += ($tax_type == 1) ? number_format(round($tax), 2, '.', '') : 0.00;
+                                                                        $total_igst_value += ($tax_type == 1) ? 0.00 : $value->total_tax;
+                                                                        $total_amt += $invoice_data->totalamount;
+
                                                                         $date = _d($invoice_data->date);
                                                                         $number = "<a href='".admin_url("creditnotes/download_pdf/".$value->document_id."")."'>".$invoice_data->number."</a>";
                                                                     }
@@ -124,18 +227,23 @@ legend.scheduler-border {
                                                             
                                                             if (!empty($invoice_data)){
                                                 ?>
-                                                <tr>
-                                                    <td><?php echo ++$key; ?></td>
-                                                    <td><?php echo $date; ?></td>
-                                                    <td><?php echo $type; ?></td>
-                                                    <td><?php echo $number; ?></td>
-                                                    <td><?php echo client_info($invoice_data->clientid)->client_branch_name; ?></td>
-                                                    <td>
-                                                        <input type="hidden" name="details[<?php echo $key; ?>][document_id]" class="document_id" value="<?php echo $value->document_id;?>">
-                                                        <input type="hidden" name="details[<?php echo $key; ?>][document_type]" class="document_type" value="<?php echo $value->tabel_type;?>">
-                                                        <input type='checkbox' class='chkaction' name='details[<?php echo $key; ?>][checked]'>
-                                                    </td>
-                                                </tr>
+                                                                    <tr>
+                                                                        <td><?php echo ++$key; ?></td>
+                                                                        <td><?php echo $date; ?></td>
+                                                                        <td><?php echo $type; ?></td>
+                                                                        <td><?php echo $number; ?></td>
+                                                                        <td><?php echo client_info($invoice_data->clientid)->client_branch_name; ?></td>
+                                                                        <td><?php echo number_format($invoice_amount, 2); ?></td>
+                                                                        <td><?php echo number_format($taxable_value, 2); ?></td>
+                                                                        <td><?php echo $cgst_value; ?></td>
+                                                                        <td><?php echo $sgst_value; ?></td>
+                                                                        <td><?php echo $igst_value; ?></td>
+                                                                        <td>
+                                                                            <input type="hidden" name="details[<?php echo $key; ?>][document_id]" class="document_id" value="<?php echo $value->document_id;?>">
+                                                                            <input type="hidden" name="details[<?php echo $key; ?>][document_type]" class="document_type" value="<?php echo $value->tabel_type;?>">
+                                                                            <input type='checkbox' class='chkaction' name='details[<?php echo $key; ?>][checked]'>
+                                                                        </td>
+                                                                    </tr>
                                                 <?php
                                                             }
                                                         }
@@ -198,7 +306,12 @@ legend.scheduler-border {
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
 
 <script>
-
+    $("#ttl_taxable_val").html('<?php echo $total_taxable_value; ?>');
+    $("#ttl_sgst_val").html('<?php echo $total_sgst_value; ?>');
+    $("#ttl_cgst_val").html('<?php echo $total_cgst_value; ?>');
+    $("#ttl_igst_val").html('<?php echo $total_igst_value; ?>');
+    $("#ttl_amount_val").html('<?php echo $total_amt; ?>');
+    $("#ttl_counts_val").html('<?php echo $ttl_count; ?>');
     $(document).ready(function () {
 
         $('#newtable').DataTable({

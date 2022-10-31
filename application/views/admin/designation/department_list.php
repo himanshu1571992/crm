@@ -3,19 +3,12 @@
 <div id="wrapper">
     <div class="content accounting-template">
          <div class="row">
-
             <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'department_form', 'class' => 'department-form')); ?>
             <div class="col-md-12">
                 <div class="panel_s">
-
                     <div class="panel-body">
-
                     <h4 class="no-margin"><?php echo $title; ?> <a href="<?php echo admin_url('designation/departmentsmaster'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Department</a></h4>
-
-
-
                     <hr class="hr-panel-heading">
-
                     <div class="row">
                     
                         <div class="">
@@ -25,9 +18,10 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Departments Name</th>
                                         <th>Status</th>
-                                        <th>Date</th>
+                                        <th>Date Created</th>
                                         <th class="text-center">Action</th>
                                       </tr>
                                     </thead>
@@ -46,6 +40,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? get_employee_fullname($row->added_by) : 'N/A'; ?></td>
                                                 <td><?php echo cc($row->name); ?></td>
                                                 <td><?php echo $toggleActive;?></td>
                                                 <td><?php echo _d($row->created_at);?></td>

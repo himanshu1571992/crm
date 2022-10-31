@@ -109,7 +109,10 @@
                                             }
                                               ?>
                                               <tr>
-                                                  <td><?php echo $i++;?></td>
+                                                  <td>
+                                                    <?php echo $i++;?>
+                                                    <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                </td>
                                                   <td><?php echo $row->name;?></td>
                                                   <td><?php echo ($row->head_id > 0) ? value_by_id("tblexpensehead", $row->head_id, "name") : '--';?></td>
                                                   <td><?php echo $designationname; ?></td>

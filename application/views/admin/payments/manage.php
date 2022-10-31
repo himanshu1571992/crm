@@ -89,7 +89,7 @@
 								<thead>
 									<tr>
 									<th>S.No.</th>
-									<th>Added By</th>
+									<!-- <th>Added By</th> -->
 									<!-- <th>Payment No.</th> -->
 									<th>Payment for</th>
 									<th>Invoice/Debitnote</th>
@@ -155,8 +155,13 @@
 											<tr <?php echo $datechanges; ?>>
 												<td><?php echo $z++;?></td>
 												<!-- <td><a target="_blank" href="<?php echo admin_url('payments/payment/' . $row->id); ?>"><?php echo str_pad($row->id, 4, '0', STR_PAD_LEFT);?></a></td> -->
-												<td><?php echo get_employee_fullname($row->staff_id);  ?></td>
-												<td><?php echo ($row->paymentmethod == 2) ? 'Invoice' : 'Debitnote';  ?></td>
+												<!-- <td><?php //echo get_employee_fullname($row->staff_id);  ?></td> -->
+												<td>
+													<?php 
+														echo get_creator_info($row->staff_id, $row->daterecorded);
+														echo ($row->paymentmethod == 2) ? 'Invoice' : 'Debitnote';
+													?>
+												</td>
 											<?php
 												if($row->paymentmethod == 2){
 											?>

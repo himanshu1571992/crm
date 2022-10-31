@@ -86,6 +86,7 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Title</th>
                                         <th>Final Receiver</th>
                                         <th>Remark</th>
@@ -106,6 +107,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo get_employee_fullname($row->staff_id);?></td>
                                                 <td><?php echo cc($row->title);?></td>
                                                 <td><?php echo get_employee_fullname($row->receiver_id);?></td>
                                                 <td><?php echo (!empty($row->remark)) ? cc($row->remark) : '--'; ?></td>

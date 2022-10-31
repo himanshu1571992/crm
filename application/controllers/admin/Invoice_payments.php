@@ -172,7 +172,7 @@ class Invoice_payments extends Admin_controller
                     }
                 }
 
-                $result_file = handle_multi_payment_attachments($pay_id, 'payment');
+                $result_file = handle_multi_attachments($pay_id, 'payment');
                 if ($payment_behalf == 1) {
                     $paymnt = 'On Account';
                 } elseif ($payment_behalf == 2) {
@@ -382,8 +382,6 @@ class Invoice_payments extends Admin_controller
             $data["clientpayment_info"] = $this->db->query("SELECT * FROM `tblclientpayment` where id = '" . $id . "' ")->row();
             $data['title'] = 'Convert to Receipt';
         }
-
-
 
         $this->load->view('admin/invoice_payments/add', $data);
     }
@@ -598,7 +596,7 @@ class Invoice_payments extends Admin_controller
                     }
                 }
 
-	            	$result_file=handle_multi_payment_attachments($pay_id,'payment');
+	            	$result_file=handle_multi_attachments($pay_id,'payment');
 
 	            	if(!empty($row)){
 		        		foreach ($row as $key => $value) {
@@ -1016,7 +1014,7 @@ class Invoice_payments extends Admin_controller
                         $this->db->delete('tblfiles', array('rel_id' => $id, 'rel_type' => 'payment'));
                     }
 
-                    handle_multi_payment_attachments($pay_id, 'payment');
+                    handle_multi_attachments($pay_id, 'payment');
                 }
 
                 set_alert('success', 'On Account Payment Edit Successfully');
@@ -1140,7 +1138,7 @@ class Invoice_payments extends Admin_controller
         $data['id'] = $id;
         $data['staff_id'] = $staff->staff_id;
         $data['payment']  = $this->db->query("SELECT * FROM tblinvoicepaymentrecords where pay_id = '".$id."'  ")->result();
-
+        $data['file_info'] = $this->db->query("SELECT * FROM tblfiles WHERE rel_id = '" . $id . "' and rel_type = 'payment'  ")->result();
         $data['title'] = 'Client Payment Approval';
         $this->load->view('admin/invoice_payments/clientpayment_approval', $data);
     }
@@ -1253,7 +1251,7 @@ class Invoice_payments extends Admin_controller
                         }
                     }
 
-                    $result_file=handle_multi_payment_attachments($pay_id,'payment');
+                    $result_file=handle_multi_attachments($pay_id,'payment');
                     if (!empty($row)) {
                         foreach ($row as $key => $value) {
                             $amount = $_POST['amount_' . $value];
@@ -1378,6 +1376,19 @@ class Invoice_payments extends Admin_controller
             }
 
             echo $html;
+        }
+    }
+
+    public function mark_suspense_unknown($id)
+    {
+        if(!empty($id)){
+            if($this->home_model->update('tblclientpayment', array("unknown_suspense" => 1), array("id" => $id))){
+                set_alert('success', 'Suspense Marked as Unknown successfully');
+                redirect(admin_url('payments'));
+            }else{
+                set_alert('warning', 'Somthing went wrong!');
+                redirect(admin_url('payments'));
+            }
         }
     }
 

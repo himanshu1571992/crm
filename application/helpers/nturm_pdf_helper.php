@@ -1084,7 +1084,20 @@ function nturm_infoice_pdf($invoice){
 
 	    }
 
-	    $final_amount = ($total_price - $discount);
+
+      /* this code use for calculate charges of tcs */ 
+      $ttltcs_charges = 0;
+      $tcs_charges_data = $CI->db->query("SELECT `tcs_amount` FROM tblinvoicetcscharges WHERE `invoice_id`= '".$invoice->id."' ")->row();
+      if (!empty($tcs_charges_data)){
+        $html .= '<tr>
+                    <td style="background: #F7EF79;"></td>
+                    <td style="text-align:left; background: #F7EF79;"><b>TCS CHARGES</b></td>
+                    <td style="background: #F7EF79;" colspan="'.$mainColSpan.'"><b>'.number_format($tcs_charges_data->tcs_amount, 2).'</b></td>
+                  </tr>';
+        $ttltcs_charges = $tcs_charges_data->tcs_amount;
+      }
+
+      $final_amount = ($total_price - $discount) + $ttltcs_charges;
 
         $html .='<tr>
           <td style="background: #F7EF79;"></td>
@@ -1158,6 +1171,11 @@ function nturm_ledger_pdf($data){
   $service_type = $data['service_type'];
   $year_id = $data['year_id'];
 
+   /* this code use for get multiple client outstanding amount */
+   $vendordata = $CI->db->query("SELECT GROUP_CONCAT(vendor_id) as vendor_ids FROM `tblclientbranch` WHERE `userid` IN (".$branch_str.") ")->row();
+   $vendorids_str = (!empty($vendordata)) ? $vendordata->vendor_ids : 0;
+   $vendor_outstanding_amount = get_vendor_ledger_amount($vendorids_str);
+   
   if($service_type == 1){
       $ledger_for = 'Rental Ledger';
     }else{
@@ -1715,7 +1733,7 @@ function nturm_ledger_pdf($data){
 
             //Getting Debit Notes againt parent invoice
             if (!empty($year_id)){
-              $debit_note_info = $CI->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and year_id = '".$year_id."' and status = '1' order by dabit_note_date ".$flow." ")->result();
+               $debit_note_info = $CI->db->query("SELECT * FROM tbldebitnote where invoice_id > '0' and clientid IN (".$branch_str.") and year_id = '".$year_id."' and status = '1' order by dabit_note_date ".$flow." ")->result();
             }else{
               $debit_note_info = $CI->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by dabit_note_date ".$flow." ")->result();
             }
@@ -1884,7 +1902,7 @@ function nturm_ledger_pdf($data){
 
 			      //Getting Credit Notes againt parent invoice
               if (!empty($year_id)){
-                $credit_note_info = $CI->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' and year_id = '".$year_id."' order by date ".$flow." ")->result();
+                $credit_note_info = $CI->db->query("SELECT * FROM tblcreditnote where  invoice_id > '0' and clientid IN (".$branch_str.") and status = '1' and year_id = '".$year_id."' order by date ".$flow." ")->result();
               }else{
                 $credit_note_info = $CI->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by date ".$flow." ")->result();
               }
@@ -1999,9 +2017,9 @@ function nturm_ledger_pdf($data){
 
 	//Payment Debit Notes
 	  $financialyearwhere = (!empty($year_id)) ? 'and dn.year_id='.$year_id : '';
-    $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 ".$financialyearwhere." GROUP by dn.id ")->result();
+    $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 and dn.status > 0 ".$financialyearwhere." GROUP by dn.id ")->result();
     if(empty($payment_debitnote)){
-      $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 ".$financialyearwhere." GROUP by dn.id ")->result();
+      $payment_debitnote = $CI->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 and dn.status > 0 ".$financialyearwhere." GROUP by dn.id ")->result();
     }
 	  if(!empty($payment_debitnote)){
             $ttl_tds = 0;
@@ -2192,7 +2210,7 @@ function nturm_ledger_pdf($data){
     $waveoff_info = $CI->db->query("SELECT * FROM `tblclientwaveoff`  where client_id IN (".$data['client_branch'].") and status = 1 and service_type = '".$service_type."' ".$createdatefilter." ")->result();
     $clientrefund_amt = $CI->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (".$data['client_branch'].") and pd.utr_no != '' and service_type = '".$service_type."' ".$refubddatefilter." order by r.id desc")->row()->ttl_amount;
 
-    $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt));
+    $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt) - $vendor_outstanding_amount);
 
 
   $html .='<table border="0" cellspacing="0" cellpadding="0">
@@ -2231,6 +2249,13 @@ function nturm_ledger_pdf($data){
 				 <td>'.round($clientrefund_amt).'.00</td>
 			</tr>';
 	}
+
+  if ($vendor_outstanding_amount > 0){
+    $html .= '<tr>
+                <td>- Vendor Outstanding</td>
+                <td>'.$vendor_outstanding_amount.'.00</td>
+            </tr>';
+  }
   $html .='<tr>
             <td>Final Balance</td>
             <td>'.round($final_balance).'.00</td>

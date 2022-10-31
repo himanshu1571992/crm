@@ -123,6 +123,13 @@ fieldset.for-panel p span.badge-success {
                                                ?>
                                            </p>
                                        </td>
+                                       
+                                   </tr>
+                                   <tr>
+                                        <td class="col-sm-6"><label class="control-label" style="color:red;"> Remark <sapn class="pull-right">&nbsp;&nbsp;:</sapn></label></td>
+                                        <td class="col-sm-6">
+                                            <p class="form-control-static text-success"><?php echo (!empty($enquirycall_info->remark)) ? $enquirycall_info->remark :''; ?></p> 
+                                        </td>
                                    </tr>
                                    <?php
                                         if (isset($enquirycall_info) && !empty($enquirycall_info)) {
@@ -223,7 +230,7 @@ fieldset.for-panel p span.badge-success {
                                     echo '<div class="row">
                                             <div class="col-sm-8">
                                                 <div class="form-horizontal">               
-                                                    <label class="col-xs-2 control-label" style="color:red;">'.$i++.') Product Name :</label>
+                                                    <label class="col-xs-3 control-label" style="color:red;">'.$i++.') Product Name :</label>
                                                         <p class="form-control-static '.$color.'">'.cc($product_name).'</p>                        
                                                 </div>
                                             </div>

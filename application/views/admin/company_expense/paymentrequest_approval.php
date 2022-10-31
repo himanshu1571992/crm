@@ -290,11 +290,29 @@ fieldset.for-panel p span.badge-success {
                                             </td>
                                         </tr>
                                     <?php } ?>
+                                    <?php if(!empty($paymentrequest_info->booking_date)) { ?>
+                                        <tr class="col-md-6">
+                                            <td class="row"><label class="control-label">Booking Amount : &nbsp;&nbsp;</label>
+                                                <?php 
+                                                    echo _d($paymentrequest_info->booking_date);
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
                                     <?php if(!empty($paymentrequest_info->amount)) { ?>
                                         <tr class="col-md-6">
-                                            <td class="row"><label class="control-label">Amount : &nbsp;&nbsp;</label>
+                                            <td class="row"><label class="control-label">Paid Amount : &nbsp;&nbsp;</label>
                                                 <?php 
                                                     echo $paymentrequest_info->amount;
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                    <?php if(!empty($paymentrequest_info->taxable_amount)) { ?>
+                                        <tr class="col-md-6">
+                                            <td class="row"><label class="control-label">Taxable Amount : &nbsp;&nbsp;</label>
+                                                <?php 
+                                                    echo $paymentrequest_info->taxable_amount;
                                                 ?>
                                             </td>
                                         </tr>

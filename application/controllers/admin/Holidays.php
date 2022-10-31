@@ -100,6 +100,7 @@ class Holidays extends Admin_controller
 
 
             $ad_data = array(
+                            'added_by' => get_staff_user_id(),
                             'title' => $title,
                             'year' => $year,
                             'date' => $date,
@@ -108,9 +109,6 @@ class Holidays extends Admin_controller
                             'created_at' => date('Y-m-d H:i:s'),
                             'status' => 1
                         );
-
-
-
             $insert = $this->home_model->insert('tblholidays', $ad_data);
 
             if($insert){

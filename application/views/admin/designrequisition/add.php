@@ -24,7 +24,7 @@
                                                         <input type="text" class="form-control" readonly name="design_id" value="<?php echo $design_id;?>">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label for="lead_type" class="control-label">Product Type</label>
                                                         <select class="form-control selectpicker" id="product_type" name="product_type" required="" data-live-search="true">
@@ -34,13 +34,42 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label for="lead_type" class="control-label">Type</label>
                                                         <select class="form-control selectpicker dtype" id="type" name="type" required="" data-live-search="true">
                                                             <option value=""></option>
                                                             <option value="1" <?php echo (isset($drequisition_info)) ? ($drequisition_info->type == 1) ? "selected=''": "": ""; ?>>Staff</option>
                                                             <option value="2" <?php echo (isset($drequisition_info)) ? ($drequisition_info->type == 2) ? "selected=''": "": ""; ?>>Client</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <?php
+                                                            $chkpermission = get_staff_info(get_staff_user_id())->createdirectdesignrequisition;
+                                                        ?>
+                                                        <label for="assign_production" class="control-label">Assign To Production</label>
+                                                        <select class="form-control selectpicker" <?php echo ($chkpermission == 0) ? 'required=""':''; ?> id="assign_to_production" name="assignproductionid[]" multiple="" data-live-search="true">
+                                                            <option value=""></option>
+                                                            <?php
+
+                                                            if (isset($allStaffdata) && count($allStaffdata) > 0) {
+                                                                foreach ($allStaffdata as $Staffgroup_key => $Staffgroup_value) {
+                                                                    ?>
+                                                                    <optgroup class="<?php echo 'group' . $Staffgroup_value['id'] ?>">
+                                                                        <option value="<?php echo 'group' . $Staffgroup_value['id'] ?>"><?php echo $Staffgroup_value['name'] ?></option>
+                                                                        <?php
+                                                                        foreach ($Staffgroup_value['staffs'] as $singstaff) {
+                                                                            ?>
+                                                                            <option style="margin-left: 3%;" value="<?php echo 'staff' . $singstaff['staffid'] ?>"><?php echo $singstaff['firstname'] ?></option>
+                                                                            <?php }
+                                                                        ?>
+                                                                    </optgroup>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -96,35 +125,7 @@
                                                     </div>
                                                 </div>
                                               </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <?php
-                                                            $chkpermission = get_staff_info(get_staff_user_id())->createdirectdesignrequisition;
-                                                        ?>
-                                                        <label for="assign_production" class="control-label">Assign To Production</label>
-                                                        <select class="form-control selectpicker" <?php echo ($chkpermission == 0) ? 'required=""':''; ?> id="assign_to_production" name="assignproductionid[]" multiple="" data-live-search="true">
-                                                            <option value=""></option>
-                                                            <?php
-
-                                                            if (isset($allStaffdata) && count($allStaffdata) > 0) {
-                                                                foreach ($allStaffdata as $Staffgroup_key => $Staffgroup_value) {
-                                                                    ?>
-                                                                    <optgroup class="<?php echo 'group' . $Staffgroup_value['id'] ?>">
-                                                                        <option value="<?php echo 'group' . $Staffgroup_value['id'] ?>"><?php echo $Staffgroup_value['name'] ?></option>
-                                                                        <?php
-                                                                        foreach ($Staffgroup_value['staffs'] as $singstaff) {
-                                                                            ?>
-                                                                            <option style="margin-left: 3%;" value="<?php echo 'staff' . $singstaff['staffid'] ?>"><?php echo $singstaff['firstname'] ?></option>
-                                                                            <?php }
-                                                                        ?>
-                                                                    </optgroup>
-                                                                    <?php
-                                                                }
-                                                            }
-                                                            ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                                
                                                 <div class="col-md-4">
                                                   <div class="form-group">
                                                       <label for="lead_type" class="control-label">Attachments</label>
@@ -149,7 +150,14 @@
                                                       ?>
                                                   </div>
                                                 </div>
-
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <?php 
+                                                            $value = (isset($drequisition_info) ? _d($drequisition_info->expected_date) : _d(date('Y-m-d')));
+                                                            echo render_date_input('expected_date', 'Expected Date', $value); 
+                                                        ?>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="btn-bottom-toolbar bottom-transaction text-right">

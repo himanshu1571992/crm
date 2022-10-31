@@ -99,7 +99,7 @@ class Manage_cheque extends Admin_controller
                             </select>
                             </div>
                             </td>
-                            <td><input type="text" name="chaque_clear_date" class="form-control date_picker" value="<?php if(!empty($clientpayment_info->chaque_clear_date)){ echo date('d/m/Y',strtotime($clientpayment_info->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
+                            <td><input type="text" name="chaque_clear_date" class="form-control date_picker" value="<?php if(!empty($clientpayment_info->chaque_clear_date)){ echo date('m/d/Y',strtotime($clientpayment_info->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
                         </tr>
 
 
@@ -282,7 +282,7 @@ class Manage_cheque extends Admin_controller
                             </select>
                             </div>
                             </td>
-                            <td><input type="text" name="chaque_clear_date1" class="form-control date_picker1" value="<?php if(!empty($clientpayment_info->chaque_clear_date)){ echo date('d/m/Y',strtotime($clientpayment_info->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
+                            <td><input type="text" name="chaque_clear_date1" class="form-control date_picker1" value="<?php if(!empty($clientpayment_info->chaque_clear_date)){ echo date('m/d/Y',strtotime($clientpayment_info->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
                         </tr>
 
 
@@ -360,7 +360,7 @@ class Manage_cheque extends Admin_controller
                             </select>
                             </div>
                             </td>
-                            <td><input type="text" name="chaque_clear_date2" class="form-control date_picker2" value="<?php if(!empty($clientpayment_info->chaque_clear_date)){ echo date('d/m/Y',strtotime($clientpayment_info->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
+                            <td><input type="text" name="chaque_clear_date2" class="form-control date_picker2" value="<?php if(!empty($clientpayment_info->chaque_clear_date)){ echo date('m/d/Y',strtotime($clientpayment_info->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
                         </tr>
 
 
@@ -485,7 +485,7 @@ class Manage_cheque extends Admin_controller
                             </select>
                             </div>
                             </td>
-                            <td><input type="text" name="chaque_clear_date" class="form-control date_picker" value="<?php if(!empty($vendorpayment_info->chaque_clear_date)){ echo date('d/m/Y',strtotime($vendorpayment_info->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
+                            <td><input type="text" name="chaque_clear_date" class="form-control date_picker" value="<?php if(!empty($vendorpayment_info->chaque_clear_date)){ echo date('m/d/Y',strtotime($vendorpayment_info->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
                         </tr>
 
 
@@ -564,7 +564,7 @@ class Manage_cheque extends Admin_controller
                             </select>
                             </div>
                             </td>
-                            <td><input type="text" name="chaque_clear_date1" class="form-control date_picker1" value="<?php if(!empty($vendorpayment_info1->chaque_clear_date)){ echo date('d/m/Y',strtotime($vendorpayment_info1->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
+                            <td><input type="text" name="chaque_clear_date1" class="form-control date_picker1" value="<?php if(!empty($vendorpayment_info1->chaque_clear_date)){ echo date('m/d/Y',strtotime($vendorpayment_info1->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
                         </tr>
 
 
@@ -642,7 +642,7 @@ class Manage_cheque extends Admin_controller
                             </select>
                             </div>
                             </td>
-                            <td><input type="text" name="chaque_clear_date2" class="form-control date_picker2" value="<?php if(!empty($vendorpayment_info2->chaque_clear_date)){ echo date('d/m/Y',strtotime($vendorpayment_info2->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
+                            <td><input type="text" name="chaque_clear_date2" class="form-control date_picker2" value="<?php if(!empty($vendorpayment_info2->chaque_clear_date)){ echo date('m/d/Y',strtotime($vendorpayment_info2->chaque_clear_date)); }else{ echo date('m/d/Y');} ?>"></td>
                         </tr>
 
 
@@ -739,7 +739,7 @@ class Manage_cheque extends Admin_controller
             	'amount' => $amount,
             	'ref_no' => $ref_no,
             	'remark' => $remark,
-            	'created_at' => date("Y-m-d")
+            	'created_at' => date("Y-m-d H:i:s")
             );
 
             if ($id != ''){

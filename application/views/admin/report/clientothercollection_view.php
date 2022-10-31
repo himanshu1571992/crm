@@ -50,52 +50,32 @@
                         <div>                                                    
 
                         <table class="table" id="newtable">
-
                             <thead>
-
                               <tr>
-
                                 <th>S.No</th>
-
+                                <th>Added By</th>
                                 <th>Name</th>
-
-                                <th>Date</th>
-
+                                <th>Date Time</th>
                                 <th class="text-center">Action</th>
-
                               </tr>
-
                             </thead>
-
                             <tbody>
 
                             <?php
 
                             if(!empty($othercollection_data)){
-
-
-
                                 foreach ($othercollection_data as $key => $value) {
-
-
-
                                 ?>
-
                                 <tr>
-
                                     <td><?php echo ++$key; ?></td>                                                
-
+                                    <td><?php echo ($value->added_by > 0) ? get_employee_fullname($value->added_by) : 'N/a'; ?></td>
                                     <td><?php echo $value->name; ?></td>
-
                                     <td><?php echo _d($value->created_at); ?></td>
-
                                     <td class="text-center">
                                         <a href="<?php echo admin_url('report/client_othercollection/'.$value->id); ?>" class="btn btn-info btn-xs">Edit</a>
                                         <a href="<?php echo admin_url('report/delete_client_othercollection/'.$value->id); ?>" class="btn btn-danger btn-xs _delete">Delete</a>
                                     </td>
-
                                   </tr>
-
                                 <?php
 
                                 }

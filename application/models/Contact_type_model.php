@@ -31,6 +31,7 @@ class Contact_type_model extends CRM_Model {
      */
     public function add($data) {
 
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $data['updated_at'] = date("Y-m-d H:i:s");
 		//print_r($data);die();

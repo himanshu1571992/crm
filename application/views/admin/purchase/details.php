@@ -45,7 +45,22 @@
                 <div class="panel_s">
                     <div class="panel-body">
                         <div class="row">
-
+                            <div class="col-md-12">
+                                <div class="row panelHead">
+                                    <div class="col-xs-12 col-md-6">
+                                        <h4>
+                                        <?php  
+                                            $title = "Purchase Order Approval";
+                                            if ((isset($purchase_info['order_type'])) && $purchase_info['order_type'] == 2){
+                                                $title = "Work Order Approval";
+                                            }
+                                            echo $title;
+                                        ?>
+                                     </h4>
+                                    </div>
+                                </div>
+                                <hr class="hr-panel-heading">
+                            </div>
 
 
                             <div class="col-md-6">
@@ -680,8 +695,12 @@
                             
                             <?php 
                                 $html = '';
+                                if(!empty($purchase_info['specification'])){
+                                    $html .= '<h4 class="no-mtop mrg3"><u>Notes/Special Remarks :</u></h4><hr><div class="termsList">'.$purchase_info['specification'].'</div><br><br>';
+
+                                }
                                 if(!empty($purchase_info['product_terms_and_conditions'])){
-                                    $html .= '<h4 class="no-mtop mrg3"><u>Product Terms and Conditions:</u></h4><hr><div class="termsList">'.$purchase_info['product_terms_and_conditions'].'</div>';
+                                    $html .= '<h4 class="no-mtop mrg3"><u>Product Terms and Conditions:</u></h4><hr><div class="termsList">'.$purchase_info['product_terms_and_conditions'].'</div><br><br>';
                                 }
                                 $html .= '<h4 class="no-mtop mrg3"><u>General Terms and Conditions:</u></h4><hr><div class="termsList">'.getAllTermsConditions($purchase_info['id'], "purchase_order").'</div>';
                                 echo $html;

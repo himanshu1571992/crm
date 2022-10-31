@@ -132,6 +132,7 @@ if(!empty($service_type)){
               							<option value="proposal" <?php if(!empty($used_for) && $used_for == 'proposal'){ echo 'selected'; } ?>>Quote</option>
               							<option value="invoice" <?php if(!empty($used_for) && $used_for == 'invoice'){ echo 'selected'; } ?>>Invoice</option>
               							<option value="estimate" <?php if(!empty($used_for) && $used_for == 'estimate'){ echo 'selected'; } ?>>Proforma Invoice</option>
+                                        <option value="material_receipt" <?php if(!empty($used_for) && $used_for == 'material_receipt'){ echo 'selected'; } ?>>Material Receipt</option>
             						</select>
           						</div>
           						<div class="col-md-2">

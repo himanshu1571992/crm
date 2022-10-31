@@ -1,36 +1,20 @@
 <?php init_head(); ?>
-
 <div id="wrapper">
-
     <div class="content accounting-template">
-
          <div class="row">
-
             <div class="col-md-12">
-
                 <div class="panel_s">
-                   
                     <div class="panel-body">
-                 <div class="row panelHead">
-
-                        <div class="col-xs-12 col-md-6">
-
-                            <h4><?php echo $title; ?></h4>
-
+                        <div class="row panelHead">
+                          <div class="col-xs-12 col-md-6">
+                              <h4><?php echo $title; ?></h4>
+                          </div>
+                          <div class="col-xs-12 col-md-6 text-right">
+                              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#whatsappModal"><i class="fa fa-whatsapp" aria-hidden="true"></i> Send Whatsapp</button>
+                              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#emailModal"><i class="fa fa-envelope-o" aria-hidden="true"></i> Send Email</button>
+                          </div>
                         </div>
-
-                        <div class="col-xs-12 col-md-6 text-right">
-
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#whatsappModal"><i class="fa fa-whatsapp" aria-hidden="true"></i> Send Whatsapp</button>
-
-                        
-
-                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#emailModal"><i class="fa fa-envelope-o" aria-hidden="true"></i> Send Email</button>
-
-                        </div>
-
-                    </div>
-                  <hr class="hr-panel-heading">
+                        <hr class="hr-panel-heading">
 
                     <form action="<?php  echo  admin_url('staff/registered_employeelist');?>" method="post" enctype="multipart/form-data" id="myForm">
                          <div class="form-group col-md-3" app-field-wrapper="date">
@@ -101,47 +85,38 @@
                                     $status = 'Pending';
                                     $cls = 'btn-warning';
                                     $datatarget='approval';
-                                      
                                   }
-
                           ?>
-
                                 <tr>
-
                                     <td><?php echo ++$key; ?></td>                                                
-
                                     <td><?php echo $value->employee_name; ?></td>
-
                                     <td><?php echo $value->email; ?></td>
-
                                     <td><?php echo $value->contact_no; ?></td>
-
                                     <td><?php echo _d($value->created_at); ?></td>
                                     <td>
                                         <?php 
-                                        
-                                        if($value->approval_status== 1){
-                                          echo '<button type="button" class="'.$cls.' btn-sm approve" id="'.$id.'" value="'.$value->staffid.'" data-toggle="modal" data-target="#'.$datatarget.'">'.$status.'</button>';
-                                          
-                                        }elseif($value->approval_status== 2){
-                                          echo '<button type="button" class="'.$cls.' btn-sm reject" id="'.$id.'" value="'.$value->staffid.'" data-toggle="modal" data-target="#'.$datatarget.'">'.$status.'</button>';
-                                        }elseif ($value->approval_status== 4) {
-                                          echo '<a href="'.  admin_url().'staff/registered_employee_process/'.$value->staffid.'" target="_blank" class="btn-info btn-sm" >Form Pending</a>';  
-                                        }else{
-                                          echo '<button type="button" class="'.$cls.' btn-sm status" id="'.$id.'" value="'.$value->staffid.'" data-toggle="modal" data-target="#'.$datatarget.'">'.$status.'</button>';
-                                        }
-                                          
-                                        
-                                       
+                                          if($value->approval_status== 1){
+                                            echo '<button type="button" class="'.$cls.' btn-sm approve" id="'.$id.'" value="'.$value->staffid.'" data-toggle="modal" data-target="#'.$datatarget.'">'.$status.'</button>';
+                                           
+                                          }elseif($value->approval_status== 2){
+                                            echo '<button type="button" class="'.$cls.' btn-sm reject" id="'.$id.'" value="'.$value->staffid.'" data-toggle="modal" data-target="#'.$datatarget.'">'.$status.'</button>';
+                                          }elseif ($value->approval_status== 4) {
+                                            echo '<a href="'.  admin_url().'staff/registered_employee_process/'.$value->staffid.'" target="_blank" class="btn-info btn-sm" >Form Pending</a>';  
+                                          }else{
+                                            if (!empty($value->employee_name) && $value->designation_id > 0 && $value->branch_id > 0 && !empty($value->net_salary) && $value->superior_id > 0 && !empty($value->joining_date)){
+                                                echo '<button type="button" class="'.$cls.' btn-sm status" id="'.$id.'" value="'.$value->staffid.'" data-toggle="modal" data-target="#'.$datatarget.'">'.$status.'</button>';
+                                            }else{
+                                                echo '<a href="javascript:void(0);" class="btn-sm btn-info">Updated Company Details</a>';
+                                            }
+                                            
+                                          }
                                         ?>
                                     </td> 
                                     <td class="text-center">
-
-                                        
                                         <?php if ($value->approval_status != 4) {?>
-                                        <a href="<?php echo site_url('staff/employee_pdf/'.$value->staffid); ?>" target="_blank" class="btn-sm btn-info">PDF</a>
+                                          <a href="<?php echo site_url('staff/employee_pdf/'.$value->staffid); ?>" target="_blank" class="btn-sm btn-info">PDF</a>
                                         <?php } ?>
-                                      <div class="btn-group pull-right">
+                                        <div class="btn-group pull-right">
                                             <button type="button" class="btn btn-default dropdown-toggle" <?php echo ($value->approval_status == 4) ? 'disabled': ""?> data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                             </button>
@@ -150,8 +125,10 @@
                                                   <a href="<?php echo site_url('staff/employee_print/'.$value->staffid); ?>" target="_blank" title="PRINT">PRINT</a>                                                  
                                                   <a href="<?php echo admin_url('staff/employee_view/'.$value->staffid); ?>"  target="_blank" title="VIEW"></i>VIEW</a>
                                                   <?php 
-                                                        $chk_emp = $this->db->query("SELECT `staffid` FROM tblstaff WHERE reg_id=".$value->staffid."")->row();
-                                                        if ($value->approval_status == 1 && empty($chk_emp)) { ?>
+                                                      $chk_emp = $this->db->query("SELECT `staffid` FROM tblstaff WHERE reg_id=".$value->staffid."")->row();
+                                                      if ($value->approval_status == 1 && empty($chk_emp)) {
+                                                  ?>
+                                                        <a href="<?php echo admin_url('letters_format/generate_offer_letter/' . $value->staffid); ?>" target="_blank" title="generate offer letter">GENERATE OFFER LETTER</a>                                                  
                                                         <a href="<?php echo admin_url('staff/convert_to_employee/'.$value->staffid); ?>" target="_blank" title="Convert To Employee">CONVERT TO EMPLOYEE</a>                                                  
                                                   <?php } ?>
                                                 </li>

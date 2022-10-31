@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $aColumns = [
 //    '`id`',
     '`id`',
+    '`added_by`',
     '`name`',
     '`color`',
     '`order`',
@@ -29,7 +30,7 @@ foreach ($rResult as $aRow) {
 
     // #
     $row[] = $i++;
-    
+    $row[] = ($aRow['added_by'] > 0) ? get_employee_fullname($aRow['added_by']) : 'N/A';
     $url = admin_url('staffgroup/staffgroup/' . $aRow['id']);
 
     $user_name_html = '<a href="' . $url . '">' . cc($aRow['name']) . '</a>';

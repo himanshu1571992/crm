@@ -239,6 +239,7 @@ class Employees extends Admin_controller {
             extract($this->input->post());
 
             $insert_data = array(
+                "added_by" => get_staff_user_id(),
                 "staff_id" => $staff_id,
                 "product_category_id" => $product_category_id,
                 "amount" => $amount,

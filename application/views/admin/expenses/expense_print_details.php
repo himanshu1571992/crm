@@ -26,7 +26,32 @@
 				display: inline-block;
 				font-size: 16px;
 			}
-			
+			.btn {
+				text-transform: uppercase;
+				font-size: 13.5px;
+				outline-offset: 0;
+				margin-left: 25px;
+				border: 1px solid transparent;
+				transition: all .15s ease-in-out;
+				-o-transition: all .15s ease-in-out;
+				-moz-transition: all .15s ease-in-out;
+				-webkit-transition: all .15s ease-in-out;
+			}
+			.btn-warning {
+				color: #fff;
+				background-color: #F1A515;
+				border: 0;
+				border-radius: 5px;
+				padding: 5px;
+			}
+			.btn-success {
+				color: #fff;
+				background-color: #84c529;
+				border: 0;
+				border-radius: 5px;
+				padding: 5px;
+				
+			}
 		</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>		
 	</head>
@@ -61,6 +86,7 @@
 					<th rowspan="2" style="background:#323a45; color:#fff; text-align:center; padding:5px; border: 1px solid #111; width:5%;">Requested Date</th>
 					<th rowspan="2" style="background:#323a45; color:#fff; text-align:center; padding:5px; border: 1px solid #111; width:5%;">Approved Date</th>
 					<th rowspan="2" style="background:#323a45; color:#fff; text-align:center; padding:5px; border: 1px solid #111; width:15%;">ID</th>
+					<th rowspan="2" style="background:#323a45; color:#fff; text-align:center; padding:5px; border: 1px solid #111; width:20%;">Accounted</th>
 					<th rowspan="2" style="background:#323a45; color:#fff; text-align:center; padding:5px; border: 1px solid #111; width:20%;">Details</th>
 					<th rowspan="2" style="background:#323a45; color:#fff; text-align:center; padding:5px; border: 1px solid #111; width:20%;">Description</th>
 					<th rowspan="2" style="background:#323a45; color:#fff; text-align:center; padding:5px; border: 1px solid #111; width:10%;">Category</th>
@@ -138,6 +164,17 @@
 								}
 							?>
 							</td>
+							<td rowspan="<?php echo $sub_expense_count; ?>" style="text-align:center; padding:8px; border: 1px solid #111;">
+								<?php
+									$accounted_status = 0;
+									$accounted_text = '<span class="btn btn-warning">Pending</span>';
+									if ($row_1->accounted_status > 0){
+										$accounted_status = 1;
+										$accounted_text = '<span class="btn btn-success">Accounted</span>';
+									}
+								?>
+								<a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_1->id.'/expense'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+							</td>
 							<td rowspan="<?php echo $sub_expense_count; ?>" style="text-align:left; padding:8px; border: 1px solid #111;">
 								Purpose - <?php echo get_expense_purpose($row_1->id); ?> <br>
 								<?php echo get_expense_related($row_1->id);?>
@@ -156,35 +193,35 @@
 							<td style="text-align:center; padding:8px; border: 1px solid #111;">0</td>
 						</tr>
 						<?php
-						if(!empty($sub_expense_list)){
-							foreach($sub_expense_list as $row_2){
-								
-								$sub_expense_paid_by = get_expense_paidy($row_2->id);
-								if($row_2->paidby_employee == $staff_id){
-									$ttl_amount += $row_2->amount;
-								}else{
-									if($sub_expense_paid_by != '--'){
-										$ttl_paid += $row_2->amount;
-									}else{
+							if(!empty($sub_expense_list)){
+								foreach($sub_expense_list as $row_2){
+									
+									$sub_expense_paid_by = get_expense_paidy($row_2->id);
+									if($row_2->paidby_employee == $staff_id){
 										$ttl_amount += $row_2->amount;
+									}else{
+										if($sub_expense_paid_by != '--'){
+											$ttl_paid += $row_2->amount;
+										}else{
+											$ttl_amount += $row_2->amount;
+										}
 									}
+									
+									$bill_status = get_bill_status($row_2->id);
+									?>
+									<tr>
+										<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_expense_head($row_2->id); ?></td>
+										<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_expense_from($row_2->id); ?></td>
+										<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_expense_to($row_2->id); ?></td>
+										<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_kilometer_limit($row_2->id); ?></td>
+										<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $sub_expense_paid_by; ?></td>
+										<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $bill_status; ?></td>
+										<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $row_2->amount; ?></td>
+										<td style="text-align:center; padding:8px; border: 1px solid #111;">0</td>
+									</tr>
+									<?php
 								}
-								
-								$bill_status = get_bill_status($row_2->id);
-								?>
-								<tr>
-									<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_expense_head($row_2->id); ?></td>
-									<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_expense_from($row_2->id); ?></td>
-									<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_expense_to($row_2->id); ?></td>
-									<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_kilometer_limit($row_2->id); ?></td>
-									<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $sub_expense_paid_by; ?></td>
-									<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $bill_status; ?></td>
-									<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $row_2->amount; ?></td>
-									<td style="text-align:center; padding:8px; border: 1px solid #111;">0</td>
-								</tr>
-								<?php
 							}
-						}
 						}
 					}	
 
@@ -212,6 +249,17 @@
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo date('d/m/Y',strtotime($date));?></td>
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $approved_date;?></td>
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $cat_id; ?></td>
+								<td style="text-align:center; padding:8px; border: 1px solid #111;">
+									<?php
+										$accounted_status = 0;
+										$accounted_text = '<span class="btn btn-warning">Pending</span>';
+										if ($row_3->accounted_status > 0){
+											$accounted_status = 1;
+											$accounted_text = '<span class="btn btn-success">Accounted</span>';
+										}
+									?>
+									<a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_3->id.'/request'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+								</td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_3->reason; ?></td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_3->description; ?></td>
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_request_category($row_3->category);?></td>
@@ -250,6 +298,17 @@
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo date('d/m/Y',strtotime($date));?></td>
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $approved_date;?></td>
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $cat_id; ?></td>
+								<td style="text-align:center; padding:8px; border: 1px solid #111;">
+									<?php
+										$accounted_status = 0;
+										$accounted_text = '<span class="btn btn-warning">Pending</span>';
+										if ($row_5->accounted_status > 0){
+											$accounted_status = 1;
+											$accounted_text = '<span class="btn btn-success">Accounted</span>';
+										}
+									?>
+									<a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_5->id.'/request'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+								</td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_5->reason; ?></td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_5->description; ?></td>
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_request_category($row_5->category).$added_by;?></td>
@@ -285,6 +344,17 @@
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo date('d/m/Y',strtotime($date));?></td>
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $approved_date;?></td>
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo $cat_id; ?></td>
+								<td style="text-align:center; padding:8px; border: 1px solid #111;">
+									<?php
+										$accounted_status = 0;
+										$accounted_text = '<span class="btn btn-warning">Pending</span>';
+										if ($row_4->accounted_status > 0){
+											$accounted_status = 1;
+											$accounted_text = '<span class="btn btn-success">Accounted</span>';
+										}
+									?>
+									<a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_4->id.'/request'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+								</td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_4->reason; ?></td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_4->description; ?></td>
 								<td style="text-align:center; padding:8px; border: 1px solid #111;"><?php echo get_request_category($row_4->category); if($row_4->person_id > 0 ){ echo '<br><small>'.'(To '.get_employee_name($row_4->person_id).')</small>'; }?></td>
@@ -314,7 +384,7 @@
 			if($ttl_amount > 0 || $ttl_advance > 0 || $ttl_paid > 0){				?>
 				<tfoot>
 					<tr>
-						<td colspan="14" style="background:#f0f0f0; text-align:center; padding:8px; border: 1px solid #111;"><b>Total</b></td>
+						<td colspan="15" style="background:#f0f0f0; text-align:center; padding:8px; border: 1px solid #111;"><b>Total</b></td>
 						<td style="background:#f0f0f0; text-align:center; padding:8px; border: 1px solid #111;"><b><?php echo $ttl_amount; ?></b></td>
 						<td style="background:#f0f0f0; text-align:center; padding:8px; border: 1px solid #111;"><b><?php echo $ttl_advance; ?></b></td>
 					</tr>
@@ -323,7 +393,7 @@
 			}else{
 				echo '<tfoot>
 					<tr>
-						<td colspan="16" style="background:#f0f0f0; text-align:center; padding:8px; border: 1px solid #111;"><b>No Record Found!</b></td>
+						<td colspan="17" style="background:#f0f0f0; text-align:center; padding:8px; border: 1px solid #111;"><b>No Record Found!</b></td>
 					</tr>
 				</tfoot>';
 			}

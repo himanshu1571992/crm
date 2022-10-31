@@ -1186,7 +1186,7 @@ class Task extends Admin_controller
 			if($insert_1){
 
 				if (!empty($tag_staff_ids)){
-					$staff_ids = explode(",", $tag_staff_ids);
+					$staff_ids = array_unique(explode(",", $tag_staff_ids));
 					foreach ($staff_ids as $staff_id) {
 						$tag_notification_arr = array(
                             'activity_id' => $insert_1,
@@ -1195,11 +1195,32 @@ class Task extends Admin_controller
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
                             'description' => 'You taged in Task activity Log',
+							'readonly' => 0,
                             'link'  => "task/activity_log/".$id
                         );
                         send_activitytag_notification($tag_notification_arr);
 					}
 				}
+
+				/* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        /*send single notification to tag person */
+                        $tag_notification_arr = array(
+                            'activity_id' => $insert_1,
+                            'module_id' => 60,
+                            'table_id' => $id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in Task activity Log',
+							'readonly' => 1,
+                            'link'  => "task/activity_log/".$id
+                        );
+                        send_activitytag_notification($tag_notification_arr);
+                    }
+                }
 				set_alert('success', 'New Activity Add Successfully');
 				redirect($_SERVER['HTTP_REFERER']);
 			}

@@ -12,7 +12,7 @@
 <div id="wrapper">
    <div class="content">
       <div class="row">
-		 <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'unit-form', 'class' => 'proposal-form')); ?>
+		 <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'unit-form', 'class' => 'proposal-form', "onsubmit" => "return confirm('Do you really want to take action ?');")); ?>
          <div class="col-md-6">
             <div class="panel_s">
                <div class="panel-body">
@@ -43,9 +43,12 @@
 						<label for="id" class="control-label title-panel col-md-6">Approved Amount :</label> <span class="text-content">&#8377; <?php echo $request_info["approved_amount"]; ?></span>
 					</div>
 					<div class="col-md-12">
-						<label for="id" class="control-label title-panel col-md-6">From Name :</label> <span class="text-content"><?php echo ($request_info["addedfrom"] != "") ? get_employee_fullname($request_info["addedfrom"]): '--'; ?></span>
+						<label for="id" class="control-label title-panel col-md-6">Loan Tenue :</label> <span class="text-content"><?php echo $request_info["tenure_name"]; ?></span>
 					</div>
-					<?php if ($request_info["category_id"] == 1){ ?>
+					<div class="col-md-12">
+						<label for="id" class="control-label title-panel col-md-6">From Name :</label> <span class="text-content"><?php echo $request_info["approved_by"]; ?></span>
+					</div>
+					<?php if (!empty($request_info["on_behalf_name"])){ ?>
 						<div class="col-md-12">
 							<label for="id" class="control-label title-panel col-md-6">On Behalf Of :</label> <span class="text-content text-danger"><?php echo $request_info["on_behalf_name"]; ?></span>
 						</div>
@@ -57,29 +60,29 @@
 						<label for="id" class="control-label title-panel col-md-6">Group Name :</label> <span class="text-content text-danger"><?php echo $request_info["group_name"]; ?></span>
 					</div>
 					<div class="col-md-12">
-						<label for="id" class="control-label title-panel col-md-6">Reason :</label> <span class="col-md-6"><?php echo cc($request_info["reason"]); ?></span>
+						<label for="id" class="control-label title-panel col-md-6">Reason :</label><span class="col-md-6" style="overflow-wrap: break-word;"><?php echo cc($request_info["reason"]); ?></span>
 					</div>
 					<div class="col-md-12">
-						<br>
-						<label for="id" class="control-label title-panel col-md-6">Description :</label> <span class="col-md-6"><?php echo cc($request_info["description"]); ?></span>
+						<label for="id" class="control-label title-panel col-md-6">Description :</label><span class="col-md-6" style="overflow-wrap: break-word;"><?php echo cc($request_info["description"]); ?></span>
 					</div>
 					<div class="col-md-12">
-						<br>
 						<label for="id" class="control-label title-panel col-md-6">Request Route :</label> <span class="text-content"><?php echo $request_info["approved_via"]; ?></span>
 					</div>
+					
 					<?php 
-						$showapproval = 0;
+						$showapproval = 1;
 						if ($request_info["confirmed_by_user"] == 0 && $request_info["approved_status"] == 1){
-							if ($request_info["category_id"] != 4 && $request_info["addedfrom"] != get_staff_user_id()){
-								$showapproval = 1;
+							if ($request_info["category_id"] == 4 && $request_info["addedfrom"] == get_staff_user_id()){
+								$showapproval = 0;
+						 	}
+						}
+
+						if ($showapproval == 1 && $request_info["approved_status"] == 1){
 					?>
 						<div class="btn-bottom-toolbar text-right">
 							<button type="submit" class="btn btn-info"><?php echo 'Submit'; ?></button>
 						</div>
-					<?php
-						 	}
-						}
-					?>
+					<?php } ?>
                </div>
             </div>
 			<div class="panel_s">
@@ -147,7 +150,7 @@
 					<?php } ?>	
 				</div>	
 			</div>
-			<?php if ($request_info["confirmed_by_user"] == 0 && $showapproval == 1){ ?>
+			<?php if ($request_info["confirmed_by_user"] == 0 && $request_info["approved_status"] == 1 && $showapproval == 1){ ?>
 				<div class="panel_s">
 					<div class="panel-body">
 						<h4 class="no-margin"><?php echo 'Request Confirmation'; ?></h4>
@@ -163,9 +166,9 @@
 										<option value="2" <?php echo (isset($request_info["confirmed_by_user"]) && $request_info["confirmed_by_user"] == 2) ? 'selected' : "" ?>>Not Received</option>
 									</select>
 								</div>
-								<div class="form-group">
+								<div class="form-group confirmation_payment_mode_div">
 									<label for="confirmation_payment_mode" class="control-label"><?php echo 'Payment Mode'; ?> *</label>
-									<select class="form-control" id="confirmation_payment_mode" name="confirmation_payment_mode" required="">
+									<select class="form-control " id="confirmation_payment_mode" name="confirmation_payment_mode" required="">
 										<option value="" disabled selected >--Select One-</option>
 										<?php
 										if(!empty($payment_mode_info)){
@@ -203,8 +206,12 @@ $('#receive_status').change(function(){
 	var status = $(this).val();
 	if(status == 1){
 		$('#user_confirmation_remark').val('Yes, Received with Thanks.');
+		$(".confirmation_payment_mode_div").show();
+		$("#confirmation_payment_mode").attr("required", "");
 	}else if(status == 2){
 		$('#user_confirmation_remark').val('Not, Received yet');
+		$(".confirmation_payment_mode_div").hide();
+		$("#confirmation_payment_mode").removeAttr("required", "");
 	}
 
 });	

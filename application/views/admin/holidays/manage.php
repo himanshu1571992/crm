@@ -39,17 +39,10 @@
             <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'attendance_form', 'class' => 'proposal-form')); ?>
             <div class="col-md-12">
                 <div class="panel_s">
-
                     <div class="panel-body">
-
                     <h4 class="no-margin">Holidays List <?php if(check_permission_page(111,'create')){ ?> <a href="<?php echo admin_url('holidays/add'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add New Holiday</a> <?php } ?></h4>
-
-
-
                     <hr class="hr-panel-heading">
-
                     <div class="row">
-
                     <div class="row col-md-12">
                         <div class="form-group col-md-4" id="employee_div">
                             <label for="branch_id" class="control-label"><?php echo 'Year'; ?> *</label>
@@ -65,9 +58,6 @@
                                 ?>
                             </select>
                         </div>
-
-
-
                         <div class="col-md-1">
                         <button type="submit" style="margin-top: 25px;" class="btn btn-info">Search</button>
                         </div>
@@ -98,7 +88,10 @@
                                         foreach($holiday_info as $row){
                                             ?>
                                             <tr>
-                                                <td><?php echo $i++;?></td>
+                                                <td>
+                                                    <?php echo $i++;?>
+                                                    <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                </td>
                                                 <td><?php echo $row->title;?></td>
                                                 <td><?php echo $row->year;?></td>
                                                 <td><?php echo date('d-m-Y',strtotime($row->date));?></td>

@@ -201,6 +201,19 @@
                                         <input type="text" readonly="" class="form-control" value="<?php echo $info['reference_no']; ?>">
                                     </div>
                                 </div>
+                                <div class="form-group col-md-3">
+                                    <label for="image" class="control-label">Image</label><br>
+                                    <?php
+                                        if (!empty($file_info)) {
+                                            foreach ($file_info as $file_key) {
+                                    ?>
+                                            <a target="_blank" href="<?php echo base_url('uploads/payment/' . $info['id'] . '/' . $file_key->file_name); ?>" ><b><?php echo $file_key->file_name; ?></b></a> <br>       
+                                    <?php
+                                            }
+                                        }
+                                    ?>
+                                </div>
+                                
                             </div>
                         </div>
                         

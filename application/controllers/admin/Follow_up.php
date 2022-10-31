@@ -429,7 +429,7 @@ class Follow_up extends Admin_controller
                $insert_id = $this->home_model->insert('tblfollowupclientactivity',$ad_data);
 
                if (!empty($tag_staff_ids)){
-                   $staff_ids = explode(",", $tag_staff_ids);
+                   $staff_ids = array_unique(explode(",", $tag_staff_ids));
                    foreach ($staff_ids as $staff_id) {
 
                         $tag_notification_arr = array(
@@ -439,11 +439,31 @@ class Follow_up extends Admin_controller
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
                             'description' => 'You taged in client activity follow up',
-                            'link'  => "follow_up/client_activity/".$client_id
+                            'link'  => "follow_up/client_activity/".$client_id,
+                            'readonly' => 0
                         );
                         send_activitytag_notification($tag_notification_arr);
                    }
                }
+
+                /* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        $read_notification_arr = array(
+                            'activity_id' => $insert_id,
+                            'module_id' => 31,
+                            'table_id' => $client_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in client activity follow up',
+                            'link'  => "follow_up/client_activity/".$client_id,
+                            'readonly' => 1
+                        );
+                        send_activitytag_notification($read_notification_arr);
+                    }
+                }
 
                 set_alert('success', 'Activity Added successfully');
                 redirect(admin_url('follow_up/client_activity/' . $client_id));
@@ -716,6 +736,7 @@ class Follow_up extends Admin_controller
         if(!empty($_POST)){
             extract($this->input->post());
             
+           
             /* this code use for check tagging information */
             send_activity_replied(30, $lead_id, $from_user_id, get_staff_user_id());
 
@@ -752,7 +773,7 @@ class Follow_up extends Admin_controller
     $this->home_model->update('tblleads',array('last_activity_date'=>date('Y-m-d')),array('id'=>$lead_id));
 
                 if (!empty($tag_staff_ids)){
-                    $staff_ids = explode(",", $tag_staff_ids);
+                    $staff_ids = array_unique(explode(",", $tag_staff_ids));
                     foreach ($staff_ids as $staff_id) {
 
                         $tag_notification_arr = array(
@@ -762,9 +783,29 @@ class Follow_up extends Admin_controller
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
                             'description' => 'You taged in leads activity follow up',
+                            'readonly' => 0,
                             'link'  => "follow_up/lead_activity/".$lead_id
                         );
                         send_activitytag_notification($tag_notification_arr);
+                    }
+                }
+
+                /* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        $read_notification_arr = array(
+                            'activity_id' => $insert_id,
+                            'module_id' => 30,
+                            'table_id' => $lead_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in leads activity follow up',
+                            'readonly' => 1,
+                            'link'  => "follow_up/lead_activity/".$lead_id
+                        );
+                        send_activitytag_notification($read_notification_arr);
                     }
                 }
 
@@ -782,8 +823,8 @@ class Follow_up extends Admin_controller
 
         $data['suggestion_info'] = $this->db->query("SELECT * FROM `tblsuggestion` where status = '1'")->result();
         krsort($data['activity_log']);
-
         $data['title'] = $LeadNumber.' - Followup Activities';
+        $data['heading'] = '<a target="_blank" href="'.admin_url('leads/lead_profile/'.$lead_id).'">'.$LeadNumber.'</a> - Followup Activities';
         // $data['branch_list'] = $this->db->query("SELECT * FROM `tblcompanybranch` WHERE `status` = 1 ")->result();
         // $data['department_list'] = $this->db->query("SELECT * FROM `tbldepartmentsmaster` WHERE `status` = 1 ")->result();
         
@@ -1131,9 +1172,10 @@ class Follow_up extends Admin_controller
 
             if ($branch_id != '' && $department_id != ''){
                 $staff_list = $this->db->query("SELECT * FROM tblstaff WHERE `reporting_branch_id` = ".$branch_id." AND `department_id` = ".$department_id." AND `staffid` != ".get_staff_user_id()." AND `active` = 1")->result();
-                echo '<div class="form-group" app-field-wrapper="staff">
-                        <label for="staff" class="control-label">Staff</label>
-                        <select class="form-control selectpicker" onchange="showtag_btn(this);" id="staffuserlist" data-live-search="true" name="finished" multiple=""><option value=""></option>';
+                $allstafflist = $this->db->query("SELECT * FROM tblstaff WHERE `staffid` != ".get_staff_user_id()." AND `active` = 1")->result();
+                echo '<div class="row"><div class="col-md-6 form-group" app-field-wrapper="staff">
+                        <label for="staff" class="control-label">Staff <small>(Tag to Revert)</small></label>
+                        <select class="form-control selectpicker" onchange="showtag_btn(this);" id="staffuserlist1" data-live-search="true" name="finished" multiple=""><option value=""></option>';
                         if (!empty($staff_list)){
                             foreach ($staff_list as $value) {
                                 $designation_name = get_designation($value->designation_id);
@@ -1141,7 +1183,18 @@ class Follow_up extends Admin_controller
                                 echo '<option data-staff_id="'.$value->staffid.'" value="'.$sval.'">'.$value->firstname.' ('.$designation_name.')'.'</option>';
                             }
                         }
-                    echo '</select></div>';
+                echo '</select></div>';
+                echo '<div class="col-md-6 form-group" app-field-wrapper="staff">
+                        <label for="staff" class="control-label">Staff <small>(Tag to Show)</small></label>
+                        <select class="form-control selectpicker" onchange="activityviewstaff(this);" id="staffuserlist2" data-live-search="true" name="tagviewstaff" multiple=""><option value=""></option>';
+                        if (!empty($allstafflist)){
+                            foreach ($allstafflist as $value) {
+                                $designation_name = get_designation($value->designation_id);
+                                $sval = '@'.$value->firstname.' ('.$designation_name.')';
+                                echo '<option data-staff_id="'.$value->staffid.'" value="'.$sval.'">'.$value->firstname.' ('.$designation_name.')'.'</option>';
+                            }
+                        }
+                echo '</select></div></div>';
             }
         }
     }
@@ -1194,7 +1247,7 @@ class Follow_up extends Admin_controller
                 $this->home_model->update('tblpurchaseorder',array('last_activity_date'=>date('Y-m-d')),array('id'=>$po_id));
 
                 if (!empty($tag_staff_ids)){
-                   $staff_ids = explode(",", $tag_staff_ids);
+                   $staff_ids = array_unique(explode(",", $tag_staff_ids));
                    foreach ($staff_ids as $staff_id) {
 
                         $tag_notification_arr = array(
@@ -1204,10 +1257,30 @@ class Follow_up extends Admin_controller
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
                             'description' => 'You taged in purchase order activity follow up',
-                            'link'  => "follow_up/po_activity/".$po_id
+                            'link'  => "follow_up/po_activity/".$po_id,
+                            'readonly' => 0
                         );
                         send_activitytag_notification($tag_notification_arr);
                    }
+                }
+
+                /* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        $read_notification_arr = array(
+                            'activity_id' => $insert_id,
+                            'module_id' => 33,
+                            'table_id' => $po_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in purchase order activity follow up',
+                            'link'  => "follow_up/po_activity/".$po_id,
+                            'readonly' => 1
+                        );
+                        send_activitytag_notification($read_notification_arr);
+                    }
                 }
 
                 set_alert('success', 'Activity Added successfully');
@@ -1225,6 +1298,7 @@ class Follow_up extends Admin_controller
         krsort($data['activity_log']);
 
         $data['title'] = $po_number.' - Followup Activities';
+        $data['heading'] = '<a target="_blank" href="'.admin_url('purchase/view_pdf/'.$po_id).'">'.$po_number.'</a> - Followup Activities';
         $this->load->view('admin/follow_up/purchaseorder_activity', $data);
     }
 
@@ -1344,7 +1418,7 @@ class Follow_up extends Admin_controller
                 $this->home_model->update('tblestimates',array('last_activity_date'=>date('Y-m-d')),array('id'=>$estimate_id));
 
                 if (!empty($tag_staff_ids)){
-                   $staff_ids = explode(",", $tag_staff_ids);
+                   $staff_ids = array_unique(explode(",", $tag_staff_ids));
                    foreach ($staff_ids as $staff_id) {
 
                         $tag_notification_arr = array(
@@ -1354,11 +1428,31 @@ class Follow_up extends Admin_controller
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
                             'description' => 'You taged in proforma invoice activity follow up',
-                            'link'  => "follow_up/estimates_activity/".$estimate_id
+                            'link'  => "follow_up/estimates_activity/".$estimate_id,
+                            'readonly' => 0
                         );
                         send_activitytag_notification($tag_notification_arr);
                          
                    }
+                }
+
+                /* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        $read_notification_arr = array(
+                            'activity_id' => $insert_id,
+                            'module_id' => 37,
+                            'table_id' => $estimate_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in proforma invoice activity follow up',
+                            'link'  => "follow_up/estimates_activity/".$estimate_id,
+                            'readonly' => 1
+                        );
+                        send_activitytag_notification($read_notification_arr);
+                    }
                 }
 
                 set_alert('success', 'Activity Added successfully');
@@ -1379,6 +1473,7 @@ class Follow_up extends Admin_controller
         krsort($data['activity_log']);
 
         $data['title'] = $client_info->client_branch_name.' (' .$estimate_number.') - Followup Activities';
+        $data['heading'] = $client_info->client_branch_name.' <a target="_blank" href="'.admin_url('estimates/download_pdf/'.$estimate_id).'">(' .$estimate_number.')</a> - Followup Activities';
         $this->load->view('admin/follow_up/estimate_activity', $data);
     }
 
@@ -1498,7 +1593,7 @@ class Follow_up extends Admin_controller
                 $this->home_model->update('tblcandidaterequirement',array('last_activity_date'=>date('Y-m-d')),array('id'=>$requirement_id));
 
                 if (!empty($tag_staff_ids)){
-                    $staff_ids = explode(",", $tag_staff_ids);
+                    $staff_ids = array_unique(explode(",", $tag_staff_ids));
                     foreach ($staff_ids as $staff_id) {
 
                         $tag_notification_arr = array(
@@ -1508,9 +1603,30 @@ class Follow_up extends Admin_controller
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
                             'description' => 'You taged in candidate requirement activity follow up',
-                            'link'  => "follow_up/candidate_requirement_activity/".$requirement_id
+                            'link'  => "follow_up/candidate_requirement_activity/".$requirement_id,
+                            'readonly' => 0
+                            
                         );
                         send_activitytag_notification($tag_notification_arr);
+                    }
+                }
+
+                /* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        $read_notification_arr = array(
+                            'activity_id' => $insert_id,
+                            'module_id' => 39,
+                            'table_id' => $requirement_id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in candidate requirement activity follow up',
+                            'link'  => "follow_up/candidate_requirement_activity/".$requirement_id,
+                            'readonly' => 1
+                        );
+                        send_activitytag_notification($read_notification_arr);
                     }
                 }
 
@@ -1806,7 +1922,7 @@ class Follow_up extends Admin_controller
             }        
 
             if (!empty($tag_staff_ids)){
-                $staff_ids = explode(",", $tag_staff_ids);
+                $staff_ids = array_unique(explode(",", $tag_staff_ids));
                 foreach ($staff_ids as $staff_id) {
 
                     $tag_notification_arr = array(
@@ -1816,10 +1932,30 @@ class Follow_up extends Admin_controller
                         'fromuserid' => get_staff_user_id(),
                         'touserid' => $staff_id,
                         'description' => $tag_message,
-                        'link'  => $action_url
+                        'link'  => $action_url,
+                        'readonly' => 0
                     );
                     send_activitytag_notification($tag_notification_arr);
                     
+                }
+            }
+
+            /* this is for tag read activity staff */
+            if (!empty($tag_viewstaff_ids)){
+                $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                foreach ($staff_ids as $staff_id) {
+
+                    $read_notification_arr = array(
+                        'activity_id' => $insert_id,
+                        'module_id' => $module_id,
+                        'table_id' => $table_id,
+                        'fromuserid' => get_staff_user_id(),
+                        'touserid' => $staff_id,
+                        'description' => $tag_message,
+                        'link'  => $action_url,
+                        'readonly' => 1
+                    );
+                    send_activitytag_notification($read_notification_arr);
                 }
             }
 

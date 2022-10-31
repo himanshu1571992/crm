@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $aColumns = [
 //    '`id`',
     '`id`',
+    '`added_by`',
     '`name`',
     '`number`',
     '`driver_id`',
@@ -29,7 +30,7 @@ foreach ($rResult as $aRow) {
 
     // #
     $row[] = $i++;
-    
+    $row[] = ($aRow['added_by'] > 0) ? get_employee_fullname($aRow['added_by']) : 'N/A';
     $url = admin_url('expenses/add_tempo/' . $aRow['id']);
 
     $user_name_html = '<a href="' . $url . '">' . $aRow['name'] . '</a>';
@@ -74,6 +75,6 @@ foreach ($rResult as $aRow) {
     
     // date added
     $row[] = $files;
-
+    $row[] = _d($aRow['created_at']);
     $output['aaData'][] = $row;
 }

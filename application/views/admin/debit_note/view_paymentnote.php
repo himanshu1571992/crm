@@ -115,6 +115,7 @@
 										<th>Date</th>
 										<th>Amount</th>
 										<th>Status</th>
+                                        <th>Accounted Status</th>
 										<th>Action</th>
 									  </tr>
 									</thead>
@@ -147,6 +148,17 @@
 												<td><?php echo _d($row->date); ?></td>
 												<td><?php echo $tt_amt; ?></td>
 												<td><?php echo '<p class="'.$cls.'">'.$paid_status.'</p>'; ?></td>
+                                                <td>
+                                                    <?php
+                                                        $accounted_status = 0;
+                                                        $accounted_text = '<span class="btn-sm btn-warning">Pending</span>';
+                                                        if ($row->accounted_status > 0){
+                                                            $accounted_status = 1;
+                                                            $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
+                                                        }
+                                                    ?>
+                                                    <a href="<?php echo admin_url('debit_note/update_accounted_status/'.$row->id.'/debitpayment'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+                                                </td>
 												<td class="">
                                                     <?php if($row->status == 0){ ?>
                                                         <span class="text-danger">CANCELLED</span>

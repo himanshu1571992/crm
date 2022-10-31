@@ -207,15 +207,33 @@
                                        ?>
                                     </select>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label for="amount" class="control-label">Paid Amount</label>
+                                            <input type="text" id="amount" onkeypress="return isNumberKey(event)" name="amount" class="form-control" required="" value="<?php echo (isset($payment_info->amount) && $payment_info->amount != "") ? $payment_info->amount : "" ?>">
+                                        </div> 
+                                        <div class="form-group col-md-6" app-field-wrapper="date">
+                                            <label for="to_date" class="control-label"><?php echo 'Booking Date'; ?></label>
+                                            <div class="input-group date">
+                                                <input id="booking_date" name="booking_date" required="" class="form-control datepicker" value="<?php echo (isset($payment_info->booking_date) && $payment_info->booking_date != "") ? _d($payment_info->booking_date) : ""; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>            
+                                
 
-                                <div class="form-group col-md-6">
-                                    <label for="amount" class="control-label">Amount</label>
-                                    <input type="text" id="amount" onkeypress="return isNumberKey(event)" name="amount" class="form-control" required="" value="<?php echo (isset($payment_info->amount) && $payment_info->amount != "") ? $payment_info->amount : "" ?>">
-                                </div>
-
-                                <div class="form-group col-md-6">
-                                    <label for="tds_amt" class="control-label">TDS Amount</label>
-                                    <input type="text" id="tds_amt" onkeypress="return isNumberKey(event)" name="tds_amt" class="form-control" required="" value="<?php echo (isset($payment_info->tds_amt) && $payment_info->tds_amt != "") ? $payment_info->tds_amt : "" ?>">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="form-group col-md-6" app-field-wrapper="date">
+                                            <label for="taxable_amount" class="control-label">Taxable Amount</label>
+                                            <input type="text" id="taxable_amount"  onkeypress="return isNumberKey(event)" name="taxable_amount" class="form-control" required="" value="<?php echo (isset($payment_info->taxable_amount) && $payment_info->taxable_amount != "") ? $payment_info->taxable_amount : "" ?>">
+                                        </div>
+                                        <div class="form-group col-md-6" app-field-wrapper="date">
+                                            <label for="tds_amt" class="control-label">TDS Amount</label>
+                                            <input type="text" id="tds_amt" onkeypress="return isNumberKey(event)" name="tds_amt" class="form-control" required="" value="<?php echo (isset($payment_info->tds_amt) && $payment_info->tds_amt != "") ? $payment_info->tds_amt : "" ?>">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-group col-md-6">

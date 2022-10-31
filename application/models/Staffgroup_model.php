@@ -31,7 +31,6 @@ class Staffgroup_model extends CRM_Model {
         if(!empty($employee_info->employee_group)){
             return $this->db->query("SELECT * FROM `tblstaffgroup` where status = 1 and id IN (".$employee_info->employee_group.") ")->result_array();
         }
-
     }
 
     /**
@@ -41,6 +40,7 @@ class Staffgroup_model extends CRM_Model {
      */
     public function add($data) {
         $multiselect_id=$data['multiselect_id'];
+        $data['added_by'] = get_staff_user_id();
         $data['created_at'] = date("Y-m-d H:i:s");
         $data['updated_at'] = date("Y-m-d H:i:s");
 		$data['multiselect_id'] =implode(',',$data['multiselect_id']);

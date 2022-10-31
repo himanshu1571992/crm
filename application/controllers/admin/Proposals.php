@@ -2245,20 +2245,21 @@ class Proposals extends Admin_controller {
             }
             echo form_open_multipart(admin_url("proposals/addTransportChargesRequest"), array('id' => 'sub_form_product'));
     ?>
-    <!-- Modal content-->
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close close-model" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title"> Transport Charges Request </h4>
-        </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group" app-field-wrapper="name">
-                        <label for="module_id" class="control-label">Select Challan Manager</label>
-                        <select class="form-control selectpicker" required="" data-live-search="true" id="challan_manage_id" name="challan_manage_id">
-                            <option value=""></option>
-                            <?php 
+<!-- Modal content-->
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close close-model" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"> Transport Charges Request </h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group" app-field-wrapper="name">
+                    <label for="module_id" class="control-label">Select Challan Manager</label>
+                    <select class="form-control selectpicker" required="" data-live-search="true" id="challan_manage_id"
+                        name="challan_manage_id">
+                        <option value=""></option>
+                        <?php 
                                 $managerlist = $this->db->query("SELECT `challan_manage_id`,`comp_branch_name` FROM `tblcompanybranch` WHERE `status` = 1")->result();
                                 if ($managerlist){
                                     foreach ($managerlist as $key => $value) {
@@ -2267,27 +2268,30 @@ class Proposals extends Admin_controller {
                                     }
                                 }
                             ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="form-group" app-field-wrapper="name">
-                        <label for="module_id" class="control-label">Remark</label>
-                        <textarea name="sender_remark" class="form-control" id="sender_remark" cols="5" rows="5"><?php echo (isset($request_info) && !empty($request_info->sender_remark)) ? $request_info->sender_remark : ''; ?></textarea>
-                    </div>    
+                    </select>
                 </div>
             </div>
-
-            <input type="hidden" name="request_id" class="request_id" value="<?php echo (isset($request_id) && $request_id > 0) ? $request_id : '0'; ?>">
-            <input type="hidden" name="rel_id" class="rel_id" value="<?php echo $rel_id; ?>">
-            <input type="hidden" name="rel_type" class="rel_type" value="<?php echo $rel_type; ?>">
+            <div class="col-md-12">
+                <div class="form-group" app-field-wrapper="name">
+                    <label for="module_id" class="control-label">Remark</label>
+                    <textarea name="sender_remark" class="form-control" id="sender_remark" cols="5"
+                        rows="5"><?php echo (isset($request_info) && !empty($request_info->sender_remark)) ? $request_info->sender_remark : ''; ?></textarea>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default close-model" data-dismiss="modal">Close</button>
-            <button type="submit" autocomplete="off"  class="btn btn-info"><?php echo (isset($request_id) && $request_id > 0) ? 'Update' : 'Send'; ?></button>
-        </div>        
-    </div>        
-    <?php     
+
+        <input type="hidden" name="request_id" class="request_id"
+            value="<?php echo (isset($request_id) && $request_id > 0) ? $request_id : '0'; ?>">
+        <input type="hidden" name="rel_id" class="rel_id" value="<?php echo $rel_id; ?>">
+        <input type="hidden" name="rel_type" class="rel_type" value="<?php echo $rel_type; ?>">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default close-model" data-dismiss="modal">Close</button>
+        <button type="submit" autocomplete="off"
+            class="btn btn-info"><?php echo (isset($request_id) && $request_id > 0) ? 'Update' : 'Send'; ?></button>
+    </div>
+</div>
+<?php     
             echo form_close();   
         }
     }
@@ -2404,4 +2408,214 @@ class Proposals extends Admin_controller {
         $this->load->view("admin/proposals/transport_charges_approval",$data); 
     }
 
+    /* this function use for get production assign status of proposal */
+    public function get_production_assign($proposal_id){
+        $assign_info = $this->db->query("SELECT * FROM `tblmasterapproval` WHERE `module_id`='61' AND `table_id`='".$proposal_id."'")->result();
+        if (!empty($assign_info)){
+    ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <h4 class="no-mtop mrg3">Assign Detail List</h4>
+                    </div>
+                    <hr />
+                    <div class="col-md-12">
+                        <div style="overflow-x:auto !important;">
+                            <div class="form-group">
+                                <table class="table credite-note-items-table table-main-credit-note-edit no-mtop">
+                                    <thead>
+                                        <tr>
+                                            <td>S.No</td>
+                                            <td>Name</td>
+                                            <td>Action</td>
+                                            <td>Remark</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                            if(!empty($assign_info)){
+                                                $i = 1;
+                                                foreach ($assign_info as $key => $value) {
+
+                                                    if($value->approve_status == 0){
+                                                        $status = 'Pending';
+                                                        $color = 'Darkorange';
+                                                    }elseif($value->approve_status == 1){
+                                                        $status = 'Approved';
+                                                        $color = 'green';
+                                                    }elseif($value->approve_status == 2){
+                                                        $status = 'Reject';
+                                                        $color = 'red';
+                                                    }elseif($value->approve_status == 4){
+                                                        $status = 'Reconciliation';
+                                                        $color = 'brown';
+                                                    }elseif($value->approve_status == 5){
+                                                        $status = 'On Hold';
+                                                        $color = '#e8bb0b;';
+                                                    }
+                                        ?>
+                                        <tr>
+                                            <td><?php echo $i++;?></td>
+                                            <td><?php echo get_employee_fullname($value->staff_id); ?></td>
+                                            <td style="color: <?php echo $color; ?>;"><?php echo $status; ?></td>
+                                            <td><?php echo ($value->approval_remark != '') ?  $value->approval_remark : '--';  ?></td>
+                                        </tr>
+                                        <?php
+                                                }
+                                            }else{
+                                                echo '<tr><td class="text-center" colspan="4"><h5>Record Not Found!</h5></td></tr>';
+                                            }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+            </div>
+<?php            
+        }else{
+
+            /* this is for assign staff list */
+            $assignstafff = array();
+            $Staffgroup = $this->db->query("SELECT st.* FROM `tblstaffgroup` st LEFT JOIN `tblstaffgroupmultiselect` stm ON st.`id`=stm.`staffgroup_id` LEFT JOIN `tblmultiselectmaster` ms ON stm.multiselect_id=ms.id WHERE ms.id='12' ORDER BY st.name ASC")->result_array();
+            $i=0;
+            foreach($Staffgroup as $singlestaff)
+            {
+                $i++;
+                $assignstafff[$i]['id']=$singlestaff['id'];
+                $assignstafff[$i]['name']=$singlestaff['name'];
+                $query = $this->db->query("SELECT s.staffid,s.firstname,s.email FROM `tblstaffgroupmembers` sg LEFT JOIN `tblstaff` s ON s.staffid=sg.`staff_id` WHERE sg.`group_id`='".$singlestaff['id']."' AND s.staffid!='". get_staff_user_id()."' ORDER BY s.firstname ASC")->result_array();
+                $assignstafff[$i]['staffs']=$query;
+            }
+        ?>
+        
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group module_template" app-field-wrapper="name">
+                            <label for="module_id" class="control-label">Select Assign Person</label>
+                            <select class="form-control selectpicker" multiple="" required="" data-live-search="true" id="production_assign" name="assign[]">
+                                <option value=""></option>
+                                <?php 
+                                    if (isset($assignstafff) && count($assignstafff) > 0) {
+                                        foreach ($assignstafff as $Staffgroup_value) {
+                                            ?>
+                                            <optgroup class="<?php echo 'group' . $Staffgroup_value['id'] ?>">
+                                                <option value="<?php echo 'group' . $Staffgroup_value['id'] ?>"><?php echo $Staffgroup_value['name'] ?></option>
+                                                <?php
+                                                foreach ($Staffgroup_value['staffs'] as $singstaff) {
+                                                    ?>
+                                                    <option style="margin-left: 3%;" value="<?php echo 'staff' . $singstaff['staffid'] ?>"><?php echo $singstaff['firstname'] ?></option>
+                                                    <?php }
+                                                ?>
+                                            </optgroup>
+                                            <?php
+                                        }
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="module_id" class="control-label">Remark</label>
+                            <textarea name="production_assign_remark" id="production_assign_remark" cols="74" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="proposal_id" value="<?php echo $proposal_id; ?>" class="proposal_row_id">
+                <button type="button" class="btn btn-default close-model" data-dismiss="modal">Close</button>
+                <button type="submit" autocomplete="off"  class="btn btn-info">Send</button>
+            </div>    
+        
+        <?php 
+            
+        }
+    }
+
+    public function send_production_assign(){
+        if ($this->input->post()) {
+            extract($this->input->post());
+            
+            /* THIS CODE FOR ASSIGN STAFF FOR TAKE APPROVAL */
+            $staff_id = array();
+            if(!empty($assign)){
+                foreach ($assign as $single_staff) {
+                if (strpos($single_staff, 'staff') !== false) {
+                        $staff_id[] = str_replace("staff", "", $single_staff);
+                    }
+                }
+                $staff_id = array_unique($staff_id);
+            }
+            if(!empty($staff_id)){
+
+                /* this code use for update proposal remark */
+                $updatedata["production_assign_remark"] = $production_assign_remark;
+                $this->home_model->update("tblproposals", $updatedata, array('id' => $proposal_id));
+
+                foreach ($staff_id as $staffid) {
+                    $adata = array(
+                        'staff_id' => $staffid,
+                        'fromuserid' => get_staff_user_id(),
+                        'module_id' => 61,
+                        'description' => 'Proposal Production Request Send to you for Approval',
+                        'table_id' => $proposal_id,
+                        'approve_status' => 0,
+                        'status' => 0,
+                        'link' => 'proposals/production_approval/' . $proposal_id,
+                        'date' => date('Y-m-d'),
+                        'date_time' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    );
+                    $this->db->insert('tblmasterapproval', $adata);
+
+                    //Sending Mobile Intimation
+                    $token = get_staff_token($challan_manage_id);
+                    $message = 'Proposal Production Request Send to you for Approval';
+                    $title = 'Schach';
+                    sendFCM($message, $title, $token, $page = 2);
+                    set_alert('success', "Proposal Production Request send successfully.");
+                }
+            }else{
+                set_alert('warning', "Somthing went wrong.");
+            }
+            redirect(admin_url('proposals/list'));
+        }    
+    }
+
+    public function production_approval($proposal_id){
+        if(!empty($_POST)){
+            extract($this->input->post());
+            
+            $ad_data = array(
+                'production_approval_status' => $action
+            );
+            $update = $this->home_model->update('tblproposals', $ad_data, array('id'=>$proposal_id));
+            if ($update){
+                update_masterapproval_single(get_staff_user_id(),61,$proposal_id,$action);
+                update_masterapproval_all(61,$proposal_id,$action);
+
+                /* this code use for update approval remark  */
+                $upmaster_data = array("approval_remark" => $approval_remark);
+                $this->home_model->update('tblmasterapproval', $upmaster_data, array('staff_id'=> get_staff_user_id(),'module_id'=> 61,'table_id'=>$proposal_id));
+                set_alert('success', 'Proposals updated succesfully');
+                redirect(admin_url('approval/notifications'));
+            }
+        }
+            
+        $data["title"] = "Proposal Production Approval";
+        $data["request_info"] = $this->db->query("SELECT * FROM `tblproposals` WHERE `id`='".$proposal_id."' ")->row();
+        if (!empty($data["request_info"]) && $data["request_info"]->production_approval_status == '1'){
+            set_alert('danger', 'Action already taken');
+            redirect(admin_url('approval/notifications'));
+        }
+        $data["items_list"] = $this->db->query("SELECT * FROM `tblitems_in` WHERE `rel_id`= '".$proposal_id."' AND `rel_type`='proposal'")->result();      
+        $this->load->view('admin/proposals/production_approval', $data);
+    }
 }

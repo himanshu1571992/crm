@@ -89,6 +89,7 @@ if(!empty($s_fdate) && !empty($s_tdate)){
                                             <td><?php echo $i++; ?></td>
                                             <td><?php echo date('d/m/Y',strtotime($value->salesdate)); ?></td>
                                             <td><?php echo $value->remark; ?></td>
+                                            
                                             <td class="text-center">                                         
                                                 <a href="<?php echo admin_url('staffSalesReport/view/'.$value->id); ?>" target="_blank" class="btn-sm btn-primary"><i class="fa fa-eye"></i></a>
                                             </td>

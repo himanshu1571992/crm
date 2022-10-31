@@ -25,10 +25,11 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>Name</th>
                                         <th>Division</th>
                                         <th>Status</th>
-                                        <th>Date</th>
+                                        <th>Date Time</th>
                                         <th class="text-center">Action</th>
                                       </tr>
                                     </thead>
@@ -55,6 +56,7 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->added_by > 0) ? get_employee_fullname($row->added_by) : 'N/a'; ?></td>
                                                 <td title="<?php echo cc($row->name); ?>"><?php echo limit_word(cc($row->name)); ?></td>
                                                 <td><?php echo value_by_id('tbldivisionmaster',$row->department,'title'); ?></td>
                                                 <td><?php echo $toggleActive;?></td>

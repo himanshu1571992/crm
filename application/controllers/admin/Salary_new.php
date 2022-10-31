@@ -580,7 +580,8 @@ class Salary_new extends Admin_controller
         }
 
         $data['staff_list'] = array();
-        if (is_admin() == 1) {
+        $staffdesignation_id = get_staff_info(get_staff_user_id())->designation_id;
+        if (is_admin() == 1 || $staffdesignation_id == 4) {
             $branch_info = $this->home_model->get_result('tblcompanybranch', array('status' => 1), '');
             if (!empty($branch_info)){
                 foreach ($branch_info as $binfo) {

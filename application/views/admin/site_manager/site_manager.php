@@ -45,8 +45,10 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="address" class="control-label"><?php echo _l('site_address'); ?> *</label>
-                                    <textarea id="address" name="address" class="form-control" ><?php echo (isset($site_manager['address']) && $site_manager['address'] != "") ? $site_manager['address'] : "" ?></textarea>
+                                    <textarea id="address" name="address" onkeyup="countChar(this)" class="form-control site_address" ><?php echo (isset($site_manager['address']) && $site_manager['address'] != "") ? $site_manager['address'] : "" ?></textarea>
+                                    <div class="wordcount text-danger"></div>
                                 </div>
+                                
                             </div>
                             
                             <div>
@@ -119,7 +121,7 @@
     </div>
 </div>
 <?php init_tail(); ?>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     init_selectpicker();
 
@@ -147,7 +149,21 @@
                 $('.selectpicker').selectpicker('refresh');
             }
         });
+        
     }
+    var alertcount = 0;
+    function countChar(val){
+        var len = val.value.length;
+        if (len == 0){
+            alertcount = 0;
+        }
+        if (len >= 100 && alertcount <= 0) {
+            swal("Please Add (-) Before Word", "", "info");
+            ++alertcount;
+        }
+        $(".wordcount").text(len+" characters");
+    };
+
 </script>
 </body>
 </html>

@@ -783,4 +783,19 @@ class Creditnotes extends Admin_controller {
         }
         redirect(admin_url('creditnotes'));
     }
+
+    /* this function use for update accounted status in credit note */
+    public function update_accounted_status($creditnote_id){
+        
+        $status = value_by_id_empty('tblcreditnote', $creditnote_id, "accounted_status");
+        $updata["accounted_status"] = 0;
+        if ($status == 0){
+            $updata["accounted_status"] = 1;
+            $updata["accounted_by"] = get_staff_user_id();
+            $updata["accounted_date"] = date("Y-m-d H:i:s");
+        }
+        
+        $this->home_model->update('tblcreditnote', $updata,array('id'=>$creditnote_id));
+        redirect(admin_url('creditnotes'));
+    }
 }

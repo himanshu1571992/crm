@@ -97,8 +97,13 @@
                                                         }
                                                         ?>
                                                         <tr>
-                                                            <td><?php echo ++$key; ?></td>
-                                                            <td><?php echo cc($value->candidate_name)." ".$ratinghtml; ?></td>
+                                                            <td>
+                                                                <?php echo ++$key; ?>
+                                                            </td>
+                                                            <td>
+                                                                <?php echo get_creator_info($value->added_by, $value->created_at); ?>
+                                                                <?php echo cc($value->candidate_name)." ".$ratinghtml; ?>
+                                                            </td>
                                                             <td><?php echo _d($value->date); ?></td>
                                                             <td><?php echo cc($value->interviewer_name); ?></td>
                                                             <td><?php echo $interview_round; ?></td>

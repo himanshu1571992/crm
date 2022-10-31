@@ -457,6 +457,8 @@ class Estimates extends Admin_controller {
                     redirect(admin_url('estimates/list/'));
                 }
             } else {
+
+                
                 check_permission(6,'edit');
                 $success = $this->Estimates_model->update_pi($proposal_data, $id);
 
@@ -464,6 +466,9 @@ class Estimates extends Admin_controller {
                 if ($success) {
                     //Update Final Amt
                     update_pi_final_amount($id);
+
+                    /* this code use for revert confirm order process  of this estimate */
+                    $this->remove_confirm_order_process($id);
 
                     //update service type
                     $service_type = 1;
@@ -495,6 +500,14 @@ class Estimates extends Admin_controller {
         if ($id == '') {
             $title = 'Add Proforma Invoice';
         } else {
+
+            /* this code use for check estimate order is confirm or not */
+            $chk_order = $this->db->query("SELECT id FROM `tblconfirmorder` WHERE `estimate_id` = '".$id."' AND `complete_status` = '1' ")->row();
+            if (!empty($chk_order)){
+                set_alert('warning', "Order is completed, so we can't have permission to edit");
+                redirect(admin_url('estimates/list'));
+            }
+
             $this->load->model('estimates_model');
             $data['proposal'] = $this->estimates_model->get($id);
             $this->db->where('id', $id);
@@ -3174,5 +3187,67 @@ class Estimates extends Admin_controller {
         $data["title"] = "Purchase Order Verification";
         $data["estimate_info"] = $this->estimates_model->get($estimate_id);
         $this->load->view('admin/estimates/po_verification', $data);
+    }
+
+    /* this function use for remove confirm order enteries from the system */
+    public function remove_confirm_order_process($estimate_id){
+        $chk_order = $this->db->query("SELECT id FROM `tblconfirmorder` WHERE `estimate_id` = '".$estimate_id."' AND `complete_status` = '1' ")->row();
+        if (empty($chk_order)){
+            $up_data["order_confirm"] = 0;
+            $up_data["expected_date_of_delivery"] = NULL;
+            $response = $this->home_model->update("tblestimates", $up_data, array("id" => $estimate_id));
+            if ($response){
+                $chk_pfchalan = $this->db->query("SELECT `id`,`production_plan_id` FROM `tblproformachalan` WHERE `rel_id` = '".$estimate_id."' ")->result();
+                if (!empty($chk_pfchalan)){
+                    foreach ($chk_pfchalan as $pfdata) {
+
+                        /* this code use to check production plan */
+                        if ($pfdata->production_plan_id > 0){
+
+                            /* this code use for reduce demand qty which is update on production plan create */
+                            $chk_pfchalan_product = $this->db->query("SELECT `product_id`,`qty` FROM `tblproformachalandetails` WHERE `proformachalan_id` = '".$pfdata->id."' and `type` = '2'")->result();
+                            if (!empty($chk_pfchalan_product)){
+                                foreach ($chk_pfchalan_product as $value) {
+                                    $chk_product = $this->db->query("SELECT id FROM tblproducts WHERE `id`='".$value->product_id."' AND `productmaterial_id`!='11' AND `isOtherCharge`='0'")->row();
+                                    if (!empty($chk_product)){
+                                        $chk_data = $this->db->query("SELECT id,demand_qty FROM tblproduction_component_demand WHERE `product_id`='".$value->product_id."'")->row();
+                                        if (!empty($chk_data)){
+                                            $demand_qty = $chk_data->demand_qty - $value->qty;
+                                            $demand_arr = array(
+                                                'demand_qty' => $demand_qty,
+                                            );
+                                            $this->home_model->update('tblproduction_component_demand', $demand_arr, array('id' => $chk_data->id));
+                                        }
+                                    }
+                                }
+                            }
+                            $this->home_model->delete("tblchalanproductionplan", array("id" => $pfdata->production_plan_id, "ref_type" => "2"));
+                        }
+
+                        /* this code use check delivery challan record */
+                        $chk_deliverychalan = $this->db->query("SELECT `id` FROM `tblchalanmst` WHERE `rel_id` = '".$pfdata->id."' and `rel_type` LIKE '%proforma_challan%'")->row();
+                        if (!empty($chk_deliverychalan)){
+
+                            $this->home_model->delete("tblcreatedchalanmst", array("original_chalan_idd" => $chk_deliverychalan->id));
+                            $this->home_model->delete("tblcreatedchalandetailsmst", array("chalan_id" => $chk_deliverychalan->id));
+                            $this->home_model->delete("tblchalandetailsmst", array("chalan_id" => $chk_deliverychalan->id));
+                            $this->home_model->delete("tblchallanapproval", array("challan_id" => $chk_deliverychalan->id));
+                            $this->home_model->delete("tblmasterapproval", array("module_id"=>29,"table_id" => $chk_deliverychalan->id));
+                            $this->home_model->delete("tblchalanmst", array("id" => $chk_deliverychalan->id));
+                        }
+                        
+                        /* remove proforma challan entries*/
+                        $this->home_model->delete("tblproformachalandetails", array("proformachalan_id" => $pfdata->id));
+                        $this->home_model->delete("tblproformachalanapproval", array("proformachallan_id" => $pfdata->id));
+                        $this->home_model->delete("tblmasterapproval", array("table_id" => $pfdata->id, "module_id" => '55'));
+                        $this->home_model->delete("tblproformachalan", array("id" => $pfdata->id,"rel_id" => $estimate_id));
+                    }
+                }
+
+                /* remove confirm order entries */
+                $this->home_model->delete("tblconfirmorder", array("estimate_id" => $estimate_id));
+                $this->home_model->delete("tblconfirmorderprocess", array("estimate_id" => $estimate_id));
+            }
+        }
     }
 }

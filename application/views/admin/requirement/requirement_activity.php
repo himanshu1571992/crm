@@ -40,7 +40,7 @@
                     <div class="panel_s">
                         <div class="panel-body">
                             <h4 class="no-margin"><?php echo $title; ?>  <span style="padding-left: 15%;"><button value="1" name="important_search" class="btn btn-info"><i class="fa fa-star" aria-hidden="true"></i>  Search Important</button> <button type="button" id="load_more" class="btn btn-info"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i>  Load last conversation</button> </span></h4>
-                            <h4 style="color:red;"><?php echo (isset($parsonname) && !empty($parsonname)) ? cc($parsonname) : "";?></h4>
+                            <h4 style="color:red;"><a target="_blank" href="<?php echo admin_url('requirement/requirement_process_view/'.$requirement_info->id);?>"><?php echo (isset($parsonname) && !empty($parsonname)) ? cc($parsonname) : "";?></a></h4>
                             <hr class="hr-panel-heading">
                             <div class="col-md-12">
                                 <?php if($requirement_info->cancel == 1){ ?>
@@ -185,6 +185,7 @@
                                             <!-- <mark style="color:red">* Please use @ for tag someone</mark> -->
                                             <div class="text-right">
                                                 <input type="hidden" name="tag_staff_ids" class="staff_ids">
+                                                <input type="hidden" name="tag_viewstaff_ids" class="view_staff_ids">
                                                 <input type="hidden" name="parent_id" class="reply_parent_id" value="0">
                                                 <button class="btn btn-info"><?php echo _l('submit'); ?></button>
                                             </div>

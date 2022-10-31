@@ -37,7 +37,7 @@
         <?php render_admin_js_variables(); ?>
         <script>
             appLang['datatables'] = <?php echo json_encode(get_datatables_language_array()); ?>;
-            var totalUnreadNotifications = <?php echo $current_user->total_unread_notifications; ?>,
+            var totalUnreadNotifications = <?php echo get_approval_counts(); ?>,
                     proposalsTemplates = <?php echo json_encode(get_proposal_templates()); ?>,
                     contractsTemplates = <?php echo json_encode(get_contract_templates()); ?>,
                     availableTags = <?php echo json_encode(get_tags_clean()); ?>,

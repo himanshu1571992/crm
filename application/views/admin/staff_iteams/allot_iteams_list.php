@@ -110,8 +110,13 @@
                                     $employee_name = $this->db->query("SELECT * FROM `tblstaff` where staffid = '".$value['staff_id']."' ")->row(); 
                                 ?>
                                 <tr>
-                                    <td><?php echo ++$key; ?></td>
-                                    <td><?php echo $employee_name->firstname; ?></td>
+                                    <td>
+                                        <?php echo ++$key; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo get_creator_info($value["added_by"], $value["created_date"]); ?>
+                                        <?php echo $employee_name->firstname; ?>
+                                    </td>
                                     <td><?php echo $iteam_name->name; ?></td>
                                     <td><?php if($value['remark'] == 1){ echo "Returnable";} else { echo "Non Returnable";} ?></td>
                                     <td><?php echo '<button type="button" class="'.$cls.' btn-sm" value="'.$value['id'].'">'.$status.'</button>'; ?></td>

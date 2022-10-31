@@ -205,7 +205,73 @@
                     </div>
                 </div>
             </div>
+            <?php
+                $assign_info = $this->db->query("SELECT * from tblmasterapproval  where module_id = '40' and table_id = '".$payment_info['id']."'  ")->result();
+            ?>
+            <div class="col-md-12">
+                <div class="panel_s">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="no-mtop mrg3">Assign Detail List</h4>
+                            </div>
+                            <hr/>
+                            <div class="col-md-12">
+                                <div style="overflow-x:auto !important;">
+                                    <div class="form-group" >
+                                        <table class="table credite-note-items-table table-main-credit-note-edit no-mtop">
+                                            <thead>
+                                                <tr>
+                                                    <td>S.No</td>
+                                                    <td>Name</td>
+                                                    <td>Status</td>
+                                                    <td>Read At</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                    if(!empty($assign_info)){
+                                                        $i = 1;
+                                                        foreach ($assign_info as $key => $value) {
 
+                                                                if($value->approve_status == 0){
+                                                                    $status = 'Pending';
+                                                                    $color = 'Darkorange';
+                                                                }elseif($value->approve_status == 1){
+                                                                    $status = 'Approved';
+                                                                    $color = 'green';
+                                                                }elseif($value->approve_status == 2){
+                                                                    $status = 'Reject';
+                                                                    $color = 'red';
+                                                                }elseif($value->approve_status == 4){
+                                                                    $status = 'Reconciliation';
+                                                                    $color = 'brown';
+                                                                }elseif($value->approve_status == 5){
+                                                                    $status = 'On Hold';
+                                                                    $color = '#e8bb0b;';
+                                                                }
+                                                            ?>
+                                                            <tr>
+                                                                <td><?php echo $i++;?></td>
+                                                                <td><?php echo get_employee_name($value->staff_id); ?></td>
+                                                                <td style="color: <?php echo $color; ?>;"><?php echo $status; ?></td>
+                                                                <td><?php if(!empty($value->readdate)){ echo _d($value->readdate); }else{ echo 'Not Yet'; }   ?></td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                    }else{
+                                                        echo '<tr><td class="text-center" colspan="4"><h5>Record Not Found!</h5></td></tr>';
+                                                    }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">

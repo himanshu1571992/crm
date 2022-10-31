@@ -92,27 +92,17 @@
                                         }
 
                                         ?>
-
                                     </select>
-
                                 </div>
-
-
                                 <div class="row">
                                     <div class="form-group col-md-6">
-
                                         <label for="source_type" class="control-label">Select Source</label>
-
                                         <select class="form-control selectpicker" data-live-search="true" id="source_type" name="source_type">
-
                                             <option value=""></option>
                                             <option value="1" <?php echo (isset($purchase_info['source_type']) && $purchase_info['source_type'] == 1) ? 'selected' : "" ?>>Warehouse</option>
                                             <option value="2" <?php echo (isset($purchase_info['source_type']) && $purchase_info['source_type'] == 2) ? 'selected' : "" ?>>Site</option>
-
                                         </select>
-
                                     </div>
-
                                     <div class="form-group col-md-6">
 
                                         <div id="for_warehouse" hidden>
@@ -142,16 +132,11 @@
 
                                                 </select>
                                         </div>
-
                                         <div id="for_site" hidden>
-                                                <label for="site_id" class="control-label">Site Name <a target="_blank" href="<?php echo admin_url('site_manager/site_manager')?>">(Add Site)</a></label>
-
-                                                <select class="form-control selectpicker site_id" data-live-search="true" id="site_id" name="site_id">
-
-                                                    <option value=""></option>
-
-                                                    <?php
-
+                                            <label for="site_id" class="control-label">Site Name <a target="_blank" href="<?php echo admin_url('site_manager/site_manager')?>">(Add Site)</a></label>
+                                            <select class="form-control selectpicker site_id" data-live-search="true" id="site_id" name="site_id">
+                                                <option value=""></option>
+                                                <?php
                                                     if (isset($all_site) && count($all_site) > 0) {
                                                         foreach ($all_site as $site_key => $site_value) {
                                                             ?>
@@ -159,13 +144,9 @@
                                                             <?php
                                                         }
                                                     }
-
-                                                    ?>
-
-                                                </select>
+                                                ?>
+                                            </select>
                                         </div>
-
-
                                     </div>
                                 </div>
 
@@ -363,19 +344,29 @@
                                     </div>
 
                                 </div> -->
-                                <div class="form-group">
-                                    <label for="billing_branch_id" class="control-label">Select Billing Branch</label>
-                                    <select class="form-control selectpicker" data-live-search="true" required="" id="billing_branch_id" name="billing_branch_id">
-                                        <?php
-                                            if(!empty($billing_branches)){
-                                                foreach ($billing_branches as $branch) {
-                                                    ?>
-                                                    <option value="<?php echo $branch->id; ?>" <?php echo (!empty($purchase_info) && $purchase_info['billing_branch_id'] == $branch->id) ? 'selected' : '' ; ?> ><?php echo cc($branch->comp_branch_name); ?></option>
-                                                    <?php
+                                
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="billing_branch_id" class="control-label">Select Billing Branch</label>
+                                        <select class="form-control selectpicker" data-live-search="true" required="" id="billing_branch_id" name="billing_branch_id">
+                                            <?php
+                                                if(!empty($billing_branches)){
+                                                    foreach ($billing_branches as $branch) {
+                                                        ?>
+                                                        <option value="<?php echo $branch->id; ?>" <?php echo (!empty($purchase_info) && $purchase_info['billing_branch_id'] == $branch->id) ? 'selected' : '' ; ?> ><?php echo cc($branch->comp_branch_name); ?></option>
+                                                        <?php
+                                                    }
                                                 }
-                                            }
-                                        ?>
-                                    </select>
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="po_for" class="control-label">Select PO For</label>
+                                        <select class="form-control selectpicker" data-live-search="true" required="" id="po_for" name="po_for">
+                                            <option value="1" <?php echo (!empty($purchase_info) && $purchase_info['po_for'] == 1) ? 'selected' : '' ; ?> >Regular</option>
+                                            <option value="2" <?php echo (!empty($purchase_info) && $purchase_info['po_for'] == 2) ? 'selected' : '' ; ?>>Special</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
@@ -450,11 +441,19 @@
                                         <label for="date" class="control-label">Billing Contact Number</label>
                                         <input type="text" id="billing_contact_number" name="billing_contact_number" required="" class="form-control" value="<?php echo (isset($purchase_info) ? $purchase_info['billing_contact_number'] : '');?>" >
                                     </div>
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-6">
                                         <label for="date" class="control-label">Billing Contact Email</label>
                                         <input type="text" id="billing_contact_email" name="billing_contact_email" required="" class="form-control" value="<?php echo (isset($purchase_info) ? $purchase_info['billing_contact_email'] : '');?>" >
                                     </div>
-                                    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="currency" class="control-label">Currency</label>
+                                            <select class="form-control selectpicker" id="currency" required="" name="currency" data-live-search="true">
+                                                <option value="0" <?php echo (isset($purchase_info) && $purchase_info['currency'] == 0) ? 'selected' : '' ; ?> >INR</option>
+                                                <option value="1" <?php echo (isset($purchase_info) && $purchase_info['currency'] == 1) ? 'selected' : '' ; ?> >USD</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>             
                                 <div class="clearfix mbot15"></div>
 
@@ -1775,11 +1774,15 @@
 
             var distotalamt = (parseFloat(rent_total_amt) - parseFloat(disamt));
 
+            /* this code for round off of the amount */
+            var roundoffamt = amountpointroundoff(distotalamt);
+            $('.roundoffamount').val(roundoffamt.toFixed(2));
+
             $('.sale_discount_amt').val(disamt.toFixed(2));
 
-            $('.sale_total_quotation_amt').val(distotalamt.toFixed(2));
-
-            $('.sale_total_quotation_amt_in_words').html(toWords(distotalamt.toFixed(2)));
+            var ttlamt = Math.round(distotalamt);
+            $('.sale_total_quotation_amt').val(ttlamt.toFixed(2));
+            $('.sale_total_quotation_amt_in_words').html(toWords(ttlamt.toFixed(2)));
 
         }
     }
@@ -1791,9 +1794,15 @@
         var disamt = ((rent_total_amt * rent_discount_percentage) / 100);
         var distotalamt = (parseFloat(rent_total_amt) - parseFloat(disamt));
 
+        /* this code for round off of the amount */
+        var roundoffamt = amountpointroundoff(distotalamt);
+            $('.roundoffamount').val(roundoffamt.toFixed(2));
+
         $('.sale_discount_amt').val(disamt.toFixed(2));
-        $('.sale_total_quotation_amt').val(distotalamt.toFixed(2));
-        $('.sale_total_quotation_amt_in_words').html(toWords(distotalamt.toFixed(2)));
+        var ttlamt = Math.round(distotalamt);
+        $('.sale_total_quotation_amt').val(ttlamt.toFixed(2));
+        $('.sale_total_quotation_amt_in_words').html(toWords(ttlamt.toFixed(2)));
+
     }
 
     function calculate_disc_percent()
@@ -1808,6 +1817,13 @@
         $('.sale_total_quotation_amt_in_words').html(toWords(distotalamt.toFixed(2)));
     }
 
+    /* this function use for auto round off of the amount */
+    function amountpointroundoff(amount){
+        var ttlamount = parseFloat(amount);
+        var roundoffamount = Math.round(ttlamount);
+        var amtdiff = (roundoffamount-ttlamount);
+        return amtdiff;
+    }
     $(document).ready(function () {
 
         var totalamt = 0;

@@ -206,7 +206,18 @@
                                           <td><?php echo $r2->rate; ?></td>
                                           <td><?php echo ($r2->tax == 1) ? 'Including' : 'Excluding'; ?></td>
                                           <td><?php echo cc($r2->remark); ?></td>
-                                          <td class="text-center"><input type="checkbox" <?php echo ($r2->approve == 1) ? 'checked' : ''; ?>  name="approve_<?php echo $r2->id; ?>" value="1"></td>
+                                          <td class="text-center">
+                                            <?php 
+                                              if ($r2->approve == 1) {
+                                                echo '<span class="text-success">Approved</span>';
+                                                echo '<input type="hidden" name="approve_'.$r2->id.'" value="1">';
+                                              }else if ($r2->approve == 2)  {
+                                                echo '<span class="text-danger">Rejected</span>';
+                                              }else{
+                                            ?> 
+                                                <input type="checkbox" <?php echo ($r2->approve == 1) ? 'checked' : ''; ?>  name="approve_<?php echo $r2->id; ?>" value="1">
+                                            <?php } ?>
+                                          </td>
                                         </tr>
                                       <?php
                                     }

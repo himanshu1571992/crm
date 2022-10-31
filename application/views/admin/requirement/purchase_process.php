@@ -154,7 +154,12 @@
         <div class="row mt-5">
             <div class="col-md-12">
                 <hr class="hr-panel-heading">
-                <h4 class="no-margin"><?php echo $value->product_name.' - Quantity ('.$value->quantity.')'; ?> <button val="<?php echo $value->id; ?>" value="<?php if(!empty($productvendors)){ echo (count($productvendors) - 1); }else{ echo 0; } ?>" type="button" class="btn btn-success pull-right addmore" style="margin-top:-6px;">Add More Vendors</button></h4>
+                <h4 class="no-margin">
+                    <?php echo cc($value->product_name).' - Quantity ('.$value->quantity.')'; ?> 
+                    <?php if ($value->rate_given == 0){  ?>
+                        <button val="<?php echo $value->id; ?>" value="<?php if(!empty($productvendors)){ echo (count($productvendors) - 1); }else{ echo 0; } ?>" type="button" class="btn btn-success pull-right addmore" style="margin-top:-6px;">Add More Vendors</button>
+                    <?php } ?>
+                </h4>
                 <div>
                     <br>
                     <p><b>Remark :</b> <?php echo $value->remark; ?></p>
@@ -176,11 +181,14 @@
                     <tbody>
                           <?php if(!empty($productvendors)){
                             foreach ($productvendors as $k2 => $r2) {
+                                
+                                $approved_status = $r2->approve;
+                                $rategiven = ($value->rate_given == 1) ? 'readonly':'';
                               ?>
                                 <tr id="tr<?php echo $value->id.'_'.$k2;?>">
                                   <td>
                                     <div class="form-group">
-                                          <input class="form-control" required="" value="<?php echo $r2->vendor_name; ?>" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]">
+                                          <input class="form-control" value="<?php echo $r2->vendor_name; ?>" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]" <?php echo $rategiven; ?>>
                                           <datalist id="vendor_<?php echo $value->id; ?>">
                                               <?php
                                               if (!empty($vendor_info)) {
@@ -194,7 +202,7 @@
                                       </div>
                                   </td>
                                   <td>
-                                     <select class="form-control selectpicker" data-live-search="true" name="unit_id_<?php echo $value->id; ?>[]" id="unit_id">
+                                     <select class="form-control selectpicker" data-live-search="true" name="unit_id_<?php echo $value->id; ?>[]" id="unit_id" <?php echo $rategiven; ?>>
                                          <option value=""></option>
                                          <?php
                                             if (isset($unit_list) && !empty($unit_list)){
@@ -207,15 +215,21 @@
                                          ?>
                                      </select>
                                   </td>
-                                  <td><input class="form-control" required="" value="<?php echo $r2->rate; ?>" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate"></td>
+                                  <td><input class="form-control" value="<?php echo $r2->rate; ?>" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate" <?php echo $rategiven; ?>></td>
                                   <td class="text-center">
-                                      <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]">
+                                      <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]" <?php echo $rategiven; ?>>
                                           <option value="0" <?php echo ($r2->tax == 0) ? 'selected':''; ?>>Excluding</option>
                                           <option value="1" <?php echo ($r2->tax == 1) ? 'selected':''; ?>>Including</option>
                                       </select>
                                   </td>
-                                  <td><textarea name="vendorremark_<?php echo $value->id; ?>[]" class="form-control"><?php echo $r2->remark; ?></textarea></td>
-                                  <td class="text-center"><button type="button" class="btn pull-right btn-danger"  onclick="removeprocomp(<?php echo $value->id.','.$k2;?>);" ><i class="fa fa-remove"></i></button></td>
+                                  <td><textarea name="vendorremark_<?php echo $value->id; ?>[]" class="form-control" <?php echo $rategiven; ?>><?php echo $r2->remark; ?></textarea></td>
+                                  <td class="text-center">
+                                    <?php if ($value->rate_given == 0){  ?>
+                                        <button type="button" class="btn pull-right btn-danger"  onclick="removeprocomp(<?php echo $value->id.','.$k2;?>);" ><i class="fa fa-remove"></i></button>
+                                    <?php }else{
+                                        echo '<input type="hidden" name="approve_'.$value->id.'[]" value="'.$approved_status.'">';
+                                    } ?>
+                                  </td>
                                 </tr>
                               <?php
                             }
@@ -227,7 +241,7 @@
                               <tr id="tr<?php echo $value->id.'_0';?>">
                                   <td>
                                     <div class="form-group">
-                                          <input class="form-control" required="" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]" value="<?php echo $provendor->name; ?>">
+                                          <input class="form-control" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]" value="<?php echo $provendor->name; ?>">
                                           <datalist id="vendor_<?php echo $value->id; ?>">
                                               <?php
                                               if (!empty($vendor_info)) {
@@ -255,7 +269,7 @@
                                          ?>
                                      </select>
                                   </td>
-                                  <td><input class="form-control" required="" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate"></td>
+                                  <td><input class="form-control" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate"></td>
                                   <td class="text-center">
                                       <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]">
                                           <option value="0">Excluding</option>
@@ -272,7 +286,7 @@
                                 <tr id="tr<?php echo $value->id.'_0';?>">
                                   <td>
                                     <div class="form-group">
-                                          <input class="form-control" required="" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]">
+                                          <input class="form-control" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]">
                                           <datalist id="vendor_<?php echo $value->id; ?>">
                                               <?php
                                               if (!empty($vendor_info)) {
@@ -299,7 +313,7 @@
                                          ?>
                                      </select>
                                   </td>
-                                  <td><input class="form-control" required="" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate"></td>
+                                  <td><input class="form-control" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate"></td>
                                   <td class="text-center">
                                       <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]">
                                           <option value="0">Excluding</option>

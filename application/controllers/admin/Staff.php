@@ -227,8 +227,10 @@ class Staff extends Admin_controller
         $data['religion_list'] = $this->db->query('SELECT * FROM tblreligion WHERE status = 1 ORDER BY name ASC')->result();
         $data['departments_info'] = $this->db->query('SELECT * FROM tbldepartmentsmaster WHERE status = 1 order by name asc')->result_array();
         $data['superior_info'] = $this->db->query('SELECT * FROM tblstaff WHERE active = 1')->result_array();
+        
         $data['location_info'] = $this->db->query('SELECT * FROM tbllocationmaster WHERE status = 1 order by name asc')->result_array();
         $data['agent_number_list'] = $this->db->query('SELECT * FROM tblvagentnumbers WHERE source_id > 0 and status = 1 GROUP BY exotel_number ORDER BY id ASC')->result();
+        $data['staff_letter_list'] = $this->db->query('SELECT * FROM tbllettersformattypes WHERE `status` = 1 ORDER BY id ASC')->result();
 
         $data['Staffgroup'] = $this->db->query("SELECT st.* FROM `tblstaffgroup` st LEFT JOIN `tblstaffgroupmultiselect` stm ON st.`id`=stm.`staffgroup_id` LEFT JOIN `tblmultiselectmaster` ms ON stm.multiselect_id=ms.id WHERE ms.multiselect='proposal'")->result_array();
         $Staffgroup = $this->db->query("SELECT st.* FROM `tblstaffgroup` st LEFT JOIN `tblstaffgroupmultiselect` stm ON st.`id`=stm.`staffgroup_id` LEFT JOIN `tblmultiselectmaster` ms ON stm.multiselect_id=ms.id WHERE ms.id='22'")->result_array();
@@ -430,11 +432,11 @@ class Staff extends Admin_controller
     /* Change status to staff active or inactive / ajax */
     public function change_staff_status($id, $status)
     {
-        if (has_permission('staff', '', 'edit')) {
+        //if (has_permission('staff', '', 'edit')) {
             if ($this->input->is_ajax_request()) {
                 $this->staff_model->change_staff_status($id, $status);
             }
-        }
+        //}
     }
 
     /* Logged in staff notifications*/
@@ -618,34 +620,142 @@ class Staff extends Admin_controller
     }
 
 
-	function ExportStaff()
-	{
-		$session_data = $this->session->userdata('user_info');
-	    $user_id = $session_data['id'];
+	// function ExportStaff()
+	// {
+	// 	$session_data = $this->session->userdata('user_info');
+	//     $user_id = $session_data['id'];
 
 
-		$this->load->dbutil();
-		$this->load->helper('file');
-		$this->load->helper('download');
-		$delimiter = ",";
-		$newline = "\r\n";
-		$filename = "staff_list.csv";
+	// 	$this->load->dbutil();
+	// 	$this->load->helper('file');
+	// 	$this->load->helper('download');
+	// 	$delimiter = ",";
+	// 	$newline = "\r\n";
+	// 	$filename = "staff_list.csv";
 
-                $where = "`s`.`active`=1";
-                if (!is_admin() == 1){
-                    $where .= " and `s`.`added_by` =".get_staff_user_id();
-                }
-		//$query = "SELECT employee_id as `ID`, `firstname` as `Name`, `birth_date` as `Date of Birth`, `phonenumber` as `Mobile`, `joining_date` as `Date of Joining`, `pan_card_no` as `Pan No`, `adhar_no` as `Adhaar No`, `epf_no` as `PF No`, `epic_no` as `ESIC No`, `working_from` as `Working From`, `working_to` as `Working To`, `monthly_salary` as `Gross Salary`, `residential_address` as `Address` FROM `tblstaff` where ".$where."  order by firstname asc";
-
-
-        $query = "SELECT `s`.`employee_id` as `ID`, `s`.`firstname` as `Name`, `d`.`designation` as `Designation`, `s`.`birth_date` as `Date of Birth`, `s`.`phonenumber` as `Mobile`, `s`.`joining_date` as `Date of Joining`, `s`.`pan_card_no` as `Pan No`, `s`.`adhar_no` as `Adhaar No`, `s`.`epf_no` as `PF No`, `s`.`epic_no` as `ESIC No`, `s`.`working_from` as `Working From`, `s`.`working_to` as `Working To`, `s`.`monthly_salary` as `Gross Salary`, `s`.`residential_address` as `Address` FROM `tblstaff` as s LEFT JOIN `tbldesignation` as d ON s.designation_id = d.id where ".$where."  order by `s`.`firstname` asc";
+    //     $where = "`s`.`active`=1";
+    //     if (!is_admin() == 1){
+    //         $where .= " and `s`.`added_by` =".get_staff_user_id();
+    //     }
+	// 	//$query = "SELECT employee_id as `ID`, `firstname` as `Name`, `birth_date` as `Date of Birth`, `phonenumber` as `Mobile`, `joining_date` as `Date of Joining`, `pan_card_no` as `Pan No`, `adhar_no` as `Adhaar No`, `epf_no` as `PF No`, `epic_no` as `ESIC No`, `working_from` as `Working From`, `working_to` as `Working To`, `monthly_salary` as `Gross Salary`, `residential_address` as `Address` FROM `tblstaff` where ".$where."  order by firstname asc";
 
 
+    //     $query = "SELECT `s`.`employee_id` as `ID`, `s`.`firstname` as `Name`, `d`.`designation` as `Designation`, `s`.`birth_date` as `Date of Birth`, `s`.`phonenumber` as `Contact`, `s`.`alternatenumber` as `Alt. Contact number`, `s`.`email` as `Email`, `s`.`gender` as `Gender`, `s`.`joining_date` as `Date of Joining`, `s`.`pan_card_no` as `Pan No`, `s`.`adhar_no` as `Adhaar No`, `s`.`epf_no` as `PF No`, `s`.`epic_no` as `ESIC No`, `s`.`working_from` as `Working From`, `s`.`working_to` as `Working To`, `s`.`monthly_salary` as `Gross Salary`, `s`.`residential_address` as `Address` FROM `tblstaff` as s LEFT JOIN `tbldesignation` as d ON s.designation_id = d.id where ".$where."  order by `s`.`firstname` asc";
 
-		$result = $this->db->query($query);
-		$data = $this->dbutil->csv_from_result($result, $delimiter, $newline);
-		force_download($filename, $data);
-	}
+
+
+	// 	$result = $this->db->query($query);
+	// 	$data = $this->dbutil->csv_from_result($result, $delimiter, $newline);
+	// 	force_download($filename, $data);
+	// }
+
+    public function ExportStaff()
+    {
+        // create file name
+        // $fileName = 'export/lead.xlsx';
+        $fileName = "staff_list.xlsx";
+        // load excel library
+        $this->load->library('excel');
+
+        $where = "`s`.`active`= 1";
+        /*if (!is_admin() == 1){
+            $where .= " and `s`.`added_by` =".get_staff_user_id();
+        }*/
+        $query = "SELECT s.*, d.designation FROM `tblstaff` as s LEFT JOIN `tbldesignation` as d ON s.designation_id = d.id where ".$where."  order by `s`.`firstname` asc";
+		$result = $this->db->query($query)->result();
+
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A1:J1');
+        $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Company Name : Schach Engineers Pvt Ltd.');
+
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:J2');
+        $objPHPExcel->getActiveSheet()->setCellValue('A2', 'Staff List');
+
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A3:J3');
+        $objPHPExcel->getActiveSheet()->setCellValue('A3', 'Date : '.date('d/m/Y').'');
+
+        // set Header
+        $objPHPExcel->getActiveSheet()->SetCellValue('A4', 'ID');
+        $objPHPExcel->getActiveSheet()->SetCellValue('B4', 'Name');
+        $objPHPExcel->getActiveSheet()->SetCellValue('C4', 'Designation');
+        $objPHPExcel->getActiveSheet()->SetCellValue('D4', 'Birth Date');
+        $objPHPExcel->getActiveSheet()->SetCellValue('D4', 'Actual Birth Date');
+        $objPHPExcel->getActiveSheet()->SetCellValue('E4', 'Mobile');
+        $objPHPExcel->getActiveSheet()->SetCellValue('F4', 'Alt. Contact number');
+        $objPHPExcel->getActiveSheet()->SetCellValue('G4', 'Email');
+        $objPHPExcel->getActiveSheet()->SetCellValue('H4', 'Gender');
+        $objPHPExcel->getActiveSheet()->SetCellValue('I4', 'Date of Joining');
+        $objPHPExcel->getActiveSheet()->SetCellValue('J4', 'Pan No');
+        $objPHPExcel->getActiveSheet()->SetCellValue('K4', 'Adhaar No');
+        $objPHPExcel->getActiveSheet()->SetCellValue('L4', 'PF No');
+        $objPHPExcel->getActiveSheet()->SetCellValue('M4', 'ESIC No');
+        $objPHPExcel->getActiveSheet()->SetCellValue('N4', 'Working From');
+        $objPHPExcel->getActiveSheet()->SetCellValue('O4', 'Working To');
+        $objPHPExcel->getActiveSheet()->SetCellValue('P4', 'Salary CTC');
+        $objPHPExcel->getActiveSheet()->SetCellValue('Q4', 'Gross Salary');
+        $objPHPExcel->getActiveSheet()->SetCellValue('R4', 'Address');
+        $objPHPExcel->getActiveSheet()->SetCellValue('S4', 'Religion');
+        $objPHPExcel->getActiveSheet()->SetCellValue('T4', 'Employee Branch');
+        $objPHPExcel->getActiveSheet()->SetCellValue('U4', 'Location');
+        $objPHPExcel->getActiveSheet()->SetCellValue('V4', 'Employee Reporting To');
+        $objPHPExcel->getActiveSheet()->SetCellValue('W4', 'Employee Reporting Branch');
+        $objPHPExcel->getActiveSheet()->SetCellValue('X4', 'Department');
+        $objPHPExcel->getActiveSheet()->SetCellValue('Y4', 'Division');
+
+        // set Row
+        $rowCount = 5;
+        $i = 1;
+        foreach ($result as $value)
+        {
+            $gender = ($value->gender == 1) ? "MALE" : "FEMALE";
+            $actual_birth_date = (!empty($value->actual_birth_date)) ? _d($value->actual_birth_date) : "--";
+            $employeebranchinfo = $this->db->query("SELECT GROUP_CONCAT(comp_branch_name) as branch_name FROM `tblcompanybranch` WHERE id IN (".$value->branch_id.") ")->row();
+            $employeebranch = (!empty($employeebranchinfo)) ? $employeebranchinfo->branch_name : '';
+            $location_name = value_by_id("tbllocationmaster", $value->location_id, "name");
+            $reporting_branch = value_by_id("tblcompanybranch", $value->reporting_branch_id, "name");
+            $department_name = value_by_id("tbldepartmentsmaster", $value->department_id, "name");
+            $division_name = value_by_id("tbldivisionmaster", $value->division_id, "title");
+            $superior_id = get_employee_fullname($value->superior_id);
+
+            $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, $value->employee_id);
+            $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, $value->firstname);
+            $objPHPExcel->getActiveSheet()->SetCellValue('C' . $rowCount, $value->designation);
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, _d($value->birth_date));
+            $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $actual_birth_date);
+            $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $value->phonenumber);
+            $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $value->alternatenumber);
+            $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $value->email);
+            $objPHPExcel->getActiveSheet()->SetCellValue('H' . $rowCount, $gender);
+            $objPHPExcel->getActiveSheet()->SetCellValue('I' . $rowCount, _d($value->joining_date));
+            $objPHPExcel->getActiveSheet()->SetCellValue('J' . $rowCount, $value->pan_card_no);
+            $objPHPExcel->getActiveSheet()->SetCellValue('K' . $rowCount, $value->adhar_no);
+            $objPHPExcel->getActiveSheet()->SetCellValue('L' . $rowCount, $value->epf_no);
+            $objPHPExcel->getActiveSheet()->SetCellValue('M' . $rowCount, $value->epic_no);
+            $objPHPExcel->getActiveSheet()->SetCellValue('N' . $rowCount, $value->working_from);
+            $objPHPExcel->getActiveSheet()->SetCellValue('O' . $rowCount, $value->working_to);
+            $objPHPExcel->getActiveSheet()->SetCellValue('P' . $rowCount, $value->monthly_salary);
+            $objPHPExcel->getActiveSheet()->SetCellValue('Q' . $rowCount, $value->gross_salary);
+            $objPHPExcel->getActiveSheet()->SetCellValue('R' . $rowCount, $value->residential_address);
+            $objPHPExcel->getActiveSheet()->SetCellValue('S' . $rowCount, value_by_id("tblreligion", $value->religion_id, "name"));
+            $objPHPExcel->getActiveSheet()->SetCellValue('T' . $rowCount, $employeebranch);
+            $objPHPExcel->getActiveSheet()->SetCellValue('U' . $rowCount, $location_name);
+            $objPHPExcel->getActiveSheet()->SetCellValue('V' . $rowCount, $superior_id);
+            $objPHPExcel->getActiveSheet()->SetCellValue('W' . $rowCount, $reporting_branch);
+            $objPHPExcel->getActiveSheet()->SetCellValue('X' . $rowCount, $department_name);
+            $objPHPExcel->getActiveSheet()->SetCellValue('Y' . $rowCount, $division_name);
+            $i++;
+            $rowCount++;
+        }
+
+        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter->save($fileName);
+        // download file
+        header("Content-Type: application/vnd.ms-excel");
+        redirect(site_url().$fileName);
+
+    }
 
     function ExportExStaff()
     {
@@ -783,6 +893,25 @@ class Staff extends Admin_controller
     //gopla bilrla for view section
     public function employee_view($id = '')
     {
+
+        if ($this->input->post()) {
+            extract($this->input->post());
+
+            $updateinfo = array(
+                'designation_id' => $designation_id,
+                'branch_id' => $branch_id,
+                'superior_id' => $superior_id,
+                'net_salary' => $net_salary,
+                'joining_date' => db_date($joining_date),
+            );
+            $response = $this->home_model->update('tblregisteredstaff', $updateinfo, array('staffid' => $id));
+            if ($response) {
+                set_alert('success', 'Company Details update successfully');
+            }else{
+                set_alert('warning', 'somthing went wrong');
+            }
+            redirect(admin_url('staff/registered_employeelist'));
+        }    
         if($id == '') {
             $title = _l('add_new', _l('employee_registration'));
 
@@ -818,7 +947,7 @@ class Staff extends Admin_controller
             if(isset($data['site_manager']['state_id']) && $data['site_manager']['state_id'] != "") {
                 $data['city_data'] = $this->Site_manager_model->get_cities_by_state_id($data['site_manager']['state_id']);
             }
-
+        $data['company_branch_list'] = $this->db->query('SELECT * FROM tblcompanybranch WHERE status = 1')->result_array();    
         $data['title'] = 'Employee Registration Form';
         $this->load->view('admin/staff/employee_view', $data);
 
@@ -1147,10 +1276,10 @@ class Staff extends Admin_controller
         $data['designation']   = $this->Designation_model->get();
         $data['companybranchdata']   =  $this->db->get('tblcompanybranch')->result_array();
 
-	$data['state_data'] = $this->Site_manager_model->get_state();
-	$data['allcity'] = $this->Site_manager_model->get_city();
+        $data['state_data'] = $this->Site_manager_model->get_state();
+        $data['allcity'] = $this->Site_manager_model->get_city();
         $data['city_data'] = array();
-	if(isset($data['site_manager']['state_id']) && $data['site_manager']['state_id'] != "") {
+	    if(isset($data['site_manager']['state_id']) && $data['site_manager']['state_id'] != "") {
             $data['city_data'] = $this->Site_manager_model->get_cities_by_state_id($data['site_manager']['state_id']);
         }
          $data['agent_number_list'] = $this->db->query('SELECT * FROM tblvagentnumbers WHERE status = 1 order by source asc')->result();
@@ -1202,11 +1331,10 @@ class Staff extends Admin_controller
         if ($this->input->post()) {
             extract($this->input->post());
 
-
-
             if ($id == '') {
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'branch_id' => $branch_id,
                     'name' => $name,
                     'created_at' => date('Y-m-d H:i:s'),
@@ -1373,5 +1501,22 @@ class Staff extends Admin_controller
                 echo 'Employee ID Already Exist.';
             }
         } 
+    }
+
+    /* this function use for delete staff document */
+    public function delete_staff_document($doc_id){
+        $documents_data = $this->db->query("SELECT * FROM tblfiles WHERE `id`='".$doc_id."' ")->row();
+        if (!empty($documents_data)){
+            $response = $this->home_model->delete("tblfiles", array("id" => $doc_id));
+            if (!empty($response)){
+                $path = get_upload_path_by_type('staff_document') . $documents_data->rel_id . '/'.$documents_data->file_name;
+                unlink($path);
+
+                set_alert('success', "Staff document delete successfully");
+            }else{
+                set_alert('danger', "Something went wrong");
+            }
+        }
+        redirect(admin_url('staff/member/'.$documents_data->rel_id));
     }
 }

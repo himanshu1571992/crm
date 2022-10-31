@@ -101,6 +101,8 @@
         </div>
     </div>
 
+    <div class="col-md-12">
+                                <div style="overflow-x:auto !important;">
     <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable" style="margin-top:2%; !important">
         <thead>
             <tr>
@@ -144,7 +146,10 @@
                 }
               ?>
         </tbody>
-    </table>
+    </table></div></div>
+
+
+    
 
     <div class="row">
         <div class="col-md-12">
@@ -166,6 +171,51 @@
 
 	   </div>
 	</div>
+                <div class="panel_s">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="no-mtop mrg3">Assign Detail List</h4>
+                            </div>
+                            <hr/>
+                            <div class="col-md-12">
+                                <div style="overflow-x:auto !important;">
+                                    <div class="form-group">
+                                        <table class="table credite-note-items-table table-main-credit-note-edit no-mtop">
+                                            <thead>
+                                                <tr>
+                                                    <td>S.No</td>
+                                                    <td>Name</td>
+                                                    <td>Status</td>
+                                                    <td>Remark</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php 
+                                                    if(!empty($assign_info)){
+                                                    foreach ($assign_info as $key => $value) {
+                                                        $status = get_approve_status($value->approve_status);
+                                                ?>
+                                                    <tr>
+                                                        <td><?php echo ++$key; ?></td>
+                                                        <td><?php echo get_employee_fullname($value->staff_id); ?></td>
+                                                        <td><?php echo $status; ?></td>                                                        
+                                                        <td><?php echo !empty($value->approvereason) ? $value->approvereason : '--'; ?></td>
+                                                    </tr>
+                                                <?php
+                                                    }
+                                                    }
+                                                ?>
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
   <div class="panel_s">
       <div class="panel-body">
           <div class="col-md-12">

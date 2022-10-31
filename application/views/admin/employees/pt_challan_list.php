@@ -70,7 +70,7 @@
                                         <thead>
                                             <tr>
                                                 <th>S.No.</th>
-                                                <th width="10%">Challan No</th>
+                                                <th width="20%">Challan No</th>
                                                 <th>Challan Date</th>
                                                 <th>PT Amount</th>
                                                 <th>Adjustment Amount</th> 
@@ -94,7 +94,10 @@
                                             ?>                                                                                      
                                                     <tr>
                                                         <td><?php echo $z++;?></td>
-                                                        <td><?php echo $row->challan_no;?></td>
+                                                        <td>
+                                                            <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                            <?php echo $row->challan_no;?>
+                                                        </td>
                                                         <td><?php echo _d($row->challan_date);?></td>
                                                         <td><?php echo number_format($total_amount, '2'); ?></td>
                                                         <td><?php echo number_format($adjusted_amt->t1, '2'); ?></td>

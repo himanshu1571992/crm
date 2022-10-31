@@ -18,10 +18,22 @@ init_head();
                 <div class="panel_s">
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-12">
+
+                            <div class="row ">
+                                <div class="col-xs-12 col-md-6"><h4><?php echo $title; ?> </h4></div>   
+                                <?php if($section == "suspense_account"){?>
+                                <div class="col-xs-12 col-md-6 text-right">
+                                    <a href="<?php echo admin_url('invoice_payments/mark_suspense_unknown/'.$clientpayment_info->id); ?>" class="btn btn-success _delete">Mark as Unkown</a> 
+                                </div>
+                                <?php } ?>
+                            </div>
+                            <hr/>
+                           <!--  <div class="col-md-12">
                                 <h3><?php echo $title; ?></h3>
                                 <hr/>
-                            </div>
+                            </div> -->
+
+
                             <?php if($section == "add"){?>
                             <div class="col-md-12">
                                 <div class="from-group pull-right">

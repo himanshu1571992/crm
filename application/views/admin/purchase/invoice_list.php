@@ -49,20 +49,27 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                         </div>
 
 
-                        <div class="form-group col-md-3" app-field-wrapper="date">
+                        <div class="form-group col-md-2" app-field-wrapper="date">
                             <label for="f_date" class="control-label">From Date</label>
                             <div class="input-group date">
                                 <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if(!empty($f_date)){ echo $f_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                             </div>
                         </div>
 
-                        <div class="form-group col-md-3" app-field-wrapper="date">
+                        <div class="form-group col-md-2" app-field-wrapper="date">
                             <label for="t_date" class="control-label">To Date</label>
                             <div class="input-group date">
                                 <input id="t_date" name="t_date" class="form-control datepicker" value="<?php if(!empty($t_date)){ echo $t_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                             </div>
                         </div>
-
+                        <div class="form-group col-md-2">
+                            <label for="po_for" class="control-label">PO For</label>
+                            <select class="form-control selectpicker" data-live-search="true" id="po_for" name="po_for">
+                                <option value=""></option>
+                                <option value="1" <?php echo (!empty($po_for) && $po_for == 1) ? 'selected' : '' ; ?> >Regular</option>
+                                <option value="2" <?php echo (!empty($po_for) && $po_for == 2) ? 'selected' : '' ; ?>>Special</option>
+                            </select>
+                        </div>            
                         
                        <!--  <div class="col-md-2" id="employee_div">
                             <div class="form-group ">
@@ -99,12 +106,14 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                         <th width="10%">Invoice #</th>
                                         <th>Reference No.</th>
                                         <th>PO No.</th>
+                                        <th>PO For</th>
                                         <th>Vendor</th>
                                         <th>Amount</th>
                                         <th>Date</th>
                                         <th>Invoice For</th>
                                         <th width="15%">Invoices</th>
-                                        <th width="25%">Action</th>
+                                        <th>Accounted Status</th>
+                                        <th width="30%">Action</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -124,10 +133,21 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                             }
                                               
                                             $po_number = "--";
+                                            $purchaseorder_for = "--";
                                              $po_info = $this->db->query("SELECT * FROM `tblpurchaseorder` WHERE `id` = ".$value->po_id."")->row();
                                              if(!empty($po_info)){
+                                                $purchaseorder_for = ($po_info->po_for == 1) ? '<span class="label label-info">Regular</span>':'<span class="label label-success">Special</span>';
                                                 $po_number = "<a href='".admin_url("purchase/download_pdf/".$value->po_id)."' target='_blank'>".$po_info->number."</a>";
                                              }
+                                            $show = 1;
+                                            if (isset($po_for) && $po_for != ''){
+                                                if (!empty($po_info->po_for) && $po_for == $po_info->po_for){
+                                                    $show = 1;
+                                                }else{
+                                                    $show = 0;
+                                                }
+                                            }
+                                             if ($show == 1){
                                             ?>
                                             <tr>
                                                 <td><?php echo ++$key; ?></td>                                                
@@ -137,12 +157,23 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                                 </td>
                                                 <td><?php echo $value->reference_number; ?></td>
                                                 <td><?php echo $po_number; ?></td>
+                                                <td><?php echo $purchaseorder_for; ?></td>
                                                 <td><a href="<?php echo admin_url('vendor/vendor/'.$value->vendor_id);?>" target="_blank"><?php echo cc(value_by_id('tblvendor',$value->vendor_id,'name')); ?></a></td>
                                                 <td><?php echo $value->totalamount; ?></td>
                                                 <td><?php echo _d($value->date); ?></td>                                                 
                                                 <td><?php echo ($value->invoice_for == 1) ? 'Purchase Order' : 'Work Order'; ?></td>
                                                 <td><?php echo $file_data; ?></td>
-
+                                                <td>
+                                                    <?php
+                                                        $accounted_status = 0;
+                                                        $accounted_text = '<span class="btn-sm btn-warning">Pending</span>';
+                                                        if ($value->accounted_status > 0){
+                                                            $accounted_status = 1;
+                                                            $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
+                                                        }
+                                                    ?>
+                                                    <a href="<?php echo admin_url('purchase/update_accounted_status/'.$value->id); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+                                                </td>
                                                 <td class="text-center">
                                                     
                                                     
@@ -187,6 +218,8 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                               </tr>
                                             <?php
                                         }
+                                        }
+
                                     }
                                     ?>
                                      

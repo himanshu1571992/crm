@@ -20,7 +20,7 @@
 						<h4 class="no-margin"><?php echo $title; ?></h4>
 						<hr class="hr-panel-heading" />
 						<?php 
-							$number = 'REQ-'.number_series($request_info["id"]);
+							$number = 'REQ-PTC-'.number_series($request_info["id"]);
 						?>	
 						<div class="col-md-12">
 							<label for="id" class="control-label title-panel col-md-6">Id :</label> <span class="text-content"><?php echo $number; ?></span>
@@ -35,7 +35,7 @@
 							<label for="id" class="control-label title-panel col-md-6">Approved Amount :</label> <span class="text-content">&#8377; <?php echo $request_info["approved_amount"]; ?></span>
 						</div>
 						<div class="col-md-12">
-							<label for="id" class="control-label title-panel col-md-6">From Name :</label> <span class="text-content"><?php echo (!empty($pettycashrequest_data) && $pettycashrequest_data->addedfrom != "") ? get_employee_fullname($pettycashrequest_data->addedfrom): '--'; ?></span>
+							<label for="id" class="control-label title-panel col-md-6">From Name :</label> <span class="text-content"><?php echo $request_info["approved_by"]; ?></span>
 						</div>
 						<div class="col-md-12">
 							<label for="id" class="control-label title-panel col-md-6">Group Name :</label> <span class="text-content"><?php echo $request_info["group_name"]; ?></span>
@@ -71,15 +71,15 @@
 											<label for="receive_status" class="control-label"><?php echo _l('unit_status'); ?> *</label>
 											<select class="form-control selectpicker" id="receive_status" name="receive_status" required="">
 												<option value=""></option>
-												<option value="1" <?php echo (isset($request_info["confirmed_by_user"]) && $request_info["confirmed_by_user"] == 1) ? 'selected' : "" ?>>Confirm</option>
-												<option value="2" <?php echo (isset($request_info["confirmed_by_user"]) && $request_info["confirmed_by_user"] == 2) ? 'selected' : "" ?>>Reject</option>
+												<option value="1" <?php echo (isset($request_info["confirmed_by_user"]) && $request_info["confirmed_by_user"] == 1) ? 'selected' : "" ?>>Received</option>
+												<option value="2" <?php echo (isset($request_info["confirmed_by_user"]) && $request_info["confirmed_by_user"] == 2) ? 'selected' : "" ?>>Not Received</option>
 											</select>
 										</div>
 									</div>
-									<div class="col-md-3 amount_div">
+									<div class="col-md-3 confirmation_payment_mode_div">
 										<div class="form-group">
 											<label for="confirmation_payment_mode" class="control-label"><?php echo 'Payment Mode'; ?> *</label>
-											<select class="form-control selectpicker" id="confirmation_payment_mode" name="confirmation_payment_mode" required="">
+											<select class="form-control selectpicker confirmation_payment_mode" id="confirmation_payment_mode" name="confirmation_payment_mode" required="">
 												<option value="" disabled selected >--Select One-</option>
 												<?php
 												if(!empty($payment_mode_info)){
@@ -178,12 +178,16 @@
 </div>
 <?php init_tail(); ?>
 <script type="text/javascript">
-	var request_amount = '<?php echo $request_info["request_amount"]; ?>';
-	$(document).on("change", "#approve_status", function(){
+	$(document).on("change", "#receive_status", function(){
 		var status_val = $(this).val();
-		$("#approved_amount").val("");
-		if (status_val == 1){
-			$("#approved_amount").val(request_amount);
+		if(status_val == 1){
+			$('#user_confirmation_remark').val('Yes, Received with Thanks.');
+			$(".confirmation_payment_mode_div").show();
+			$("#confirmation_payment_mode").attr("required", "");
+		}else{
+			$('#user_confirmation_remark').val('Not, Received yet');
+			$(".confirmation_payment_mode_div").hide();
+			$("#confirmation_payment_mode").removeAttr("required", "");
 		}
 	});											
 

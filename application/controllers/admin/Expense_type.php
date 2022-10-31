@@ -34,6 +34,7 @@ class Expense_type extends Admin_controller
             
             $designationids = (!empty($designation_ids)) ? implode(",", $designation_ids) : "";
             $ad_data = array(
+                'added_by' => get_staff_user_id(),
                 'head_id' => $head_id,
                 'name' => $name,
                 'expense_for' => $expense_for,
@@ -41,7 +42,8 @@ class Expense_type extends Admin_controller
                 'designation_ids' => $designationids,
                 'default_sub_category' => 0,
                 'description' => $description,
-                'status' => 1
+                'status' => 1,
+                'created_at' => date('Y-m-d H:i:s')
             );
 
             $insert = $this->home_model->insert('tblexpensetype', $ad_data);
@@ -141,11 +143,13 @@ class Expense_type extends Admin_controller
             extract($this->input->post());
             $designationids = (!empty($designation_ids)) ? implode(",", $designation_ids) : '';
             $ad_data = array(
+                'added_by' => get_staff_user_id(),
                 'name' => $name,
                 'type_id' => $type_id,
                 'designation_ids' => $designationids,
                 'description' => $description,
-                'status' => 1
+                'status' => 1,
+                'created_at' => date('Y-m-d H:i:s')
             );
             $insert = $this->home_model->insert('tblexpensetypesub', $ad_data);
             if($insert){

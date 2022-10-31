@@ -159,8 +159,6 @@ class Invoices extends Admin_controller
             $where_ttl = "i.status != 5 and i.service_type = 2 and i.year_id = '".financial_year()."' and cb.company_branch = '0'";
         }
 
-
-
         // Get records
         $data['invoice_list'] = $this->db->query("SELECT i.* FROM `tblinvoices` as i LEFT JOIN `tblclientbranch` as cb ON i.clientid = cb.userid WHERE ".$where." ORDER BY id DESC ")->result();
         $data['invoice_amount'] = $this->db->query("SELECT sum(total) as ttl_amt from `tblinvoices` as i LEFT JOIN `tblclientbranch` as cb ON i.clientid = cb.userid WHERE ".$where_ttl." ")->row()->ttl_amt;
@@ -1355,7 +1353,6 @@ class Invoices extends Admin_controller
                 $html = infoice_pdf($invoice);
             }
 
-
             $dompdf = new Dompdf();
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'portrait');
@@ -1452,18 +1449,19 @@ class Invoices extends Admin_controller
         check_permission('58,82','view');
 
         $staff_id = $this->session->userdata('staff_user_id');
-
         if(!empty($client_id) && $page == 'under_over_limit'){
-
+            
             $branch = $this->db->query("SELECT * from tblclientbranch where userid = '".$client_id."' order by client_branch_name asc")->row();
 
             $site = array();
             $client_branch = array();
+            
             if(!empty($branch)){
                 $data['client_id'] = $branch->client_id;
             }
             $client_branch[] = $client_id;
-             $data['client_branch'] = $client_branch;
+            
+            $data['client_branch'] = $client_branch;
 
             $site_info = $this->db->query("SELECT i.site_id, s.name FROM tblinvoices as  i LEFT JOIN tblsitemanager as s ON i.site_id = s.id where i.clientid = '".$client_id."' and i.site_id > 0  GROUP By i.site_id ORDER by i.id DESC")->result();
             if(!empty($site_info)){
@@ -1475,9 +1473,11 @@ class Invoices extends Admin_controller
             $data['flow'] = 'asc';
             $data['service_type'] = 1;
         }elseif(!empty($client_id)){
+            
             $data['client_id'] = $client_id;
-            $branch = $this->db->query("SELECT `userid` from tblclientbranch where client_id = '".$client_id."' order by client_branch_name asc ")->result();
+            $branch = $this->db->query("SELECT `userid`,`vendor_id` from tblclientbranch where client_id = '".$client_id."' order by client_branch_name asc ")->result();
             $client_branch = array();
+            
             $site = array();
             if(!empty($branch)){
                 foreach ($branch as $value) {
@@ -1508,7 +1508,9 @@ class Invoices extends Admin_controller
 
             $site_arr = array();
             if(empty($site_id)){
+                
                 $client_str = implode(",",$client_branch);
+                
                 $site_info = $this->db->query("SELECT i.site_id FROM tblinvoices as  i LEFT JOIN tblsitemanager as s ON i.site_id = s.id where i.clientid IN (".$client_str.") and i.site_id > 0  GROUP By i.site_id ORDER by i.id DESC")->result();
                 if(!empty($site_info)){
                     foreach ($site_info as $s_id) {
@@ -1519,7 +1521,7 @@ class Invoices extends Admin_controller
             }else{
                 $data['site_ids'] = $site_id;
             }
-
+            
             $data['client_id'] = $client_id;
 
             $data['client_branch'] = $client_branch;
@@ -1527,6 +1529,17 @@ class Invoices extends Admin_controller
             $data['service_type'] = $service_type;
             $data['year_id'] = $year_id;
 
+        }
+        
+        $data["vendor_outstanding_amount"] = 0;
+        if (!empty($client_branch)){
+            /* this code use for get multiple client outstanding amount */
+            $clientbranch_str = implode(",",$client_branch);
+            $vendordata = $this->db->query("SELECT GROUP_CONCAT(vendor_id) as vendor_ids FROM `tblclientbranch` WHERE `userid` IN (".$clientbranch_str.") ")->row();
+            $vendorids_str = (!empty($vendordata)) ? $vendordata->vendor_ids : 0;
+            if ($vendorids_str > 0){
+                $data["vendor_outstanding_amount"] = get_vendor_ledger_amount($vendorids_str);
+            }
         }
 
         $data['title'] = 'Client Ledger';
@@ -2188,686 +2201,501 @@ class Invoices extends Admin_controller
     public function ledger_export($data){
 
         $file_name = 'Ledger Excel -'.date('d_m_y').'.xls';
-            $site_ids = explode(",",$data['site_ids']);
-            $branch_str = $data['client_branch'];
-            $client_id = $data['client_id'];
-            $flow = $data['flow'];
-            $service_type = $data['service_type'];
-            $year_id = $data['year_id'];
-            $this->load->library('excel');
+        $site_ids = explode(",",$data['site_ids']);
+        $branch_str = $data['client_branch'];
+        $client_id = $data['client_id'];
+        $flow = $data['flow'];
+        $service_type = $data['service_type'];
+        $year_id = $data['year_id'];
+        $this->load->library('excel');
 
-            $objPHPExcel = new PHPExcel();
-            $objPHPExcel->setActiveSheetIndex(0);
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
 
-            $styleArray = array(
-                'font'  => array(
-                'bold'  => false,
-                'size'  => 14,
-                'name'  => 'Arial'
-            ));
+        $styleArray = array(
+            'font'  => array(
+            'bold'  => false,
+            'size'  => 14,
+            'name'  => 'Arial'
+        ));
 
-            $textFormat='@';//'General','0.00','@'
-            $allinvoice_ids = $alldn_ids = 0;
-            $ledger_for = ($service_type == 1) ? 'Rental Ledger' : 'Sales Ledger';
-            $client_info = main_client_info($data['client_id']);
+        $textFormat='@';//'General','0.00','@'
+        $allinvoice_ids = $alldn_ids = 0;
+        $ledger_for = ($service_type == 1) ? 'Rental Ledger' : 'Sales Ledger';
+        $client_info = main_client_info($data['client_id']);
 
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:J2');
-            $objPHPExcel->getActiveSheet()->setCellValue('A2', $ledger_for);
+        
+        /* this code use for get multiple client outstanding amount */
+        $vendordata = $this->db->query("SELECT GROUP_CONCAT(vendor_id) as vendor_ids FROM `tblclientbranch` WHERE `userid` IN (".$branch_str.") ")->row();
+        $vendorids_str = (!empty($vendordata)) ? $vendordata->vendor_ids : 0;
+        $vendor_outstanding_amount = get_vendor_ledger_amount($vendorids_str);
 
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A3:J3');
-            $objPHPExcel->getActiveSheet()->setCellValue('A3', 'Client Name : '.$client_info->company);
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:J2');
+        $objPHPExcel->getActiveSheet()->setCellValue('A2', $ledger_for);
 
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:J4');
-            $objPHPExcel->getActiveSheet()->setCellValue('A4', 'Client Address : '.$client_info->address.'');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A3:J3');
+        $objPHPExcel->getActiveSheet()->setCellValue('A3', 'Client Name : '.$client_info->company);
 
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A5:J5');
-            $objPHPExcel->getActiveSheet()->setCellValue('A5', 'GST Number : '.$client_info->vat.'');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:J4');
+        $objPHPExcel->getActiveSheet()->setCellValue('A4', 'Client Address : '.$client_info->address.'');
 
-            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A6:J6');
-            $objPHPExcel->getActiveSheet()->setCellValue('A6', 'Print Date : '.date('d/m/Y').'');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A5:J5');
+        $objPHPExcel->getActiveSheet()->setCellValue('A5', 'GST Number : '.$client_info->vat.'');
 
-            $styleArray = array(
-                    'borders' => array(
-                        'allborders' => array(
-                            'style' => PHPExcel_Style_Border::BORDER_THIN
-                        )
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A6:J6');
+        $objPHPExcel->getActiveSheet()->setCellValue('A6', 'Print Date : '.date('d/m/Y').'');
+
+        $styleArray = array(
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN
                     )
-                );
-            $grand_bal = $grand_recevied = $i = $ttl_billing = 0;
-            $siteheadingcol = 7;
-            foreach ($site_ids as $s_id) {
-                $i++;
-                $col_span = 0;
-                $cols = "A";
-                $site_info = $this->db->query("SELECT * FROM tblsitemanager where id = '".$s_id."' ")->row();
+                )
+            );
+        $grand_bal = $grand_recevied = $i = $ttl_billing = 0;
+        $siteheadingcol = 7;
+        foreach ($site_ids as $s_id) {
+            $i++;
+            $col_span = 0;
+            $cols = "A";
+            $site_info = $this->db->query("SELECT * FROM tblsitemanager where id = '".$s_id."' ")->row();
 
-                if (!empty($year_id) && $year_id != ''){
-                    $parent_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$branch_str.") and site_id = '".$s_id."' and service_type = '".$service_type."' and parent_id = '0' and status != '5' and year_id = '".$year_id."' order by date ".$flow." ")->result();
-                }else{
-                    $parent_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$branch_str.") and site_id = '".$s_id."' and service_type = '".$service_type."' and parent_id = '0' and status != '5' order by date ".$flow." ")->result();
+            if (!empty($year_id) && $year_id != ''){
+                $parent_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$branch_str.") and site_id = '".$s_id."' and service_type = '".$service_type."' and parent_id = '0' and status != '5' and year_id = '".$year_id."' order by date ".$flow." ")->result();
+            }else{
+                $parent_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$branch_str.") and site_id = '".$s_id."' and service_type = '".$service_type."' and parent_id = '0' and status != '5' order by date ".$flow." ")->result();
+            }
+
+
+            $ttl_bal = $ttl_tds = $ttl_recv = $ttl_amt = $parent_ids = 0;
+            if(!empty($parent_invoice)){
+
+                $siteheadingcol = $siteheadingcol + 1;
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:J$siteheadingcol");
+                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", cc($site_info->name))->getStyle("A$siteheadingcol:J$siteheadingcol")->getFont()->setBold(true);
+                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", cc($site_info->name))->getStyle("A$siteheadingcol:J$siteheadingcol")->applyFromArray($styleArray);
+                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", cc($site_info->name))->getStyle("A$siteheadingcol:J$siteheadingcol")->getAlignment()->setHorizontal('center');
+
+                ++$siteheadingcol;
+                if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
+
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Start-End Date')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "A") ? "B": "A";
+                }
+                if(!empty($data['printdata']['inv_no'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Inv. Number')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "B") ? "C": "B";
+                }
+                if(!empty($data['printdata']['inv_date'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Inv. Date')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "C") ? "D": "C";
+                }
+                if(!empty($data['printdata']['inv_amt'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Inv. Amt')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "D") ? "E": "D";
+                }
+                if(!empty($data['printdata']['ttl_recd'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Total Recd')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "E") ? "F": "E";
+                }
+                if(!empty($data['printdata']['inv_recd'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Received')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "F") ? "G": "F";
+                }
+                if(!empty($data['printdata']['tds'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'TDS')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "G") ? "H": "G";
+                }
+                if(!empty($data['printdata']['balance'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Balance')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "H") ? "I": "H";
+                }
+                if(!empty($data['printdata']['receipt_date'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Receipt Date')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "I") ? "J": "I";
+                }
+                if(!empty($data['printdata']['ref_details'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Ref Detail')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "J") ? "K": "J";
+                }
+                if(!empty($data['printdata']['contact_person'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Contact Person')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
+//                    $cols = ($cols == "K") ? "L": "K";
+                }
+                if(!empty($data['printdata']['due_days'])){
+                    $cols = $this->getNameFromNumber($col_span);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Due Days')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                    $col_span += 1;
                 }
 
-
-                $ttl_bal = $ttl_tds = $ttl_recv = $ttl_amt = $parent_ids = 0;
-                if(!empty($parent_invoice)){
-
-                    $siteheadingcol = $siteheadingcol + 1;
-                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:J$siteheadingcol");
-                    $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", cc($site_info->name))->getStyle("A$siteheadingcol:J$siteheadingcol")->getFont()->setBold(true);
-                    $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", cc($site_info->name))->getStyle("A$siteheadingcol:J$siteheadingcol")->applyFromArray($styleArray);
-                    $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", cc($site_info->name))->getStyle("A$siteheadingcol:J$siteheadingcol")->getAlignment()->setHorizontal('center');
-
-                    ++$siteheadingcol;
-                    if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
-
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Start-End Date')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "A") ? "B": "A";
-                    }
-                    if(!empty($data['printdata']['inv_no'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Inv. Number')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "B") ? "C": "B";
-                    }
-                    if(!empty($data['printdata']['inv_date'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Inv. Date')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "C") ? "D": "C";
-                    }
-                    if(!empty($data['printdata']['inv_amt'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Inv. Amt')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "D") ? "E": "D";
-                    }
-                    if(!empty($data['printdata']['ttl_recd'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Total Recd')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "E") ? "F": "E";
-                    }
-                    if(!empty($data['printdata']['inv_recd'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Received')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "F") ? "G": "F";
-                    }
-                    if(!empty($data['printdata']['tds'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'TDS')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "G") ? "H": "G";
-                    }
-                    if(!empty($data['printdata']['balance'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Balance')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "H") ? "I": "H";
-                    }
-                    if(!empty($data['printdata']['receipt_date'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Receipt Date')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "I") ? "J": "I";
-                    }
-                    if(!empty($data['printdata']['ref_details'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Ref Detail')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "J") ? "K": "J";
-                    }
-                    if(!empty($data['printdata']['contact_person'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Contact Person')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-    //                    $cols = ($cols == "K") ? "L": "K";
-                    }
-                    if(!empty($data['printdata']['due_days'])){
-                        $cols = $this->getNameFromNumber($col_span);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol)->getStyle($cols.$siteheadingcol)->applyFromArray($styleArray);
-                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, 'Due Days')->getStyle($cols.$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                        $col_span += 1;
-                    }
-
-                    foreach ($parent_invoice as $parent) {
-                        $parent_ids .= ','.$parent->id;
-                        $allinvoice_ids .= ','.$parent->id;
-                        $item_info = $this->db->query("SELECT is_sale FROM `tblitems_in` where  `rel_type` = 'invoice' and `rel_id` = '".$parent->id."' ")->row();
-
-                        $type = '--';
-                        if(!empty($item_info)){
-                            if($item_info->is_sale == 0){
-                                $type = 'Rent';
-                            }elseif($item_info->is_sale == 1){
-                                $type = 'Sale';
-                            }
-                        }
-
-                        if ($type == 'Rent') {
-                            $start_date = _d($parent->date);
-                            $due_date = _d($parent->duedate);
-                        } else {
-                            $start_date = '-';
-                            $due_date = '-';
-                        }
-
-                        $due_days = due_days($parent->payment_due_date);
-
-
-                        $received = invoice_received($parent->id);
-                        $received_tds = invoice_tds_received($parent->id);
-
-                        $bal_amt = ($parent->total - $received - $received_tds);
-
-                        $ttl_recv += $received;
-                        $ttl_tds += $received_tds;
-                        $ttl_amt += $parent->total;
-                        $ttl_bal += $bal_amt;
-                        $grand_bal += $bal_amt;
-
-                        $ttl_billing += $parent->total;
-
-                        $payment_info = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '2' and p.invoiceid = '".$parent->id."' and cp.status = 1 order by p.id asc ")->result();
-
-                        if (count($payment_info) == 1) {
-                            if ($payment_info[0]->payment_mode == 1 && $payment_info[0]->chaque_status != 1) {
-                                $payment_info = '';
-                            }
-                        }
-
-                         //Getting site person
-                        $person_info = invoice_contact_person($parent->id);
-                        $site_name = (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--';
-
-                        if(!empty($payment_info)){
-                            $j = 0;
-                            foreach ($payment_info as  $r1) {
-                                $to_see = ($r1->payment_mode == 1 && $r1->chaque_status != 1) ? '0' : '1';
-
-                                if($to_see == 1){
-                                    $ref_no = value_by_id('tblclientpayment',$r1->pay_id,'reference_no');
-
-                                    $receipt_date = _d($r1->date);
-                                    if($r1->payment_mode == 1 && $r1->chaque_status == 1 && !empty($r1->chaque_clear_date)){
-                                      $receipt_date = _d($r1->chaque_clear_date);
-                                    }
-
-                                    $total = ($j == 0) ? $parent->total : '--';
-                                    $ttl_received = ($j == 0) ? $received : '--';
-                                    $bal = ($j == 0) ? number_format($bal_amt, 2, '.', '') : '--';
-                                    $due_days = ($j == 0) ? $due_days : '--';
-                                    $pay_date = ($r1->amount > 0) ? $receipt_date : '--';
-                                    $cols = "A";
-                                    ++$siteheadingcol;
-                                    if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $start_date.' - '.$due_date);
-                                        $cols = ($cols == "A") ? "B": "A";
-                                    }
-                                    if(!empty($data['printdata']['inv_no'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $parent->number);
-                                        $cols = ($cols == "B") ? "C": "B";
-                                    }
-                                    if(!empty($data['printdata']['inv_date'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, _d($parent->invoice_date));
-                                        $cols = ($cols == "C") ? "D": "C";
-                                    }
-                                    if(!empty($data['printdata']['inv_amt'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $total);
-                                        $cols = ($cols == "D") ? "E": "D";
-                                    }
-                                    if(!empty($data['printdata']['ttl_recd'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $ttl_received);
-                                        $cols = ($cols == "E") ? "F": "E";
-                                    }
-                                    if(!empty($data['printdata']['inv_recd'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $r1->amount);
-                                        $cols = ($cols == "F") ? "G": "F";
-                                    }
-                                    if(!empty($data['printdata']['tds'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $r1->paid_tds_amt);
-                                        $cols = ($cols == "G") ? "H": "G";
-                                    }
-                                    if(!empty($data['printdata']['balance'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $bal);
-                                        $cols = ($cols == "H") ? "I": "H";
-                                    }
-                                    if(!empty($data['printdata']['receipt_date'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $pay_date);
-                                        $cols = ($cols == "I") ? "J": "I";
-                                    }
-                                    if(!empty($data['printdata']['ref_details'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $ref_no);
-                                        $cols = ($cols == "J") ? "K": "J";
-                                    }
-                                    if(!empty($data['printdata']['contact_person'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $site_name);
-                                        $cols = ($cols == "K") ? "L": "K";
-                                    }
-                                    if(!empty($data['printdata']['due_days'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $due_days);
-                                    }
-                                    $j++;
-                                }
-                            }
-                        }else{
-                            $cols = "A";
-                            ++$siteheadingcol;
-                            if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $start_date.' - '.$due_date);
-                                $cols = ($cols == "A") ? "B": "A";
-                            }
-                            if(!empty($data['printdata']['inv_no'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $parent->number);
-                                $cols = ($cols == "B") ? "C": "B";
-                            }
-                            if(!empty($data['printdata']['inv_date'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, _d($parent->invoice_date));
-                                $cols = ($cols == "C") ? "D": "C";
-                            }
-                            if(!empty($data['printdata']['inv_amt'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $parent->total);
-                                $cols = ($cols == "D") ? "E": "D";
-                            }
-                            if(!empty($data['printdata']['ttl_recd'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
-                                $cols = ($cols == "E") ? "F": "E";
-                            }
-                            if(!empty($data['printdata']['inv_recd'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
-                                $cols = ($cols == "F") ? "G": "F";
-                            }
-                            if(!empty($data['printdata']['tds'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
-                                $cols = ($cols == "G") ? "H": "G";
-                            }
-                            if(!empty($data['printdata']['balance'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, number_format($bal_amt, 2, '.', ''));
-                                $cols = ($cols == "H") ? "I": "H";
-                            }
-                            if(!empty($data['printdata']['receipt_date'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '--');
-                                $cols = ($cols == "I") ? "J": "I";
-                            }
-                            if(!empty($data['printdata']['ref_details'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '--');
-                                $cols = ($cols == "J") ? "K": "J";
-                            }
-                            if(!empty($data['printdata']['contact_person'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $site_name);
-                                $cols = ($cols == "K") ? "L": "K";
-                            }
-                            if(!empty($data['printdata']['due_days'])){
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $due_days);
-                            }
-                        }
-
-                        //Getting Child Invoice
-                        if (!empty($year_id)){
-                            $child_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$branch_str.") and site_id = '".$s_id."' and service_type = '".$service_type."' and parent_id = '".$parent->id."' and year_id = '".$year_id."' and status != '5' order by date ".$flow." ")->result();
-                          }else{
-                            $child_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$branch_str.") and site_id = '".$s_id."' and service_type = '".$service_type."' and parent_id = '".$parent->id."' and status != '5' order by date ".$flow." ")->result();
-                          }
-                        if (!empty($child_invoice)) {
-                            foreach ($child_invoice as $child) {
-
-
-                                $allinvoice_ids .= ',' . $child->id;
-                                $item_info = $this->db->query("SELECT is_sale FROM `tblitems_in` where  `rel_type` = 'invoice' and `rel_id` = '" . $child->id . "' ")->row();
-                                $type = '--';
-                                if (!empty($item_info)) {
-                                    if ($item_info->is_sale == 0) {
-                                        $type = 'Rent';
-                                    } elseif ($item_info->is_sale == 1) {
-                                        $type = 'Sale';
-                                    }
-                                }
-
-                                if ($type == 'Rent') {
-                                    $start_date = _d($child->date);
-                                    $due_date = _d($child->duedate);
-                                } else {
-                                    $start_date = '-';
-                                    $due_date = '-';
-                                }
-                                $due_days = due_days($child->payment_due_date);
-
-
-                                $received = invoice_received($child->id);
-                                $received_tds = invoice_tds_received($child->id);
-
-                                $bal_amt = ($child->total - $received - $received_tds);
-
-                                $ttl_recv += $received;
-                                $ttl_tds += $received_tds;
-                                $ttl_amt += $child->total;
-                                $ttl_bal += $bal_amt;
-                                $grand_bal += $bal_amt;
-
-                                $ttl_billing += $child->total;
-
-                                $payment_info = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '2' and p.invoiceid = '" . $child->id . "' and cp.status = 1 order by p.id asc ")->result();
-
-                                // IF there is only one recored of payment which is made by cheque and cheque is not clear
-                                if (count($payment_info) == 1) {
-                                    if ($payment_info[0]->payment_mode == 1 && $payment_info[0]->chaque_status != 1) {
-                                        $payment_info = '';
-                                    }
-                                }
-
-                                //Getting site person
-                                $person_info = invoice_contact_person($child->id);
-                                $site_name = (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--';
-
-                                if (!empty($payment_info)) {
-                                    $j = 0;
-                                    foreach ($payment_info as $r1) {
-
-                                        $to_see = ($r1->payment_mode == 1 && $r1->chaque_status != 1) ? '0' : '1';
-
-                                        if ($to_see == 1) {
-                                            $cols = "A";
-                                            ++$siteheadingcol;
-
-                                            $ref_no = value_by_id('tblclientpayment', $r1->pay_id, 'reference_no');
-
-                                            $receipt_date = _d($r1->date);
-                                            if ($r1->payment_mode == 1 && $r1->chaque_status == 1 && !empty($r1->chaque_clear_date)) {
-                                                $receipt_date = _d($r1->chaque_clear_date);
-                                            }
-
-                                            $total = ($j == 0) ? $child->total : '--';
-                                            $ttl_received = ($j == 0) ? $received : '--';
-                                            $bal = ($j == 0) ? number_format($bal_amt, 2, '.', '') : '--';
-                                            $due_days = ($j == 0) ? $due_days : '--';
-                                            $pay_date = ($r1->amount > 0) ? $receipt_date : '--';
-                                            //$tds = ($r1->showInReconciliation == 2) ? $r1->tds_amt : '0.00';
-
-                                            if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $start_date . ' - ' . $due_date);
-                                                $cols = ($cols == "A") ? "B": "A";
-                                            }
-                                            if(!empty($data['printdata']['inv_no'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $child->number);
-                                                $cols = ($cols == "B") ? "C": "B";
-                                            }
-                                            if(!empty($data['printdata']['inv_date'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, _d($child->invoice_date));
-                                                $cols = ($cols == "C") ? "D": "C";
-                                            }
-                                            if(!empty($data['printdata']['inv_amt'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $total);
-                                                $cols = ($cols == "D") ? "E": "D";
-                                            }
-                                            if(!empty($data['printdata']['ttl_recd'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $ttl_received);
-                                                $cols = ($cols == "E") ? "F": "E";
-                                            }
-                                            if(!empty($data['printdata']['inv_recd'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $r1->amount);
-                                                $cols = ($cols == "F") ? "G": "F";
-                                            }
-                                            if(!empty($data['printdata']['tds'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $r1->paid_tds_amt);
-                                                $cols = ($cols == "G") ? "H": "G";
-                                            }
-                                            if(!empty($data['printdata']['balance'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $bal);
-                                                $cols = ($cols == "H") ? "I": "H";
-                                            }
-                                            if(!empty($data['printdata']['receipt_date'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $pay_date);
-                                                $cols = ($cols == "I") ? "J": "I";
-                                            }
-                                            if(!empty($data['printdata']['ref_details'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $ref_no);
-                                                $cols = ($cols == "J") ? "K": "J";
-                                            }
-                                            if(!empty($data['printdata']['contact_person'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $site_name);
-                                                $cols = ($cols == "K") ? "L": "K";
-                                            }
-                                            if(!empty($data['printdata']['due_days'])){
-
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $due_days);
-                                            }
-                                            $j++;
-                                        }
-                                    }
-                                } else {
-                                    $cols = "A";
-                                    ++$siteheadingcol;
-
-                                    if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $start_date . ' - ' . $due_date);
-                                        $cols = ($cols == "A") ? "B": "A";
-                                    }
-
-                                    if(!empty($data['printdata']['inv_no'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $child->number);
-                                        $cols = ($cols == "B") ? "C": "B";
-                                    }
-                                    if(!empty($data['printdata']['inv_date'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, _d($child->invoice_date));
-                                        $cols = ($cols == "C") ? "D": "C";
-                                    }
-                                    if(!empty($data['printdata']['inv_amt'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $child->total);
-                                        $cols = ($cols == "D") ? "E": "D";
-                                    }
-                                    if(!empty($data['printdata']['ttl_recd'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
-                                        $cols = ($cols == "E") ? "F": "E";
-                                    }
-                                    if(!empty($data['printdata']['inv_recd'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
-                                        $cols = ($cols == "F") ? "G": "F";
-                                    }
-                                    if(!empty($data['printdata']['tds'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
-                                        $cols = ($cols == "G") ? "H": "G";
-                                    }
-                                    if(!empty($data['printdata']['balance'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, number_format($bal_amt, 2, '.', ''));
-                                        $cols = ($cols == "H") ? "I": "H";
-                                    }
-                                    if(!empty($data['printdata']['receipt_date'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '--');
-                                        $cols = ($cols == "I") ? "J": "I";
-                                    }
-                                    if(!empty($data['printdata']['ref_details'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '--');
-                                        $cols = ($cols == "J") ? "K": "J";
-                                    }
-                                    if(!empty($data['printdata']['contact_person'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $site_name);
-                                        $cols = ($cols == "K") ? "L": "K";
-                                    }
-                                    if(!empty($data['printdata']['due_days'])){
-
-                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $due_days);
-                                    }
-                                }
-                            }
+                foreach ($parent_invoice as $parent) {
+                    $parent_ids .= ','.$parent->id;
+                    $allinvoice_ids .= ','.$parent->id;
+                    $item_info = $this->db->query("SELECT is_sale FROM `tblitems_in` where  `rel_type` = 'invoice' and `rel_id` = '".$parent->id."' ")->row();
+
+                    $type = '--';
+                    if(!empty($item_info)){
+                        if($item_info->is_sale == 0){
+                            $type = 'Rent';
+                        }elseif($item_info->is_sale == 1){
+                            $type = 'Sale';
                         }
                     }
 
-                    //Getting Debit Notes againt parent invoice
-                    if (!empty($year_id)){
-                        $debit_note_info = $this->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and year_id = '".$year_id."' and status = '1' order by dabit_note_date ".$flow." ")->result();
+                    if ($type == 'Rent') {
+                        $start_date = _d($parent->date);
+                        $due_date = _d($parent->duedate);
+                    } else {
+                        $start_date = '-';
+                        $due_date = '-';
+                    }
+
+                    $due_days = due_days($parent->payment_due_date);
+
+
+                    $received = invoice_received($parent->id);
+                    $received_tds = invoice_tds_received($parent->id);
+
+                    $bal_amt = ($parent->total - $received - $received_tds);
+
+                    $ttl_recv += $received;
+                    $ttl_tds += $received_tds;
+                    $ttl_amt += $parent->total;
+                    $ttl_bal += $bal_amt;
+                    $grand_bal += $bal_amt;
+
+                    $ttl_billing += $parent->total;
+
+                    $payment_info = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '2' and p.invoiceid = '".$parent->id."' and cp.status = 1 order by p.id asc ")->result();
+
+                    if (count($payment_info) == 1) {
+                        if ($payment_info[0]->payment_mode == 1 && $payment_info[0]->chaque_status != 1) {
+                            $payment_info = '';
+                        }
+                    }
+
+                        //Getting site person
+                    $person_info = invoice_contact_person($parent->id);
+                    $site_name = (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--';
+
+                    if(!empty($payment_info)){
+                        $j = 0;
+                        foreach ($payment_info as  $r1) {
+                            $to_see = ($r1->payment_mode == 1 && $r1->chaque_status != 1) ? '0' : '1';
+
+                            if($to_see == 1){
+                                $ref_no = value_by_id('tblclientpayment',$r1->pay_id,'reference_no');
+
+                                $receipt_date = _d($r1->date);
+                                if($r1->payment_mode == 1 && $r1->chaque_status == 1 && !empty($r1->chaque_clear_date)){
+                                    $receipt_date = _d($r1->chaque_clear_date);
+                                }
+
+                                $total = ($j == 0) ? $parent->total : '--';
+                                $ttl_received = ($j == 0) ? $received : '--';
+                                $bal = ($j == 0) ? number_format($bal_amt, 2, '.', '') : '--';
+                                $due_days = ($j == 0) ? $due_days : '--';
+                                $pay_date = ($r1->amount > 0) ? $receipt_date : '--';
+                                $cols = "A";
+                                ++$siteheadingcol;
+                                if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $start_date.' - '.$due_date);
+                                    $cols = ($cols == "A") ? "B": "A";
+                                }
+                                if(!empty($data['printdata']['inv_no'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $parent->number);
+                                    $cols = ($cols == "B") ? "C": "B";
+                                }
+                                if(!empty($data['printdata']['inv_date'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, _d($parent->invoice_date));
+                                    $cols = ($cols == "C") ? "D": "C";
+                                }
+                                if(!empty($data['printdata']['inv_amt'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $total);
+                                    $cols = ($cols == "D") ? "E": "D";
+                                }
+                                if(!empty($data['printdata']['ttl_recd'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $ttl_received);
+                                    $cols = ($cols == "E") ? "F": "E";
+                                }
+                                if(!empty($data['printdata']['inv_recd'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $r1->amount);
+                                    $cols = ($cols == "F") ? "G": "F";
+                                }
+                                if(!empty($data['printdata']['tds'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $r1->paid_tds_amt);
+                                    $cols = ($cols == "G") ? "H": "G";
+                                }
+                                if(!empty($data['printdata']['balance'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $bal);
+                                    $cols = ($cols == "H") ? "I": "H";
+                                }
+                                if(!empty($data['printdata']['receipt_date'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $pay_date);
+                                    $cols = ($cols == "I") ? "J": "I";
+                                }
+                                if(!empty($data['printdata']['ref_details'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $ref_no);
+                                    $cols = ($cols == "J") ? "K": "J";
+                                }
+                                if(!empty($data['printdata']['contact_person'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $site_name);
+                                    $cols = ($cols == "K") ? "L": "K";
+                                }
+                                if(!empty($data['printdata']['due_days'])){
+
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $due_days);
+                                }
+                                $j++;
+                            }
+                        }
                     }else{
-                        $debit_note_info = $this->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by dabit_note_date ".$flow." ")->result();
+                        $cols = "A";
+                        ++$siteheadingcol;
+                        if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $start_date.' - '.$due_date);
+                            $cols = ($cols == "A") ? "B": "A";
+                        }
+                        if(!empty($data['printdata']['inv_no'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $parent->number);
+                            $cols = ($cols == "B") ? "C": "B";
+                        }
+                        if(!empty($data['printdata']['inv_date'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, _d($parent->invoice_date));
+                            $cols = ($cols == "C") ? "D": "C";
+                        }
+                        if(!empty($data['printdata']['inv_amt'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $parent->total);
+                            $cols = ($cols == "D") ? "E": "D";
+                        }
+                        if(!empty($data['printdata']['ttl_recd'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
+                            $cols = ($cols == "E") ? "F": "E";
+                        }
+                        if(!empty($data['printdata']['inv_recd'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
+                            $cols = ($cols == "F") ? "G": "F";
+                        }
+                        if(!empty($data['printdata']['tds'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
+                            $cols = ($cols == "G") ? "H": "G";
+                        }
+                        if(!empty($data['printdata']['balance'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, number_format($bal_amt, 2, '.', ''));
+                            $cols = ($cols == "H") ? "I": "H";
+                        }
+                        if(!empty($data['printdata']['receipt_date'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '--');
+                            $cols = ($cols == "I") ? "J": "I";
+                        }
+                        if(!empty($data['printdata']['ref_details'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '--');
+                            $cols = ($cols == "J") ? "K": "J";
+                        }
+                        if(!empty($data['printdata']['contact_person'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $site_name);
+                            $cols = ($cols == "K") ? "L": "K";
+                        }
+                        if(!empty($data['printdata']['due_days'])){
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $due_days);
+                        }
                     }
-                    if (!empty($debit_note_info)) {
-                        foreach ($debit_note_info as $debitnote) {
 
-                            $alldn_ids .= ',' . $debitnote->id;
+                    //Getting Child Invoice
+                    if (!empty($year_id)){
+                        $child_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$branch_str.") and site_id = '".$s_id."' and service_type = '".$service_type."' and parent_id = '".$parent->id."' and year_id = '".$year_id."' and status != '5' order by date ".$flow." ")->result();
+                        }else{
+                        $child_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$branch_str.") and site_id = '".$s_id."' and service_type = '".$service_type."' and parent_id = '".$parent->id."' and status != '5' order by date ".$flow." ")->result();
+                        }
+                    if (!empty($child_invoice)) {
+                        foreach ($child_invoice as $child) {
 
-                            $received = debitnote_received($debitnote->number);
-                            $received_tds = debitnote_tds_received($debitnote->number);
-                            $bal_amt = ($debitnote->totalamount - $received - $received_tds);
+
+                            $allinvoice_ids .= ',' . $child->id;
+                            $item_info = $this->db->query("SELECT is_sale FROM `tblitems_in` where  `rel_type` = 'invoice' and `rel_id` = '" . $child->id . "' ")->row();
+                            $type = '--';
+                            if (!empty($item_info)) {
+                                if ($item_info->is_sale == 0) {
+                                    $type = 'Rent';
+                                } elseif ($item_info->is_sale == 1) {
+                                    $type = 'Sale';
+                                }
+                            }
+
+                            if ($type == 'Rent') {
+                                $start_date = _d($child->date);
+                                $due_date = _d($child->duedate);
+                            } else {
+                                $start_date = '-';
+                                $due_date = '-';
+                            }
+                            $due_days = due_days($child->payment_due_date);
+
+
+                            $received = invoice_received($child->id);
+                            $received_tds = invoice_tds_received($child->id);
+
+                            $bal_amt = ($child->total - $received - $received_tds);
 
                             $ttl_recv += $received;
                             $ttl_tds += $received_tds;
-                            $ttl_amt += $debitnote->totalamount;
+                            $ttl_amt += $child->total;
                             $ttl_bal += $bal_amt;
                             $grand_bal += $bal_amt;
 
-                            $ttl_billing += $debitnote->totalamount;
+                            $ttl_billing += $child->total;
 
-                            $debitnote_payment = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '3' and p.debitnote_no = '" . $debitnote->number . "' and cp.status = 1 order by p.id asc ")->result();
+                            $payment_info = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '2' and p.invoiceid = '" . $child->id . "' and cp.status = 1 order by p.id asc ")->result();
 
                             // IF there is only one recored of payment which is made by cheque and cheque is not clear
-                            if (count($debitnote_payment) == 1) {
-                                if ($debitnote_payment[0]->payment_mode == 1 && $debitnote_payment[0]->chaque_status != 1) {
-                                    $debitnote_payment = '';
+                            if (count($payment_info) == 1) {
+                                if ($payment_info[0]->payment_mode == 1 && $payment_info[0]->chaque_status != 1) {
+                                    $payment_info = '';
                                 }
                             }
 
+                            //Getting site person
+                            $person_info = invoice_contact_person($child->id);
+                            $site_name = (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--';
 
-                            if (!empty($debitnote_payment)) {
+                            if (!empty($payment_info)) {
                                 $j = 0;
-                                foreach ($debitnote_payment as $r3) {
+                                foreach ($payment_info as $r1) {
 
-                                    $to_see = ($r3->payment_mode == 1 && $r3->chaque_status != 1) ? '0' : '1';
+                                    $to_see = ($r1->payment_mode == 1 && $r1->chaque_status != 1) ? '0' : '1';
 
                                     if ($to_see == 1) {
-
                                         $cols = "A";
                                         ++$siteheadingcol;
 
-                                        $ref_no = value_by_id('tblclientpayment', $r3->pay_id, 'reference_no');
+                                        $ref_no = value_by_id('tblclientpayment', $r1->pay_id, 'reference_no');
 
-                                        $receipt_date = _d($r3->date);
-                                        if ($r3->payment_mode == 1 && $r3->chaque_status == 1 && !empty($r3->chaque_clear_date)) {
-                                            $receipt_date = _d($r3->chaque_clear_date);
+                                        $receipt_date = _d($r1->date);
+                                        if ($r1->payment_mode == 1 && $r1->chaque_status == 1 && !empty($r1->chaque_clear_date)) {
+                                            $receipt_date = _d($r1->chaque_clear_date);
                                         }
 
-                                        $total = ($j == 0) ? $debitnote->totalamount : '--';
+                                        $total = ($j == 0) ? $child->total : '--';
                                         $ttl_received = ($j == 0) ? $received : '--';
                                         $bal = ($j == 0) ? number_format($bal_amt, 2, '.', '') : '--';
-                                        //$tds = ($r3->showInReconciliation == 2) ? $r3->tds_amt : '0.00';
+                                        $due_days = ($j == 0) ? $due_days : '--';
+                                        $pay_date = ($r1->amount > 0) ? $receipt_date : '--';
+                                        //$tds = ($r1->showInReconciliation == 2) ? $r1->tds_amt : '0.00';
 
-                                        if(!empty($data['printdata']['start_end_date']) && $service_type == 1) {
+                                        if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
 
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, 'DN');
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $start_date . ' - ' . $due_date);
                                             $cols = ($cols == "A") ? "B": "A";
                                         }
+                                        if(!empty($data['printdata']['inv_no'])){
 
-                                        if(!empty($data['printdata']['inv_no'])) {
-
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $debitnote->number);
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $child->number);
                                             $cols = ($cols == "B") ? "C": "B";
                                         }
+                                        if(!empty($data['printdata']['inv_date'])){
 
-                                        if(!empty($data['printdata']['inv_date'])) {
-
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, _d($debitnote->dabit_note_date));
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, _d($child->invoice_date));
                                             $cols = ($cols == "C") ? "D": "C";
                                         }
+                                        if(!empty($data['printdata']['inv_amt'])){
 
-                                        if(!empty($data['printdata']['inv_amt'])) {
-
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $total);
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $total);
                                             $cols = ($cols == "D") ? "E": "D";
                                         }
+                                        if(!empty($data['printdata']['ttl_recd'])){
 
-                                        if(!empty($data['printdata']['ttl_recd'])) {
-
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $ttl_received);
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $ttl_received);
                                             $cols = ($cols == "E") ? "F": "E";
                                         }
-                                        if(!empty($data['printdata']['inv_recd'])) {
+                                        if(!empty($data['printdata']['inv_recd'])){
 
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $r3->amount);
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $r1->amount);
                                             $cols = ($cols == "F") ? "G": "F";
                                         }
-                                        if(!empty($data['printdata']['tds'])) {
+                                        if(!empty($data['printdata']['tds'])){
 
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $r3->paid_tds_amt);
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $r1->paid_tds_amt);
                                             $cols = ($cols == "G") ? "H": "G";
                                         }
-                                        if(!empty($data['printdata']['balance'])) {
+                                        if(!empty($data['printdata']['balance'])){
 
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $bal);
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $bal);
                                             $cols = ($cols == "H") ? "I": "H";
                                         }
-                                        if(!empty($data['printdata']['receipt_date'])) {
+                                        if(!empty($data['printdata']['receipt_date'])){
 
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $receipt_date);
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $pay_date);
                                             $cols = ($cols == "I") ? "J": "I";
                                         }
-                                        if(!empty($data['printdata']['ref_details'])) {
+                                        if(!empty($data['printdata']['ref_details'])){
 
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $ref_no);
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $ref_no);
                                             $cols = ($cols == "J") ? "K": "J";
                                         }
-                                        if(!empty($data['printdata']['contact_person'])) {
+                                        if(!empty($data['printdata']['contact_person'])){
 
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $site_name);
                                             $cols = ($cols == "K") ? "L": "K";
                                         }
-                                        if(!empty($data['printdata']['due_days'])) {
+                                        if(!empty($data['printdata']['due_days'])){
 
-                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                                            $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $due_days);
                                         }
                                         $j++;
                                     }
@@ -2876,139 +2704,246 @@ class Invoices extends Admin_controller
                                 $cols = "A";
                                 ++$siteheadingcol;
 
-                                if(!empty($data['printdata']['start_end_date']) && $service_type == 1) {
+                                if(!empty($data['printdata']['start_end_date']) && $service_type == 1){
 
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, 'DN');
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $start_date . ' - ' . $due_date);
                                     $cols = ($cols == "A") ? "B": "A";
                                 }
 
-                                if(!empty($data['printdata']['inv_no'])) {
+                                if(!empty($data['printdata']['inv_no'])){
 
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $debitnote->number );
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $child->number);
                                     $cols = ($cols == "B") ? "C": "B";
                                 }
+                                if(!empty($data['printdata']['inv_date'])){
 
-                                if(!empty($data['printdata']['inv_date'])) {
-
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, _d($debitnote->dabit_note_date));
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, _d($child->invoice_date));
                                     $cols = ($cols == "C") ? "D": "C";
                                 }
+                                if(!empty($data['printdata']['inv_amt'])){
 
-                                if(!empty($data['printdata']['inv_amt'])) {
-
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $debitnote->totalamount);
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $child->total);
                                     $cols = ($cols == "D") ? "E": "D";
                                 }
+                                if(!empty($data['printdata']['ttl_recd'])){
 
-                                if(!empty($data['printdata']['ttl_recd'])) {
-
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
                                     $cols = ($cols == "E") ? "F": "E";
                                 }
-                                if(!empty($data['printdata']['inv_recd'])) {
+                                if(!empty($data['printdata']['inv_recd'])){
 
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
                                     $cols = ($cols == "F") ? "G": "F";
                                 }
-                                if(!empty($data['printdata']['tds'])) {
+                                if(!empty($data['printdata']['tds'])){
 
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '0.00');
                                     $cols = ($cols == "G") ? "H": "G";
                                 }
-                                if(!empty($data['printdata']['balance'])) {
+                                if(!empty($data['printdata']['balance'])){
 
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, number_format($bal_amt, 2, '.', ''));
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, number_format($bal_amt, 2, '.', ''));
                                     $cols = ($cols == "H") ? "I": "H";
                                 }
-                                if(!empty($data['printdata']['receipt_date'])) {
+                                if(!empty($data['printdata']['receipt_date'])){
 
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '--');
                                     $cols = ($cols == "I") ? "J": "I";
                                 }
-                                if(!empty($data['printdata']['ref_details'])) {
+                                if(!empty($data['printdata']['ref_details'])){
 
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, '--');
                                     $cols = ($cols == "J") ? "K": "J";
                                 }
-                                if(!empty($data['printdata']['contact_person'])) {
+                                if(!empty($data['printdata']['contact_person'])){
 
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $site_name);
                                     $cols = ($cols == "K") ? "L": "K";
                                 }
-                                if(!empty($data['printdata']['due_days'])) {
+                                if(!empty($data['printdata']['due_days'])){
 
-                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                                    $objPHPExcel->getActiveSheet()->SetCellValue($cols.$siteheadingcol, $due_days);
                                 }
                             }
                         }
                     }
+                }
 
-                    //Getting Credit Notes againt parent invoice
-                    if (!empty($year_id)){
-                        $credit_note_info = $this->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' and year_id = '".$year_id."' order by date ".$flow." ")->result();
-                      }else{
-                        $credit_note_info = $this->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by date ".$flow." ")->result();
-                      }
-                    if (!empty($credit_note_info)) {
-                        foreach ($credit_note_info as $creditnote) {
+                //Getting Debit Notes againt parent invoice
+                if (!empty($year_id)){
+                    $debit_note_info = $this->db->query("SELECT * FROM tbldebitnote where invoice_id > '0' and clientid IN (".$branch_str.") and year_id = '".$year_id."' and status = '1' order by dabit_note_date ".$flow." ")->result();
+                }else{
+                    $debit_note_info = $this->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by dabit_note_date ".$flow." ")->result();
+                }
+                if (!empty($debit_note_info)) {
+                    foreach ($debit_note_info as $debitnote) {
 
+                        $alldn_ids .= ',' . $debitnote->id;
+
+                        $received = debitnote_received($debitnote->number);
+                        $received_tds = debitnote_tds_received($debitnote->number);
+                        $bal_amt = ($debitnote->totalamount - $received - $received_tds);
+
+                        $ttl_recv += $received;
+                        $ttl_tds += $received_tds;
+                        $ttl_amt += $debitnote->totalamount;
+                        $ttl_bal += $bal_amt;
+                        $grand_bal += $bal_amt;
+
+                        $ttl_billing += $debitnote->totalamount;
+
+                        $debitnote_payment = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '3' and p.debitnote_no = '" . $debitnote->number . "' and cp.status = 1 order by p.id asc ")->result();
+
+                        // IF there is only one recored of payment which is made by cheque and cheque is not clear
+                        if (count($debitnote_payment) == 1) {
+                            if ($debitnote_payment[0]->payment_mode == 1 && $debitnote_payment[0]->chaque_status != 1) {
+                                $debitnote_payment = '';
+                            }
+                        }
+
+
+                        if (!empty($debitnote_payment)) {
+                            $j = 0;
+                            foreach ($debitnote_payment as $r3) {
+
+                                $to_see = ($r3->payment_mode == 1 && $r3->chaque_status != 1) ? '0' : '1';
+
+                                if ($to_see == 1) {
+
+                                    $cols = "A";
+                                    ++$siteheadingcol;
+
+                                    $ref_no = value_by_id('tblclientpayment', $r3->pay_id, 'reference_no');
+
+                                    $receipt_date = _d($r3->date);
+                                    if ($r3->payment_mode == 1 && $r3->chaque_status == 1 && !empty($r3->chaque_clear_date)) {
+                                        $receipt_date = _d($r3->chaque_clear_date);
+                                    }
+
+                                    $total = ($j == 0) ? $debitnote->totalamount : '--';
+                                    $ttl_received = ($j == 0) ? $received : '--';
+                                    $bal = ($j == 0) ? number_format($bal_amt, 2, '.', '') : '--';
+                                    //$tds = ($r3->showInReconciliation == 2) ? $r3->tds_amt : '0.00';
+
+                                    if(!empty($data['printdata']['start_end_date']) && $service_type == 1) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, 'DN');
+                                        $cols = ($cols == "A") ? "B": "A";
+                                    }
+
+                                    if(!empty($data['printdata']['inv_no'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $debitnote->number);
+                                        $cols = ($cols == "B") ? "C": "B";
+                                    }
+
+                                    if(!empty($data['printdata']['inv_date'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, _d($debitnote->dabit_note_date));
+                                        $cols = ($cols == "C") ? "D": "C";
+                                    }
+
+                                    if(!empty($data['printdata']['inv_amt'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $total);
+                                        $cols = ($cols == "D") ? "E": "D";
+                                    }
+
+                                    if(!empty($data['printdata']['ttl_recd'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $ttl_received);
+                                        $cols = ($cols == "E") ? "F": "E";
+                                    }
+                                    if(!empty($data['printdata']['inv_recd'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $r3->amount);
+                                        $cols = ($cols == "F") ? "G": "F";
+                                    }
+                                    if(!empty($data['printdata']['tds'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $r3->paid_tds_amt);
+                                        $cols = ($cols == "G") ? "H": "G";
+                                    }
+                                    if(!empty($data['printdata']['balance'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $bal);
+                                        $cols = ($cols == "H") ? "I": "H";
+                                    }
+                                    if(!empty($data['printdata']['receipt_date'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $receipt_date);
+                                        $cols = ($cols == "I") ? "J": "I";
+                                    }
+                                    if(!empty($data['printdata']['ref_details'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $ref_no);
+                                        $cols = ($cols == "J") ? "K": "J";
+                                    }
+                                    if(!empty($data['printdata']['contact_person'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                                        $cols = ($cols == "K") ? "L": "K";
+                                    }
+                                    if(!empty($data['printdata']['due_days'])) {
+
+                                        $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                                    }
+                                    $j++;
+                                }
+                            }
+                        } else {
                             $cols = "A";
                             ++$siteheadingcol;
-                            $ttl_recv += $creditnote->totalamount;
-
-                            $ttl_bal -= $creditnote->totalamount;
-                            $grand_bal -= $creditnote->totalamount;
 
                             if(!empty($data['printdata']['start_end_date']) && $service_type == 1) {
 
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, 'CN');
+                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, 'DN');
                                 $cols = ($cols == "A") ? "B": "A";
                             }
+
                             if(!empty($data['printdata']['inv_no'])) {
 
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $creditnote->number );
+                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $debitnote->number );
                                 $cols = ($cols == "B") ? "C": "B";
                             }
+
                             if(!empty($data['printdata']['inv_date'])) {
 
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, _d($creditnote->date));
+                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, _d($debitnote->dabit_note_date));
                                 $cols = ($cols == "C") ? "D": "C";
                             }
+
                             if(!empty($data['printdata']['inv_amt'])) {
 
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
+                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $debitnote->totalamount);
                                 $cols = ($cols == "D") ? "E": "D";
                             }
 
                             if(!empty($data['printdata']['ttl_recd'])) {
 
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $creditnote->totalamount);
+                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
                                 $cols = ($cols == "E") ? "F": "E";
                             }
-
                             if(!empty($data['printdata']['inv_recd'])) {
 
                                 $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
                                 $cols = ($cols == "F") ? "G": "F";
                             }
-                            if(!empty($data['printdata']['balance'])) {
-
-                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
-                                $cols = ($cols == "G") ? "I": "G";
-                            }
-
                             if(!empty($data['printdata']['tds'])) {
 
                                 $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
-                                $cols = ($cols == "I") ? "H": "I";
+                                $cols = ($cols == "G") ? "H": "G";
                             }
+                            if(!empty($data['printdata']['balance'])) {
 
+                                $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, number_format($bal_amt, 2, '.', ''));
+                                $cols = ($cols == "H") ? "I": "H";
+                            }
                             if(!empty($data['printdata']['receipt_date'])) {
 
                                 $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
-                                $cols = ($cols == "H") ? "J": "H";
+                                $cols = ($cols == "I") ? "J": "I";
                             }
-
                             if(!empty($data['printdata']['ref_details'])) {
 
                                 $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
@@ -3025,299 +2960,395 @@ class Invoices extends Admin_controller
                             }
                         }
                     }
-
-                     ++$siteheadingcol;
-                    $colspan = ($service_type == 1) ? "C" : "B" ;
-                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:".$colspan.$siteheadingcol);
-                    $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol")->getStyle("A$siteheadingcol");
-                    $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "TOTAL")->getStyle("A$siteheadingcol:".$colspan.$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-                    $colspan = ($colspan == "C") ? "D" : "C" ;
-                    $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_amt, 2, '.', ''));
-                    $colspan = ($colspan == "D") ? "E" : "D" ;
-                    $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_recv, 2, '.', ''));
-                    $colspan = ($colspan == "E") ? "F" : "E" ;
-                    $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_recv, 2, '.', ''));
-
-                    $colspan = ($colspan == "F") ? "G" : "F" ;
-                    if(!empty($data['printdata']['tds'])){
-                        $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_tds, 2, '.', ''));
-                        $colspan = ($colspan == "G") ? "H" : "G" ;
-                    }
-                    $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_bal, 2, '.', ''));
-
-
-                    $siteheadingcol++;
-                    $grand_recevied += ($ttl_recv + $ttl_tds);
                 }
 
-
-            }
-
-            //Payment Debit Notes
-            $financialyearwhere = (!empty($year_id)) ? 'and dn.year_id='.$year_id : '';
-            $payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 ".$financialyearwhere." GROUP by dn.id ")->result();
-            if(empty($payment_debitnote)){
-                $payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 ".$financialyearwhere." GROUP by dn.id ")->result();
-            }
-            if(!empty($payment_debitnote)){
-                ++ $siteheadingcol;
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:I$siteheadingcol");
-                $objPHPExcel->getActiveSheet()->getStyle("A$siteheadingcol:I$siteheadingcol")->getFont()->setBold(true);
-                $objPHPExcel->getActiveSheet()->getStyle("A$siteheadingcol:I$siteheadingcol")->applyFromArray($styleArray);
-                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Delay in Payment")->getStyle("A$siteheadingcol:I$siteheadingcol")->getAlignment()->setHorizontal('center');
-
-                $ttl_tds = $ttl_bal = $ttl_recv = $ttl_amt = 0;
-                ++ $siteheadingcol;
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol, 'Details')->getStyle("A".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("B".$siteheadingcol, 'DN Number')->getStyle("B".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("C".$siteheadingcol, 'DN Date')->getStyle("C".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("D".$siteheadingcol, 'Amount')->getStyle("D".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("E".$siteheadingcol, 'Payment recd')->getStyle("E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol, 'TDS')->getStyle("F".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("G".$siteheadingcol, 'Payment Balance')->getStyle("G".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("H".$siteheadingcol, 'Payment Receipt Date')->getStyle("H".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("I".$siteheadingcol, 'Payment Ref Detail')->getStyle("I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-
-                foreach ($payment_debitnote as $debitnote) {
-
-                    $received = debitnote_received($debitnote->number);
-                    $received_tds = debitnote_tds_received($debitnote->number);
-                    $bal_amt = ($debitnote->amount - $received - $received_tds);
-
-                    $ttl_recv += $received;
-                    $ttl_amt += $debitnote->amount;
-                    $ttl_bal += $bal_amt;
-                    $grand_bal += $bal_amt;
-
-                    $ttl_billing += $debitnote->amount;
-
-                    $debitnote_payment = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '3' and p.debitnote_no = '".$debitnote->number."' and cp.status = 1 order by p.id asc ")->result();
-                    // IF there is only one recored of payment which is made by cheque and cheque is not clear
-                    if(count($debitnote_payment) == 1){
-                        if($debitnote_payment[0]->payment_mode == 1 && $debitnote_payment[0]->chaque_status != 1){
-                            $debitnote_payment = '';
-                        }
+                //Getting Credit Notes againt parent invoice
+                if (!empty($year_id)){
+                    $credit_note_info = $this->db->query("SELECT * FROM tblcreditnote where  invoice_id > '0' and clientid IN (".$branch_str.") and status = '1' and year_id = '".$year_id."' order by date ".$flow." ")->result();
+                    }else{
+                    $credit_note_info = $this->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by date ".$flow." ")->result();
                     }
-                    $j = 0;
-                    $total = ($j == 0) ? $debitnote->amount : '--';
-                    $bal = ($j == 0) ? number_format($bal_amt, 2, '.', '') : '--';
-                    if (!empty($debitnote_payment)) {
+                if (!empty($credit_note_info)) {
+                    foreach ($credit_note_info as $creditnote) {
 
-                        foreach ($debitnote_payment as $r4) {
+                        $cols = "A";
+                        ++$siteheadingcol;
+                        $ttl_recv += $creditnote->totalamount;
 
-                            $to_see = ($r4->payment_mode == 1 && $r4->chaque_status != 1) ? '0' : '1';
-                            if ($to_see == 1) {
-                                ++ $siteheadingcol;
-                                $ref_no = value_by_id('tblclientpayment', $r4->pay_id, 'reference_no');
-                                //$tds = ($r4->showInReconciliation == 2) ? $r4->tds_amt : '0.00';
-                                $receipt_date = _d($r4->date);
-                                if ($r4->payment_mode == 1 && $r4->chaque_status == 1 && !empty($r4->chaque_clear_date)) {
-                                    $receipt_date = _d($r4->chaque_clear_date);
-                                }
-                                $objPHPExcel->getActiveSheet()->SetCellValue("A" . $siteheadingcol, 'DN (Delay in Payment)');
-                                $objPHPExcel->getActiveSheet()->SetCellValue("B" . $siteheadingcol, $debitnote->number);
-                                $objPHPExcel->getActiveSheet()->SetCellValue("C" . $siteheadingcol, _d($debitnote->date));
-                                $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, $total);
-                                $objPHPExcel->getActiveSheet()->SetCellValue("E" . $siteheadingcol, $r4->amount);
-                                $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, $r4->paid_tds_amt);
-                                $objPHPExcel->getActiveSheet()->SetCellValue("G" . $siteheadingcol, $bal);
-                                $objPHPExcel->getActiveSheet()->SetCellValue("H" . $siteheadingcol, $receipt_date);
-                                $objPHPExcel->getActiveSheet()->SetCellValue("I" . $siteheadingcol, $ref_no);
-                                $j++;
-                            }
+                        $ttl_bal -= $creditnote->totalamount;
+                        $grand_bal -= $creditnote->totalamount;
+
+                        if(!empty($data['printdata']['start_end_date']) && $service_type == 1) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, 'CN');
+                            $cols = ($cols == "A") ? "B": "A";
                         }
-                    } else {
-                        ++ $siteheadingcol;
+                        if(!empty($data['printdata']['inv_no'])) {
 
-                        $objPHPExcel->getActiveSheet()->SetCellValue("A" . $siteheadingcol, 'DN (Delay in Payment)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue("B" . $siteheadingcol, $debitnote->number);
-                        $objPHPExcel->getActiveSheet()->SetCellValue("C" . $siteheadingcol, _d($debitnote->date));
-                        $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, $total);
-                        $objPHPExcel->getActiveSheet()->SetCellValue("E" . $siteheadingcol, '0.00');
-                        $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, '--');
-                        $objPHPExcel->getActiveSheet()->SetCellValue("G" . $siteheadingcol, $bal);
-                        $objPHPExcel->getActiveSheet()->SetCellValue("H" . $siteheadingcol, '--');
-                        $objPHPExcel->getActiveSheet()->SetCellValue("I" . $siteheadingcol, '--');
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $creditnote->number );
+                            $cols = ($cols == "B") ? "C": "B";
+                        }
+                        if(!empty($data['printdata']['inv_date'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, _d($creditnote->date));
+                            $cols = ($cols == "C") ? "D": "C";
+                        }
+                        if(!empty($data['printdata']['inv_amt'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
+                            $cols = ($cols == "D") ? "E": "D";
+                        }
+
+                        if(!empty($data['printdata']['ttl_recd'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, $creditnote->totalamount);
+                            $cols = ($cols == "E") ? "F": "E";
+                        }
+
+                        if(!empty($data['printdata']['inv_recd'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
+                            $cols = ($cols == "F") ? "G": "F";
+                        }
+                        if(!empty($data['printdata']['balance'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
+                            $cols = ($cols == "G") ? "I": "G";
+                        }
+
+                        if(!empty($data['printdata']['tds'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '0.00');
+                            $cols = ($cols == "I") ? "H": "I";
+                        }
+
+                        if(!empty($data['printdata']['receipt_date'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                            $cols = ($cols == "H") ? "J": "H";
+                        }
+
+                        if(!empty($data['printdata']['ref_details'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                            $cols = ($cols == "J") ? "K": "J";
+                        }
+                        if(!empty($data['printdata']['contact_person'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                            $cols = ($cols == "K") ? "L": "K";
+                        }
+                        if(!empty($data['printdata']['due_days'])) {
+
+                            $objPHPExcel->getActiveSheet()->SetCellValue($cols . $siteheadingcol, '--');
+                        }
                     }
                 }
 
-                ++ $siteheadingcol;
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."C".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "TOTAL")->getStyle("A$siteheadingcol:"."C".$siteheadingcol)->getAlignment()->setHorizontal('center');
-                $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, number_format($ttl_amt, 2, '.', ''));
-                $objPHPExcel->getActiveSheet()->SetCellValue("E" . $siteheadingcol, number_format($ttl_recv, 2, '.', ''));
-                $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($ttl_tds, 2, '.', ''));
-                $objPHPExcel->getActiveSheet()->SetCellValue("G" . $siteheadingcol, number_format($ttl_bal, 2, '.', ''));
-                $objPHPExcel->getActiveSheet()->SetCellValue("H" . $siteheadingcol, "");
-                $objPHPExcel->getActiveSheet()->SetCellValue("I" . $siteheadingcol, "");
+                    ++$siteheadingcol;
+                $colspan = ($service_type == 1) ? "C" : "B" ;
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:".$colspan.$siteheadingcol);
+                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol")->getStyle("A$siteheadingcol");
+                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "TOTAL")->getStyle("A$siteheadingcol:".$colspan.$siteheadingcol)->getAlignment()->setHorizontal('center');
 
+                $colspan = ($colspan == "C") ? "D" : "C" ;
+                $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_amt, 2, '.', ''));
+                $colspan = ($colspan == "D") ? "E" : "D" ;
+                $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_recv, 2, '.', ''));
+                $colspan = ($colspan == "E") ? "F" : "E" ;
+                $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_recv, 2, '.', ''));
+
+                $colspan = ($colspan == "F") ? "G" : "F" ;
+                if(!empty($data['printdata']['tds'])){
+                    $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_tds, 2, '.', ''));
+                    $colspan = ($colspan == "G") ? "H" : "G" ;
+                }
+                $objPHPExcel->getActiveSheet()->SetCellValue($colspan.$siteheadingcol, number_format($ttl_bal, 2, '.', ''));
+                
+
+                $siteheadingcol++;
                 $grand_recevied += ($ttl_recv + $ttl_tds);
             }
 
-            $ondatefilter = '';
-            if (!empty($year_id)){
-                $from_date = value_by_id("tblfinancialyear", $year_id, "from_date");
-                $to_date = value_by_id("tblfinancialyear", $year_id, "to_date");
-                $ondatefilter = 'and date BETWEEN '.$from_date.' and '.$to_date;
-            }
-            $onaccout_info = $this->db->query("SELECT * FROM `tblclientpayment` where client_id IN (".$data['client_branch'].") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ".$ondatefilter." ")->result();
 
-            // IF there is only one recored of payment which is made by cheque and cheque is not clear
-            if(count($onaccout_info) == 1){
-                if($onaccout_info[0]->payment_mode == 1 && $onaccout_info[0]->chaque_status != 1){
-                    $onaccout_info = '';
-                }
-            }
-            if(!empty($onaccout_info)){
+        }
 
-                ++ $siteheadingcol;
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:I$siteheadingcol");
-                $objPHPExcel->getActiveSheet()->getStyle("A$siteheadingcol:I$siteheadingcol")->getFont()->setBold(true);
-                $objPHPExcel->getActiveSheet()->getStyle("A$siteheadingcol:I$siteheadingcol")->applyFromArray($styleArray);
-                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "On Account Details")->getStyle("A$siteheadingcol:I$siteheadingcol")->getAlignment()->setHorizontal('center');
+        //Payment Debit Notes
+        $financialyearwhere = (!empty($year_id)) ? 'and dn.year_id='.$year_id : '';
+        $payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 and dn.status > 0 ".$financialyearwhere." GROUP by dn.id ")->result();
+        if(empty($payment_debitnote)){
+            $payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 and dn.status > 0 ".$financialyearwhere." GROUP by dn.id ")->result();
+        }
+        if(!empty($payment_debitnote)){
+            ++ $siteheadingcol;
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:I$siteheadingcol");
+            $objPHPExcel->getActiveSheet()->getStyle("A$siteheadingcol:I$siteheadingcol")->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle("A$siteheadingcol:I$siteheadingcol")->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Delay in Payment")->getStyle("A$siteheadingcol:I$siteheadingcol")->getAlignment()->setHorizontal('center');
 
-                ++$siteheadingcol;
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol, 'Sr. No')->getStyle("A".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("B".$siteheadingcol, 'Date')->getStyle("B".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("C".$siteheadingcol, 'Reference No.')->getStyle("C".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("D".$siteheadingcol, 'Amount')->getStyle("D".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $ttl_onaccount = 0;
-                foreach ($onaccout_info as $key => $on_acc) {
-                    $to_see = ($on_acc->payment_mode == 1 && $on_acc->chaque_status != 1) ? '0' : '1';
-                    if($to_see == 1){
-                        ++$siteheadingcol;
-                        $ttl_onaccount += $on_acc->ttl_amt;
-                        $objPHPExcel->getActiveSheet()->SetCellValue("A" . $siteheadingcol, ++$key);
-                        $objPHPExcel->getActiveSheet()->SetCellValue("B" . $siteheadingcol, _d($on_acc->date));
-                        $objPHPExcel->getActiveSheet()->SetCellValue("C" . $siteheadingcol, $on_acc->reference_no);
-                        $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, $on_acc->ttl_amt);
+            $ttl_tds = $ttl_bal = $ttl_recv = $ttl_amt = 0;
+            ++ $siteheadingcol;
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol, 'Details')->getStyle("A".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("B".$siteheadingcol, 'DN Number')->getStyle("B".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("C".$siteheadingcol, 'DN Date')->getStyle("C".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("D".$siteheadingcol, 'Amount')->getStyle("D".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("E".$siteheadingcol, 'Payment recd')->getStyle("E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol, 'TDS')->getStyle("F".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("G".$siteheadingcol, 'Payment Balance')->getStyle("G".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("H".$siteheadingcol, 'Payment Receipt Date')->getStyle("H".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("I".$siteheadingcol, 'Payment Ref Detail')->getStyle("I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
 
-                   }
-                }
-                ++$siteheadingcol;
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."C".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "TOTAL")->getStyle("A$siteheadingcol:"."C".$siteheadingcol)->getAlignment()->setHorizontal('center');
-                $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, number_format($ttl_onaccount, 2, '.', ''));
-            }
+            foreach ($payment_debitnote as $debitnote) {
 
-            $datefilter = $refubddatefilter = $createdatefilter = '';
-            if (!empty($year_id)){
-                $from_date = value_by_id("tblfinancialyear", $year_id, "from_date");
-                $to_date = value_by_id("tblfinancialyear", $year_id, "to_date");
-                $datefilter = 'and date BETWEEN '.$from_date.' and '.$to_date;
-                $refubddatefilter = 'and r.date BETWEEN '.$from_date.' and '.$to_date;
-                $createdatefilter = 'and created_date BETWEEN '.$from_date.' and '.$to_date;
-            }
-            //$onaccout_amt = $this->db->query("SELECT COALESCE(SUM(ttl_amt),0) AS ttl_amount FROM `tblclientpayment`  where client_id IN (".$data['client_branch'].") and payment_behalf = 1 and service_type = '".$service_type."' ")->row()->ttl_amount;
-            $onaccout_amt = 0;
-            $onaccout_amt_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$data['client_branch'].") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ".$datefilter."")->result();
-            if(!empty($onaccout_amt_info)){
-                foreach ($onaccout_amt_info as $on_am) {
-                    $to_see = ($on_am->payment_mode == 1 && $on_am->chaque_status != 1) ? '0' : '1';
-                    if($to_see == 1){
-                    $onaccout_amt += $on_am->ttl_amt;
+                $received = debitnote_received($debitnote->number);
+                $received_tds = debitnote_tds_received($debitnote->number);
+                $bal_amt = ($debitnote->amount - $received - $received_tds);
+
+                $ttl_recv += $received;
+                $ttl_amt += $debitnote->amount;
+                $ttl_bal += $bal_amt;
+                $grand_bal += $bal_amt;
+
+                $ttl_billing += $debitnote->amount;
+
+                $debitnote_payment = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '3' and p.debitnote_no = '".$debitnote->number."' and cp.status = 1 order by p.id asc ")->result();
+                // IF there is only one recored of payment which is made by cheque and cheque is not clear
+                if(count($debitnote_payment) == 1){
+                    if($debitnote_payment[0]->payment_mode == 1 && $debitnote_payment[0]->chaque_status != 1){
+                        $debitnote_payment = '';
                     }
                 }
-            }
+                $j = 0;
+                $total = ($j == 0) ? $debitnote->amount : '--';
+                $bal = ($j == 0) ? number_format($bal_amt, 2, '.', '') : '--';
+                if (!empty($debitnote_payment)) {
 
-            $waveoff_amt = $this->db->query("SELECT COALESCE(SUM(amount),0) AS ttl_amount FROM `tblclientwaveoff`  where client_id IN (".$data['client_branch'].") and status = 1 and service_type = '".$service_type."' ".$createdatefilter." ")->row()->ttl_amount;
-            $waveoff_info = $this->db->query("SELECT * FROM `tblclientwaveoff`  where client_id IN (".$data['client_branch'].") and status = 1 and service_type = '".$service_type."' ".$createdatefilter." ")->result();
-            $clientrefund_amt = $this->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (".$data['client_branch'].") and pd.utr_no != '' and service_type = '".$service_type."' ".$refubddatefilter." order by r.id desc")->row()->ttl_amount;
+                    foreach ($debitnote_payment as $r4) {
 
-            $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt));
+                        $to_see = ($r4->payment_mode == 1 && $r4->chaque_status != 1) ? '0' : '1';
+                        if ($to_see == 1) {
+                            ++ $siteheadingcol;
+                            $ref_no = value_by_id('tblclientpayment', $r4->pay_id, 'reference_no');
+                            //$tds = ($r4->showInReconciliation == 2) ? $r4->tds_amt : '0.00';
+                            $receipt_date = _d($r4->date);
+                            if ($r4->payment_mode == 1 && $r4->chaque_status == 1 && !empty($r4->chaque_clear_date)) {
+                                $receipt_date = _d($r4->chaque_clear_date);
+                            }
+                            $objPHPExcel->getActiveSheet()->SetCellValue("A" . $siteheadingcol, 'DN (Delay in Payment)');
+                            $objPHPExcel->getActiveSheet()->SetCellValue("B" . $siteheadingcol, $debitnote->number);
+                            $objPHPExcel->getActiveSheet()->SetCellValue("C" . $siteheadingcol, _d($debitnote->date));
+                            $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, $total);
+                            $objPHPExcel->getActiveSheet()->SetCellValue("E" . $siteheadingcol, $r4->amount);
+                            $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, $r4->paid_tds_amt);
+                            $objPHPExcel->getActiveSheet()->SetCellValue("G" . $siteheadingcol, $bal);
+                            $objPHPExcel->getActiveSheet()->SetCellValue("H" . $siteheadingcol, $receipt_date);
+                            $objPHPExcel->getActiveSheet()->SetCellValue("I" . $siteheadingcol, $ref_no);
+                            $j++;
+                        }
+                    }
+                } else {
+                    ++ $siteheadingcol;
 
-            ++$siteheadingcol;
-            ++$siteheadingcol;
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Total Billing")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($ttl_billing, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-            ++$siteheadingcol;
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Total Recevied")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($grand_recevied, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-            ++$siteheadingcol;
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Total Balance")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($grand_bal, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-            ++$siteheadingcol;
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Onaccount")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
-                $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, "- ".number_format($onaccout_amt, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-            if (!empty($waveoff_info)) {
-                foreach ($waveoff_info as $wave_row) {
-                    $waveoff_title = (!empty($wave_row->remark)) ? $wave_row->remark : 'Waveoff';
-                    $waveoff_sign = ($wave_row->amount > 0) ? '-' : '+';
-                    ++$siteheadingcol;
-                    $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
-                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
-                    $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", $waveoff_sign . ' ' . $waveoff_title)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
-
-                    $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
-                    $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($wave_row->amount, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("A" . $siteheadingcol, 'DN (Delay in Payment)');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("B" . $siteheadingcol, $debitnote->number);
+                    $objPHPExcel->getActiveSheet()->SetCellValue("C" . $siteheadingcol, _d($debitnote->date));
+                    $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, $total);
+                    $objPHPExcel->getActiveSheet()->SetCellValue("E" . $siteheadingcol, '0.00');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, '--');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("G" . $siteheadingcol, $bal);
+                    $objPHPExcel->getActiveSheet()->SetCellValue("H" . $siteheadingcol, '--');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("I" . $siteheadingcol, '--');
                 }
             }
 
+            ++ $siteheadingcol;
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."C".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "TOTAL")->getStyle("A$siteheadingcol:"."C".$siteheadingcol)->getAlignment()->setHorizontal('center');
+            $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, number_format($ttl_amt, 2, '.', ''));
+            $objPHPExcel->getActiveSheet()->SetCellValue("E" . $siteheadingcol, number_format($ttl_recv, 2, '.', ''));
+            $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($ttl_tds, 2, '.', ''));
+            $objPHPExcel->getActiveSheet()->SetCellValue("G" . $siteheadingcol, number_format($ttl_bal, 2, '.', ''));
+            $objPHPExcel->getActiveSheet()->SetCellValue("H" . $siteheadingcol, "");
+            $objPHPExcel->getActiveSheet()->SetCellValue("I" . $siteheadingcol, "");
 
-            if ($clientrefund_amt > 0){
-               ++$siteheadingcol;
-               $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
-               $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
-               $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-               $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Client Refund")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+            $grand_recevied += ($ttl_recv + $ttl_tds);
+        }
 
-               $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
-               $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-               $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($clientrefund_amt, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
+        $ondatefilter = '';
+        if (!empty($year_id)){
+            $from_date = value_by_id("tblfinancialyear", $year_id, "from_date");
+            $to_date = value_by_id("tblfinancialyear", $year_id, "to_date");
+            $ondatefilter = 'and date BETWEEN '.$from_date.' and '.$to_date;
+        }
+        $onaccout_info = $this->db->query("SELECT * FROM `tblclientpayment` where client_id IN (".$data['client_branch'].") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ".$ondatefilter." ")->result();
 
+        // IF there is only one recored of payment which is made by cheque and cheque is not clear
+        if(count($onaccout_info) == 1){
+            if($onaccout_info[0]->payment_mode == 1 && $onaccout_info[0]->chaque_status != 1){
+                $onaccout_info = '';
             }
-             ++$siteheadingcol;
+        }
+        if(!empty($onaccout_info)){
+
+            ++ $siteheadingcol;
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:I$siteheadingcol");
+            $objPHPExcel->getActiveSheet()->getStyle("A$siteheadingcol:I$siteheadingcol")->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle("A$siteheadingcol:I$siteheadingcol")->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "On Account Details")->getStyle("A$siteheadingcol:I$siteheadingcol")->getAlignment()->setHorizontal('center');
+
+            ++$siteheadingcol;
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol, 'Sr. No')->getStyle("A".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("B".$siteheadingcol, 'Date')->getStyle("B".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("C".$siteheadingcol, 'Reference No.')->getStyle("C".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("D".$siteheadingcol, 'Amount')->getStyle("D".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $ttl_onaccount = 0;
+            foreach ($onaccout_info as $key => $on_acc) {
+                $to_see = ($on_acc->payment_mode == 1 && $on_acc->chaque_status != 1) ? '0' : '1';
+                if($to_see == 1){
+                    ++$siteheadingcol;
+                    $ttl_onaccount += $on_acc->ttl_amt;
+                    $objPHPExcel->getActiveSheet()->SetCellValue("A" . $siteheadingcol, ++$key);
+                    $objPHPExcel->getActiveSheet()->SetCellValue("B" . $siteheadingcol, _d($on_acc->date));
+                    $objPHPExcel->getActiveSheet()->SetCellValue("C" . $siteheadingcol, $on_acc->reference_no);
+                    $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, $on_acc->ttl_amt);
+
+                }
+            }
+            ++$siteheadingcol;
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."C".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "TOTAL")->getStyle("A$siteheadingcol:"."C".$siteheadingcol)->getAlignment()->setHorizontal('center');
+            $objPHPExcel->getActiveSheet()->SetCellValue("D" . $siteheadingcol, number_format($ttl_onaccount, 2, '.', ''));
+        }
+
+        $datefilter = $refubddatefilter = $createdatefilter = '';
+        if (!empty($year_id)){
+            $from_date = value_by_id("tblfinancialyear", $year_id, "from_date");
+            $to_date = value_by_id("tblfinancialyear", $year_id, "to_date");
+            $datefilter = 'and date BETWEEN '.$from_date.' and '.$to_date;
+            $refubddatefilter = 'and r.date BETWEEN '.$from_date.' and '.$to_date;
+            $createdatefilter = 'and created_date BETWEEN '.$from_date.' and '.$to_date;
+        }
+        //$onaccout_amt = $this->db->query("SELECT COALESCE(SUM(ttl_amt),0) AS ttl_amount FROM `tblclientpayment`  where client_id IN (".$data['client_branch'].") and payment_behalf = 1 and service_type = '".$service_type."' ")->row()->ttl_amount;
+        $onaccout_amt = 0;
+        $onaccout_amt_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$data['client_branch'].") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ".$datefilter."")->result();
+        if(!empty($onaccout_amt_info)){
+            foreach ($onaccout_amt_info as $on_am) {
+                $to_see = ($on_am->payment_mode == 1 && $on_am->chaque_status != 1) ? '0' : '1';
+                if($to_see == 1){
+                $onaccout_amt += $on_am->ttl_amt;
+                }
+            }
+        }
+
+        $waveoff_amt = $this->db->query("SELECT COALESCE(SUM(amount),0) AS ttl_amount FROM `tblclientwaveoff`  where client_id IN (".$data['client_branch'].") and status = 1 and service_type = '".$service_type."' ".$createdatefilter." ")->row()->ttl_amount;
+        $waveoff_info = $this->db->query("SELECT * FROM `tblclientwaveoff`  where client_id IN (".$data['client_branch'].") and status = 1 and service_type = '".$service_type."' ".$createdatefilter." ")->result();
+        $clientrefund_amt = $this->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (".$data['client_branch'].") and pd.utr_no != '' and service_type = '".$service_type."' ".$refubddatefilter." order by r.id desc")->row()->ttl_amount;
+
+        $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt) - $vendor_outstanding_amount);
+
+        ++$siteheadingcol;
+        ++$siteheadingcol;
             $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
             $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Final Balance")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Total Billing")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
 
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
             $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-            $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($final_balance, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
+            $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($ttl_billing, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
 
-            foreach(range('A','Y') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-                    ->setAutoSize(true);
+        ++$siteheadingcol;
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Total Recevied")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($grand_recevied, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+        ++$siteheadingcol;
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Total Balance")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($grand_bal, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+        ++$siteheadingcol;
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Onaccount")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, "- ".number_format($onaccout_amt, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+        if (!empty($waveoff_info)) {
+            foreach ($waveoff_info as $wave_row) {
+                $waveoff_title = (!empty($wave_row->remark)) ? $wave_row->remark : 'Waveoff';
+                $waveoff_sign = ($wave_row->amount > 0) ? '-' : '+';
+                ++$siteheadingcol;
+                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
+                $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", $waveoff_sign . ' ' . $waveoff_title)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
+                $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+                $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($wave_row->amount, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
             }
+        }
 
-            $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
-            $objWriter->save($file_name);
-            // download file
-            header("Content-Type: application/vnd.ms-excel");
-            redirect(site_url().$file_name);
+
+        if ($clientrefund_amt > 0){
+            ++$siteheadingcol;
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Client Refund")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($clientrefund_amt, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
+        }
+
+        if ($vendor_outstanding_amount > 0){
+                ++$siteheadingcol;
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "- Vendor Outstanding")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
+            $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+            $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($vendor_outstanding_amount, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
+        }
+        
+        ++$siteheadingcol;
+        $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
+        $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+        $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Final Balance")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
+        $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+        $objPHPExcel->getActiveSheet()->SetCellValue("F" . $siteheadingcol, number_format($final_balance, 2, '.', ''))->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getAlignment()->setHorizontal('center');
+
+        foreach(range('A','Y') as $columnID) {
+            $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                ->setAutoSize(true);
+        }
+
+        $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+        $objWriter->save($file_name);
+        // download file
+        header("Content-Type: application/vnd.ms-excel");
+        redirect(site_url().$file_name);
     }
 
     public function internal_billing()
@@ -3822,10 +3853,91 @@ class Invoices extends Admin_controller
     //this is a temprory report for priyanka
     public function invoce_export()
     {
-
         $data['invoice_list'] = $this->db->query("SELECT i.id,i.number FROM tblinvoices as i LEFT JOIN tbltermsandconditionsdetails as tc ON i.id = tc.rel_id where i.year_id = 7 and i.parent_id = 0  and i.transportation_charges = 0 and tc.document_name = 'invoice' and tc.value1 = 'Included' and tc.master_id = 6 GROUP by i.id ")->result();
-
         $this->load->view('admin/invoices/invoce_export', $data);
+    }
 
+    /* this function use for update accounted status in debit note */
+    public function update_accounted_status($invoice_id, $page_name){
+
+        $status = value_by_id_empty("tblinvoices", $invoice_id, "accounted_status");
+        $updata["accounted_status"] = 0;
+        if ($status == 0){
+            $updata["accounted_status"] = 1;
+            $updata["accounted_by"] = get_staff_user_id();
+            $updata["accounted_date"] = date("Y-m-d H:i:s");
+        }
+        
+        $this->home_model->update('tblinvoices', $updata,array('id'=>$invoice_id));
+        if ($page_name == 'sales'){
+            redirect(admin_url("invoices/list"));
+        }else{
+            redirect(admin_url("invoices/rent_list"));
+        }
+    }
+
+    /* this function use for check tcs calculation */
+    public function calculate_tcs_charges($invoice_id, $client_id){
+        $charges_val = yearly_client_invoice_values($invoice_id, $client_id);
+        if (!empty($charges_val)){
+            // 5000000
+            if ($charges_val >= 5000000){
+                redirect(admin_url('invoices/client_invoice_tcs_charges/'.$invoice_id.'/'.$client_id));
+            }else{
+                
+                $this->home_model->update('tblinvoices', array('tcs_status' => 1), array('id' => $invoice_id));
+                set_alert('success', "TCS charges calculated successfully");
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+        }else{
+            set_alert('warning', "TCS charges calculation not allowed for this invoice");
+            redirect($_SERVER['HTTP_REFERER']);
+        }
+    }
+
+    /* this function use for client invoices tcs charges report */
+    public function client_invoice_tcs_charges($invoice_id, $client_id){
+
+        if (!empty($_POST)){
+            extract($this->input->post());
+
+            // echo "<pre>";
+            // print_r($_POST);
+            // exit;
+            if ($tcs_charges_amt == '' OR $tcs_charges_amt == 0){
+                set_alert('warning', "TCS charges amount is required");
+                redirect($_SERVER['HTTP_REFERER']);
+            }    
+            
+            $insertdata["added_by"] = get_staff_user_id();
+            $insertdata["client_id"] = $client_id;
+            $insertdata["invoice_id"] = $invoice_id;
+            $insertdata["tcs_amount"] = $tcs_charges_amt;
+            $insertdata["created_at"] = date("Y-m-d H:i:s");
+            $insertdata["status"] = 1;
+            $insert_id = $this->home_model->insert("tblinvoicetcscharges", $insertdata);
+            if ($insert_id){
+                if (!empty($tcschargedata)){
+                    foreach($tcschargedata as $invoiceid){
+                        $this->home_model->update('tblinvoices', array('tcs_status' => 1, 'tcs_id' => $insert_id), array('id' => $invoiceid));
+                    }
+                }
+                set_alert('success', "TCS charges calculated successfully");
+            }else{
+                set_alert('warning', "Somthing went wrong");
+            }
+
+            /* update final amount of invoice */
+            update_invoice_final_amount($invoice_id);
+            
+            $service_type = value_by_id("tblinvoices", $invoice_id, "service_type");
+            $redirect_url = ($service_type == 1) ? 'invoices/rent_list':'invoices/list';
+            redirect(admin_url($redirect_url));
+        }    
+        $data["title"] = "Client Invoice TCS Changes";
+        $data["client_name"] = client_info($client_id)->client_branch_name;
+        $data["financial_year"] = value_by_id('tblfinancialyear', financial_year(), 'name');
+        $data["invoice_list"] = $this->db->query("SELECT * FROM `tblinvoices` WHERE year_id = '".financial_year()."' AND clientid = '".$client_id."' AND tcs_status = 0 AND status != 5")->result();
+        $this->load->view('admin/invoices/client_invoice_tcs_charges', $data);
     }
 }

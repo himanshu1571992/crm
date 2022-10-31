@@ -36,7 +36,7 @@
         <div class="col-md-12">
           <div class="panel_s">
             <div class="panel-body">
-              <h4 class="no-margin"><?php echo $title; ?>  <span style="padding-left: 15%;"><a href="<?php  echo admin_url('reminder/add/0/2'); ?>" class="btn btn-info"><i class="fa fa-bell-o" aria-hidden="true"></i> Set Reminder</a> <button value="1" name="important_search" class="btn btn-info"><i class="fa fa-star" aria-hidden="true"></i>  Search Important</button> <button type="button" id="load_more" class="btn btn-info"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i>  Load last conversation</button> <?php if(!empty($contact_info)){ ?><a target="_blank" href="<?php echo admin_url('leads/lead_contact/'.$lead_id); ?>" class="btn btn-info"><i class="fa fa-user" aria-hidden="true"></i> Contacts</a><?php } ?></span></h4>
+              <h4 class="no-margin"><?php echo $heading; ?>  <span style="padding-left: 15%;"><a href="<?php  echo admin_url('reminder/add/0/2'); ?>" class="btn btn-info"><i class="fa fa-bell-o" aria-hidden="true"></i> Set Reminder</a> <button value="1" name="important_search" class="btn btn-info"><i class="fa fa-star" aria-hidden="true"></i>  Search Important</button> <button type="button" id="load_more" class="btn btn-info"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i>  Load last conversation</button> <?php if(!empty($contact_info)){ ?><a target="_blank" href="<?php echo admin_url('leads/lead_contact/'.$lead_id); ?>" class="btn btn-info"><i class="fa fa-user" aria-hidden="true"></i> Contacts</a><?php } ?></span></h4>
               <h4 style="color:red;">
                 <?php 
                   $lead_info = $this->db->query("SELECT * FROM tblleads WHERE id = '".$lead_id."' ")->row();
@@ -208,6 +208,7 @@
                 <!-- <mark style="color:red">* Please use @ for tag someone</mark> -->
                <div class="text-right">
                    <input type="hidden" name="tag_staff_ids" class="staff_ids">
+                   <input type="hidden" name="tag_viewstaff_ids" class="view_staff_ids">
                    <input type="hidden" name="parent_id" class="reply_parent_id" value="0">
                   <button class="btn btn-info"><?php echo _l('submit'); ?></button>
                </div>

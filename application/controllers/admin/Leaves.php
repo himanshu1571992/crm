@@ -713,6 +713,7 @@ class Leaves extends Admin_controller
 				//$category_str = implode(',',$category_id);
 
 				$ad_data = array(
+					'added_by' => get_staff_user_id(),
 					'leave_count' => $leave_count,
 					'category_id' => $category_id,
 					'status' => $status,

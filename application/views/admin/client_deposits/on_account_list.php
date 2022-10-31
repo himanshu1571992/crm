@@ -166,8 +166,14 @@
                                                 }
                                                 ?>
                                                 <tr>
-                                                    <td><?php echo ++$key; ?></td>
-                                                    <td><?php echo cc($client_info->client_branch_name); ?></td>
+                                                    <td>
+                                                        <?php echo ++$key; ?>
+                                                        
+                                                    </td>
+                                                    <td>
+                                                        <?php echo get_creator_info($value->staff_id, $value->created_date); ?>
+                                                        <?php echo cc($client_info->client_branch_name); ?>
+                                                    </td>
                                                     <td><?php echo ($value->on_account == 1) ? "On Account" : "--"; ?></td>
                                                     <td><?php echo $paymentmode; ?></td>
                                                     <td><?php echo $value->reference_no; ?></td>

@@ -43,6 +43,7 @@ class Designrequisition_model extends CRM_Model
         $clientid = (isset($data["client_id"]) && !empty($data["client_id"])) ? $data["client_id"] : 0;
         $staff_id = (!empty($data["staff_id"])) ? $data["staff_id"] : 0;
         $enquirycall_id = (isset($data["enquirycall_id"]) && !empty($data["enquirycall_id"])) ? $data["enquirycall_id"] : 0;
+        $expected_date = (isset($data["expected_date"])) ? db_date($data["expected_date"]) : '';
 
         $insertdata['enquirycall_id'] = $enquirycall_id;
         $insertdata['product_type'] = $data["product_type"];
@@ -51,6 +52,7 @@ class Designrequisition_model extends CRM_Model
         $insertdata['client_name'] = $client_name;
         $insertdata['client_id'] = $clientid;
         $insertdata['date'] = date("Y-m-d");
+        $insertdata['expected_date'] = $expected_date;
         $insertdata['added_by'] = get_staff_user_id();
         $insertdata['created_at'] = $current_datetime;
         $insertdata['updated_at'] = $current_datetime;
@@ -154,12 +156,14 @@ class Designrequisition_model extends CRM_Model
         $client_name = (!empty($data["client_name"])) ? $data["client_name"] : "";
         $clientid = (isset($data["client_id"]) && !empty($data["client_id"])) ? $data["client_id"] : 0;
         $staff_id = (!empty($data["staff_id"])) ? $data["staff_id"] : 0;
+        $expected_date = (isset($data["expected_date"])) ? db_date($data["expected_date"]) : '';
 
         $updatedata['product_type'] = $data["product_type"];
         $updatedata['type'] = $data["type"];
         $updatedata['staff_id'] = $staff_id;
         $updatedata['client_name'] = $client_name;
         $updatedata['client_id'] = $clientid;
+        $updatedata['expected_date'] = $expected_date;
         $updatedata['status'] = 0;
         $updatedata['updated_at'] = $current_datetime;
 

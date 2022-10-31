@@ -331,6 +331,8 @@ class Tds extends Admin_controller
                 'addedby' => get_staff_user_id(),
                 'party_name' => $party_name,
                 'taxable_amount' => $taxable_amount,
+                'paid_amount' => $paid_amount,
+                'booking_date' => db_date($booking_date),
                 'tds_amount' => $tds_amount,
                 'pan_no' => $pan_no,
                 'date' => $tds_date,
@@ -557,5 +559,53 @@ class Tds extends Admin_controller
             set_alert('success', 'TDS Deduction linked succesfully');
             redirect(admin_url('tds/tds_challan_list'));
         }    
+    }
+
+    /* this function use for update taxable amount in tds deduction */
+    public function addTaxableAmount(){
+        if(!empty($_POST)){
+            extract($this->input->post());
+            
+            $this->home_model->update("tbltdsdeduction", array("taxable_amount" => $taxable_amount), array("id" => $tds_id));
+            set_alert('success', 'Taxable Amount added succesfully');
+            redirect(admin_url('tds/tds_deduction_report'));
+        }   
+    }
+    /* this function use for update booking Date in tds deduction */
+    public function addBookingdate(){
+        if(!empty($_POST)){
+            extract($this->input->post());
+            
+            $this->home_model->update("tbltdsdeduction", array("booking_date" => db_date($booking_date)), array("id" => $tds_id));
+            set_alert('success', 'Booking Date added succesfully');
+            redirect(admin_url('tds/tds_deduction_report'));
+        }   
+    }
+
+    public function update_tds_deduction_report(){
+        $tds_report = $this->db->query("SELECT * FROM tbltdsdeduction WHERE `rel_type` IN (1,3) ORDER BY id DESC ")->result();
+        if (!empty($tds_report)){
+            foreach ($tds_report as $value) {
+                if ($value->rel_type == 1){
+                    $chk_payment = $this->db->query("SELECT `po_id` FROM `tblpurchaseorderpayments` WHERE `id` ='".$value->rel_id."' ")->row();
+                    if (!empty($chk_payment)){
+                        $po_product = $this->db->query("SELECT SUM(ttl_price) as ttl_price FROM `tblpurchaseorderproduct` WHERE `po_id` ='".$chk_payment->po_id."' ")->row();
+                        if (!empty($po_product) && !empty($po_product->ttl_price)){
+                            $up_data["taxable_amount"] = $po_product->ttl_price;
+                            $this->home_model->update("tbltdsdeduction", $up_data, array("id" => $value->id));
+                        }
+                    }
+                }else if ($value->rel_type == 3){
+                    $chk_log = $this->db->query("SELECT `month`,`year`,`gross_salary` FROM `tblsalarypaidlog` WHERE `id` ='".$value->rel_id."' ")->row();
+                    if (!empty($chk_log)){
+                        $booking_date = date('Y-m-d', strtotime("01/".$chk_log->month."/".$chk_log->year));
+                        $tds_data["taxable_amount"] = $chk_log->gross_salary;
+                        $tds_data["booking_date"] = $booking_date;
+                        $this->home_model->update("tbltdsdeduction", $tds_data, array("id" => $value->id));
+                    }
+                }
+            }
+        }
+        echo "TDS Record update successfully";
     }
 }

@@ -104,6 +104,40 @@ if(!defined('CUSTOM_FIELD_TRANSFER_SIMILARITY')){
     define('CUSTOM_FIELD_TRANSFER_SIMILARITY', 85);
 }
 
+// START Master india API Credentials 
+if (ENVIRONMENT == 'production'){
+    
+    define('E_INVOICE_URL', 'https://pro.mastersindia.co/oauth/access_token');
+    define('E_INVOICE_USERNAME', 'admin@schachengineers.com');
+    define('E_INVOICE_PASSWORD', 'Admin@123');
+    define('E_INVOICE_CLIENTID', 'VeedYPmyztskMdXKEA');
+    define('E_INVOICE_CLIENT_SECRET', '9j6LSTBtpXOmB8CFqi8hawFj');
+
+    define('E_INVOICE_ACCESS_TOKEN', '496b29b8fd8b299f2e59ef0d478181b61c05749f');
+
+    define('E_INVOICE_GENERATE_EINVOICE', 'https://pro.mastersindia.co/generateEinvoice');
+    define('E_INVOICE_CANCEL_URL', 'https://pro.mastersindia.co/cancelEinvoice');
+    define('E_INVOICE_DISTANCE', 'http://pro.mastersindia.co/distance');
+    define('E_INVOICE_GENERATE_EWAYBILL', 'https://pro.mastersindia.co/generateEwaybillByIrn');
+}else{
+    
+    define('E_INVOICE_URL', 'https://clientbasic.mastersindia.co/oauth/access_token');
+    define('E_INVOICE_USERNAME', 'testeway@mastersindia.co');
+    define('E_INVOICE_PASSWORD', '!@#Demo!@#123');
+    define('E_INVOICE_CLIENTID', 'fIXefFyxGNfDWOcCWnj');
+    define('E_INVOICE_CLIENT_SECRET', 'QFd6dZvCGqckabKxTapfZgJc');
+
+    define('E_INVOICE_ACCESS_TOKEN', '67118f6bfaa1efedba09c90f9b2bc578e70f8468');
+
+    define('E_INVOICE_GENERATE_EINVOICE', 'https://clientbasic.mastersindia.co/generateEinvoice');
+    define('E_INVOICE_CANCEL_URL', 'https://clientbasic.mastersindia.co/cancelEinvoice');
+    define('E_INVOICE_DISTANCE', 'http://clientbasic.mastersindia.co/distance');
+    define('E_INVOICE_GENERATE_EWAYBILL', 'https://clientbasic.mastersindia.co/generateEwaybillByIrn');
+}
+/* END Master india API Credentials */
+
+
+
 // Defined folders
 // CRM temporary path
 define('TEMP_FOLDER',FCPATH .'temp' . '/');
@@ -213,6 +247,9 @@ define('CHALLAN_FINAL_ATTACHMENTS_FOLDER',FCPATH . 'uploads/challan' . '/');
 //challan purchase order
 define('PURCHASE_ORDER_ATTACHMENTS_FOLDER',FCPATH . 'uploads/purchase_order' . '/');
 
+// purchase order proforma invoice 
+define('POPROFORMA_INVOICE_ATTACHMENTS_FOLDER',FCPATH . 'uploads/purchase_order/proforma_invoice' . '/');
+
 //challan material receipt
 define('MATERIAL_RECEIPT_ATTACHMENTS_FOLDER',FCPATH . 'uploads/material_receipt' . '/');
 
@@ -294,6 +331,8 @@ define('PAYMENT_REQUEST_FOLDER',FCPATH.'uploads/payment_request' . '/');
 define('SOFTWARE_TASK_FOLDER',FCPATH.'uploads/software_task' . '/');
 
 define('QUALITY_REQUEST_FOLDER',FCPATH.'uploads/inspection/quality_report' . '/');
+
+define('EMPLOYEE_COMPLAIN_FOLDER',FCPATH.'uploads/employee_complains' . '/');
 
 define('TEST_CERTIFICATE_REQUEST_FOLDER',FCPATH.'uploads/inspection/test_certificate' . '/');
 define('ESTIMATE_PURCHASE_ORDER_FOLDER',FCPATH.'uploads/estimates/purchase_order' . '/');

@@ -87,8 +87,14 @@
                                         ?>
                                     
                                     <tr>
-                                        <td class="text-center"><?php echo ++$key; ?></td>
-                                        <td class="text-center"><?php echo cc($client_info->client_branch_name); ?></td>
+                                        <td class="text-center">
+                                            <?php echo ++$key; ?>
+                                            
+                                        </td>
+                                        <td>
+                                            <?php echo get_creator_info($value->added_by, $value->created_date); ?>
+                                            <?php echo cc($client_info->client_branch_name); ?>
+                                        </td>
                                         <td class="text-center"><?php echo $value->cheque_amount; ?></td>
                                         <td class="text-center"><?php echo $value->cheque_number; ?></td>
                                         <td class="text-center"><?php if($value->cheque_date == null){

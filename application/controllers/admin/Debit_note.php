@@ -875,4 +875,24 @@ class Debit_note extends Admin_controller {
         }
         redirect(admin_url('debit_note/view_paymentnote'));
     }
+
+    /* this function use for update accounted status in debit note */
+    public function update_accounted_status($debitnote_id, $page_name){
+        $table_name = 'tbldebitnotepayment';
+        $redirect_url = 'debit_note/view_paymentnote';
+        if ($page_name == 'debit_note'){
+            $table_name = 'tbldebitnote';
+            $redirect_url = 'debit_note';
+        }
+        $status = value_by_id_empty($table_name, $debitnote_id, "accounted_status");
+        $updata["accounted_status"] = 0;
+        if ($status == 0){
+            $updata["accounted_status"] = 1;
+            $updata["accounted_by"] = get_staff_user_id();
+            $updata["accounted_date"] = date("Y-m-d H:i:s");
+        }
+        
+        $this->home_model->update($table_name, $updata,array('id'=>$debitnote_id));
+        redirect(admin_url($redirect_url));
+    }
 }

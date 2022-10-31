@@ -308,7 +308,21 @@
                       <option value="1" <?php echo (isset($client) && $client->company_branch == 1) ? 'selected' : "" ?>>Yes</option>
                     </select>
                  </div> 
-                    
+                 <div class="form-group">
+                     <label for="vendor_id" class="control-label">Select Vendor <span data-toggle="tooltip" data-placement="right" title="If Client is our Vendor"><i class="fa fa-info-circle" aria-hidden="true"></i></span></label>
+                     <select class="form-control selectpicker" data-live-search="true" id="vendor_id" name="vendor_id">
+                           <option value=""></option>
+                           <?php
+                           if (isset($vendor_list) && count($vendor_list) > 0) {
+                              foreach ($vendor_list as $vendor_key => $vendor_value) {
+                                 ?>
+                                 <option value="<?php echo $vendor_value->id; ?>" <?php echo (isset($client->vendor_id) && $client->vendor_id == $vendor_value->id) ? 'selected' : "" ?>><?php echo cc($vendor_value->name); ?></option>
+                                 <?php
+                              }
+                           }
+                           ?>
+                     </select>
+                  </div>  
                </div>
             </div>
          </div>

@@ -3229,6 +3229,36 @@ function software_task_image_upload($id = '', $field_name = 'image') {
     return false;
 }
 
+function employee_complains_image_upload($id = '', $field_name = 'image') {
+    
+    if (isset($_FILES[$field_name]['name']) && $_FILES[$field_name]['name'] != '') { 
+        do_action('before_product_staff_photo');
+        $path = get_upload_path_by_type('employee_complains') . $id . '/';
+        // Get the temp file path
+        $tmpFilePath = $_FILES[$field_name]['tmp_name'];
+        // Make sure we have a filepath
+        if (!empty($tmpFilePath) && $tmpFilePath != '') {
+           
+            
+            _maybe_create_upload_path($path);
+            $filename = unique_filename($path, $_FILES[$field_name]['name']);
+            $newFilePath = $path . '/' . $filename;
+            // Upload the file into the company uploads dir
+            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                $CI = & get_instance();
+                $data = [
+                    'file' => $filename,
+                ];
+                $CI->db->update('tblemployee_complains',$data,array('id' => $id));
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 function upload_ledger_reco($id = '', $field_name = 'file') {
     
     if (isset($_FILES[$field_name]['name']) && $_FILES[$field_name]['name'] != '') { 
@@ -3463,6 +3493,10 @@ function get_upload_path_by_type($type) {
             case 'purchase_order':
             return PURCHASE_ORDER_ATTACHMENTS_FOLDER;
             break;
+            
+            case 'poproforma_invoice':
+            return POPROFORMA_INVOICE_ATTACHMENTS_FOLDER;
+            break;
 
             case 'material_receipt':
             return MATERIAL_RECEIPT_ATTACHMENTS_FOLDER;
@@ -3591,6 +3625,9 @@ function get_upload_path_by_type($type) {
             break;
             case 'ledger_reco':
                 return LEDGER_RECO_FOLDER;
+            break;
+            case 'employee_complains':
+                return EMPLOYEE_COMPLAIN_FOLDER;
             break;
         default:
             return false;

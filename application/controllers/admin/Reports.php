@@ -1369,4 +1369,110 @@ class Reports extends Admin_controller
         $data['under_execution_list'] = $this->db->query("SELECT * FROM tblconfirmorder ORDER BY id DESC")->result();
         $this->load->view('admin/reports/order_under_execution', $data);
     }
+
+    /* this function use for report of tagging staff */
+    public function activity_tagged_report(){
+
+        $where = "status = 1 and tagged_from = ".get_staff_user_id();
+        if(!empty($_POST)){
+            extract($this->input->post());
+            $data['title'] = 'Activity Tagged Report';
+
+            if(!empty($module_id)){
+                $data["module_id"] = $module_id;
+                $where .= " and module_id = '".$module_id."' ";
+            }
+            if(!empty($tagged_to)){
+                $data["tagged_to"] = $tagged_to;
+                $where .= " and tagged_to = '".$tagged_to."' ";
+            }
+        }
+
+        $data["activity_tagged_report"] = $this->db->query("SELECT * FROM `tblactivitytagged` WHERE ".$where." ORDER BY created_at DESC")->result();
+        $data["module_list"] = $this->db->query("SELECT * FROM `tblcrmmodules` WHERE `for_activity`='1' ")->result();
+        $data["staff_list"] = $this->db->query("SELECT * FROM `tblstaff` WHERE `active` = '1' ")->result();
+        $data["title"] = "Activity Tagged Report";
+        $this->load->view("admin/reports/activitytaggedreport", $data);
+    }
+
+    public function gridlineApi(){
+
+        if(!empty($_POST)){
+            extract($this->input->post());
+            
+            if($type == 1){
+                $response = aadhaar_verification($number);
+            }elseif($type == 3){
+                $response = pan_verification($number);
+            }elseif($type == 4){
+                $data["dob"] = $dob;
+                $response = drivingLicenseDetails($number, $dob);                
+            }elseif($type == 5){
+                $response = voterId_verification($number);                
+            }elseif($type == 6){
+                $data["ifsc_code"] = $ifsc_code;
+                $response = account_verification($number,$ifsc_code);                              
+            }elseif($type == 7){
+                $response = rcDetails($number);                                               
+            }elseif($type == 8){
+                $response = uanDetails($number);                                             
+            }elseif($type == 9){
+                $response = gstDetails($number); 
+            }
+            // echo '<pre/>';
+            // print_r($response);
+            // die;
+            $data["response"] = $response;
+            $data["type"] = $type;
+            $data["number"] = $number;
+            
+        }
+
+        $data["title"] = "Verification Report";
+        $this->load->view("admin/reports/gridlineApi", $data);
+    } 
+
+    public function getVerificationFormFields(){
+        if(!empty($_POST)){
+            extract($this->input->post());
+            $html = '';
+            if($type_id == '1'){
+                    $title = 'Aadhaar Number';           
+            }elseif($type_id == '3'){
+                    $title = 'PAN Number';           
+            }elseif($type_id == '4'){
+                    $title = 'Driving Licence Number';           
+            }elseif($type_id == '5'){
+                    $title = 'Voter ID Number';           
+            }elseif($type_id == '6'){
+                    $title = 'Account Number';           
+            }elseif($type_id == '7'){
+                    $title = 'Vehicle Number';           
+            }elseif($type_id == '8'){
+                    $title = 'Mobile Number';           
+            }elseif($type_id == '9'){
+                    $title = 'GSTIN Number';           
+            }
+
+            $doc_number = (isset($number) && !empty($number)) ? $number : '';
+            $dob = (isset($dob) && !empty($dob)) ? $dob : '';
+            $ifsc_code = (isset($ifsc_code) && !empty($ifsc_code)) ? $ifsc_code : '';
+            $html .= '<div class="col-md-3">
+                    <label for="number" class="control-label">'.$title.'</label>
+                    <input type="text" name="number" class="form-control" value="'.$doc_number.'" required>
+               </div>';
+            if($type_id == '4'){
+                $html .= '<div class="col-md-3">
+                    <label for="dob" class="control-label">Date of Birth</label>
+                    <input type="date" name="dob" class="form-control" value="'.$dob.'" required>
+               </div>';
+            }elseif($type_id == '6'){
+                $html .= '<div class="col-md-3">
+                    <label for="ifsc_code" class="control-label">IFSC Code</label>
+                    <input type="text" name="ifsc_code" class="form-control" value="'.$ifsc_code.'" required>
+               </div>';
+            }   
+            echo $html;
+        }    
+    }  
 }

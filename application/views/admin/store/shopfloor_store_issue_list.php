@@ -59,7 +59,7 @@
                                         <th>Added By</th>
                                         <th>Warehouse</th>
                                         <th>Issue Store To</th>
-                                        <th>Date</th>
+                                        <th>Created At</th>
                                         <th>Remark</th>
                                         <th class="text-center">Action</th>
                                       </tr>
@@ -81,7 +81,7 @@
                                             <td><?php echo get_employee_fullname($value->added_by); ?></td>
                                             <td><?php echo value_by_id("tblwarehouse", $value->warehouse_id, "name"); ?></td>
                                             <td><?php echo $issue_store_to; ?></td>
-                                            <td><?php echo date("d/m/Y" ,strtotime($value->created_at)); ?></td>
+                                            <td><?php echo _d($value->created_at); ?></td>
                                             <td><?php echo (!empty($value->remark)) ? cc($value->remark) : "--"; ?></td>  
                                             <td><a href="javascript:void(0)" class="btn-sm btn-info status" onclick="get_productlog_details('<?php echo $value->id; ?>');" data-id="<?php echo $value->id; ?>" data-target="#stock_details" id="status" data-toggle="modal">View Details</a></td>
                                           </tr>

@@ -938,7 +938,18 @@ class Bank_payments extends Admin_controller
                                 $payee_name = $payee_info->name;
                             }
 
-
+                            $utr_no = $row->utr_no;
+                            $utr_date = $row->utr_date;
+                            //For UTR number link with po payment utr
+                            if(empty($utr_no) && $row->pay_type == 'po_payment'){
+                                $po_paymentInfo = $this->db->query("SELECT `utr_no`,`payment_date` FROM `tblpurchaseorderpayments` where id = '".$row->pay_type_id."' ")->row();
+                                if(!empty($po_paymentInfo->utr_no)){
+                                    $utr_no = $po_paymentInfo->utr_no;
+                                }
+                                if(empty($utr_date) && !empty($po_paymentInfo->payment_date)){
+                                    $utr_date = $po_paymentInfo->payment_date;
+                                }
+                            }
 
                             ?>
 
@@ -947,8 +958,8 @@ class Bank_payments extends Admin_controller
                                 <td><?php echo value_by_id('tblcompanyexpensecatergory',$row->category_id,'name'); ?></td>
                                 <td><?php echo $payee_name; ?></td>
                                 <td><?php echo $row->amount; ?></td>
-                                <td><input class="form-control" type="text" name="urt_<?php echo $row->id; ?>" value="<?php echo $row->utr_no; ?>"></td>
-                                <td><input type="text" name="utr_date_<?php echo $row->id; ?>" class="form-control date_picker" value="<?php if(!empty($row->utr_date)){ echo date('m/d/Y',strtotime($row->utr_date)); }else{ echo date('m/d/Y');} ?>"></td>
+                                <td><input class="form-control" type="text" name="urt_<?php echo $row->id; ?>" value="<?php echo $utr_no; ?>"></td>
+                                <td><input type="text" name="utr_date_<?php echo $row->id; ?>" class="form-control date_picker" value="<?php if(!empty($utr_date)){ echo date('m/d/Y',strtotime($utr_date)); }else{ echo date('m/d/Y');} ?>"></td>
 
                              </tr>
 

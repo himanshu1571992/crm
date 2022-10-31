@@ -330,7 +330,7 @@ class Designrequisition extends Admin_controller
 
                 $insert_id = $this->home_model->insert('tbldesignrequisitionactivity',$ad_data);
                 if (!empty($tag_staff_ids)){
-                    $staff_ids = explode(",", $tag_staff_ids);
+                    $staff_ids = array_unique(explode(",", $tag_staff_ids));
                     foreach ($staff_ids as $staff_id) {
 
                         $tag_notification_arr = array(
@@ -340,9 +340,29 @@ class Designrequisition extends Admin_controller
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
                             'description' => 'You taged in design requisition activity',
-                            'link'  => "designrequisition/designrequisition_activity/".$id
+                            'link'  => "designrequisition/designrequisition_activity/".$id,
+                            'readonly' => 0
                         );
                         send_activitytag_notification($tag_notification_arr);
+                    }
+                }
+                
+                /* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        $read_notification_arr = array(
+                            'activity_id' => $insert_id,
+                            'module_id' => 42,
+                            'table_id' => $id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'description' => 'You taged in design requisition activity',
+                            'link'  => "designrequisition/designrequisition_activity/".$id,
+                            'readonly' => 1
+                        );
+                        send_activitytag_notification($read_notification_arr);
                     }
                 }
 
@@ -410,7 +430,7 @@ class Designrequisition extends Admin_controller
 
                 $insert_id = $this->home_model->insert('tbldesignactivity',$ad_data);
                 if (!empty($tag_staff_ids)){
-                    $staff_ids = explode(",", $tag_staff_ids);
+                    $staff_ids = array_unique(explode(",", $tag_staff_ids));
                     foreach ($staff_ids as $staff_id) {
 
                         $tag_notification_arr = array(
@@ -419,10 +439,30 @@ class Designrequisition extends Admin_controller
                             'table_id' => $id,
                             'fromuserid' => get_staff_user_id(),
                             'touserid' => $staff_id,
+                            'readonly' => 0,
                             'description' => 'You taged in design activity',
                             'link'  => "designrequisition/design_activity/".$id
                         );
                         send_activitytag_notification($tag_notification_arr);
+                    }
+                }
+
+                /* this is for tag read activity staff */
+                if (!empty($tag_viewstaff_ids)){
+                    $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
+                    foreach ($staff_ids as $staff_id) {
+
+                        $read_notification_arr = array(
+                            'activity_id' => $insert_id,
+                            'module_id' => 48,
+                            'table_id' => $id,
+                            'fromuserid' => get_staff_user_id(),
+                            'touserid' => $staff_id,
+                            'readonly' => 1,
+                            'description' => 'You taged in design activity',
+                            'link'  => "designrequisition/design_activity/".$id
+                        );
+                        send_activitytag_notification($read_notification_arr);
                     }
                 }
 
@@ -933,5 +973,18 @@ class Designrequisition extends Admin_controller
             redirect(admin_url('designrequisition'));
         }
 
+    }
+
+    /* this function use for update expected date */
+    public function update_expected_completed_date(){
+        if(!empty($_POST)){
+            extract($this->input->post());
+
+            $response = $this->home_model->update('tbldesignrequisition', array('expected_completed_date'=> db_date($expected_completed_date)),array('id'=>$designrequisition_id));
+            if (!empty($response)){
+                set_alert('success', 'Expected Completion date added successfully');
+                redirect(admin_url('designrequisition?section=2'));
+            }
+        }    
     }
 }

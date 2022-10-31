@@ -17,6 +17,11 @@
                         <h4 class="no-margin"><?php if(!empty($title)){ echo $title;}?></h4>
                         <hr class="hr-panel-heading">
                         <div class="row">
+
+                            <div class="col-md-12">    
+                                <h4><?php echo (isset($expense_data[0])) ? $expense_data[0]['added_by'] : '--'; ?></h4>
+                            </div>
+
                             <div class="col-md-12">
                                 <div class="col-md-6">
                                     <div class="panel_s panel-body">

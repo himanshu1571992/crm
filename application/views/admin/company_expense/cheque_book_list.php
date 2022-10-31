@@ -97,7 +97,10 @@
                                             ?>
                                                 <tr>
                                                     <td><?php echo $i++; ?></td>
-                                                    <td><?php echo value_by_id("tblbankmaster", $row->bank_id, "name"); ?></td>
+                                                    <td>
+                                                        <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                        <?php echo value_by_id("tblbankmaster", $row->bank_id, "name"); ?>
+                                                    </td>
                                                     <td><?php echo (!empty($row->chequebook_name)) ? $row->chequebook_name : "--"; ?></td>
                                                     <td><?php echo $row->from_page . "-" . $row->to_page; ?></td>
                                                     <td><div class="onoffswitch">

@@ -89,7 +89,12 @@
                                                     <tr>
 
                                                         <td><?php echo $z++; ?></td>
-                                                        <td><?php echo $payment_name; ?></td>												
+                                                        <td>
+                                                            <?php 
+                                                                echo get_creator_info($row->staff_id, $row->created_date);
+                                                                echo $payment_name;
+                                                            ?>
+                                                        </td>												
                                                         <td><?php echo date('d/m/Y', strtotime($row->date)); ?></td>
                                                         <td><?php echo $row->ttl_amt; ?></td>
                                                         <td><?php echo value_by_id("tblbankmaster", $row->bank_id, "bank_code");?></td>

@@ -49,14 +49,16 @@
 								$from_name = (!empty($addedfrom_id)) ? get_employee_fullname($addedfrom_id) : '--';
 								$wallet_amt = (!empty($addedfrom_id)) ? wallet_amount($addedfrom_id,'','') : '--';
 							?>
-							<label for="id" class="control-label title-panel col-md-6">From Name :</label> <span class="text-content"><?php echo $from_name; ?></span>
+							<label for="id" class="control-label title-panel col-md-6">From Name :</label> <span class="text-content"><?php echo $request_info["approved_by"]; ?></span>
 						</div>
 						<div class="col-md-12">
 							<label for="id" class="control-label title-panel col-md-6">Pay To :</label> <span class="text-content"><?php echo $request_info["pay_to_staff"]; ?></span>
 						</div>
-						<div class="col-md-12">
-							<label for="id" class="control-label title-panel col-md-6">On Behalf Of :</label> <span class="text-content"><?php echo $request_info["on_behalf_name"]; ?></span>
-						</div>
+						<?php if (!empty($request_info["on_behalf_name"])){ ?>
+							<div class="col-md-12">
+								<label for="id" class="control-label title-panel col-md-6">On Behalf Of :</label> <span class="text-content"><?php echo $request_info["on_behalf_name"]; ?></span>
+							</div>
+						<?php } ?>
 						<div class="col-md-12">
 							<label for="wallet_amount" class="control-label title-panel col-md-6">Wallet Amount :</label> <span class="text-content">&#8377; <?php echo $request_info["wallet_amount"]; ?></span>
 						</div>
@@ -76,10 +78,10 @@
 							<label for="id" class="control-label title-panel col-md-6">Category :</label> <span class="text-content"><?php echo get_request_category($request_info["category_id"]); ?></span>
 						</div>
 						<div class="col-md-12">
-							<label for="id" class="control-label title-panel col-md-6">Reason :</label> <span class="col-md-6"><?php echo cc($request_info["reason"]); ?></span>
+							<label for="id" class="control-label title-panel col-md-6">Reason :</label> <span class="col-md-6" style="overflow-wrap: break-word;"><?php echo cc($request_info["reason"]); ?></span>
 						</div>
 						<div class="col-md-12">
-							<label for="id" class="control-label title-panel col-md-6">Description :</label> <span class="col-md-6"><?php echo cc($request_info["description"]); ?></span>
+							<label for="id" class="control-label title-panel col-md-6">Description :</label> <span class="col-md-6" style="overflow-wrap: break-word;"><?php echo cc($request_info["description"]); ?></span>
 						</div>
 						<div class="btn-bottom-toolbar text-right">
 							
@@ -122,8 +124,8 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label for="remark" required class="control-label"><?php echo 'Remark'; ?></label>
-											<textarea id="remark" name="remark" class="form-control" rows="3" ></textarea>
+											<label for="remark"  class="control-label"><?php echo 'Remark'; ?></label>
+											<textarea id="remark" required name="remark" class="form-control" rows="3" ></textarea>
 										</div>
 									</div>
 								</div>

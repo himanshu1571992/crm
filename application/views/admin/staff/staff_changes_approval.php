@@ -1018,7 +1018,7 @@
                                             <div class="card-body">
                                                 <h5 class="card-title">Resignation Date</h5>
                                                 <?php 
-                                                    if (!empty($curr_staff_info) && $curr_staff_info->resignation_date != $info->resignation_date){
+                                                    if (!empty($curr_staff_info) && $curr_staff_info->resignation_date != $info->resignation_date && $info->resignation_date != "0000-00-00"){
                                                         $relieving_count++; 
                                                     }
                                                     $cls = (!empty($curr_staff_info) && $curr_staff_info->resignation_date != $info->resignation_date) ? "background-color:red;" : ""; ?>

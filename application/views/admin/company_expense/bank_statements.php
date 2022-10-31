@@ -48,7 +48,8 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h4 class="no-margin"><?php echo $title; ?></h4>
+                        <h4 class="no-margin col-md-11"><?php echo $title; ?></h4>
+                        <a href="<?php echo admin_url('company_expense/bankstatement_entries_list'); ?>" target="_blank" class="btn-sm btn-info">Bank Entries</a>
                         <hr class="hr-panel-heading">
                         <div class="row">
                             <div class="col-md-4">
@@ -69,24 +70,28 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group col-md-4" app-field-wrapper="date">
+                            <div class="form-group col-md-3" app-field-wrapper="date">
                                 <label for="f_date" class="control-label"><?php echo 'From Date'; ?> <span style="color:red">*</span></label>
                                 <div class="input-group date">
                                     <input id="f_date" name="f_date" required="" class="form-control datepicker" value="<?php echo (isset($s_fdate) && $s_fdate != "") ? $s_fdate : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-4" app-field-wrapper="date">
+                            <div class="form-group col-md-3" app-field-wrapper="date">
                                 <label for="t_date" class="control-label"><?php echo 'To Date'; ?> <span style="color:red">*</span></label>
                                 <div class="input-group date">
                                     <input id="t_date" name="t_date" required="" class="form-control datepicker" value="<?php echo (isset($s_tdate) && $s_tdate != "") ? $s_tdate : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                                 </div>
                             </div>
+                            <div class="col-md-2" style="margin-top: 25px;">
+                                <button class="btn btn-info" value="1" name="mark" type="submit">Submit</button>
+                                <a class="btn btn-danger">Reset</a>
+                            </div>
                         </div>
-                        <div class="btn-bottom-toolbar text-right">
+                        <!-- <div class="btn-bottom-toolbar text-right">
                             <button class="btn btn-info" value="1" name="mark" type="submit">
                                 Submit
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             <?php echo form_close(); ?>
@@ -145,7 +150,7 @@
                                 <thead>
                                     <tr><td align="center" colspan="2"></td></tr>
                                     <tr>
-                                        <td colspan="2" style="border-left: 5px solid; border-top: 5px solid; border-bottom: 5px solid;"> 
+                                        <td colspan="3" class="col-md-6" style="border-left: 5px solid; border-top: 5px solid; border-bottom: 5px solid;"> 
                                             <div class="form-group row">
                                                 <label for="inputPassword3" class="col-sm-5 col-form-label" style="font-size: 18px; color: red;">Bank Name : </label>
                                                 <div class="col-sm-7">
@@ -158,8 +163,14 @@
                                                     <span style="font-size: 15px;"><?php echo $s_fdate . " To " . $s_tdate; ?></span>
                                                 </div>
                                             </div>
+                                            <div class="form-group row">
+                                                <label for="inputPassword3" class="col-sm-6 col-form-label" style="font-size: 18px; color: red;">Total Closing Balance: </label>
+                                                <div class="col-sm-6">
+                                                    <span style="font-size: 15px;" class="ttlclosing_bal">0</span>
+                                                </div>
+                                            </div>
                                         </td>
-                                        <td colspan="2" style="border-top: 5px solid; border-bottom: 5px solid;"> 
+                                        <td colspan="3" class="col-md-6" style="border-right: 5px solid; border-top: 5px solid; border-bottom: 5px solid;"> 
                                             <div class="form-group row">
                                                 <label for="inputPassword3" class="col-sm-6 col-form-label" style="font-size: 18px; color: red;">Opening Balance : </label>
                                                 <div class="col-sm-6">
@@ -174,13 +185,10 @@
                                                     <span style="font-size: 15px;" class="scbal"><?php echo number_format($closing_bal, 2, '.', ''). " ( by ". $cadded_by . " )"; ?></span>
                                                 </div>
                                             </div>
-                                        </td>
-                                        <td colspan="2" style="border-top: 5px solid; border-right: 5px solid; border-bottom: 5px solid;"> 
-                                            
                                             <div class="form-group row">
-                                                <label for="inputPassword3" class="col-sm-5 col-form-label" style="font-size: 18px; color: red;">Calculate Balance : </label>
-                                                <div class="col-sm-7">
-                                                    <span style="font-size: 15px;" class="calculate_bal"></span>
+                                                <label for="inputPassword3" class="col-sm-6 col-form-label" style="font-size: 18px; color: red;">Diffrence : </label>
+                                                <div class="col-sm-6">
+                                                    <span style="font-size: 15px;" class="ttldifference_bal">0</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -225,7 +233,7 @@
                                             
                                         $ttcredit_amt = $ttdebit_amt = 0;
                                         $tcount = count($bank_statement);
-                                        
+                                        $ttlclosingbal = 0;
                                         $i = 1;
                                         echo '<tr><td align="center">'.db_date($s_fdate).'</td><td align="center">Opening Balance</td><td></td><td></td><td></td><td align="center">'.$opening_bal.'</td></tr>';
                                         foreach ($bank_statement as $key => $bvalue) {
@@ -237,12 +245,13 @@
                                                 $debit_amt = number_format($value["debit_amt"], 2, '.', '');
                                                 $credit_amt = number_format($value["credit_amt"], 2, '.', '');
                                                 $opening_bal = ($debit_amt > 0.00) ? $opening_bal - $debit_amt : $opening_bal + $credit_amt;
-
+                                                
                                                 $ttcredit_amt += $credit_amt;
                                                 $ttdebit_amt += $debit_amt;
                                                 $debit_amt = ($debit_amt > 0.00) ? '<p class="text-danger">'.$debit_amt.'</p>' : $debit_amt;
                                                 $credit_amt = ($credit_amt > 0.00) ? '<p class="text-success">'.$credit_amt.'</p>' : $credit_amt;
 
+                                                $ttlclosingbal = $opening_bal;
                                                 echo '<tr>'
                                                         . '<td align="center">'.$value["date"].'</td>'
                                                         . '<td align="center">'.$value["description"].'</td>'
@@ -263,7 +272,8 @@
                     </div>    
                 </div>    
             </div>
-        <?php } ?>     
+        <?php }
+        ?>     
         <div class="btn-bottom-pusher"></div>
     </div>
 </div>
@@ -351,8 +361,11 @@ $(document).ready(function() {
 
     });
 } );
-
-var cbal = $(".cbal").text();
+var ttlclosingbal = '<?php echo $ttlclosingbal; ?>';
+var closing_bal = '<?php echo $closing_bal; ?>';
+$(".ttlclosing_bal").html(ttlclosingbal);
+$(".ttldifference_bal").html(closing_bal-ttlclosingbal);
+/*var cbal = $(".cbal").text();
 var scbal = $(".scbal").text();
 if (cbal != "" && scbal != ""){
     
@@ -363,7 +376,7 @@ if (cbal != "" && scbal != ""){
         var cal_bal = parseFloat(cbal) + parseFloat(scbal);
         $(".calculate_bal").html(cal_bal.toFixed(2)+" <small> ( "+ scbal + " "+ cbal + " )</small>");
     }
-}
+}*/
 </script>
 
 

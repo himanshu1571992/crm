@@ -41,7 +41,7 @@
                 <div class="col-md-12">
                     <div class="panel_s">
                         <div class="panel-body">
-                            <h4 class="no-margin"><?php echo $title; ?>  <span style="padding-left: 5%;"><a href="<?php echo admin_url('reminder/add/0/1'); ?>" class="btn btn-info"><i class="fa fa-bell-o" aria-hidden="true"></i> Set Reminder</a> <button value="1" name="important_search" class="btn btn-info"><i class="fa fa-star" aria-hidden="true"></i>  Search Important</button> <button type="button" id="load_more" class="btn btn-info"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i>  Load last conversation</button> <a target="_blank" href="<?php echo admin_url('purchase/download_pdf/'.$po_id); ?>" class="btn btn-info"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> PO PDF</a> </span></h4>
+                            <h4 class="no-margin"><?php echo $heading; ?>  <span style="padding-left: 5%;"><a href="<?php echo admin_url('reminder/add/0/1'); ?>" class="btn btn-info"><i class="fa fa-bell-o" aria-hidden="true"></i> Set Reminder</a> <button value="1" name="important_search" class="btn btn-info"><i class="fa fa-star" aria-hidden="true"></i>  Search Important</button> <button type="button" id="load_more" class="btn btn-info"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i>  Load last conversation</button> <a target="_blank" href="<?php echo admin_url('purchase/download_pdf/'.$po_id); ?>" class="btn btn-info"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> PO PDF</a> </span></h4>
                             <hr class="hr-panel-heading">
 
                             <div class="row">
@@ -213,6 +213,7 @@
                                             <div id="text-data"></div>
                                             <div class="text-right">
                                                 <input type="hidden" name="tag_staff_ids" class="staff_ids">
+                                                <input type="hidden" name="tag_viewstaff_ids" class="view_staff_ids">
                                                 <input type="hidden" name="parent_id" class="reply_parent_id" value="0">
                                                 <button class="btn btn-info"><?php echo _l('submit'); ?></button>
                                             </div>

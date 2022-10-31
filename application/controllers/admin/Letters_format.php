@@ -130,7 +130,16 @@ class Letters_format extends Admin_controller
         $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
         $file_name = "Exprience Certificate - ".$employee_code;
         $html = staff_exprience_certificate($staff_info, $format);
-//        echo $html; exit; 
+
+        /*Update letter generated information */
+        if ($staff_info->letter_created_1 == 0){
+                    
+            $upinfo = array(
+                'letter_added_1'=> get_staff_user_id(),
+                'letter_created_1'=> date("Y-m-d H:i:s")
+            );
+            $this->home_model->update('tblstaff', $upinfo, array('staffid' => $id));
+        }
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
@@ -176,6 +185,16 @@ class Letters_format extends Admin_controller
         $file_name = "Intent Letter - ".$employee_code;
         $html = staff_intent_letter($staff_info, $format);
         
+        /*Update letter generated information */
+        if ($staff_info->letter_created_2 == 0){
+                    
+            $upinfo = array(
+                'letter_added_2'=> get_staff_user_id(),
+                'letter_created_2'=> date("Y-m-d H:i:s")
+            );
+            $this->home_model->update('tblstaff', $upinfo, array('staffid' => $id));
+        }
+
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
@@ -221,6 +240,16 @@ class Letters_format extends Admin_controller
         $file_name = "Joining Letter - ".$employee_code;
         $html = staff_joining_letter($staff_info, $format);
 
+        /*Update letter generated information */
+        if ($staff_info->letter_created_3 == 0){
+                    
+            $upinfo = array(
+                'letter_added_3'=> get_staff_user_id(),
+                'letter_created_3'=> date("Y-m-d H:i:s")
+            );
+            $this->home_model->update('tblstaff', $upinfo, array('staffid' => $id));
+        }
+
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
@@ -265,7 +294,16 @@ class Letters_format extends Admin_controller
         $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
         $file_name = "Relieving Letter - ".$employee_code;
         $html = staff_relieving_letter($staff_info, $format);
-//        echo $html;exit;
+
+        /*Update letter generated information */
+        if ($staff_info->letter_created_4 == 0){
+                            
+            $upinfo = array(
+                'letter_added_4'=> get_staff_user_id(),
+                'letter_created_4'=> date("Y-m-d H:i:s")
+            );
+            $this->home_model->update('tblstaff', $upinfo, array('staffid' => $id));
+        }
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
@@ -347,7 +385,17 @@ class Letters_format extends Admin_controller
         $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
         $file_name = "Confirmation letter - ".$employee_code;
         $html = confirmation_letter($staff_info, $format);
-        
+
+        /*Update letter generated information */
+        if ($staff_info->letter_created_5 == 0){
+                            
+            $upinfo = array(
+                'letter_added_5'=> get_staff_user_id(),
+                'letter_created_5'=> date("Y-m-d H:i:s")
+            );
+            $this->home_model->update('tblstaff', $upinfo, array('staffid' => $id));
+        }
+
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
@@ -372,22 +420,32 @@ class Letters_format extends Admin_controller
         $dompdf->stream($file_name, array("Attachment" => false));
     }
 
-    /* this function use for offer letter download */
-    public function download_offer_letter($id) {
+    /* this function use for generate offer letter download for registered staff */
+    public function generate_offer_letter($id) {
         require_once APPPATH.'third_party/pdfcrowd.php';
         
         if (!$id) {
             redirect(admin_url('staff'));
         }
-        $staff_info = get_employee_info($id);
+        $staff_info = $this->db->query("SELECT * FROM `tblregisteredstaff` WHERE `staffid`='".$id."' ")->row();
         
         if (empty($staff_info)) {
             redirect(admin_url('staff'));
         }
         $format = $this->db->query("SELECT `content` FROM tbllettersformat WHERE lettertype_id = 6 and status = 1")->row();
-        $employee_code = (strpos( $staff_info->employee_id, 'SCHACH' ) !== false ) ? $staff_info->employee_id : 'SCHACH '.$staff_info->employee_id;
+        $employee_code = (strpos( $staff_info->staffid, 'SCHACH' ) !== false ) ? $staff_info->staffid : 'SCHACH '.$staff_info->staffid;
         $file_name = "Offer letter - ".$employee_code;
-        $html = offer_letter($staff_info, $format);
+        $html = registered_staff_offer_letter($staff_info, $format);
+        
+        /*Update Offer letter generated information */
+        if ($staff_info->offer_letter_generated_by == 0){
+            
+            $upinfo = array(
+                'offer_letter_generated_by'=> get_staff_user_id(),
+                'offer_letter_generated_at'=> date("Y-m-d H:i:s")
+            );
+            $this->home_model->update('tblregisteredstaff', $upinfo, array('staffid' => $id));
+        }
         
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);

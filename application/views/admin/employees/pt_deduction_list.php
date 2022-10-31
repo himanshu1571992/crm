@@ -100,7 +100,10 @@
                                             ?>                                                                                      
                                                     <tr>
                                                         <td><?php echo $z++;?></td>
-                                                        <td><?php echo cc(get_employee_fullname($row->employee_id));  ?></td>
+                                                        <td>
+                                                            <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                            <?php echo cc(get_employee_fullname($row->employee_id));  ?>
+                                                        </td>
                                                         <td><?php echo $yearmonth; ?></td>
                                                         <td><a href="javascript:void(0);" class="btn-sm btn-info up_emp_deduction" data-rid="<?php echo $row->id; ?>" data-ftype="pt_amount" data-fval="<?php echo $row->pt_amount;?>"><?php echo $row->pt_amount;?></a></td>
                                                         <td><?php echo number_format($ttlamount, '2'); ?></td>

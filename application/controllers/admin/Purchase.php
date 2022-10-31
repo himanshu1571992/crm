@@ -44,6 +44,14 @@ class Purchase extends Admin_controller {
                         $where1 .= " and po.vendor_id = '".$vendor_id."'";
                     }
                 }
+                if($po_for != ''){
+                    $data['po_for'] = $po_for;
+                    if ($section == "purchase_order") {
+                        $where .= " and po.po_for = '".$po_for."'";
+                    }else{
+                        $where1 .= " and po.po_for = '".$po_for."'";
+                    }
+                }
 
                 if ($status != '') {
                     $data['s_status'] = $status;
@@ -552,7 +560,7 @@ class Purchase extends Admin_controller {
         $this->load->view('admin/purchase/details', $data);
     }
 
-     public function purchaseorder_view($id) {
+    public function purchaseorder_view($id) {
 
 
     	$data['id'] = $id;
@@ -1474,7 +1482,7 @@ class Purchase extends Admin_controller {
        		extract($this->input->post());
        		$assign_info = $this->db->query("SELECT * from tblpurchaseorderapproval  where po_id = '".$po_id."'  ")->result();
        		?>
-       		<div class="row">
+       		            <div class="row">
                             <div class="col-md-12">
                                 <h4 class="no-mtop mrg3">Assign Detail List</h4>
                             </div>
@@ -1797,6 +1805,7 @@ class Purchase extends Admin_controller {
     }
 
 
+
     public function mr_upload($section="mr") {
         if(!empty($_POST)){
             extract($this->input->post());
@@ -1897,11 +1906,14 @@ class Purchase extends Admin_controller {
         if(!empty($_POST)){
             extract($this->input->post());
 
-            if(!empty($vendor_id) || !empty($f_date) || !empty($t_date)){
+            if(!empty($vendor_id) || !empty($f_date) || !empty($t_date) || !empty($po_for)){
                 $where = "status = 1 ";
                 if(!empty($vendor_id)){
                     $data['vendor_id'] = $vendor_id;
                     $where .= " and vendor_id = '".$vendor_id."'";
+                }
+                if(!empty($po_for)){
+                    $data['po_for'] = $po_for;
                 }
 
                 if(!empty($f_date) && !empty($t_date)){
@@ -2364,7 +2376,7 @@ public function delete_purchasepayment($id) {
               set_alert('warning', 'Invalid Record');
               redirect(admin_url('approval/notifications'));
             }
-
+            
             $ad_data = array(
                 'approve_status' => $submit,
                 'remark' => $remark,
@@ -2460,8 +2472,11 @@ public function delete_purchasepayment($id) {
                     $totalamount = value_by_id('tblpurchaseorder', $chk_payment->po_id, "totalamount");
                     $beforepayamt = ($totalamount - $po_paid_amount);
                     $taxamt = ($beforepayamt > 0) ? ($beforepayamt * 18)/100 : 0;
-                    $taxable_amount = round($beforepayamt - $taxamt);
-                    if ($taxable_amount > 0){
+                    $tdspaid_amount = round($beforepayamt - $taxamt);
+
+                    $po_product = $this->db->query("SELECT SUM(ttl_price) as ttl_price FROM `tblpurchaseorderproduct` WHERE `po_id` ='".$chk_payment->po_id."' ")->row();
+                    $taxable_amount = (!empty($po_product) && !empty($po_product->ttl_price)) ? $po_product->ttl_price : 0;
+                    if ($tdspaid_amount > 0){
                         
                         $vendor_id = value_by_id('tblpurchaseorder', $chk_payment->po_id, "vendor_id");
                         $vendor_name = value_by_id('tblvendor', $vendor_id, "name");
@@ -2472,6 +2487,7 @@ public function delete_purchasepayment($id) {
                         $tds_data["rel_type"] = 1;
                         $tds_data["rel_id"] = $id;
                         $tds_data["taxable_amount"] = $taxable_amount;
+                        $tds_data["paid_amount"] = $tdspaid_amount;
                         $tds_data["tds_amount"] = $tds_amt;
                         $tds_data["pan_no"] = $vendor_pan_no;
                         $tds_data["date"] = db_date($chk_payment->created_at);
@@ -5098,7 +5114,8 @@ public function delete_purchasepayment($id) {
 
     /* this is use for show purchase order acceptace pending record */
     public function pending_payment_request(){
-        $where = "`p`.`year_id`= '".financial_year()."' AND `pt`.`acceptance`='0' AND (`pt`.`status`='1' OR `pt`.`status`='0') AND `pt`.`payment_by`= '1'";
+        $where = "`p`.`year_id`= '".financial_year()."' AND `p`.`cancel`=0 AND `pt`.`acceptance`='0' AND (`pt`.`status`='1' OR `pt`.`status`='0') AND `pt`.`payment_by`= '1'";
+        $pwhere = "`transport_against` = 2 and `acceptance` = 0 and `approved_status` IN (1,0) ";
         if(!empty($_POST)){
             extract($this->input->post());
 
@@ -5108,25 +5125,30 @@ public function delete_purchasepayment($id) {
                 $data['s_tdate'] = $t_date;
 
                 $where .= " and p.date  BETWEEN  '".db_date($f_date)."' and  '".db_date($t_date)."' ";
+                $pwhere .= " and DATE(created_at)  BETWEEN  '".db_date($f_date)."' and  '".db_date($t_date)."' ";
             }
         }
         $data['title'] = 'Pending Payment Request';
+
+        $data['paymentrequest_list'] = $this->db->query("SELECT * FROM `tblpaymentrequest` WHERE ".$pwhere." ")->result();
         $data['paymentrequest_report'] = $this->db->query("SELECT p.*,pt.id as payemnt_request_id, pt.amount as requested_amount, pt.urgency_type, pt.priority_number FROM `tblpurchaseorderpayments` as pt RIGHT JOIN `tblpurchaseorder` as p ON `pt`.`po_id`= `p`.`id` WHERE ".$where." ORDER BY pt.priority_number ASC")->result();
         $this->load->view("admin/purchase/pending_payment_request", $data);
     }
 
     /* this function use for set urgency type of payment */
-    public function updateUrgencyType($requestid = 0){
+    public function updateUrgencyType($requestid = 0, $request_type="payrequest"){
         if(!empty($_POST)){
             extract($this->input->post());
             
-            $response = $this->home_model->update("tblpurchaseorderpayments", array("urgency_type" => $urgency_type, "priority_number" => $priority_number), array('id' => $prequest_id));
+            $tablename = ($request_type == 'transportation') ? "tblpaymentrequest": "tblpurchaseorderpayments";
+            $response = $this->home_model->update($tablename, array("urgency_type" => $urgency_type, "priority_number" => $priority_number), array('id' => $prequest_id));
             if (!empty($response)){
                 set_alert('success', 'Urgency set successfully');
                 redirect(admin_url('purchase/pending_payment_request'));
             }
         }    
-        $requestdata = $this->db->query("SELECT `urgency_type`,`priority_number` FROM `tblpurchaseorderpayments` WHERE id='".$requestid."'")->row();
+        $tablename = ($request_type == 'transportation') ? "`tblpaymentrequest`": "`tblpurchaseorderpayments`";
+        $requestdata = $this->db->query("SELECT `urgency_type`,`priority_number` FROM ".$tablename." WHERE id='".$requestid."'")->row();
         ?>
             <div class="row">
                 <div class="col-md-6">
@@ -5147,5 +5169,487 @@ public function delete_purchasepayment($id) {
                 </div>  
             </div>
         <?php   
+    }
+
+    /* this function use for convert to proforma invoice */
+    public function convert_proforma_invoice($id){
+        if ($this->input->post()) {
+            $proposal_data = $this->input->post();
+         
+            // echo '<pre/>';
+            // print_r($proposal_data);
+            // die;
+            $insert_id = $this->Purchase_model->addPurchaseProformaInvoice($id, $proposal_data);
+            if ($insert_id) {
+
+                /* this code use for update proforma invoice id in purchase order */
+                $this->home_model->update('tblpurchaseorder', array('proforma_invoice_id'=>$insert_id),array('id'=>$id));
+
+                /* this is for multi attachments upload */
+                handle_multi_handover_attachments($insert_id,'poproforma_invoice');
+
+                set_alert('success', 'Proforma Invoice converted successfully');
+                
+                redirect(admin_url('purchase/proforma_invoice_list'));
+            }
+        }
+
+        $title = 'Convert PO TO PI';
+        $data["section"] = "add";
+        $data['purchase_info'] = $this->db->query("SELECT * from tblpurchaseorder where id = '".$id."' ")->row_array();
+        $data['product_info'] = $this->db->query("SELECT * from tblpurchaseorderproduct where po_id = '".$id."' ")->result_array();
+        $data['purchase_othercharges'] = $this->db->query("SELECT * from tblpurchaseothercharges where proposalid = '".$id."' ")->result_array();
+
+        $default_settings = $this->db->query("SELECT ds.*,dsc.category_name FROM `tbldefaultsetting` ds LEFT JOIN `tbldefaultsettingcategory` dsc ON ds.`default_setting_category_id`=dsc.id")->result_array();
+        $data['default_setting_field'] = array_column($default_settings, 'default_setting_field');
+
+        $this->load->model('Site_manager_model');
+        $data['state_data'] = $this->Site_manager_model->get_state();
+        $data['all_city_data'] = $this->db->query("SELECT * FROM `tblcities` ORDER BY name ASC")->result_array();
+
+        // Getting Main products and Temp Products In Single Array
+        $data['product_data'] = array();
+        $product_data = $this->db->query("SELECT * FROM `tblproducts` where status = 1 and is_approved = 1 ORDER BY name ASC")->result_array();
+        $temp_product_data = $this->db->query("SELECT * FROM `tbltemperoryproduct` where status = 1 ORDER BY product_name ASC ")->result_array();
+        if(!empty($product_data)){
+            foreach ($product_data as $r) {
+                $data['product_data'][] = array('id'=>$r['id'],'name'=>$r['sub_name'],'is_temp'=>0);
+            }
+        }
+        if(!empty($temp_product_data)){
+            foreach ($temp_product_data as $r1) {
+                $data['product_data'][] = array('id'=>$r1['id'],'name'=>$r1['product_name'],'is_temp'=>1);
+            }
+        }
+
+        $data['title'] = $title;
+        $data['all_warehouse'] = $this->db->query("SELECT * FROM `tblwarehouse` where status= '1' ORDER BY name ASC ")->result_array();
+
+        $this->load->model('Site_manager_model');
+        $data['all_site'] = $this->Site_manager_model->get();
+
+        $data['vendors_info'] = $this->db->query("SELECT * from tblvendor where status = 1 order by name asc ")->result_array();
+
+        $this->load->model('Other_charges_model');
+        $data['othercharges'] = $this->Other_charges_model->get();
+
+        $data['unit_list'] = $this->db->query("SELECT * from tblunitmaster where status = '1' ORDER BY name ASC")->result();
+
+        $this->load->view('admin/purchase/convert_proforma_invoice', $data);
+    }
+
+    /* this function use for edit proforma invoice */
+    public function proforma_invoice_edit($id){
+        if ($this->input->post()) {
+            $proposal_data = $this->input->post();
+         
+            // echo '<pre/>';
+            // print_r($proposal_data);
+            // die;
+            $insert_id = $this->Purchase_model->editPurchaseProformaInvoice($id, $proposal_data);
+            if ($insert_id) {
+
+                /* this code use for update proforma invoice id in purchase order */
+                $this->home_model->update('tblpurchaseorder', array('proforma_invoice_id'=>$insert_id),array('id'=>$id));
+                
+                if (!empty($_FILES["file"]["name"][0])){
+                    /* this is for multi attachments upload */
+                    $files_list = $this->db->query("SELECT * FROM `tblfiles` WHERE `rel_id`='".$id."' AND `rel_type`='poproforma_invoice' ")->result();
+                    if (!empty($files_list)){
+                        foreach ($files_list as $key => $file) {
+                            $response = $this->home_model->delete('tblfiles', array('id' => $file->id, 'rel_type' => 'poproforma_invoice'));
+                            if ($response){
+                                $upath = get_upload_path_by_type('poproforma_invoice') . $id . '/'.$file->file_name;
+                                unlink($upath);
+                            }
+                        }
+                    }
+                }
+                
+                /* this is for multi attachments upload */
+                handle_multi_handover_attachments($insert_id,'poproforma_invoice');
+                set_alert('success', 'Proforma Invoice updated successfully');
+                redirect(admin_url('purchase/proforma_invoice_list'));
+            }
+        }
+
+        $title = 'Edit Proforma Invoice';
+        $data['purchase_info'] = $this->db->query("SELECT * from tblpurchaseproformainvoice where id = '".$id."' ")->row_array();
+        $data['product_info'] = $this->db->query("SELECT * from tblpurchaseorderproduct where proforma_invoice_id = '".$id."' ")->result_array();
+        $data['purchase_othercharges'] = $this->db->query("SELECT * from tblpurchaseothercharges where proposalid = '".$id."' ")->result_array();
+
+        $default_settings = $this->db->query("SELECT ds.*,dsc.category_name FROM `tbldefaultsetting` ds LEFT JOIN `tbldefaultsettingcategory` dsc ON ds.`default_setting_category_id`=dsc.id")->result_array();
+        $data['default_setting_field'] = array_column($default_settings, 'default_setting_field');
+
+        $this->load->model('Site_manager_model');
+        $data['state_data'] = $this->Site_manager_model->get_state();
+        $data['all_city_data'] = $this->db->query("SELECT * FROM `tblcities` ORDER BY name ASC")->result_array();
+
+        // Getting Main products and Temp Products In Single Array
+        $data['product_data'] = array();
+        $product_data = $this->db->query("SELECT * FROM `tblproducts` where status = 1 and is_approved = 1 ORDER BY name ASC")->result_array();
+        $temp_product_data = $this->db->query("SELECT * FROM `tbltemperoryproduct` where status = 1 ORDER BY product_name ASC ")->result_array();
+        if(!empty($product_data)){
+            foreach ($product_data as $r) {
+                $data['product_data'][] = array('id'=>$r['id'],'name'=>$r['sub_name'],'is_temp'=>0);
+            }
+        }
+        if(!empty($temp_product_data)){
+            foreach ($temp_product_data as $r1) {
+                $data['product_data'][] = array('id'=>$r1['id'],'name'=>$r1['product_name'],'is_temp'=>1);
+            }
+        }
+
+        $data['title'] = $title;
+        $data['all_warehouse'] = $this->db->query("SELECT * FROM `tblwarehouse` where status= '1' ORDER BY name ASC ")->result_array();
+
+        $this->load->model('Site_manager_model');
+        $data['all_site'] = $this->Site_manager_model->get();
+
+        $data['vendors_info'] = $this->db->query("SELECT * from tblvendor where status = 1 order by name asc ")->result_array();
+
+        $this->load->model('Other_charges_model');
+        $data['othercharges'] = $this->Other_charges_model->get();
+
+        $data['unit_list'] = $this->db->query("SELECT * from tblunitmaster where status = '1' ORDER BY name ASC")->result();
+        $data["section"] = "edit";
+        $this->load->view('admin/purchase/convert_proforma_invoice', $data);
+    }
+
+    /* this is use for show proforma invoice list */
+    public function proforma_invoice_list(){
+        $where = "`year_id`= '".financial_year()."'";
+        if(!empty($_POST)){
+            extract($this->input->post());
+
+            if (!empty($vendor_id)){
+                $where .= " and vendor_id ='".$vendor_id."'";
+                $data['vendor_id'] = $vendor_id;
+            }
+
+            if(!empty($f_date) && !empty($t_date)){
+
+                $data['f_date'] = $f_date;
+                $data['t_date'] = $t_date;
+
+                $where .= " and date  BETWEEN  '".db_date($f_date)."' and  '".db_date($t_date)."' ";
+            }
+        }
+        $data['title'] = 'Proforma Invoice List';
+        $data['vendors_info'] = $this->db->query("SELECT * from tblvendor where status = 1 order by name asc ")->result();
+        $data['proforma_invoice_list'] = $this->db->query("SELECT * FROM `tblpurchaseproformainvoice` WHERE ".$where." ORDER BY id DESC")->result();
+        $this->load->view("admin/purchase/proforma_invoice_list", $data);
+    }
+
+    /* this function use for proforma invoice view */
+    public function proforma_invoice_view($id){
+        $data['title'] = 'Proforma Invoice View';
+        $data['proforma_invoice_info'] = $this->db->query("SELECT * FROM `tblpurchaseproformainvoice` WHERE id = ".$id." ")->row();
+        $data['product_info'] = $this->db->query("SELECT * from tblpurchaseorderproduct where proforma_invoice_id = '".$id."' ")->result();
+        $this->load->view("admin/purchase/proforma_invoice_view", $data);
+    }
+
+    public function pi_upload() {
+        if(!empty($_POST)){
+            extract($this->input->post());
+
+            handle_multi_attachments($pi_id,'poproforma_invoice');
+
+            set_alert('success', 'File Uploaded successfully');
+            redirect(admin_url('purchase/proforma_invoice_list'));
+        }
+    }
+
+    public function get_pi_uploads_data() {
+        if(!empty($_POST)){
+            extract($this->input->post());
+
+            $file_info = $this->db->query("SELECT * from tblfiles where rel_type = 'poproforma_invoice' and rel_id = '".$id."' ")->result();
+
+            if(!empty($file_info)){
+            ?>
+
+
+            <div class="col-md-12">
+                <table class="table ui-table">
+                    <thead>
+                      <tr>
+                        <th>S.No</th>
+                        <th>Uploads File</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        foreach ($file_info as $key => $file) {
+                        ?>
+                         <tr>
+                            <td><?php echo ++$key; ?></td>
+                            <td><a target="_blank" href="<?php echo base_url('uploads/purchase_order/proforma_invoice/'.$file->rel_id.'/'.$file->file_name); ?>"><?php echo $file->file_name; ?></a></td>
+                            <td><?php echo _d($file->dateadded); ?></td>
+                            <td><a href="<?php echo admin_url("purchase/delete_popraforma_attachment/".$file->id); ?>" class="btn-sm btn-danger _delete"><i class="fa fa-trash"></i></a></td>
+                         </tr>
+
+                    <?php
+                    }
+                    ?>
+                     </tbody>
+                </table>
+            </div>
+            <?php
+            }
+
+        }
+    }
+
+    /* this function use for delete proforma attachment receipts */
+    public function delete_popraforma_attachment($id){
+        $files_list = $this->db->query("SELECT * FROM `tblfiles` WHERE `id`='".$id."' AND `rel_type`='poproforma_invoice' ")->row();
+        if (!empty($files_list)){
+            $response = $this->home_model->delete('tblfiles', array('id' => $files_list->id, 'rel_type' => 'poproforma_invoice'));
+            if ($response){
+                $upath = get_upload_path_by_type('poproforma_invoice') . $id . '/'.$files_list->file_name;
+                unlink($upath);
+                set_alert('success', "Successfully removed");
+            }
+        }
+
+        redirect(admin_url("purchase/proforma_invoice_list"));
+    }
+
+    /* this function use for update accounted status in purchase invoice */
+    public function update_accounted_status($purchaseinvoice_id){
+        
+        $status = value_by_id_empty('tblpurchaseinvoice', $purchaseinvoice_id, "accounted_status");
+        $updata["accounted_status"] = 0;
+        if ($status == 0){
+            $updata["accounted_status"] = 1;
+            $updata["accounted_by"] = get_staff_user_id();
+            $updata["accounted_date"] = date("Y-m-d H:i:s");
+        }
+        
+        $this->home_model->update('tblpurchaseinvoice', $updata,array('id'=>$purchaseinvoice_id));
+        redirect(admin_url('purchase/invoice_list'));
+    }
+
+    /* this function use for get renewalapproval */
+    public function get_renewalapproval_data($po_id = ''){
+        if(!empty($_POST)){
+            extract($this->input->post());
+
+            // echo "<pre>";
+            // print_r($_POST);
+            // exit;    
+
+            /* THIS CODE FOR ASSIGN STAFF FOR TAKE APPROVAL */
+            $staff_id = array();
+            if(!empty($assignid)){
+                foreach ($assignid as $single_staff) {
+                if (strpos($single_staff, 'staff') !== false) {
+                        $staff_id[] = str_replace("staff", "", $single_staff);
+                    }
+                }
+                $staff_id = array_unique($staff_id);
+            }
+
+            if(!empty($staff_id)){
+
+                $up_data = array("renewal_remark" => $renewal_remark, "approval_for_renewal" => 6);
+                $this->home_model->update("tblpurchaseorder", $up_data, array("id" => $po_id));
+
+                $this->home_model->delete('tblmasterapproval',array('table_id'=>$po_id,'module_id'=>62));
+                foreach ($staff_id as $staffid) {
+
+                    //adding on master log
+                    $adata = array(
+                        'staff_id' => $staffid,
+                        'fromuserid' => get_staff_user_id(),
+                        'module_id' => 62,
+                        'description' => 'Purchase Order Send to you for renewal Approval',
+                        'table_id' => $po_id,
+                        'approve_status' => 0,
+                        'status' => 0,
+                        'link' => 'purchase/renewal_approval/' . $po_id,
+                        'date' => date('Y-m-d'),
+                        'date_time' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    );
+                    $this->db->insert('tblmasterapproval', $adata);
+
+                    //Sending Mobile Intimation
+                    $token = get_staff_token($staffid);
+                    $message = 'Purchase Order Send to you for renewal Approval';
+                    $title = 'Schach';
+                    sendFCM($message, $title, $token, $page = 2);
+                }
+            }
+            set_alert('success', 'Purchase order renewal approval send successfully');
+            redirect($_SERVER['HTTP_REFERER']);
+        } 
+
+        $Staffgroup = $this->db->query("SELECT st.* FROM `tblstaffgroup` st LEFT JOIN `tblstaffgroupmultiselect` stm ON st.`id`=stm.`staffgroup_id` LEFT JOIN `tblmultiselectmaster` ms ON stm.multiselect_id=ms.id WHERE ms.id='19'")->result_array();
+        $i = 0;
+        $allStaffdata = array();
+        foreach ($Staffgroup as $singlestaff) {
+            $i++;
+            $allStaffdata[$i]['id'] = $singlestaff['id'];
+            $allStaffdata[$i]['name'] = $singlestaff['name'];
+            $query = $this->db->query("SELECT s.staffid,s.firstname,s.email FROM `tblstaffgroupmembers` sg LEFT JOIN `tblstaff` s ON s.staffid=sg.`staff_id` WHERE sg.`group_id`='" . $singlestaff['id'] . "' AND s.staffid!='" . get_staff_user_id() . "' ORDER BY s.firstname ASC")->result_array();
+            $allStaffdata[$i]['staffs'] = $query;
+        }
+        
+        $po_status = value_by_id_empty("tblpurchaseorder", $po_id, 'approval_for_renewal');
+        $assign_info = $this->db->query("SELECT * from `tblmasterapproval` where `module_id` = '62' and `table_id` = '".$po_id."' ")->result();
+    ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <?php
+                        if (!empty($assign_info) && ($po_status == 0 OR $po_status == 6)){
+                    ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="no-mtop mrg3">Assign Detail List</h4>
+                            </div>
+                            <hr/>
+                            <div class="col-md-12">
+                                <div style="overflow-x:auto !important;">
+                                    <div class="form-group" >
+                                        <table class="table credite-note-items-table table-main-credit-note-edit no-mtop">
+                                            <thead>
+                                                <tr>
+                                                    <td>S.No</td>
+                                                    <td>Name</td>
+                                                    <td>Action</td>
+                                                    <td>Remark</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                                $i = 1;
+                                                foreach ($assign_info as $key => $value) {
+
+                                                        if($value->approve_status == 0){
+                                                            $status = 'Pending';
+                                                            $color = 'Darkorange';
+                                                        }elseif($value->approve_status == 1){
+                                                            $status = 'Approved';
+                                                            $color = 'green';
+                                                        }elseif($value->approve_status == 2){
+                                                            $status = 'Reject';
+                                                            $color = 'red';
+                                                        }elseif ($value->approve_status == 5) {
+                                                            $status = 'On Hold';
+                                                            $color = '#e8bb0b;';
+                                                        }
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo $i++;?></td>
+                                                        <td><?php echo get_employee_name($value->staff_id); ?></td>
+                                                        <td style="color: <?php echo $color; ?>;"><?php echo $status; ?></td>
+                                                        <td><?php echo ($value->approval_remark != '') ?  $value->approval_remark : '--';  ?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            
+                                            ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php      
+                        }else{
+                        
+                        echo form_open($this->uri->uri_string(), array('id' => 'renewal-form', 'class' => 'renewalapproval', 'enctype' => 'multipart/form-data')); ?>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-6" style="margin-bottom:2%;">
+                                    <label for="city_id" class="control-label"><?php echo _l('proposal_assigned'); ?></label>
+                                    <select onchange="staffdropdown()" class="form-control selectpicker" multiple data-live-search="true" id="assign" required='' name="assignid[]">
+                                        <?php
+                                        if (isset($allStaffdata) && count($allStaffdata) > 0) {
+                                            foreach ($allStaffdata as $Staffgroup_key => $Staffgroup_value) {
+                                        ?>
+                                                <optgroup class="<?php echo 'group' . $Staffgroup_value['id'] ?>">
+                                                    <option value="<?php echo 'group' . $Staffgroup_value['id'] ?>"><?php echo $Staffgroup_value['name'] ?></option>
+                                                    <?php
+                                                    foreach ($Staffgroup_value['staffs'] as $singstaff) {
+                                                        ?>
+                                                        <option style="margin-left: 3%;" value="<?php echo 'staff' . $singstaff['staffid'] ?>" <?php
+                                                        if (isset($staffassigndata) && in_array($singstaff['staffid'], $staffassigndata)) {
+                                                            echo'selected';
+                                                        }
+                                                        ?>><?php echo $singstaff['firstname'] ?></option>
+                                                            <?php }
+                                                            ?>
+                                                </optgroup>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6" app-field-wrapper="renewal_remark">
+                                    <label for="remark" class="control-label">Renewal Remark</label>
+                                    <textarea id="renewal_remark" name="renewal_remark" class="form-control" rows="4" required=""></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-info pull-right">Send</button>
+                            </div>    
+                        </div>   
+                    <?php 
+                        echo form_close();         
+                        }
+                    ?>
+                </div>
+            </div>
+        <?php 
+    }
+
+    public function renewal_approval($id) {
+
+    	if(!empty($_POST)){
+       		extract($this->input->post());
+
+            // echo "<pre>";
+            // print_r($_POST);
+            // exit;
+
+            $ad_data = array(
+                'approval_for_renewal' => $submit
+            );
+            $update = $this->home_model->update('tblpurchaseorder', $ad_data,array("id" => $id));
+            if ($update){
+                update_masterapproval_single(get_staff_user_id(),62,$id,$submit);
+                update_masterapproval_all(62,$id,$submit);
+
+                $up_data = array("approval_remark" => $approval_remark);
+                $this->home_model->update('tblmasterapproval', $up_data,array('table_id'=> $id, 'module_id'=> '62','staff_id'=>get_staff_user_id()));
+                // if ($submit == 1){
+                //     $this->home_model->delete('tblmasterapproval',array('table_id'=>$id,'module_id'=>62));
+                // }
+                set_alert('success', 'Purchase order renewal approval updated succesfully');
+                redirect(admin_url('approval/notifications'));
+            }
+    	}
+
+    	$data['id'] = $id;
+        $data['purchase_info'] = $this->db->query("SELECT * from tblpurchaseorder where id = '".$id."' ")->row_array();
+        $data['product_info'] = $this->db->query("SELECT * from tblpurchaseorderproduct where po_id = '".$id."' ")->result_array();
+        $data['staffassigndata'] = explode(',', $data['purchase_info']['assignid']);
+        $data['product_data'] = $this->db->query("SELECT p.* FROM `tblproducts` p LEFT JOIN `tblcategorymultiselect` cm ON p.`product_cat_id`=cm.category_id LEFT JOIN `tblmultiselectmaster` ms ON cm.multiselect_id=ms.id WHERE ms.multiselect='proposal'")->result_array();
+        
+        $data['all_warehouse'] = $this->db->query("SELECT * FROM `tblwarehouse` where status='1'")->result_array();
+        $data['vendors_info'] = $this->db->query("SELECT * from tblvendor where status = 1 ")->result_array();
+        $data['appvoal_info'] = $this->db->query("SELECT * from `tblmasterapproval` where `module_id` = '62' and `table_id` = '".$id."' and staff_id = '".get_staff_user_id()."' and status != 0 ")->row();
+        $data['ttlpaidamount'] = $this->db->query("SELECT SUM(approved_amount) as ttlamount from tblpurchaseorderpayments where po_id = '".$id."' and status = 1 ")->row()->ttlamount;
+         
+        $data['title'] = 'Purchase Order Renewal Approval';
+        if ($data['purchase_info']['order_type'] == 2){
+            $data['title'] = 'Work Order Renewal Approval';
+        }
+    	
+        $this->load->view('admin/purchase/porenewal_approval', $data);
     }
 }

@@ -26,10 +26,12 @@
                         $_table_data = array(
 //                            '<span class="hide"> - </span><div class="checkbox mass_select_all_wrap"><input type="checkbox" id="mass_select_all" data-to-table="clients"><label></label></div>',
                             '#',
+                            'Added By',
                             _l('client_name'),
                             _l('client_loc'),
                             _l('client_mail'),
                             _l('client_number1'),
+                            'Created At',
                             'Payment Followup',
                             
                         );

@@ -32,9 +32,14 @@
             <?php
                // To prevent not loading the timers twice
                if(is_mobile()){ ?>
-            <li class="dropdown notifications-wrapper header-notifications">
+            <!-- <li class="dropdown notifications-wrapper header-notifications">
                <?php $this->load->view('admin/includes/notifications'); ?>
-            </li>
+            </li> -->
+            <li class="dropdown notifications-wrapper header-notifications" data-toggle="tooltip" title="<?php echo _l('nav_notifications'); ?>" data-placement="bottom">
+            <a href="<?php echo admin_url('approval/staff_notification_list'); ?>" data-toggle="tooltip" title="Notifications" data-placement="bottom"><i class="fa fa-bell fa-fw fa-lg" aria-hidden="true"></i>
+               
+            </a>
+         </li>
             <!-- <li>
                <a href="<?php echo admin_url('approval/staff_notification_list'); ?>" class="dropdown-toggle notifications-icon" data-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-bell fa-fw fa-lg"></i>
@@ -103,7 +108,7 @@
             </a>
             <ul class="dropdown-menu animated fadeIn">
 			<li class="header-my-profile"></a></li>
-               <li class="header-my-profile"><a href="<?php echo admin_url('wallet'); ?>">Wallet :- <?php echo wallet_amount($this->session->userdata('staff_user_id'));?></a></li>
+               <li class="header-my-profile"><a href="<?php echo admin_url('wallet'); ?>">Wallet :- <?php echo wallet_amount($this->session->userdata('staff_user_id')); ?></a></li>
                <li class="header-my-profile"><a href="<?php echo admin_url('profile'); ?>"><?php echo _l('nav_my_profile'); ?></a></li>
                <!--<li class="header-my-timesheets"><a href="<?php echo admin_url('staff/timesheets'); ?>"><?php echo _l('my_timesheets'); ?></a></li>-->
                <li class="header-edit-profile"><a href="<?php echo admin_url('staff/edit_profile'); ?>">Change Password</a></li>
@@ -168,9 +173,16 @@
                <?php } ?>
             </a>
          </li> -->
-         <li class="dropdown notifications-wrapper header-notifications" data-toggle="tooltip" title="<?php echo _l('nav_notifications'); ?>" data-placement="bottom">
-            <?php $this->load->view('admin/includes/notifications'); ?>
+         <li class="icon header-newsfeed">
+            <a href="<?php echo admin_url('approval/staff_notification_list'); ?>" data-toggle="tooltip" title="<?php echo _l('nav_notifications'); ?>" data-placement="bottom"><i class="fa fa-bell fa-fw fa-lg" aria-hidden="true"></i>
+                <?php if(get_staff_notification_counts() > 0){ ?>
+                    <span class="label icon-total-indicator bg-warning icon-notifications"><?php echo get_staff_notification_counts(); ?></span>
+                 <?php } ?>
+            </a>
          </li>
+         <!-- <li class="dropdown notifications-wrapper header-notifications" data-toggle="tooltip" title="<?php echo _l('nav_notifications'); ?>" data-placement="bottom">
+            <?php $this->load->view('admin/includes/notifications'); ?>
+         </li> -->
       </ul>
    </nav>
 </div>

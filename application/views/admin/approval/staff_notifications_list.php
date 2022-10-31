@@ -158,6 +158,9 @@ init_head();
                             if ($value->module_id == "9" && $value->type == "1" && $value->for_manager_approval == "0") {
                               $number = "REQ-PTC-".number_series($value->table_id);
                             }
+                            if ($value->module_id == "9" && $value->type == "2" && $value->for_manager_approval == "0") {
+                              $number = "REQ-PTC-".number_series($value->table_id);
+                            }
                             if ($value->module_id == "9" && $value->type == "1" && $value->for_manager_approval == "1") {
                               $request_id = value_by_id("tblpettycashapproved", $value->table_id, "request_id");
                               if ($value->category_id == 1){

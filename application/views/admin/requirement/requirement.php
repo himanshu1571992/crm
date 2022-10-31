@@ -56,9 +56,26 @@
                     <hr class="hr-panel-heading">
                     <div class="row">
                         <div class="row col-md-12">
-                            <div class="form-group col-md-4" id="department">
+                            
+                            <div class="form-group col-md-4" id="productname">
+                                <label for="productname" class="control-label">Product Name</label>
+                                <select class="form-control selectpicker" data-live-search="true" id="product_name" name="product_name">
+                                    <option value=""></option>
+                                    <?php
+                                        if (isset($productlist) && !empty($productlist)){
+                                           foreach ($productlist as $pro) {
+                                             $selectedcls = (isset($sproduct_name) && $sproduct_name == $pro->product_name) ? 'selected=""':'';
+                                    ?>
+                                              <option value="<?php echo $pro->product_name; ?>" <?php echo $selectedcls; ?>><?php echo cc($pro->product_name); ?></option>
+                                    <?php
+                                           }
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2" id="department">
                                 <label for="department" class="control-label">Department</label>
-                                <select class="form-control selectpicker" required="" data-live-search="true" id="department_id" name="department_id">
+                                <select class="form-control selectpicker" data-live-search="true" id="department_id" name="department_id">
                                     <option value=""></option>
                                     <?php
                                         if (isset($department_list) && !empty($department_list)){
@@ -72,8 +89,29 @@
                                     ?>
                                 </select>
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="col-md-2">
+                              <div class="form-group">
+                                  <label for="reason" class="control-label">Reason For Request </label>
+                                  <select class="form-control selectpicker" data-live-search="true" id="reason_for_request" name="reason_for_request">
+                                      <option value=""></option>
+                                      <option value="1" <?php echo (isset($reason_for_request) && $reason_for_request == 1) ? 'selected':''; ?>>For Sales Order </option>
+                                      <option value="2" <?php echo (isset($reason_for_request) && $reason_for_request == 2) ? 'selected':''; ?>>For Stock</option>
+                                  </select>
+                              </div>
+                            </div>
+                            <div class="col-md-2">
+                              <div class="form-group">
+                                  <label for="reason" class="control-label">PO Status </label>
+                                  <select class="form-control selectpicker" data-live-search="true" id="po_status" name="po_status">
+                                      <option value=""></option>
+                                      <option value="0" <?php echo (isset($po_status) && strlen($po_status) > 0 && $po_status == 0) ? 'selected':''; ?>>Not Created </option>
+                                      <option value="1" <?php echo (isset($po_status) && $po_status == 1) ? 'selected':''; ?>>Created</option>
+                                  </select>
+                              </div>
+                            </div>
+                            <div class="form-group col-md-2">
                                 <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
+                                <a href="" style="margin-top: 24px;" class="btn btn-danger">Reset</a>
                             </div>
                         </div>
                         <div class="">
@@ -147,6 +185,15 @@
                                                 }
 
                                                 $expected_date = (!empty($row->expected_date)) ? _d($row->expected_date) : 'N/A';
+                                                $admin_status = 'Pending';
+                                                $colorcls = 'color:Orange';
+                                                if ($row->approve_status == 1){
+                                                    $admin_status = 'Taken';
+                                                    $colorcls = 'color:green';
+                                                }else if ($row->approve_status == 6){
+                                                    $admin_status = 'Partially Approved';
+                                                    $colorcls = 'color:#2196f3';
+                                                }
                                               ?>
                                               <tr>
                                                     <td><?php echo $i++;?></td>
@@ -160,9 +207,9 @@
                                                     <td><?php echo date('d-m-Y h:i a',strtotime($row->created_at));?></td>
                                                     <td style="color: <?php echo ($row->purchase_person_status == 1) ? 'Green' : 'Orange'; ?>"><?php echo ($row->purchase_person_status == 1) ? 'Taken' : 'Pending'; ?></td>
                                                     <?php if ($row->approve_status == 0 && $row->purchase_person_status == 1){ ?>
-                                                        <td style="color: <?php echo ($row->approve_status == 1) ? 'Green' : 'Orange'; ?>"><?php echo ($row->approve_status == 1) ? 'Taken' : '<a href="javascript:void(0);" class="text-warning adminstatus" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">Pending</a>'; ?></td>
+                                                        <td style="<?php echo $colorcls; ?>"><?php echo ($row->approve_status == 1) ? 'Taken' : '<a href="javascript:void(0);" class="text-warning adminstatus" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">Pending</a>'; ?></td>
                                                     <?php }else{ ?>
-                                                    <td style="color: <?php echo ($row->approve_status == 1) ? 'Green' : 'Orange'; ?>"><?php echo ($row->approve_status == 1) ? 'Taken' : 'Pending'; ?></td>
+                                                        <td style="<?php echo $colorcls; ?>"><?php echo $admin_status; ?></td>
                                                     <?php } ?>
                                                     <td><?php echo $outputType; ?></td>
                                                     <td>

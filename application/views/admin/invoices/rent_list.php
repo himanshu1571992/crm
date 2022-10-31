@@ -38,6 +38,10 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
     -webkit-box-shadow:  0px 0px 0px 0px #000;
             box-shadow:  0px 0px 0px 0px #000;
 }
+
+.dropdown-menu {
+    min-width: 191px;            
+}
 </style>
 <div id="wrapper">
     <div class="content accounting-template">
@@ -141,7 +145,7 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
 
                     <div class="col-md-12">
                         <?php
-                        if(is_admin() == 1){
+                       // if(is_admin() == 1){
                         ?>
 <!--                        <div class="row">
                             <div class="col-md-12 text-center totalAmount-row">
@@ -196,7 +200,7 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                             </fieldset>
                         </div>
                         <?php
-                        }
+                       // }
                         ?>
 
                         <hr>
@@ -213,6 +217,10 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                                 <th>Status</th>
                                 <th>Send Email</th>
                                 <th>Send Courier</th>
+                                <th>E-Invoice Status</th>
+                                <th>Eway-Bill Status</th>
+                                <th>Accounted Status</th>
+                                <th>TCS Status</th>
                                 <th class="text-center">Action</th>
                               </tr>
                             </thead>
@@ -237,7 +245,7 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                                         }
                                     }
 
-                                     $client_info = $this->db->query("SELECT `client_branch_name` from `tblclientbranch` where userid = '".$value->clientid."'  ")->row();
+                                        $client_info = $this->db->query("SELECT `client_branch_name`,`legal_name`,`trade_name` from `tblclientbranch` where userid = '".$value->clientid."'  ")->row();
 
                                         $item_info = $this->db->query("SELECT is_sale FROM `tblitems_in` where  `rel_type` = 'invoice' and `rel_id` = '".$value->id."' ")->row();
 
@@ -287,18 +295,58 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                                             </div>
                                             <a href="javascript:void(0);" data-target="#courierinfo" onclick="getcourierinfo('<?php echo $value->id; ?>');" data-toggle="modal" class="label label-success courier_model"><?php echo (!empty($courier_info)) ? 'VIEW':'SET'; ?></a>
                                         </td>
+                                        <td>
+                                            <?php 
+                                                if (!empty($value->einvoice_pdf)){
+                                                    echo '<a href="'.$value->einvoice_pdf.'" class="label label-success" style="font-size: 12px;">CREATED</a>';
+                                                }else{
+                                                    echo '<span class="label label-warning">PENDING</span>';
+                                                }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php 
+                                                if (!empty($value->ewayBiIl_id)){                                                                
+                                                    $eway_info = $this->db->query("SELECT ewaybill_pdf FROM `tblwaybill` where  `status` = '1' and `invoice_id` = '".$value->id."' ")->row();
+                                                    echo '<a href="'.$eway_info->ewaybill_pdf.'" class="label label-success" style="font-size: 12px;">CREATED</a>';
+                                                }else{
+                                                    echo '<span class="label label-warning">PENDING</span>';
+                                                }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                                $accounted_status = 0;
+                                                $accounted_text = '<span class="btn-sm btn-warning">Pending</span>';
+                                                if ($value->accounted_status > 0){
+                                                    $accounted_status = 1;
+                                                    $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
+                                                }
+                                            ?>
+                                            <a href="<?php echo admin_url('invoices/update_accounted_status/'.$value->id.'/rent'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+                                        </td>
+                                        <td>
+                                            <?php
+                                                $tcsstatus_text = '<a href="'.admin_url('invoices/calculate_tcs_charges/'.$value->id.'/'.$value->clientid).'" class="_delete"><span class="label label-warning">Pending</span></a>';
+                                                if ($value->tcs_status > 0){
+                                                    $tcsstatus_text = '<span class="label label-success">Charges Taken</span>';
+                                                }
+                                                echo $tcsstatus_text;
+                                            ?>
+                                        </td>
                                         <td class="text-center">
 
-                                            <a href="<?php echo site_url('invoice/'.$value->id.'/'.$value->hash).$type ; ?>" target="_blank" class="tableBtn actionBtn"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                            <?php if(check_permission_page(18,'edit') && $value->status != '5'){ ?>
-                                            <a href="<?php echo admin_url('invoices/invoices/' . $value->id); ?>" class="tableBtn actionBtn"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                            <?php } ?>
+                                            
                                             <div class="btn-group pull-right">
-                                                 <button type="button" class="tableBtn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                  <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                                  </button>
                                                  <ul class="dropdown-menu dropdown-menu-right toggle-menu">
                                                     <li>
+                                                        <a href="<?php echo site_url('invoice/'.$value->id.'/'.$value->hash).$type ; ?>" target="_blank">View</a>
+                                            <?php if(check_permission_page(18,'edit') && $value->status != '5'){ ?>
+                                            <a href="<?php echo admin_url('invoices/invoices/' . $value->id); ?>" >Edit</a>
+                                            <?php } ?>
                                                        <a target="_blank" href="<?php echo admin_url('invoices/download_pdf/'.$value->id.'/?output_type=I');?>" data-status="1">View PDF</a>
 													   <?php
 														if($type == '?type=rent' && $value->status != '5'){
@@ -306,19 +354,44 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
 															<a target="_blank" href="<?php echo admin_url('invoices/renew_invoice/'.$value->id);?>" data-status="1">RENEWAL</a>
 														<?php
 														}
-                                                        if($value->status != '5'){
-                                                            ?>
-                                                            <a class="text-danger _delete" target="_blank" href="<?php echo admin_url('invoices/mark_as_cancelled/'.$value->id);?>" data-status="1">CANCEL</a>
-                                                        <?php
-                                                        }
 														?>
                                                             <a href="javascript:void(0);" class="btn-with-tooltip send-email" data-id="<?php echo $value->id; ?>" data-cid="<?php echo $value->clientid; ?>"  data-target="#send_mainto_customer" id="send_mail" data-toggle="modal">
-                                                                    Send Mail
-                                                                </a>
+                                                                Send Mail
+                                                            </a>
                                                             <a href="javascript:void(0);" class="btn-with-tooltip connect_to_lead" data-id="<?php echo $value->id; ?>" data-lead_id="<?php echo $value->lead_id; ?>"  data-target="#connect_lead" id="lead_connect" data-toggle="modal">
-                                                                    <?php echo ($value->lead_id > 0) ? 'Lead Connected' : 'Connect To Lead'; ?>
-                                                                </a>
-                                                                <a href="<?php echo admin_url('invoices/load_certificate_list/'.$value->id); ?>" class="btn-with-tooltip" title="Load Test Certificate">LTC</a>
+                                                                <?php echo ($value->lead_id > 0) ? 'Lead Connected' : 'Connect To Lead'; ?>
+                                                            </a>
+                                                            <a href="<?php echo admin_url('invoices/load_certificate_list/'.$value->id); ?>" class="btn-with-tooltip" title="Load Test Certificate">LTC</a>
+                                                            <?php 
+
+                                                        if($value->status != '5'){
+                                                            ?>
+                                                            <a class="text-danger _delete"  target="_blank" href="<?php echo admin_url('invoices/mark_as_cancelled/'.$value->id);?>" data-status="1"><span style="color:red;">CANCEL</span></a>
+                                                        <?php
+                                                        }
+                                                                if (empty($value->einvoice_irn) && empty($value->einvoice_ack_date) && empty($value->einvoice_ack_number)){
+                                                                    if (!empty($client_info->legal_name) && !empty($client_info->trade_name)){
+                                                                        echo '<a href="javascript:void(0);" onclick="generateEinvoice('.$value->id.');" class="btn-with-tooltip" style="font-size: 12px;">GENERATE E-INVOICE</a>';
+                                                                    }else{
+                                                                        echo '<a href="javascript:void(0);" onclick="getLegalName('.$value->clientid.');" class="btn-with-tooltip get_legal_name">Get Legal Name</a>';
+                                                                    }
+                                                                }
+                                                                if (!empty($value->einvoice_pdf)){
+                                                                    echo '<a href="'.$value->einvoice_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD E-INVOICE</a>';
+                                                                    if ($value->ewayBiIl_id > 0){
+                                                                        $ewayBiIl_pdf = value_by_id_empty("tblwaybill", $value->ewayBiIl_id, "ewaybill_pdf");
+
+                                                                        echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_ewaybill_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-WAYBILL</a>';
+                                                                        if (!empty($ewayBiIl_pdf)){
+                                                                            echo '<a href="'.$ewayBiIl_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD EwayBill</a>';
+                                                                        }
+                                                                    }else{
+                                                                        echo '<a href="javascript:void(0);" class="btn-with-tooltip" onclick="generate_ewaybill('.$value->id.');" style="font-size: 12px;">GENERATE EWAYBILL</a>';
+                                                                    }
+                                                                    
+                                                                    echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-INVOICE</a>';
+                                                                }      
+                                                            ?>
                                                     </li>
                                                  </ul>
                                             </div>
@@ -527,6 +600,164 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
         <button type="submit" autocomplete="off" class="btn btn-info">Save</button>
       </div>
     </div>
+    <?php echo form_close(); ?>
+  </div>
+</div>
+
+<div id="spinnerlodder" class="modal fade" role="dialog">
+    <div class="modal-dialog ">
+        <!-- Modal content-->
+        <div class="modal-content" style="width: 140px;margin-top: 50%;margin-left: 40%;">
+            <div class="modal-body" >
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- <img src="<?php echo base_url('assets/images/lodder.gif'); ?>" width="100px;" alt="lodder"> -->
+                        <h6>Please waiting.....</h6> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="cancel-einvoice-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <?php echo form_open(admin_url("E_invoicing/cancel_einvoice"), array('id' => 'cancel_einvoice_from')); ?>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close close-model" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="color:#fff"> Cancel E-invoice </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" name="invoice_id" class="invoice_id" value="0">
+                    <div class="form-group">
+                        <div class="col-md-12" app-field-wrapper="cancel-remark">
+                            <label for="cancel_remark" class="control-label">Cancel Remark</label>
+                            <textarea class="form-control" name="cancel_remarks" id="cancel_remarks" cols="30" rows="5" required></textarea>                
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="type" value="einvoice">
+                <button type="button" class="btn btn-default close-model" data-dismiss="modal">Close</button>
+                <button type="submit" autocomplete="off" class="btn btn-info">Send Request</button>
+            </div>
+        </div>
+    <?php echo form_close(); ?>
+  </div>
+</div>
+
+<div id="generate-ewaybill-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <?php echo form_open(admin_url("E_invoicing/generate_ewaybill"), array('id' => 'generate_ewaybill')); ?>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close close-model" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="color:#fff"> Generate Ewaybill </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" name="invoice_id" class="invoice_id" value="0">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vehicle_number" class="control-label">Vehicle Number</label>
+                                <input type="text" class="form-control" name="vehicle_number" id="vehicle_number" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="transporter_name" class="control-label">Transporter Name</label>
+                                <input type="text" class="form-control" name="transporter_name" id="transporter_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vehicle_type" class="control-label">Vehicle Type</label>
+                                <select class="form-control selectpicker" required="" data-live-search="true" id="vehicle_type" name="vehicle_type">
+                                    <option value="R">Regular</option>
+                                    <option value="O">ODC</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="transportation_mode" class="control-label">Transportation Mode</label>
+                                <select class="form-control selectpicker" required="" data-live-search="true" id="transportation_mode" name="transportation_mode">
+                                    <option value="1">Road</option>
+                                    <option value="2">Rail</option>
+                                    <option value="3">Air</option>
+                                    <option value="4">Ship</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="transporter_id" class="control-label">Transporter ID</label>
+                                <input type="text" class="form-control" name="transporter_id" id="transporter_id" >
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="transporter_doc_no" class="control-label">Transporter Document Number</label>
+                                <input type="text" class="form-control" name="transporter_doc_no" id="transporter_doc_no" >
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="transporter_doc_date" class="control-label">Transporter Document Date</label>
+                                <div class="input-group date">
+                                    <input id="transporter_doc_date" name="transporter_doc_date" class="form-control datepicker" value="" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default close-model" data-dismiss="modal">Close</button>
+                <button type="submit" autocomplete="off" class="btn btn-info">Save</button>
+            </div>
+        </div>
+    <?php echo form_close(); ?>
+  </div>
+</div>
+
+<div id="cancel-ewaybill-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <?php echo form_open(admin_url("E_invoicing/cancel_einvoice"), array('id' => 'cancel_einvoice_from')); ?>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close close-model" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="color:#fff"> Cancel E-Waybill </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" name="invoice_id" class="invoice_id" value="0">
+                    <div class="form-group">
+                        <div class="col-md-12" app-field-wrapper="cancel-remark">
+                            <label for="cancel_remark" class="control-label">Cancel Remark</label>
+                            <textarea class="form-control" name="cancel_remarks" id="cancel_remarks" cols="30" rows="5" required></textarea>                
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="type" value="ewaybill">
+                <button type="button" class="btn btn-default close-model" data-dismiss="modal">Close</button>
+                <button type="submit" autocomplete="off" class="btn btn-info">Send Request</button>
+            </div>
+        </div>
     <?php echo form_close(); ?>
   </div>
 </div>
@@ -753,6 +984,66 @@ $(document).ready(function() {
            $("#trackingnumber").val(tracking_number);
            $("#courierdate").val(courier_date);
            $(".courierfilediv").html(courier_files);
+        }
+
+        
+        function getLegalName(client_id){
+            $.ajax({
+                url: "<?php echo admin_url();?>E_invoicing//get_client_legal_name/"+client_id,
+                type: 'GET',
+                beforeSend: function(){
+                    // Show image container
+                    // $("#loader").show();
+                    $('#spinnerlodder').modal({backdrop: 'static',keyboard: false,show: true}); 
+                },
+                success: function(response){
+                    alert(response);
+                    location.reload();
+                },
+                complete:function(data){
+                    // Hide image container
+                    // $("#loader").hide();
+                    $('#spinnerlodder').modal("hide"); 
+                }
+            });
+        }
+        function generateEinvoice(invoice_id){
+            $.ajax({
+                url: "<?php echo admin_url();?>E_invoicing/generate_einvoice/"+invoice_id,
+                type: 'GET',
+                beforeSend: function(){
+                    // Show image container
+                    // $("#loader").show();
+                    $('#spinnerlodder').modal({backdrop: 'static',keyboard: false,show: true}); 
+                },
+                success: function(response){
+                    alert(response);
+                    location.reload();
+                },
+                complete:function(data){
+                    // Hide image container
+                    // $("#loader").hide();
+                    $('#spinnerlodder').modal("hide"); 
+                }
+            });
+        }
+        function cancel_ewaybill_remark(invoice_id){
+            if (confirm('Do you really want to take action ?')){
+                $("#cancel-ewaybill-modal").modal("show");
+                $(".invoice_id").val(invoice_id);
+            }
+        }
+        function generate_ewaybill(invoice_id){
+            if (confirm('Do you really want to take action ?')){
+                $("#generate-ewaybill-modal").modal("show");
+                $(".invoice_id").val(invoice_id);
+            }
+        }
+        function cancel_remark(invoice_id){
+            if (confirm('Do you really want to take action ?')){
+                $("#cancel-einvoice-modal").modal("show");
+                $(".invoice_id").val(invoice_id);
+            }
         }
     </script>
 </body>

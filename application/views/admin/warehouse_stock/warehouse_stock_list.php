@@ -76,7 +76,10 @@
                                     ?>
                                             <tr>
                                                 <td><?php echo $z++;?></td>
-                                                <td><?php echo format_stock_number($row['id']); ?></td>
+                                                <td>
+                                                    <?php echo get_creator_info($row['addedfrom'], $row['created_at']); ?>
+                                                    <?php echo format_stock_number($row['id']); ?>
+                                                </td>
                                                 <td><?php echo cc($row['name']); ?></td>
                                                 <td><?php echo $remarks; ?></td>                                             
                                                 <td><a href="javascript:void(0);" class="productstockstatus" data-id="<?php echo $row['stockid']; ?>"><?php echo $stock_status; ?></a></td>

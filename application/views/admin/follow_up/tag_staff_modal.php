@@ -84,40 +84,93 @@
     }
   }
   function showtag_btn(el){
-     var staff = $("#staffuserlist").val();
-     $(".tag_btn").hide();
-     if (staff != ''){
+     var staff = $("#staffuserlist1").val();
+     
+      $(".tag_btn").hide();
+      if (staff != ''){
+          $(".tag_btn").show();
+          // var tagstaff = $(".staff_ids").val();
+          // tagselection = el.selectedOptions.length;
+          // for (let i = 0; i < el.selectedOptions.length; i++) {
+          //   if (tagstaff == ''){
+          //     tagstaff = el.selectedOptions[i].getAttribute('data-staff_id');
+          //   }else{
+          //     tagstaff = tagstaff+','+el.selectedOptions[i].getAttribute('data-staff_id');
+          //   }
+          // }
+          // $(".staff_ids").val(tagstaff);
+      }
+  }
+
+  function activityviewstaff(el){
+    $(".tag_btn").hide();
+    var showstaff = $("#staffuserlist2").val();
+      if (showstaff != ''){
         $(".tag_btn").show();
-        var tagstaff = $(".staff_ids").val();
-        tagselection = el.selectedOptions.length;
-        for (let i = 0; i < el.selectedOptions.length; i++) {
-          if (tagstaff == ''){
-            tagstaff = el.selectedOptions[i].getAttribute('data-staff_id');
-          }else{
-            tagstaff = tagstaff+','+el.selectedOptions[i].getAttribute('data-staff_id');
-          }
-        }
-        $(".staff_ids").val(tagstaff);
-     }
+          // var tagstaff2 = $(".view_staff_ids").val();
+          // tagselection = el.selectedOptions.length;
+          // for (let i = 0; i < el.selectedOptions.length; i++) {
+          //   if (tagstaff2 == ''){
+          //     tagstaff2 = el.selectedOptions[i].getAttribute('data-staff_id');
+          //   }else{
+          //     tagstaff2 = tagstaff2+','+el.selectedOptions[i].getAttribute('data-staff_id');
+          //   }
+          // }
+          // $(".view_staff_ids").val(tagstaff2);
+      }
   }
 
   $(document).on("click", ".tag_btn", function(){
+    
     var tag_box_id = $(".tag_box_id").val();
-    var staff = $("#staffuserlist").val();
+    var staff = $("#staffuserlist1").val();
+    var staff1 = $("#staffuserlist2").val();
     // var staff = $(".staff_ids").val();
-    if (staff == ''){
-      alert("Please Select Someone for tagging");
-    }else{
-      var descriptionval = $("#description"+tag_box_id).val();
-      $(".branch_id").val('');
-      $(".department_id").val('');
-      $('.selectpicker').selectpicker('refresh');
-      $(".staff_selection_div").html("");
-      $("#tagstaffmodel").modal("hide");
-      $(".tag_btn").hide();
-      $("#description"+tag_box_id).val(descriptionval+' '+staff);
-      $("#description"+tag_box_id).focus();
-    }
+    // if (staff == ''){
+    //   alert("Please Select Someone for tagging");
+    // }else{
+      
+      var staffids = []; 
+      var readstaffids = []; 
+      var tagstaff = []; 
+      var t = 0;
+      var exisingingstaff = $(".staff_ids").val();
+      var exisingingreadstaff = $(".view_staff_ids").val();
+      $('#staffuserlist1 :selected').each(function(i, selected){  
+        staffids[i] = $(selected).data("staff_id"); 
+        tagstaff[t] = $(selected).text(); 
+        t++;
+      }); 
+      $('#staffuserlist2 :selected').each(function(i, selected){  
+        readstaffids[i] = $(selected).data("staff_id"); 
+        tagstaff[t] = $(selected).text(); 
+        t++;
+      }); 
+      
+      if (tagstaff.length > 0){
+          /* this is check exising value and set */
+          if (exisingingstaff != ''){
+            var staffids = staffids+','+exisingingstaff;
+          }
+          if (exisingingreadstaff != ''){
+            var readstaffids = readstaffids+','+exisingingreadstaff;
+          }
+          $(".staff_ids").val(staffids);
+          $(".view_staff_ids").val(readstaffids);
+          var descriptionval = $("#description"+tag_box_id).val();
+          $(".branch_id").val('');
+          $(".department_id").val('');
+          $('.selectpicker').selectpicker('refresh');
+          $(".staff_selection_div").html("");
+          $("#tagstaffmodel").modal("hide");
+          $(".tag_btn").hide();
+          $("#description"+tag_box_id).val(descriptionval+' '+tagstaff);
+          $("#description"+tag_box_id).focus();
+        }else{
+          alert("Please Select Someone for tagging");
+        }
+      
+    // }
   });
 
 </script>

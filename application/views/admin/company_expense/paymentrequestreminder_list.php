@@ -51,7 +51,10 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo $z++; ?></td>
-                                                        <td><?php echo value_by_id('tblcompanyexpensecatergory', $row->category_id, 'name'); ?></td>
+                                                        <td>
+                                                            <?php echo get_creator_info($row->user_id, $row->created_at); ?>
+                                                            <?php echo value_by_id('tblcompanyexpensecatergory', $row->category_id, 'name'); ?>
+                                                        </td>
                                                         <td><?php echo get_employee_name($row->user_id); ?></td>
                                                         <td><?php echo (!empty($party_name)) ? cc($party_name) : '--'; ?></td>
                                                         <td><?php echo $row->amount; ?></td>

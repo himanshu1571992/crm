@@ -84,6 +84,7 @@
                                             <th>PO No.</th>
                                             <th>PO Date</th>
                                             <th width="5%">MR Date</th>
+                                            <th>Payment Type</th>
                                             <th width="15%">Supplier</th>
                                             <th width="5%">PO Amount</th>
                                             <th>Payment Percent</th>
@@ -100,6 +101,64 @@
                                             $ttl_amt = 0;
                                             $total_payment = 0;
                                             $ttlveryurgentamt = $ttlurgentamt = $ttllessurgentamt = $ttlaverageamt = 0;
+                                            if (!empty($paymentrequest_list)){
+                                                foreach ($paymentrequest_list as $key => $value) {
+                                                    
+                                                    $po_details = $this->db->query("SELECT * FROM tblpurchaseorder WHERE id IN (".$value->document_id.")")->result();
+                                                    $purchase_number = $po_date = $mr_date = $poamount = '';
+                                                    if (!empty($po_details)){
+                                                        foreach ($po_details as $poval) {
+                                                            $po_number = (is_numeric($poval->number)) ? 'PO-' . $poval->number : $poval->number;
+                                                            $purchase_number .= '<a  title="View" target="_blank" href="'.admin_url('purchase/download_pdf/' . $poval->id).'">'.$po_number.'</a><br>';
+                                                            $po_date .= _d($poval->date).'<br>';
+                                                            $mr_info = $this->db->query("SELECT `date` FROM `tblmaterialreceipt` WHERE po_id = '".$poval->id."'")->row();
+                                                            $mr_date .= (!empty($mr_info)) ? _d($mr_info->date).'<br>' : '--<br>';
+                                                            $poamount .= $poval->totalamount.'<br>';
+
+                                                        }
+                                                    }
+
+                                                    $party_name = value_by_id("tblcompanyexpenseparties", $value->id, "name");
+                                                    if (!empty($value->party_name)){
+                                                        $party_name = $value->party_name;
+                                                    }
+
+                                                    $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$value->id.'" data-rtype= "transportation" class="label label-default seturgencytype">SET URGENCY</a>';
+                                                    if ($value->urgency_type > 0){
+                                                        if ($value->urgency_type == '1'){
+                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$value->id.'" data-rtype= "transportation" class="label label-danger seturgencytype">Very Urgent</a>';
+                                                        }else if ($value->urgency_type == '2'){
+                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$value->id.'" data-rtype= "transportation" class="label label-info seturgencytype">Urgent</a>';
+                                                        }else if ($value->urgency_type == '3'){
+                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$value->id.'" data-rtype= "transportation" class="label label-warning seturgencytype">Less Urgent</a>';
+                                                        }else if ($value->urgency_type == '4'){
+                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$value->id.'" data-rtype= "transportation" class="label label-success seturgencytype">Average</a>';
+                                                        }
+                                                    }
+                                                    $priority_number = '<a href="javascript:void(0);" data-requestid="'.$value->id.'" data-rtype= "transportation" class="label label-default seturgencytype">SET PRIORITY</a>';
+                                                    if ($value->priority_number > 0){
+                                                        $priority_number = '<a href="javascript:void(0);" data-requestid="'.$value->id.'" data-rtype= "transportation" class="label label-info seturgencytype">'.$value->priority_number.'</a>';
+                                                    }
+                                        ?>
+                                                    <tr>
+                                                        <td><?php echo $z++; ?></td>
+                                                        <td><?php echo $purchase_number; ?></td>
+                                                        <td><?php echo $po_date; ?></td>
+                                                        <td><?php echo $mr_date; ?></td>
+                                                        <td><?php echo 'Purchase Order'; ?></td>
+                                                        <td><?php echo cc($party_name); ?></td>
+                                                        <td><?php echo $poamount; ?></td>
+                                                        <td>--</td>
+                                                        <td>--</td>
+                                                        <td><?php echo number_format($value->amount, '2'); ?></td>
+                                                        <td>--</td>
+                                                        <td><?php echo $urgencytype; ?></td>
+                                                        <td><?php echo $priority_number; ?></td>
+                                                    </tr>
+
+                                        <?php 
+                                                }
+                                            }
                                             if (!empty($paymentrequest_report)){
                                                 foreach ($paymentrequest_report as $key => $row) {
                                                     $po_percent = "";
@@ -137,29 +196,29 @@
                                                         $warehouse = cc(value_by_id('tblsitemanager', $row->site_id, 'name'));
                                                     }
                                                     $po_number = (is_numeric($row->number)) ? 'PO-' . $row->number : $row->number;
-                                                    $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" class="btn-sm btn-default seturgencytype">SET URGENCY</a>';
+                                                    $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" data-rtype= "payrequest" class="label label-default seturgencytype">SET URGENCY</a>';
                                                     if ($row->urgency_type > 0){
                                                         if ($row->urgency_type == '1'){
                                                             $ttlveryurgentamt += $row->requested_amount;
                                                             $total_payment += $row->requested_amount;
-                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" class="btn-sm btn-danger seturgencytype">Very Urgent</a>';
+                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" data-rtype= "payrequest" class="label label-danger seturgencytype">Very Urgent</a>';
                                                         }else if ($row->urgency_type == '2'){
                                                             $ttlurgentamt += $row->requested_amount;
                                                             $total_payment += $row->requested_amount;
-                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" class="btn-sm btn-info seturgencytype">Urgent</a>';
+                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" data-rtype= "payrequest" class="label label-info seturgencytype">Urgent</a>';
                                                         }else if ($row->urgency_type == '3'){
                                                             $ttllessurgentamt += $row->requested_amount;
                                                             $total_payment += $row->requested_amount;
-                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" class="btn-sm btn-warning seturgencytype">Less Urgent</a>';
+                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" data-rtype= "payrequest" class="label label-warning seturgencytype">Less Urgent</a>';
                                                         }else if ($row->urgency_type == '4'){
                                                             $ttlaverageamt += $row->requested_amount;
                                                             $total_payment += $row->requested_amount;
-                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" class="btn-sm btn-success seturgencytype">Average</a>';
+                                                            $urgencytype = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" data-rtype= "payrequest" class="label label-success seturgencytype">Average</a>';
                                                         }
                                                     }
-                                                    $priority_number = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" class="btn-sm btn-default seturgencytype">SET PRIORITY</a>';
+                                                    $priority_number = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" data-rtype= "payrequest" class="label label-default seturgencytype">SET PRIORITY</a>';
                                                     if ($row->priority_number > 0){
-                                                        $priority_number = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" class="btn-sm btn-info seturgencytype">'.$row->priority_number.'</a>';
+                                                        $priority_number = '<a href="javascript:void(0);" data-requestid="'.$row->payemnt_request_id.'" data-rtype= "payrequest" class="label label-info seturgencytype">'.$row->priority_number.'</a>';
                                                     }
                                                     $pmt_status = "<span class='badge badge-warning' style='background-color:#ff6f00;padding: 6px;' >Pending</span>";
                                                     $chk_purchase_payment = $this->db->query("SELECT * FROM `tblpurchaseorderpayments` WHERE `po_id` = '" . $row->id . "' and status != 2")->result();
@@ -207,6 +266,7 @@
                                                         <td><a  title="View" target="_blank" href="<?php echo admin_url('purchase/download_pdf/' . $row->id); ?>"><?php echo $po_number; ?></a></td>
                                                         <td><?php echo date('d/m/Y', strtotime($row->date)); ?></td>
                                                         <td><?php echo $mr_date; ?></td>
+                                                        <td><?php echo 'Transportation'; ?></td>
                                                         <td><?php echo cc(value_by_id('tblvendor', $row->vendor_id, 'name')); ?></td>
                                                         <td><?php echo $row->totalamount; ?></td>
                                                         <td><button type='button' class='btn-sm <?php echo $percent_cls; ?> percent' value="<?php echo $row->id; ?>" data-toggle='modal' data-target='#myModalpercent'><?php echo $percent . "%"; ?></button></td>
@@ -306,6 +366,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="prequest_id" id="prequest_id" value="0">
+                    <input type="hidden" name="request_type" id="request_type" value="payrequest">
                     <button type="submit" class="btn btn-info">Submit</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -381,11 +442,13 @@
 $(document).on('click', '.seturgencytype', function() {  
 
     var requestid = $(this).data("requestid");
+    var type = $(this).data("rtype");
+    $('#request_type').val(type); 
     $('#prequest_id').val(requestid); 
 
     $.ajax({
         type    : "GET",
-        url     : "<?php echo site_url('admin/purchase/updateUrgencyType/'); ?>"+requestid,
+        url     : "<?php echo site_url('admin/purchase/updateUrgencyType/'); ?>"+requestid+'/'+type,
         success : function(response){
             if(response != ''){       
                 $("#urgencysetModel").modal('show');
@@ -400,7 +463,6 @@ $(document).on('click', '.seturgencytype', function() {
 <script type="text/javascript">
     $('.percent').click(function () {
         var po_id = $(this).val();
-
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('admin/purchase/get_payment_percent'); ?>",

@@ -28,7 +28,7 @@
                                                 <th>Category</th>
                                                 <th>Added By</th>
                                                 <th>Party Name</th>
-                                                <th>Amount</th>
+                                                <th>Paid Amount</th>
                                                 <th>TDS AMT</th>									
                                                 <th>Status</th>
                                                 <th>PayFile Status</th>
@@ -62,7 +62,12 @@
                                                     ?>
                                                     <tr>
                                                         <td><?php echo $z++; ?></td>
-                                                        <td><?php echo value_by_id('tblcompanyexpensecatergory', $row->category_id, 'name'); ?></td>
+                                                        <td>
+                                                            <?php 
+                                                            echo get_creator_info($row->user_id, $row->created_at);
+                                                            echo value_by_id('tblcompanyexpensecatergory', $row->category_id, 'name');
+                                                            ?>
+                                                        </td>
                                                         <td><?php echo get_employee_name($row->user_id); ?></td>
                                                         <td><?php echo cc($party_name); ?></td>
                                                         <td><?php echo $row->amount; ?></td>

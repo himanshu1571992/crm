@@ -116,7 +116,12 @@ $session_id = $this->session->userdata();
                       ?>
                       <tr>
                         <td><?php echo $i++; ?></td>
-                        <td><?php echo cc($client_info->client_branch_name); ?></td>
+                        <td>
+                          <?php 
+                            echo get_creator_info($row->staff_id, $row->created_date);
+                            echo cc($client_info->client_branch_name);
+                          ?>
+                        </td>
                         <td><?php echo $row->cheque_no; ?></td>
                         <td><?php echo $row->ttl_amt; ?></td>
                         <td><?php echo _d($row->cheque_date); ?></td>
@@ -231,6 +236,12 @@ $session_id = $this->session->userdata();
                       ?>
                       <tr>
                         <td><?php echo $i++; ?></td>
+                        <td>
+                          <?php 
+                            echo get_creator_info($row->staff_id, $row->created_date);
+                            echo cc($client_info1->client_branch_name);
+                          ?>
+                        </td>
                         <td><?php echo cc($client_info1->client_branch_name); ?></a></td>
                         <td><?php echo $row->cheque_no; ?></td>
                         <td><?php echo $row->ttl_amt; ?></td>
@@ -329,7 +340,12 @@ $session_id = $this->session->userdata();
                       ?>
                       <tr>
                         <td><?php echo $i++; ?></td>
-                        <td><?php echo cc($client_info2->client_branch_name); ?></a></td>
+                        <td>
+                          <?php 
+                            echo get_creator_info($row->staff_id, $row->created_date);
+                            echo cc($client_info2->client_branch_name);
+                          ?>
+                        </td>
                         <td><?php echo $row->cheque_no; ?></td>
                         <td><?php echo $row->ttl_amt; ?></td>
                         <td><?php echo _d($row->cheque_date); ?></td>

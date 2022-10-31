@@ -27,6 +27,7 @@
                         $table_data = array();
                         $_table_data = array(
                             '#',
+                            'Added By',
                             _l('designation'),
                             _l('designation_color'),
                             _l('designation_order'),

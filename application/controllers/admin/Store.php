@@ -1267,7 +1267,7 @@ class Store extends Admin_controller
                 'product_id' => $product_id,
                 'sub_products_ids' => $sub_products_ids,
                 'status' => 1,
-                'created_date' => date("Y-m-d")
+                'created_date' => date("Y-m-d H:i:s")
             );
             if ($id != ''){
                 unset($insertdata["added_by"]);

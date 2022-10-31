@@ -281,8 +281,8 @@
                                                                                             echo '<a target="_blank" href="'. admin_url('salary_new/salary_details/'.$value->staffid.'/'.$month.'/'.$year.'/taxable').'" class="btn-sm btn-info"><i class="fa fa-money" aria-hidden="true"></i></a>';
                                                                                         }
                                                                                     }else{
-                                                                                        //echo '--';
-                                                                                         echo '<a target="_blank" href="'. admin_url('salary_new/salary_details/'.$value->staffid.'/'.$month.'/'.$year.'/taxable').'" class="btn-sm btn-info"><i class="fa fa-money" aria-hidden="true"></i></a>';
+                                                                                        echo '--';
+                                                                                        //echo '<a target="_blank" href="'. admin_url('salary_new/salary_details/'.$value->staffid.'/'.$month.'/'.$year.'/taxable').'" class="btn-sm btn-info"><i class="fa fa-money" aria-hidden="true"></i></a>';
                                                                                     }
                                                                                 ?>
                                                                             </td>
@@ -424,8 +424,8 @@
                                                                                             echo '<a target="_blank" href="'. admin_url('salary_new/salary_details/'.$value->staffid.'/'.$month.'/'.$year.'/nontaxable').'" class="btn-sm btn-info"><i class="fa fa-money" aria-hidden="true"></i></a>';
                                                                                         }
                                                                                     }else{
-                                                                                       // echo '--';
-                                                                                        echo '<a target="_blank" href="'. admin_url('salary_new/salary_details/'.$value->staffid.'/'.$month.'/'.$year.'/nontaxable').'" class="btn-sm btn-info"><i class="fa fa-money" aria-hidden="true"></i></a>';
+                                                                                        echo '--';
+                                                                                        //echo '<a target="_blank" href="'. admin_url('salary_new/salary_details/'.$value->staffid.'/'.$month.'/'.$year.'/nontaxable').'" class="btn-sm btn-info"><i class="fa fa-money" aria-hidden="true"></i></a>';
                                                                                     }
                                                                                 ?>
                                                                             </td>

@@ -146,6 +146,7 @@
                                             <!-- <mark style="color:red">* Please use @ for tag someone</mark> -->
                                             <div class="text-right">
                                                 <input type="hidden" name="tag_staff_ids" class="staff_ids">
+                                                <input type="hidden" name="tag_viewstaff_ids" class="view_staff_ids">
                                                 <input type="hidden" name="parent_id" class="reply_parent_id" value="0">
                                                 <button class="btn btn-info"><?php echo _l('submit'); ?></button>
                                             </div>

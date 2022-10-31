@@ -2613,6 +2613,32 @@ class Expenses extends Admin_controller
         }    
     }
 
+    /* this function use for update accounted status in tblexpense */
+    public function update_accounted_status($expense_id, $expense_type){
+        
+        $table_name = '';
+        if ($expense_type == 'expense'){
+            $table_name = 'tblexpenses';
+        }else if ($expense_type == 'request'){
+            $table_name = 'tblrequests';
+        }
+        
+        if ($table_name != ''){
+            $status = value_by_id_empty($table_name, $expense_id, "accounted_status");
+            $updata["accounted_status"] = 0;
+            if ($status == 0){
+                $updata["accounted_status"] = 1;
+                $updata["accounted_by"] = get_staff_user_id();
+                $updata["accounted_date"] = date("Y-m-d H:i:s");
+            }
+            
+            $this->home_model->update($table_name, $updata,array('id'=>$expense_id));
+        }
+        
+        redirect($_SERVER['HTTP_REFERER']);
+        die;
+    }
+
     /* THIS FUNCTION USE FOR CALL POST CURL METHOD */
 	function curl_method($request_url, $method, $post_fields = array()){
 

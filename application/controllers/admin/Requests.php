@@ -822,7 +822,7 @@ class Requests extends Admin_controller
 			
 			$payment_type = (!empty($payment_type)) ? $payment_type : 0;
 			$petty_cash_id = (!empty($petty_cash_id)) ? $petty_cash_id : 0;
-			$approved_amount = (!empty($approved_amount)) ? $approved_amount : 0;
+			$approved_amount = (!empty($approved_amount)) ? $approved_amount : "0.0";
 			$tenure_id = (!empty($tenure_id)) ? $tenure_id : 0;
 			$post_fields = array(
 				"user_id" => get_staff_user_id(),
@@ -835,16 +835,21 @@ class Requests extends Admin_controller
 				"pettycash_id" => $petty_cash_id,
 				"payment_type" => $payment_type,
 			);
+			
 			/* SEND REQUEST FOR APPROVAL START */
-				$request_url = base_url()."Requests_API/approve_request";
-				$response = $this->curl_method($request_url, "POST", $post_fields);
-				if (is_array($response) && isset($response["status"]) && $response["status"] == TRUE){
-					set_alert('success', 'Action Taken On Request Successfully');
-					redirect(admin_url("approval/staff_notification_list"));
-				}else{
-					set_alert('danger', "Somthing Went wrong");
-					redirect(admin_url("approval/staff_notification_list"));
-				}
+			$request_url = base_url()."Requests_API/approve_request";
+			$response = $this->curl_method($request_url, "POST", $post_fields);
+			
+			if (is_array($response) && isset($response["status"]) && $response["status"] == TRUE){
+				set_alert('success', 'Action Taken On Request Successfully');
+				redirect(admin_url("approval/staff_notification_list"));
+			}else if (is_array($response) && isset($response["status"]) && $response["status"] == FALSE){
+				set_alert('warning', $response["message"]);
+				redirect(admin_url("approval/staff_notification_list"));
+			}else{
+				set_alert('danger', "Somthing Went wrong");
+				redirect(admin_url("approval/staff_notification_list"));
+			}
 			/* SEND REQUEST FOR APPROVAL END */
 		}
 
@@ -976,7 +981,7 @@ class Requests extends Admin_controller
 			/* SEND REQUEST FOR CONFIRMATION START */
 				$request_url = base_url()."Requests_API/get_request_approved_info";
 				$response = $this->curl_method($request_url, "POST", $post_fields);
-				if (is_array($response) && isset($response["status"]) && $response["status"] == TRUE){
+				if ($response == TRUE){
 					set_alert('success', 'Confirmation Action Taken Successfully');
 					redirect(admin_url("approval/staff_notification_list"));
 				}else{
@@ -1001,7 +1006,7 @@ class Requests extends Admin_controller
 		if (empty($data["request_info"])){
 			redirect(admin_url("approval/staff_notification_list"));
 		}
-		$data['title'] = 'Request Comfirm';
+		$data['title'] = 'Request Confirm';
 		$data['payment_mode_info'] = $this->home_model->get_result('tblpaymentmode', array('status'=>1), '');
         $this->load->view('admin/requests/request_comfirm', $data);
 	}
@@ -1142,7 +1147,7 @@ class Requests extends Admin_controller
 
 	/* THIS FUNCTION USE FOR CALL POST CURL METHOD */
 	function curl_method($request_url, $method, $post_fields = array()){
-
+		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $request_url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -1157,6 +1162,8 @@ class Requests extends Admin_controller
 			}else if (!empty($response_decode) && isset($response_decode["success"])){
 				return TRUE;
 			}else if (!empty($response_decode) && (isset($response_decode["status"]) && $response_decode["status"] == TRUE)){
+				return $response_decode;
+			}else if (!empty($response_decode) && (isset($response_decode["status"]) && isset($response_decode["message"]))){
 				return $response_decode;
 			}
 		}

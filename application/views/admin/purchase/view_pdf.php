@@ -433,7 +433,7 @@
                                 <br>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <p style="margin-left: 60%;" >Amount In Words : <?php echo convert_number_to_words($final_amount); ?></p>
+                                        <p style="margin-left: 60%;" >Amount In Words : <?php echo convert_number_to_words($final_amount, $purchase->currency); ?></p>
                                     </div>
                                 </div>
                                 <div class="row">

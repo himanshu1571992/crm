@@ -285,7 +285,6 @@ if (isset($vendor_id) && !empty($vendor_id)){
                                             
                                         }
                                         
-                                        
                                     ?>    
                                 </tbody>
                                 <tfoot>
@@ -336,9 +335,16 @@ if (isset($vendor_id) && !empty($vendor_id)){
                                             <td colspan="4" class="text-center">-<?php echo number_format(round($onaccout_amt), 2); ?></td>
                                             <td colspan="4"></td>
                                         </tr>
+                                        <?php if (isset($client_outstanding) && $client_outstanding > 0){ ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center"><b>- Client Outstanding</b></td>
+                                            <td colspan="4" class="text-center"><?php echo $client_outstanding; ?></td>
+                                            <td colspan="4"></td>
+                                        </tr>
+                                        <?php } ?>
                                         <tr>
                                             <td colspan="4" class="text-center"><b>Final Balance</b></td>
-                                            <td colspan="4" class="text-center"><?php echo number_format((round($grand_bal) - round($onaccout_amt)), 2); ?></td>
+                                            <td colspan="4" class="text-center"><?php echo number_format((round($grand_bal) - round($onaccout_amt) - $client_outstanding), 2); ?></td>
                                             <td colspan="4"></td>
                                         </tr>
                                     </tfoot>

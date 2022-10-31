@@ -72,7 +72,10 @@
 
                                     <tr>
                                         <td><?php echo ++$key; ?></td>
-                                        <td><?php echo "H-" . str_pad($value->head_id, 4, '0', STR_PAD_LEFT); ?></td>
+                                        <td>
+                                            <?php echo get_creator_info($value->added_by, $value->created_at); ?>
+                                            <?php echo "H-" . str_pad($value->head_id, 4, '0', STR_PAD_LEFT); ?>
+                                        </td>
                                         <td><?php echo cc(value_by_id('tblheads',$value->head_id,'name')); ?></td>
                                         <td><?php echo "SH-" . str_pad($value->id, 4, '0', STR_PAD_LEFT); ?></td>
                                         <td><?php echo cc($value->name); ?></td>

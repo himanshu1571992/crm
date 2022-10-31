@@ -84,6 +84,7 @@ class Client extends Admin_controller {
         $this->load->model('Client_category_model');
         $data['client_category_data'] = $this->Client_category_model->get();
         $data['sales_person_info'] = $this->db->query("SELECT `sales_person_id` from `tblleadstaffgroup` where status = 1  ")->result();
+        $data['vendor_list'] = $this->db->query("SELECT * FROM `tblvendor` WHERE `status` = 1 ORDER BY name ASC")->result();
 
         $this->load->view('admin/client/client', $data);
     }
@@ -176,6 +177,7 @@ class Client extends Admin_controller {
                     $c_date = db_date($cheque_date);
                 }
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'client_id' => $client_id,
                     'cheque_amount' => $cheque_amount,
                     'cheque_number' => $cheque_number,
@@ -373,7 +375,7 @@ class Client extends Admin_controller {
 
         $data['client_data'] = $this->db->query("SELECT `client_branch_name`,`userid` from `tblclientbranch`  WHERE client_branch_name != '' order by client_branch_name asc  ")->result();
 
-        $Staffgroup = $this->db->query("SELECT st.* FROM `tblstaffgroup` st LEFT JOIN `tblstaffgroupmultiselect` stm ON st.`id`=stm.`staffgroup_id` LEFT JOIN `tblmultiselectmaster` ms ON stm.multiselect_id=ms.id WHERE ms.multiselect='Stock'")->result_array();
+        $Staffgroup = $this->db->query("SELECT st.* FROM `tblstaffgroup` st LEFT JOIN `tblstaffgroupmultiselect` stm ON st.`id`=stm.`staffgroup_id` LEFT JOIN `tblmultiselectmaster` ms ON stm.multiselect_id=ms.id WHERE ms.id='20'")->result_array();
         $i=0;
         foreach($Staffgroup as $singlestaff)
         {

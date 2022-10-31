@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $aColumns = [
 //    '`id`',
     '`id`',
+    '`added_by`',
     '`multiselect`',
 	'`color`',
     '`order`',
@@ -27,7 +28,9 @@ foreach ($rResult as $aRow) {
 //    $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
 
     // #
+    $addedby = ($aRow['added_by'] > 0) ? get_employee_fullname($aRow['added_by']) : 'N/A';
     $row[] = $i++;
+    $row[] = $addedby;
     
     $url = admin_url('multiselect/multiselect/' . $aRow['id']);
 

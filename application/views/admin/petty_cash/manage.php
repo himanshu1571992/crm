@@ -60,6 +60,7 @@
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
+                                        <th>Added By</th>
                                         <th>ID</th>
                                         <th>Department</th>
                                         <th>Amount</th>
@@ -88,6 +89,7 @@
                                                                                        
                                             <tr>
                                                 <td><?php echo $i++;?></td>
+                                                <td><?php echo ($row->addedby > 0) ? get_employee_fullname($row->addedby) : 'N/A'; ?></td>
                                                 <td><?php echo 'PCM-'. str_pad($row->id, 4, '0', STR_PAD_LEFT);?></td>
                                                 <td><a href="<?php echo admin_url('petty_cash/reports/'.$row->id); ?>" target="_blank"><?php echo cc($row->department_name);?></a></td>
                                                 <td><?php echo $row->amount;?></td>

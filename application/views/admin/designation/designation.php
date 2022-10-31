@@ -22,12 +22,15 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-2">
                                     <label for="order" class="control-label"><?php echo _l('designation_order'); ?> *</label>
                                     <input type="number" id="order" name="order" class="form-control" required="" min="1"  value="<?php echo (isset($designation_data['order']) && $designation_data['order'] != "") ? $designation_data['order'] : "1" ?>">
                                 </div>
-
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-2">
+                                    <label for="notice_period" class="control-label">Notice Period *</label>
+                                    <input type="number" id="notice_period" name="notice_period" class="form-control" required="" min="1"  value="<?php echo (isset($designation_data['notice_period']) && $designation_data['notice_period'] != "") ? $designation_data['notice_period'] : ""; ?>">
+                                </div>
+                                <div class="form-group col-md-2">
                                     <label for="status" class="control-label"><?php echo _l('designation_status'); ?> *</label>
                                     <select class="form-control selectpicker" name="status" required="">
                                         <option value=""></option>

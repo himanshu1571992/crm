@@ -94,8 +94,11 @@
 											}
 											?>																						
 											<tr>
-												<td><?php echo $z++;?></td>
-												<td><?php echo cc($reminder_for);?></td>
+												<td>
+													<?php echo $z++;?>
+													
+												</td>
+												<td><?php echo get_creator_info($row->staff_id, $row->created_at); ?><?php echo cc($reminder_for);?></td>
 												<td><?php echo date('d/m/Y h:i A',strtotime($row->reminder_date)); ?></td>
 												<td><?php echo cc($row->remark); ?></td>
 												<td><?php echo $status; ?></td>

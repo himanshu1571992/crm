@@ -141,7 +141,7 @@
                                                 <?php
                                                     if (isset($client_branch_data) && count($client_branch_data) > 0) {
                                                         foreach ($client_branch_data as $client_branch_key => $client_branch_value){
-                                                          $cityname = value_by_id_empty("tblcities", $client_branch_value->city, "name");
+                                                          $cityname = ($client_branch_value->city != '') ? value_by_id_empty("tblcities", $client_branch_value->city, "name") : '';
                                                           $select_cls = (isset($enquirycall_info) && $enquirycall_info->clientid == $client_branch_value->userid) ? "selected":"";
                                                           echo '<option value="'.$client_branch_value->userid.'" '.$select_cls.'>'.cc($client_branch_value->client_branch_name).' - '.$cityname.'</option>';
                                                         }
@@ -289,7 +289,7 @@
                             </div>
                             <div class="row">
                                 <div class="assign_production" <?php echo (isset($enquirycall_info) && !empty($enquirycall_info->production_remark) && ($enquirycall_info->is_converted > 0)) ? '' : 'style="display:none;"'; ?>>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="assign_production" class="control-label">Assign To Production</label>
                                             <select class="form-control selectpicker" id="assign_to_production" name="assignproductionid[]" multiple="" data-live-search="true">
@@ -319,11 +319,18 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="production_remark" class="control-label">Assign Remark</label>
                                             <textarea id="production_remark" name="production_remark" class="form-control" placeholder="assign remark..."><?php echo (isset($enquirycall_info) && ($enquirycall_info->is_converted > 0)) ? $enquirycall_info->production_remark : ""; ?></textarea>
                                         </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="main_remark" class="control-label">Remark</label>
+                                        <textarea id="main_remark" name="remark" class="form-control" placeholder="remark..."><?php echo (isset($enquirycall_info) && !empty($enquirycall_info->remark)) ? $enquirycall_info->remark : ""; ?></textarea>
                                     </div>
                                 </div>
                             </div>

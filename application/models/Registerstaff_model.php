@@ -19,53 +19,31 @@ class Registerstaff_model extends CRM_Model {
           $ad_data['designation_id'] = value_by_id("tblstaffinterviewdetails", $data["candidate_id"], "designation_id");
       }
     
+    $ad_data['added_by'] = get_staff_user_id();
     $ad_data['employee_name'] = $data['employee_name'];
-
     $ad_data['email'] = $data['email'];
-
     $ad_data['contact_no'] = $data['contact_no'];
-
     $birth_date = $data['birth_date'];
-
     $ad_data['birth_date']=db_date($birth_date);
-
     $ad_data['gender'] = $data['gender'];
-
     $ad_data['pan_card_no'] = $data['pan_card_no'];
-
     $ad_data['adhar_no'] = $data['adhar_no'];
-
     $ad_data['branch_id'] = $data['branch_id'];
-
     $ad_data['residential_pincode'] = $data['residential_pincode'];
-
     $ad_data['residential_address'] = $data['residential_address'];
-
     $ad_data['residential_state'] = $data['residential_state'];
-
     $ad_data['residential_city'] = $data['residential_city'];
-
     $ad_data['permenent_address'] = $data['permenent_address'];
-
     $ad_data['permenent_pincode'] = $data['permenent_pincode'];
-
     $ad_data['permenent_state'] = $data['permenent_state'];
-
     $ad_data['permenent_city'] = $data['permenent_city'];
-
     $ad_data['bank_name'] = $data['bank_name'];
-    
     $ad_data['account_no'] = $data['account_no'];
-
     $ad_data['ifc_code'] = $data['ifc_code'];
-
     $ad_data['epf_no'] = $data['epf_no'];
-
     $ad_data['esic_no'] = $data['esic_no'];
     $ad_data['approval_status'] = 0;
-
-    $ad_data['created_at'] = date('Y-m-d');
-
+    $ad_data['created_at'] = date('Y-m-d H:i:s');
     $ad_data['updated_at'] = date('Y-m-d H:i:s');
 
     $this->db->insert('tblregisteredstaff',$ad_data);

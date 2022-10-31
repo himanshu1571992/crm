@@ -146,6 +146,7 @@ if(!empty($this->session->userdata('proposal_where_amt_desc'))){
                                 <th>Status</th>
                                 <th>Followup</th>
                                 <th>Req. Transport Amount</th>
+                                <th>Production Status</th>
                                 <th class="text-center">Action</th>
                               </tr>
                             </thead>
@@ -155,6 +156,23 @@ if(!empty($this->session->userdata('proposal_where_amt_desc'))){
                                 foreach ($proposal_list as $key => $value) {
                                     $source = get_multiple_source($value->source);
                                     $trans_charges_info = $this->db->query("SELECT * FROM  tbltransportchargesrequest WHERE `ref_id`='".$value->id."' AND `ref_type`='proposals'")->row();
+                                    $assign_status = check_proposals_production_assign($value->id);
+                                    if ($value->production_approval_status > 0){
+                                        switch ($value->production_approval_status) {
+                                            case 1:
+                                                $assign_status = '<span class="btn-sm btn-success">Approved</span>';
+                                                break;
+                                            case 2:
+                                                $assign_status = '<span class="btn-sm btn-danger">Rejected</span>';
+                                                break;
+                                            case 4:
+                                                $assign_status = '<span class="btn-sm btn-warning" style="background-color: #800000;">Recalculation</span>';
+                                                break; 
+                                            case 5:
+                                                $assign_status = '<span class="btn-sm btn-danger" style="background-color: #e8bb0b;">On Hold</span>';
+                                                break;     
+                                        }
+                                    }
                                 ?>
                                 <tr>
                                     <td><?php echo ++$key; ?></td>                                                
@@ -212,6 +230,9 @@ if(!empty($this->session->userdata('proposal_where_amt_desc'))){
                                             echo $sendrequest;
                                         ?>
                                     </td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="assignproduction" data-id="<?php echo $value->id; ?>" ><?php echo $assign_status; ?></a>
+                                    </td>
                                     <td class="text-center">
                                         
                                         <a href="<?php echo admin_url('proposals/download_pdf/'.$value->id); ?>" target="_blank" class="actionBtn" title="PDF"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
@@ -245,7 +266,21 @@ if(!empty($this->session->userdata('proposal_where_amt_desc'))){
     </div>
 </div>
 </div>
-
+<div id="productionassign" class="modal fade" role="dialog">
+    <div class="modal-dialog ">
+       <?php 
+            echo form_open_multipart(admin_url("proposals/send_production_assign"), array('id' => 'sub_form_product'));
+       ?>         
+       <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close close-model" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="color:#ffffff;"> Production Assign </h4>
+            </div>
+            <div class="productionassign_html"></div>
+        </div>    
+       <?php echo form_close(); ?>            
+    </div>                            
+</div>  
 <div id="lead_send_to_customer" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <?php
@@ -375,6 +410,20 @@ $(document).ready(function() {
         ]
     } );
 } );
+
+$(".assignproduction").on("click", function(){
+    var proposal_id = $(this).data("id");
+
+    $.ajax({
+            type    : "GET",
+            url     : "<?php echo base_url(); ?>admin/proposals/get_production_assign/"+proposal_id,
+            success : function(response){
+                $(".productionassign_html").html(response);
+                $('.selectpicker').selectpicker('refresh');
+                $("#productionassign").modal("show");
+            }
+        });
+});
 </script>
 <script>
    $(function(){

@@ -1254,7 +1254,8 @@ class General_API extends CRM_Controller
 						'pending_approval_notifications'=>$pending_approval_notifications,
 						'today_attendance_status'=>$today_attendance_status,
 						'show_production_menu' => checkMenuPermission($user_id,'production'),
-						'show_onbehalf_option' => checkMenuPermission($user_id,'on_behalf')
+						'show_onbehalf_option' => checkMenuPermission($user_id,'on_behalf'),
+						'show_emp_reg_menu' => checkMenuPermissionByUser($user_id,'employee_registration'),
 					);
 
 					
@@ -2574,7 +2575,8 @@ public function get_staff_list()
 
 		if(!empty($user_id)){
 
-		handle_staff_profile_image_upload($user_id);		
+		handle_staff_profile_image_upload($user_id);
+		handle_multi_attachments($user_id,'staff_document');		
 
 		$return_arr['status'] = true;	
 		$return_arr['message'] = "Profile Update Successfully";

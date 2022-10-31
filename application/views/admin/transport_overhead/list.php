@@ -41,11 +41,12 @@
                                         <thead>
                                             <tr>
                                                 <th width="5%">S.No</th>
+                                                <th>Added By</th>
                                                 <th>Head</th>
                                                 <th>Date</th>
                                                 <th>Remark</th>                                        
                                                 <th>Amount</th>                                        
-                                                <th>Added By</th>                                        
+                                                <th>Created At</th>                                        
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -57,11 +58,12 @@
                                             ?>
                                                         <tr>
                                                             <td><?php echo $i++;?></td>
+                                                            <td><span class="badge badge-secondary"><?php echo get_employee_name($row->added_by); ?></span></td>
                                                             <td><?php echo cc($row->head); ?></td>
                                                             <td><?php echo _d($row->date);?></td>
                                                             <td><?php echo (!empty($row->remark)) ? cc($row->remark) : 'n/a'; ?></td>
                                                             <td><?php echo number_format($row->amount, 2,'.',','); ?></td>
-                                                            <td><span class="badge badge-secondary"><?php echo get_employee_name($row->added_by); ?></span></td>
+                                                            <td><?php echo _d($row->created_at);?></td>
                                                             <td>
                                                                 <a href="<?php echo admin_url('company_expense/transport_overhead_add/'.$row->id); ?>" class="btn-sm btn-info">Edit</a>
                                                                 <a href="<?php echo admin_url('company_expense/transport_overhead_delete/'.$row->id); ?>" class="btn-sm btn-danger _delete">Delete</a>

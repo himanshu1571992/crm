@@ -153,6 +153,7 @@ class Designation extends Admin_controller {
             if ($id == '') {
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'name' => $name,
                     'created_at' => date('Y-m-d H:i:s')
                 );

@@ -76,7 +76,13 @@
                                             <span><?php echo ($drequisition_info->product_type == 1) ? 'Standard':'Customized'; ?></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
+                                        <label class="text-info"> Expected Date : </label>
+                                        <div class="form-group">
+                                            <p><?php echo (!empty($drequisition_info->expected_date)) ? _d($drequisition_info->expected_date) : 'N/A'; ?></p>        
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
                                         <label class="text-info">Type : </label>
                                         <div class="form-group">
                                             <span>
@@ -96,6 +102,7 @@
                                             </span>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-md-3">
                                         <label class="text-info"> Attachments : </label>
                                         <div class="form-group">
@@ -115,6 +122,8 @@
                                           <?php
                                                     }
                                                   }
+                                              }else{
+                                                echo 'N/A';
                                               }
                                           }
                                           ?>

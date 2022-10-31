@@ -158,8 +158,13 @@
                                                 }
                                                 ?>
                                                 <tr>
-                                                    <td><?php echo ++$key; ?></td>
-                                                    <td><?php echo cc($client_info->client_branch_name); ?></td>
+                                                    <td>
+                                                        <?php echo ++$key; ?>
+                                                        
+                                                    </td>
+                                                    <td>
+                                                        <?php echo get_creator_info($value->added_by, $value->created_at); ?>
+                                                        <?php echo cc($client_info->client_branch_name); ?></td>
                                                     <td><?php echo $service_type; ?></td>
                                                     <td><?php echo date('d/m/Y', strtotime($value->date)); ?></td>
                                                     <td><?php echo $value->amount; ?></td>

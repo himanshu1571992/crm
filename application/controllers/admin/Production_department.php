@@ -133,6 +133,7 @@ class Production_department extends Admin_controller
             if ($id == '') {
 
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'name' => $name,
                     'department' => $department,
                     'created_at' => date('Y-m-d H:i:s'),
@@ -222,6 +223,7 @@ class Production_department extends Admin_controller
 
                 $machine_id = implode(',', $machine_id);
                 $ad_data = array(
+                    'added_by' => get_staff_user_id(),
                     'name' => $name,
                     'department' => $department,
                     'machine_id' => $machine_id,

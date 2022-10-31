@@ -5,6 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $aColumns = [
 //    '`id`',
     '`id`',
+    '`added_by`',
     '`designation`',
     '`color`',
     '`order`',
@@ -23,6 +24,7 @@ foreach ($rResult as $aRow) {
     $row = [];
 
     $row[] = $aRow['id'];
+    $row[] = ($aRow['added_by'] > 0) ? get_employee_fullname($aRow['added_by']) : 'N/A';
     
     $url = admin_url('designation/designation/' . $aRow['id']);
     $permission_url = admin_url('menu_master/designation_assign/' . $aRow['id']);

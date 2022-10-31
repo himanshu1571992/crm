@@ -68,7 +68,7 @@ class Vendor extends Admin_controller {
         }
 
         $data['title'] = $title;
-
+        $data['client_data'] = $this->db->query("SELECT * FROM `tblclients` where active = 1 order by company asc  ")->result();
         $this->load->view('admin/vendor/vendor', $data);
     }
 
@@ -152,6 +152,7 @@ class Vendor extends Admin_controller {
 
         $data['vendor_info'] = $this->db->query("SELECT * FROM `tblvendor` where id =  '".$id."' ")->row();
         $data['title'] = $data['vendor_info']->name.' ( VEND-'.str_pad($id, 6, '0', STR_PAD_LEFT).' )';
+        $data['client_data'] = $this->db->query("SELECT * FROM `tblclients` where active = 1 order by company asc  ")->result();
         $this->load->view('admin/vendor/vendor_profile', $data);
     }
 
@@ -858,12 +859,18 @@ public function vendor_editproducts($id,$vendor_id)
     public function ledger(){
         $data['title'] = 'Vendor Ledger';
         check_permission(352,'view');
+
+        $data["client_outstanding"] = 0;
         if ($this->input->post()) {
             extract($this->input->post());
 
             $where = "vendor_id = 0";
             if(!empty($vendor_id)){
                 $data['vendor_id'] = $vendor_id;
+                $client_id = value_by_id_empty("tblvendor", $vendor_id, "client_id");
+                if ($client_id > 0){
+                    $data["client_outstanding"] = client_balance_amt($client_id, '', 0);
+                }
 
                 $where = "vendor_id ='".$vendor_id."' and po_id > 0";
             }
@@ -878,7 +885,7 @@ public function vendor_editproducts($id,$vendor_id)
 
             $data['invoicelist'] = $this->db->query("SELECT * FROM `tblpurchaseinvoice` WHERE ".$where." ORDER BY id DESC ")->result();
         }
-
+        
         $data['vendors_info'] = $this->db->query("SELECT * FROM `tblvendor` where status = 1 order by name asc")->result();
         $this->load->view('admin/vendor/ledger', $data);
     }
@@ -895,7 +902,7 @@ public function vendor_editproducts($id,$vendor_id)
         $file_name = 'Vendor Ledger PDF -'.date('d_m_y');
 
         $html = vendor_ledger_pdf($data);
-
+        
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
         // $dompdf->setPaper('A4', 'portrait');
