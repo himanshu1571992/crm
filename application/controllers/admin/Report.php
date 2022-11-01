@@ -2405,4 +2405,48 @@ class Report extends Admin_controller
         $data['month_info'] = $this->home_model->get_result('tblmonths', '', '');
         $this->load->view("admin/reports/advance_salary_report", $data);
     }
+
+    /* This function use for vendor payment report */
+    public function vendor_payment_report(){
+        $where = "pop.acceptance = 1 AND pop.status = 1 AND pop.payfile_done = 1";
+        $pwhere = "pay.transport_against = 2 and pay.acceptance = 1 and pay.approved_status = 1 and pay.payfile_done = 1";
+        if(!empty($_POST)){
+            extract($this->input->post());
+
+            if (!empty($vendor_id)){
+
+                $data['vendor_id'] = $vendor_id;
+                $where .= " and p.vendor_id = ".$vendor_id;
+                // $pwhere .= " and p.vendor_id = ".$vendor_id; 
+            }
+            if(!empty($f_date) && !empty($t_date)){
+
+                $data['s_fdate'] = $f_date;
+                $data['s_tdate'] = $t_date;
+                $data['payment_type'] = $payment_type;
+
+                $where .= " and b.date  BETWEEN  '".db_date($f_date)."' and  '".db_date($t_date)."' ";
+                $pwhere .= " and b.date  BETWEEN  '".db_date($f_date)."' and  '".db_date($t_date)."' ";
+
+                if ($payment_type == 1){
+                    $select = "p.id as po_id, p.number, p.date as po_date, p.vendor_id, p.totalamount,b.date as payment_date,b.amount as cleared_amount,b.utr_no,b.utr_date";
+                    $data['vendorpayments'] = $this->db->query("SELECT ".$select." FROM `tblbankpaymentdetails` as b RIGHT JOIN `tblpurchaseorderpayments` as pop ON b.pay_type = 'po_payment' AND b.pay_type_id = pop.id
+                    RIGHT JOIN `tblpurchaseorder` as p ON p.id = pop.po_id WHERE ".$where." ")->result();
+                }else{
+                    // $select = "p.id as po_id, p.number, p.date as po_date, p.vendor_id, p.totalamount,b.date as payment_date,b.amount as cleared_amount,b.utr_no,b.utr_date";
+                    // $data['vendorpayments'] = $this->db->query("SELECT ".$select." FROM `tblbankpaymentdetails` as b RIGHT JOIN `tblpaymentrequest` as pay ON b.pay_type = 'pay_request' AND b.pay_type_id = pay.id
+                    // RIGHT JOIN `tblpurchaseorder` as p ON FIND_IN_SET(p.id, pay.document_id) WHERE ".$pwhere." ")->result();
+                    $select = "b.date as payment_date,b.amount as cleared_amount,b.utr_no,b.utr_date,pay.document_id";
+                    $data['vendorpayments'] = $this->db->query("SELECT ".$select." FROM `tblbankpaymentdetails` as b RIGHT JOIN `tblpaymentrequest` as pay ON b.pay_type = 'pay_request' AND b.pay_type_id = pay.id
+                    WHERE ".$pwhere." ")->result();
+                }
+                
+            }
+        }
+        // echo $this->db->last_query();
+        // exit;
+        $data['title'] = 'Vendor Payments';
+        $data['vendor_list'] = $this->db->query("SELECT * from `tblvendor` where status = 1 ORDER BY name ASC ")->result();
+        $this->load->view("admin/report/vendor_payments_report", $data);
+    }
 }
