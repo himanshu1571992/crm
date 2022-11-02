@@ -1105,3 +1105,1309 @@ ERROR - 2022-11-01 10:42:44 --> Could not find the language line "Employee Confi
 ERROR - 2022-11-01 10:42:44 --> Could not find the language line "Petty Cash Request Approved Successfully"
 ERROR - 2022-11-01 10:42:44 --> Could not find the language line "Request Approved Successfully"
 ERROR - 2022-11-01 10:42:44 --> Could not find the language line "Request Approved by Petty Cash"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Request Decline"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Request Approved, Pay by Petty Cash"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Expense approve Successfully"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Expense Decline"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Leave Decline"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Leave Decline"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Employee Confimed as a Petty Cash department Manger"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:50:20 --> Could not find the language line "Request Approved by Petty Cash"
+ERROR - 2022-11-01 13:50:22 --> Severity: Notice --> Undefined variable: purchase_othercharges C:\xampp\htdocs\crm\application\views\admin\purchase\purchase_order.php 1117
+ERROR - 2022-11-01 13:50:22 --> Severity: Warning --> count(): Parameter must be an array or an object that implements Countable C:\xampp\htdocs\crm\application\views\admin\purchase\purchase_order.php 1117
+ERROR - 2022-11-01 13:50:22 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:50:22 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:50:22 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:50:22 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:50:22 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 13:50:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:50:53 --> Severity: Notice --> Array to string conversion C:\xampp\htdocs\crm\application\views\admin\dashboard\widgets\user_data.php 51
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 13:51:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 13:51:26 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 13:51:34 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:51:34 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 13:51:34 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 13:51:34 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 13:51:34 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 354
+ERROR - 2022-11-01 13:51:34 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 354
+ERROR - 2022-11-01 13:51:34 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 361
+ERROR - 2022-11-01 13:51:34 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 536
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:51:35 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 13:51:35 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 13:51:35 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 13:51:35 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1205
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1212
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1304
+ERROR - 2022-11-01 13:51:35 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1311
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 13:55:04 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:55:04 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 13:55:04 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 13:55:04 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 13:55:04 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 354
+ERROR - 2022-11-01 13:55:04 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 354
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 361
+ERROR - 2022-11-01 13:55:05 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 536
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:55:05 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 13:55:05 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 13:55:05 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 13:55:05 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1205
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1212
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1304
+ERROR - 2022-11-01 13:55:05 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1311
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 13:57:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 359
+ERROR - 2022-11-01 13:57:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 359
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 366
+ERROR - 2022-11-01 13:57:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 541
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:57:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 13:57:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 13:57:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 13:57:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1210
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1217
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1309
+ERROR - 2022-11-01 13:57:14 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1316
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 13:57:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 357
+ERROR - 2022-11-01 13:57:34 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 357
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 364
+ERROR - 2022-11-01 13:57:34 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 539
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:57:34 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 13:57:34 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 13:57:34 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 13:57:34 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1208
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1215
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1307
+ERROR - 2022-11-01 13:57:34 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1314
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:02:32 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 369
+ERROR - 2022-11-01 14:02:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 369
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 376
+ERROR - 2022-11-01 14:02:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 551
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:02:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:02:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:02:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:02:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1220
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1227
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1319
+ERROR - 2022-11-01 14:02:33 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1326
+ERROR - 2022-11-01 14:04:54 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:04:54 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:54 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:54 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:54 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:54 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:54 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:54 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:54 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:04:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 369
+ERROR - 2022-11-01 14:04:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 369
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 376
+ERROR - 2022-11-01 14:04:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 551
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:04:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:04:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:04:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:04:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1220
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1227
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1319
+ERROR - 2022-11-01 14:04:55 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1326
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:05:31 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 369
+ERROR - 2022-11-01 14:05:32 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 369
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 376
+ERROR - 2022-11-01 14:05:32 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 551
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:05:32 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:05:32 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:05:32 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:05:32 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1220
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1227
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1319
+ERROR - 2022-11-01 14:05:32 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1326
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:05:51 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 369
+ERROR - 2022-11-01 14:05:52 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 369
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 376
+ERROR - 2022-11-01 14:05:52 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 551
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:05:52 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:05:52 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:05:52 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:05:52 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1220
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1227
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1319
+ERROR - 2022-11-01 14:05:52 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1326
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:07:39 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 384
+ERROR - 2022-11-01 14:07:40 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 384
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 391
+ERROR - 2022-11-01 14:07:40 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 566
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:07:40 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:07:40 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:07:40 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:07:40 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1235
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1242
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1334
+ERROR - 2022-11-01 14:07:40 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1341
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:07:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 384
+ERROR - 2022-11-01 14:08:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 384
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 391
+ERROR - 2022-11-01 14:08:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 566
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:08:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:08:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:08:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:08:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1235
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1242
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1334
+ERROR - 2022-11-01 14:08:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1341
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:29:25 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 399
+ERROR - 2022-11-01 14:29:26 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 399
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 406
+ERROR - 2022-11-01 14:29:26 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 581
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:29:26 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:29:26 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:29:26 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:29:26 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1250
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1257
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1349
+ERROR - 2022-11-01 14:29:26 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1356
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:35:02 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 423
+ERROR - 2022-11-01 14:35:02 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 423
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 430
+ERROR - 2022-11-01 14:35:02 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 605
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:35:02 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:35:02 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:35:02 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:35:02 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1274
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1281
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1373
+ERROR - 2022-11-01 14:35:02 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1380
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:36:13 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 423
+ERROR - 2022-11-01 14:36:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 423
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 430
+ERROR - 2022-11-01 14:36:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 605
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:36:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:36:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:36:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:36:14 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1274
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1281
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1373
+ERROR - 2022-11-01 14:36:14 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1380
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:37:08 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 454
+ERROR - 2022-11-01 14:37:09 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 454
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 461
+ERROR - 2022-11-01 14:37:09 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 636
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:37:09 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:37:09 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:37:09 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:37:09 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1305
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1312
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1404
+ERROR - 2022-11-01 14:37:09 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1411
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:37:56 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 454
+ERROR - 2022-11-01 14:37:57 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 454
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 461
+ERROR - 2022-11-01 14:37:57 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 636
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:37:57 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:37:57 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:37:57 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:37:57 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1305
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1312
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1404
+ERROR - 2022-11-01 14:37:57 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1411
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:39:00 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 454
+ERROR - 2022-11-01 14:39:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 454
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 461
+ERROR - 2022-11-01 14:39:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 636
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:39:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:39:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:39:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:39:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1305
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1312
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1404
+ERROR - 2022-11-01 14:39:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1411
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:39:43 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 454
+ERROR - 2022-11-01 14:39:44 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 454
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 461
+ERROR - 2022-11-01 14:39:44 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 636
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:39:44 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:39:44 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:39:44 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:39:44 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1305
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1312
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1404
+ERROR - 2022-11-01 14:39:44 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1411
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Decline"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Approved, Pay by Petty Cash"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Expense approve Successfully"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Expense Decline"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Leave Decline"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Leave Decline"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Employee Confimed as a Petty Cash department Manger"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Approved by Petty Cash"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:41:59 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 462
+ERROR - 2022-11-01 14:42:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 462
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 469
+ERROR - 2022-11-01 14:42:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 644
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:42:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:42:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:42:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:42:00 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1313
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1320
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1412
+ERROR - 2022-11-01 14:42:00 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1419
+ERROR - 2022-11-01 14:42:01 --> Severity: Notice --> Undefined variable: purchase_othercharges C:\xampp\htdocs\crm\application\views\admin\purchase\purchase_order.php 1117
+ERROR - 2022-11-01 14:42:01 --> Severity: Warning --> count(): Parameter must be an array or an object that implements Countable C:\xampp\htdocs\crm\application\views\admin\purchase\purchase_order.php 1117
+ERROR - 2022-11-01 14:42:01 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:42:01 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:42:01 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:42:01 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:42:01 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:42:33 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 462
+ERROR - 2022-11-01 14:42:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 462
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 469
+ERROR - 2022-11-01 14:42:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 644
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:42:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:42:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:42:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:42:33 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1313
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1320
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1412
+ERROR - 2022-11-01 14:42:33 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1419
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Request Decline"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Request Approved, Pay by Petty Cash"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Expense approve Successfully"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Expense Decline"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Leave Decline"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Leave Decline"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Employee Confimed as a Petty Cash department Manger"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:42:47 --> Could not find the language line "Request Approved by Petty Cash"
+ERROR - 2022-11-01 14:42:48 --> Severity: Notice --> Undefined variable: purchase_othercharges C:\xampp\htdocs\crm\application\views\admin\purchase\purchase_order.php 1117
+ERROR - 2022-11-01 14:42:48 --> Severity: Warning --> count(): Parameter must be an array or an object that implements Countable C:\xampp\htdocs\crm\application\views\admin\purchase\purchase_order.php 1117
+ERROR - 2022-11-01 14:42:48 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:42:48 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:42:48 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:42:48 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:42:48 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Proforma Invoice Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Request Decline"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Request Approved, Pay by Petty Cash"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Expense approve Successfully"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Expense Decline"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Leave Decline"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Leave Decline"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Employee Confimed as a Petty Cash department Manger"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Petty Cash Request Approved Successfully"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:49:40 --> Could not find the language line "Request Approved by Petty Cash"
+ERROR - 2022-11-01 14:49:41 --> Severity: Notice --> Undefined variable: purchase_othercharges C:\xampp\htdocs\crm\application\views\admin\purchase\purchase_order.php 1117
+ERROR - 2022-11-01 14:49:41 --> Severity: Warning --> count(): Parameter must be an array or an object that implements Countable C:\xampp\htdocs\crm\application\views\admin\purchase\purchase_order.php 1117
+ERROR - 2022-11-01 14:49:41 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:49:41 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:49:41 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:49:41 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:49:41 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:49:44 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 456
+ERROR - 2022-11-01 14:49:45 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 456
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 463
+ERROR - 2022-11-01 14:49:45 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 644
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:49:45 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:49:45 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:49:45 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:49:45 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1313
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1320
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1412
+ERROR - 2022-11-01 14:49:45 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1419
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Approved Successfully"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Expenses Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Leave Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Petty Cash department (Factory Pettycash) alloted to you"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "New Task Alloted to you"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Petty Cash Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Stock For Approval"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Trip assigned"
+ERROR - 2022-11-01 14:51:55 --> Could not find the language line "Request Send to you for Approval"
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: contactid C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 8
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: customer_id C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 14
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 438
+ERROR - 2022-11-01 14:51:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 438
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: staff C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 445
+ERROR - 2022-11-01 14:51:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Trying to get property 'field_value' of non-object C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 626
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: base_currency C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Trying to get property 'name' of non-object C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 23
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: currencies C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:51:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 27
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:51:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 43
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: taxes C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:51:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\views\admin\invoice_items\item.php 54
+ERROR - 2022-11-01 14:51:55 --> Severity: Warning --> Invalid argument supplied for foreach() C:\xampp\htdocs\crm\application\helpers\fields_helper.php 331
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1295
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1302
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1394
+ERROR - 2022-11-01 14:51:55 --> Severity: Notice --> Undefined variable: clientsate C:\xampp\htdocs\crm\application\views\admin\purchase\details.php 1401

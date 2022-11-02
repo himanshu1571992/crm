@@ -207,10 +207,23 @@ class Complains extends Admin_controller
                 <div class="col-md-12">
                     <h4 class="no-mtop mrg3">Action Plan List</h4>
                     <?php
-                        $complain_info = $this->db->query("SELECT `action_planner_id` from tblcomplains  where `id` = '".$complain_id."' ")->row();
+                        $complain_info = $this->db->query("SELECT * from tblcomplains  where `id` = '".$complain_id."' ")->row();
                         if(!empty($complain_info)){
                             echo "<p>Action Planner Name : <span class='text-danger'>".get_employee_name($complain_info->action_planner_id)."</span></p>";
                             echo "<p>Complain Number : <span class='text-danger'>Comp-".$complain_id."</span></p>";
+                            if (!empty($complain_info->action_planner_remark)){
+                                echo "<p>Action Planner Remark : <span>".cc($complain_info->action_planner_remark)."</span></p>";
+                            }
+                            
+                            if (!empty($complain_info->resolve_till) && $complain_info->status == 1 && strtotime($complain_info->resolve_till) < strtotime(date('Y-m-d'))){
+                               
+                                echo '<div class="row col-md-12">
+                                        <div class="form-group">
+                                            <label for="delayed_remark" class="control-label text-bold"><u>Delayed Remark : </u></label>
+                                            <textarea id="delayed_remark" rows="3" required="" name="delayed_remark" class="form-control" placeholder="delayed remark..."></textarea>
+                                        </div>
+                                    </div>';
+                            }
                             echo '<input type="hidden" name="action_planner_id" class="action_planner_id" value="'.$complain_info->action_planner_id.'">';
                         }
                     ?>
@@ -338,7 +351,8 @@ class Complains extends Admin_controller
         $data['complain_products'] = $this->db->query("SELECT * FROM `tblcomplainsproducts` where complains_id = '".$id."'")->result();
 
         if(!empty($_FILES)){
-            $update = $this->home_model->update('tblcomplains', array('action_plan_status'=> 1),array('id'=> $id));
+            $up_data = array('action_plan_status'=> 1, 'action_planner_remark' => $_POST["action_planner_remark"]);
+            $update = $this->home_model->update('tblcomplains', $up_data, array('id'=> $id));
             if(!empty($update)){
                 $actionplan_list = $this->db->query("SELECT * from tblfiles  where `rel_type` = 'complaints' and `rel_id` = '".$id."' ")->result();
                 if ($actionplan_list){
@@ -348,6 +362,7 @@ class Complains extends Admin_controller
                         unlink($path);
                     }
                 }
+
                 /* upload files of action plan */
                 complain_actionplan_attachments($id);
 

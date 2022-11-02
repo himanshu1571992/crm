@@ -84,12 +84,21 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">   
-                                        <div class="form-group ">
-                                            <label for="complain_date" class="control-label">Complain Date</label>
-                                            <div class="input-group date">
-                                                <input id="complain_date" name="complain_date" required="" class="form-control datepicker" value="<?php echo (isset($complain_info)) ? _d($complain_info->complain_date) : date("d/m/Y"); ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                        <div class="row">
+                                            <div class="form-group col-md-6">
+                                                <label for="complain_date" class="control-label">Complain Date</label>
+                                                <div class="input-group date">
+                                                    <input id="complain_date" name="complain_date" required="" class="form-control datepicker" value="<?php echo (isset($complain_info)) ? _d($complain_info->complain_date) : date("d/m/Y"); ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="resolve_till" class="control-label">Resolve Till</label>
+                                                <div class="input-group date">
+                                                    <input id="resolve_till" name="resolve_till" required="" class="form-control datepicker" value="<?php echo (isset($complain_info)) ? _d($complain_info->resolve_till) : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                </div>
                                             </div>
                                         </div>
+                                        
                                     </div>
                                 </div>    
                                 <div class="row">    

@@ -134,7 +134,9 @@
                                     |&nbsp;&nbsp;Partially Satisfied <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
                                     |&nbsp;&nbsp;Dis-satisfied <span class="fa fa-star checked"></span><span class="fa fa-star checked"></span>
                                     |&nbsp;&nbsp;Highly dis-satisfied <span class="fa fa-star checked"></span>
+                                    <h4>Average Rating : </h4><span class="average_rating"></span>
                                     <hr>
+                                    <?php $ttl_rating = 0;?>
                                     <div class="card label-info bg-gray">
                                         <div class="card-body ">
                                             <h4 class="card-title">
@@ -149,6 +151,7 @@
                                                                     echo '<span class="fa fa-star"></span>';
                                                                 }else{
                                                                     echo '<span class="fa fa-star checked"></span>';
+                                                                    $ttl_rating++;
                                                                 }
                                                             }
                                                         ?>
@@ -182,6 +185,7 @@
                                                                     echo '<span class="fa fa-star"></span>';
                                                                 }else{
                                                                     echo '<span class="fa fa-star checked"></span>';
+                                                                    $ttl_rating++;
                                                                 }
                                                             }
                                                         ?>
@@ -215,6 +219,7 @@
                                                                     echo '<span class="fa fa-star"></span>';
                                                                 }else{
                                                                     echo '<span class="fa fa-star checked"></span>';
+                                                                    $ttl_rating++;
                                                                 }
                                                             }
                                                         ?>
@@ -248,6 +253,7 @@
                                                                     echo '<span class="fa fa-star"></span>';
                                                                 }else{
                                                                     echo '<span class="fa fa-star checked"></span>';
+                                                                    $ttl_rating++;
                                                                 }
                                                             }
                                                         ?>
@@ -281,6 +287,7 @@
                                                                     echo '<span class="fa fa-star"></span>';
                                                                 }else{
                                                                     echo '<span class="fa fa-star checked"></span>';
+                                                                    $ttl_rating++;
                                                                 }
                                                             }
                                                         ?>
@@ -314,6 +321,7 @@
                                                                     echo '<span class="fa fa-star"></span>';
                                                                 }else{
                                                                     echo '<span class="fa fa-star checked"></span>';
+                                                                    $ttl_rating++;
                                                                 }
                                                             }
                                                         ?>
@@ -347,6 +355,7 @@
                                                                     echo '<span class="fa fa-star"></span>';
                                                                 }else{
                                                                     echo '<span class="fa fa-star checked"></span>';
+                                                                    $ttl_rating++;
                                                                 }
                                                             }
                                                         ?>
@@ -380,6 +389,7 @@
                                                                     echo '<span class="fa fa-star"></span>';
                                                                 }else{
                                                                     echo '<span class="fa fa-star checked"></span>';
+                                                                    $ttl_rating++;
                                                                 }
                                                             }
                                                         ?>
@@ -398,6 +408,9 @@
                                                 <?php } ?>
                                             </div>
                                             </p>
+                                            <?php 
+                                                echo round($ttl_rating/8);
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -424,16 +437,15 @@
 <script type="text/javascript">
 
     $(function () {
-
         $('#color-group').colorpicker({horizontal: true});
-
+       
     });
 
     $(document).on('change', '#designation_id', function() {
 
         var designation_id = $(this).val();
         var url = "<?php echo admin_url("staff_interview/get_designation_question"); ?>";
-        $.post(url, { designation_id: designation_id, interview_round: "<?php echo $round; ?>"}, function (response){
+        $.post(url, { designation_id: designation_id, interview_round: "<?php echo (isset($round) ? $round : 0); ?>"}, function (response){
             if (response != ''){
                 $(".designation_question").html(response);
             }else{
@@ -441,6 +453,14 @@
             }
         });
     });
+
+    
+    var ttlrating = "<?php echo round($ttl_rating/8); ?>";
+    var rating = '';
+    for(var i=ttlrating; i >= 1; i--){
+        rating += '<span class="fa fa-star checked"></span>';
+    }
+    $(".average_rating").html(rating);
 </script>
 
 </body>

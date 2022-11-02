@@ -223,24 +223,6 @@
                                 ?>
 
 
-
-
-
-
-
-                                <div class="row">
-                                    <div class="col-md-12">
-
-                                        <?php $value = (isset($purchase_info) ? _d($purchase_info['date']) : _d(date('Y-m-d'))); ?>
-
-                                       <div class="form-group" app-field-wrapper="date"><label for="date" class="control-label"> <small class="req text-danger">* </small>Purchase Order Date</label>
-                                        <div class="input-group date">
-                                            <input type="text" id="date" name="date" disabled="" class="form-control datepicker" value="<?php echo $value; ?>">
-                                            <div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <?php if (isset($estimate->vendor_contact_number)){ ?>
                                     <div class="form-group col-md-6">
@@ -282,17 +264,117 @@
                                     <?php 
                                         }
                                     ?>
-                                </div>  
-                                <div class="form-group">
-                                    <label for="tax_type" class="control-label">Select Tax Type</label>
-                                    <select class="form-control selectpicker" data-live-search="true" disabled="" required="" id="tax_type" name="tax_type">
-                                        <option value="1" <?php echo (!empty($purchase_info) && $purchase_info['tax_type'] == 1) ? 'selected' : '' ; ?> >Including</option>
-                                        <option value="2" <?php echo (!empty($purchase_info) && $purchase_info['tax_type'] == 2) ? 'selected' : '' ; ?>>Excluding</option>
-
-
-                                    </select>
                                 </div>
-
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="billing_branch_id" class="control-label">Select Billing Branch</label>
+                                        <select disabled="" class="form-control selectpicker" data-live-search="true" required="" id="billing_branch_id" name="billing_branch_id">
+                                            <?php
+                                                if(!empty($billing_branches)){
+                                                    foreach ($billing_branches as $branch) {
+                                                        ?>
+                                                        <option value="<?php echo $branch->id; ?>" <?php echo (!empty($purchase_info) && $purchase_info['billing_branch_id'] == $branch->id) ? 'selected' : '' ; ?> ><?php echo cc($branch->comp_branch_name); ?></option>
+                                                        <?php
+                                                    }
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="po_for" class="control-label">Select PO For</label>
+                                        <select disabled="" class="form-control selectpicker" data-live-search="true" required="" id="po_for" name="po_for">
+                                            <option value="1" <?php echo (!empty($purchase_info) && $purchase_info['po_for'] == 1) ? 'selected' : '' ; ?> >Regular</option>
+                                            <option value="2" <?php echo (!empty($purchase_info) && $purchase_info['po_for'] == 2) ? 'selected' : '' ; ?>>Special</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="order_type" class="control-label">Select Order Type</label>
+                                        <select disabled="" class="form-control selectpicker" data-live-search="true" required="" id="order_type" name="order_type">
+                                            <option value="1" <?php echo (!empty($purchase_info) && $purchase_info['order_type'] == 1) ? 'selected' : '' ; ?> >Purchase Order</option>
+                                            <option value="2" <?php echo (!empty($purchase_info) && $purchase_info['order_type'] == 2) ? 'selected' : '' ; ?>>Work Order</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="tax_type" class="control-label">Select Tax Type</label>
+                                        <select disabled="" class="form-control selectpicker" data-live-search="true" required="" id="tax_type" name="tax_type">
+                                            <option value="2" <?php echo (!empty($purchase_info) && $purchase_info['tax_type'] == 2) ? 'selected' : '' ; ?>>Excluding</option>
+                                            <option value="1" <?php echo (!empty($purchase_info) && $purchase_info['tax_type'] == 1) ? 'selected' : '' ; ?> >Including</option>
+                                        </select>
+                                    </div> 
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="enquiry_date" class="control-label">Other Charges Tax Type</label>
+                                        <select disabled="" class="form-control selectpicker" data-live-search="true" id="other_charges_tax" name="other_charges_tax">
+                                            <option value="2" <?php echo (!empty($purchase_info['other_charges_tax']) && $purchase_info['other_charges_tax'] == 2) ? 'selected' : '' ; ?> >Excluding Tax</option>
+                                            <option value="1" <?php echo (!empty($purchase_info['other_charges_tax']) && $purchase_info['other_charges_tax'] == 1) ? 'selected' : '' ; ?> >Including Tax</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="enquiry_date" class="control-label">PO Type</label>
+                                        <select disabled="" class="form-control selectpicker" data-live-search="true" id="po_type" name="po_type">
+                                            <option value="1" <?php echo (!empty($purchase_info['po_type']) && $purchase_info['po_type'] == 1) ? 'selected' : '' ; ?> >Regular</option>
+                                            <option value="2" <?php echo (!empty($purchase_info['po_type']) && $purchase_info['po_type'] == 2) ? 'selected' : '' ; ?> >Gas</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="division" class="control-label">Division</label>
+                                        <select disabled="" class="form-control selectpicker" require="" data-live-search="true" id="division_id" name="division_id">
+                                            <option value=""></option>
+                                            <?php 
+                                                if (isset($divisionmaster_list)){
+                                                    foreach ($divisionmaster_list as $dval) {
+                                                        $selectedcls = (!empty($purchase_info['division_id']) && $purchase_info['division_id'] == $dval->id) ? 'selected=""':'';
+                                                        echo '<option value="'.$dval->id.'" '.$selectedcls.'>'.cc($dval->name).'</option>';
+                                                    }
+                                                }
+                                            ?>
+                                        </select>
+                                        <div id="division_error_div"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <?php 
+                                            $mrdatevalue = (isset($purchase_info) ? _d($purchase_info['expected_mr_date']) : ''); 
+                                            echo render_date_input('expected_mr_date', 'Expected MR Date', $mrdatevalue, array('disabled'=>''));
+                                         ?>
+                                         <div id="mrdate_error_div"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label for="date" class="control-label">Vendor Contact Number</label>
+                                        <input disabled="" type="text" id="vendor_contact_number" name="vendor_contact_number" required="" class="form-control" value="<?php echo (isset($purchase_info) ? $purchase_info['vendor_contact_number'] : '');?>" >
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="date" class="control-label">Vendor Contact Person</label>
+                                        <input disabled="" type="text" id="vendor_contact_person" name="vendor_contact_person" required="" class="form-control" value="<?php echo (isset($purchase_info) ? $purchase_info['vendor_contact_person'] : '');?>">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="date" class="control-label">Billing Contact Name</label>
+                                        <input disabled="" type="text" id="billing_contact_name" name="billing_contact_name" required="" class="form-control" value="<?php echo (isset($purchase_info) ? $purchase_info['billing_contact_name'] : '');?>" >
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="date" class="control-label">Billing Contact Number</label>
+                                        <input disabled="" type="text" id="billing_contact_number" name="billing_contact_number" required="" class="form-control" value="<?php echo (isset($purchase_info) ? $purchase_info['billing_contact_number'] : '');?>" >
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="date" class="control-label">Billing Contact Email</label>
+                                        <input disabled="" type="text" id="billing_contact_email" name="billing_contact_email" required="" class="form-control" value="<?php echo (isset($purchase_info) ? $purchase_info['billing_contact_email'] : '');?>" >
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="currency" class="control-label">Currency</label>
+                                            <select disabled="" class="form-control selectpicker" id="currency" required="" name="currency" data-live-search="true">
+                                                <option value="0" <?php echo (isset($purchase_info) && $purchase_info['currency'] == 0) ? 'selected' : '' ; ?> >INR</option>
+                                                <option value="1" <?php echo (isset($purchase_info) && $purchase_info['currency'] == 1) ? 'selected' : '' ; ?> >USD</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
 
 
                                 <div class="clearfix mbot15"></div>
@@ -305,43 +387,45 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="number">Purchase Order Number <a class="text-info" style="margin-left:10px" target="_blank" href="<?php echo admin_url("purchase/download_pdf/").$purchase_info['id'];?>">View PDF</a></label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <?php if (isset($estimate)) { ?>
-                                                <a href="#" onclick="return false;" data-toggle="popover" data-container='._transaction_form' data-html="true" data-content="<label class='control-label'><?php echo _l('settings_sales_estimate_prefix'); ?></label><div class='input-group'><input name='s_prefix' type='text' class='form-control' value='<?php echo $estimate->prefix; ?>'></div><button type='button' onclick='save_sales_number_settings(this); return false;' data-url='<?php echo admin_url('estimates/update_number_settings/' . $estimate->id); ?>' class='btn btn-info btn-block mtop15'><?php echo _l('submit'); ?></button>"><i class="fa fa-cog"></i></a>
-                                                <?php
-                                            }
-                                            echo $prefix;
-                                            ?>
-                                        </span>
-                                        <input type="text" name="number" class="form-control" value="<?php echo (isset($purchase_info)) ? $purchase_info['number'] : $_estimate_number; ?>" data-isedit="<?php echo $isedit; ?>" data-original-number="<?php echo $data_original_number; ?>">
-                                        <?php if ($format == 3) { ?>
-                                            <span class="input-group-addon">
-                                                <span id="prefix_year" class="format-n-yy"><?php echo $yy; ?></span>
-                                            </span>
-                                        <?php } else if ($format == 4) { ?>
-                                            <span class="input-group-addon">
-                                                <span id="prefix_month" class="format-mm-yyyy"><?php echo $mm; ?></span>
-                                                /
-                                                <span id="prefix_year" class="format-mm-yyyy"><?php echo $yyyy; ?></span>
-                                            </span>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label for="service_type" class="control-label">Select Tax Type</label>
-                                    <select class="form-control selectpicker" data-live-search="true" disabled="" required="" id="service_type" name="service_type">
-                                        <option value="1" <?php echo (!empty($purchase_info) && $purchase_info['service_type'] == 1) ? 'selected' : '' ; ?> >Rent</option>
-                                        <option value="2" <?php echo (!empty($purchase_info) && $purchase_info['service_type'] == 2) ? 'selected' : '' ; ?>>Sales</option>
-
-
-                                    </select>
-                                </div>
-
-
-
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">
+                                                        <?php if (isset($estimate)) { ?>
+                                                            <a href="#" onclick="return false;" data-toggle="popover" data-container='._transaction_form' data-html="true" data-content="<label class='control-label'><?php echo _l('settings_sales_estimate_prefix'); ?></label><div class='input-group'><input name='s_prefix' type='text' class='form-control' value='<?php echo $estimate->prefix; ?>'></div><button type='button' onclick='save_sales_number_settings(this); return false;' data-url='<?php echo admin_url('estimates/update_number_settings/' . $estimate->id); ?>' class='btn btn-info btn-block mtop15'><?php echo _l('submit'); ?></button>"><i class="fa fa-cog"></i></a>
+                                                            <?php
+                                                        }
+                                                        echo $prefix;
+                                                        ?>
+                                                    </span>
+                                                    <input type="text" name="number" class="form-control" value="<?php echo (isset($purchase_info)) ? $purchase_info['number'] : $_estimate_number; ?>" data-isedit="<?php echo $isedit; ?>" data-original-number="<?php echo $data_original_number; ?>">
+                                                    <?php if ($format == 3) { ?>
+                                                        <span class="input-group-addon">
+                                                            <span id="prefix_year" class="format-n-yy"><?php echo $yy; ?></span>
+                                                        </span>
+                                                    <?php } else if ($format == 4) { ?>
+                                                        <span class="input-group-addon">
+                                                            <span id="prefix_month" class="format-mm-yyyy"><?php echo $mm; ?></span>
+                                                            /
+                                                            <span id="prefix_year" class="format-mm-yyyy"><?php echo $yyyy; ?></span>
+                                                        </span>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                            <?php $date_value = (isset($purchase_info) ? _d($purchase_info['date']) : _d(date('Y-m-d'))); ?>
+                                            <div class="form-group" app-field-wrapper="date">
+                                                <label for="date" class="control-label">Purchase Order Date</label>
+                                                <div class="input-group date">
+                                                    <input disabled="" type="text" id="date" name="date" class="form-control datepicker" value="<?php echo $date_value;?>" aria-invalid="false">
+                                                        <div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="service_type" class="control-label">Select Service Type</label>
+                                                <select class="form-control selectpicker" data-live-search="true" disabled="" required="" id="service_type" name="service_type">
+                                                    <option value="1" <?php echo (!empty($purchase_info) && $purchase_info['service_type'] == 1) ? 'selected' : '' ; ?> >Rent</option>
+                                                    <option value="2" <?php echo (!empty($purchase_info) && $purchase_info['service_type'] == 2) ? 'selected' : '' ; ?>>Sales</option>
+                                                </select>
+                                            </div>
                                             <?php $value = (isset($purchase_info) ? $purchase_info['reference_no'] : ''); ?>
                                             <div class="form-group" app-field-wrapper="reference_no">
                                                 <label for="reference_no" class="control-label">Reference #</label>
@@ -433,6 +517,12 @@
                                     <?php } } ?>
                                     <?php $value = (isset($purchase_info) ? _d($purchase_info['tentative_complete_date']) : ''); ?>
                                     <?php echo render_date_input('tentative_complete_date', 'Tentative Complete Date', $value, array("readonly" => '')); ?>
+                                    <div class="col-md-6 transportation_charges_div" <?php echo (!empty($purchase_info) && $purchase_info['transportation_charges'] != '0.00') ? "": 'style="display:none;"';?>>
+                                        <div class="form-group">
+                                            <label for="transportation_charges" class="control-label">Transportation Charges Amount</label>
+                                            <input type="text" name="transportation_charges" class="form-control" value="<?php echo (!empty($purchase_info) && $purchase_info['transportation_charges'] != '0.00') ? $purchase_info["transportation_charges"] : "";?>">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

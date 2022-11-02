@@ -87,11 +87,12 @@
                                                 <th>S.No</th>
                                                 <th>Complain ID</th>
                                                 <th>Complain Date</th>
+                                                <th>Resolve Till</th>
                                                 <th>Customer Name</th>
                                                 <th>Complain Type</th>
                                                 <th>Complain Status</th>
                                                 <th>Status</th>
-                                                <th class="text-center">Action</th>
+                                                <th width="15%" class="text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -131,6 +132,7 @@
                                                             <?php echo get_creator_info($row->staff_id, $row->created_on); ?>
                                                         </td>
                                                         <td><?php echo _d($row->complain_date); ?></td>
+                                                        <td><?php echo (!empty($row->resolve_till)) ? _d($row->resolve_till) : 'N/a'; ?></td>
                                                         <td><?php echo $client_info->company; ?></td>
                                                         <td><?php echo value_by_id("tblcomplainstypes", $row->complain_type_id, "title"); ?></td>
                                                         <td><?php echo '<button type="button" class="btn ' . $ccls . ' btn-sm">' . $cstatus . '</button>'; ?></td>

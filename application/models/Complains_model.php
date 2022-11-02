@@ -7,7 +7,7 @@ class Complains_model extends CRM_Model
 
     public function add($data)
     {
-	$assignstaff=$data['assignid'];
+	    $assignstaff=$data['assignid'];
         if(!empty($assignstaff)){
             foreach ($assignstaff as $single_staff) {
             if (strpos($single_staff, 'staff') !== false) {
@@ -27,6 +27,7 @@ class Complains_model extends CRM_Model
         $ad_data["location"] = $data["location"];
         $ad_data["remark"] = $data["remark"];
         $ad_data["complain_date"] = $complain_date;
+        $ad_data["resolve_till"] = db_date($data['resolve_till']);
         $ad_data["created_on"] = date("Y-m-d H:i:s");
         $ad_data["staff_id"] = get_staff_user_id();
         
@@ -89,7 +90,7 @@ class Complains_model extends CRM_Model
 
     public function update($data, $id)
     {
-	$assignstaff=$data['assignid'];
+	    $assignstaff=$data['assignid'];
         if(!empty($assignstaff)){
             foreach ($assignstaff as $single_staff) {
             if (strpos($single_staff, 'staff') !== false) {
@@ -109,6 +110,7 @@ class Complains_model extends CRM_Model
         $ad_data["location"] = $data["location"];
         $ad_data["remark"] = $data["remark"];
         $ad_data["complain_date"] = $complain_date;
+        $ad_data["resolve_till"] = db_date($data['resolve_till']);
         $ad_data["approve_status"] = 0;
         
         $update = $this->home_model->update('tblcomplains', $ad_data, array("id" => $id)); 
@@ -249,6 +251,8 @@ class Complains_model extends CRM_Model
             $addata["status"] = 1;
         }elseif($data["action"] == 2){
             $addata["action_planner_id"] = $data["action_planner_id"];
+            $addata["delayed_remark"] = $data["delayed_remark"];
+            $addata["actual_complete_date"] = date("Y-m-d");
             $addata["action_plan_status"] = 1;
             $addata["status"] = 2;
         }

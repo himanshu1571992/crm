@@ -79,10 +79,12 @@
                                                 <th>S.No</th>
                                                 <th>Complain ID</th>
                                                 <th>Complain Date</th>
+                                                <th>Resolve Till</th>
                                                 <th>Customer Name</th>
                                                 <th>Complain Type</th>
                                                 <th>Action Planner</th>
                                                 <th>Action Planner Document's</th>
+                                                <th>Delayed At</th>
                                                 <th>Status</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
@@ -105,11 +107,23 @@
                                                     } elseif ($row->action_plan_status == 1) {
                                                         $astatus = '<button type="button" class="btn-success btn-xs listactionplan" data-id="' . $row->id . '" data-status="' . $row->status . '" data-toggle="modal" data-target="#actionplanlistModal">View Plan</button>';
                                                     }
+
+                                                    $overdue_day = '--';
+                                                    if ($row->status == 2 && !empty($row->resolve_till)){
+                                                        if (strtotime($row->actual_complete_date) > strtotime($row->resolve_till)){
+                                                            $diff_date = (strtotime($row->actual_complete_date)-strtotime($row->resolve_till));
+                                                            $overdue_day = '<a href="javascript:void(0);" data-toggle="popover" title="Delayed Remark" data-content="'.$row->delayed_remark.'" class="btn-sm btn-info">'.round($diff_date / 86400).'</a>';
+                                                        }else{
+                                                            $overdue_day = '<span class="text-success">No Due</span>';
+                                                        }
+                                                    }
                                                     ?>
+                                                    
                                                     <tr>
                                                         <td><?php echo ++$k; ?></td>
                                                         <td><?php echo "Comp-".$row->id; ?></td>
                                                         <td><?php echo _d($row->complain_date); ?></td>
+                                                        <td><?php echo (!empty($row->resolve_till)) ? _d($row->resolve_till) : 'N/a'; ?></td>
                                                         <td><?php echo $client_info->company; ?></td>
                                                         <td><?php echo value_by_id("tblcomplainstypes", $row->complain_type_id, "title"); ?></td>
                                                         <td>
@@ -122,6 +136,7 @@
                                                             ?>
                                                         </td>
                                                         <td><?php echo $astatus; ?></td>
+                                                        <td><?php echo $overdue_day; ?></td>
                                                         <td><?php echo '<button type="button" class="btn ' . $cls . ' btn-sm status" value="' . $row->id . '" data-toggle="modal" data-target="#statusModal">' . $status . '</button>'; ?></td>
                                                         <td class="text-center">
                                                             <div class="btn-group">

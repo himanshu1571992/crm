@@ -553,9 +553,9 @@ class Purchase extends Admin_controller {
 
          $data['appvoal_info'] = $this->db->query("SELECT * from tblpurchaseorderapproval where po_id = '".$id."' and staff_id = '".get_staff_user_id()."' and approve_status != 0 ")->row();
 
-
+        $data['divisionmaster_list'] = $this->db->query("SELECT * FROM `tblproducttypemaster` WHERE `status`= 1 order by `name` ASC")->result();
         $data['ttlpaidamount'] = $this->db->query("SELECT SUM(approved_amount) as ttlamount from tblpurchaseorderpayments where po_id = '".$id."' and status = 1 ")->row()->ttlamount;
-         
+        $data['billing_branches'] = $this->db->query("SELECT * from tblcompanybranch where status = '1' ORDER BY id ASC")->result();
     	$data['title'] = 'Purchase Order Details';
         $this->load->view('admin/purchase/details', $data);
     }

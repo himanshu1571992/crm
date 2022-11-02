@@ -32,6 +32,9 @@
         color:#fff;
     }
 
+    .text-bold {
+        font-size: 15px;
+    }
 
 </style>
 <div id="wrapper">
@@ -50,7 +53,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group ">
-                                            <label for="source" class="control-label">Customer :</label>
+                                            <label for="source" class="control-label text-bold"><u>Customer :</u></label>
                                             <?php
                                                 $client_info = $this->db->query("SELECT * FROM `tblclients` where `userid` = '".$complain_info->client_id."'")->row(); 
                                             ?>
@@ -59,37 +62,51 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group ">
-                                            <label for="source" class="control-label">Complain Type :</label>
+                                            <label for="source" class="control-label text-bold"><u>Complain Type :</u></label>
                                             <p ><?php echo (!empty($complain_info)) ? value_by_id("tblcomplainstypes", $complain_info->complain_type_id, "title") : ""; ?></p>
                                         </div>
                                     </div>
                                     <div class="col-md-4">   
-                                        <div class="form-group ">
-                                            <label for="complain_date" class="control-label">Complain Date :</label>
+                                        <div class="form-group col-md-6">
+                                            <label for="complain_date" class="control-label text-bold"><u>Complain Date :</u></label>
                                             <div class="input-group date">
                                                 <p><?php echo (isset($complain_info)) ? _d($complain_info->complain_date) : '--'; ?></p>
                                             </div>
                                         </div>
+                                        <?php if (!empty($complain_info->resolve_till)) { ?>
+                                        <div class="form-group col-md-6">
+                                            <label for="complain_date" class="control-label text-bold"><u>Resolve Till :</u></label>
+                                            <div class="input-group date">
+                                                <p><?php echo (isset($complain_info)) ? _d($complain_info->resolve_till) : '--'; ?></p>
+                                            </div>
+                                        </div>
+                                        <?php } ?>
                                     </div>
                                 </div>    
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="location" class="control-label">Location :</label>
+                                            <label for="location" class="control-label text-bold"><u>Location :</u></label>
                                             <p><?php echo (isset($complain_info)) ? $complain_info->location : ""; ?></p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="remark" class="control-label">Remark : </label>
+                                            <label for="remark" class="control-label text-bold"><u>Remark : </u></label>
                                             <p><?php echo (isset($complain_info)) ? $complain_info->remark : ""; ?></p>
                                         </div>
                                     </div>
                                     <?php if(isset($page) && $page == "upload_action_plan"){?>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="action plan" class="control-label">Action Plan File : </label>
+                                                <label for="action plan" class="control-label text-bold"><u>Action Plan File : </u></label>
                                                 <input type="file" required="" id="filer_input2" class="form-control"  name="files[]" multiple="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="action_planner_remark" class="control-label text-bold"><u>Action Planner Remark : </u></label>
+                                                <textarea id="action_planner_remark" rows="5" required="" name="action_planner_remark" class="form-control" placeholder="action planner remark..."></textarea>
                                             </div>
                                         </div>
                                     <?php } ?>
