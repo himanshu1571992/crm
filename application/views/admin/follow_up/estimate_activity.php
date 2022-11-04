@@ -97,6 +97,9 @@
                                                             <?php if ($ttl_reply > 0){ ?>
                                                             | <a href="javascript:void(0);" class="view_reply" val="<?php echo $log->id; ?>" data-last_id="0" data-type="1" title="Reply on activity"> <?php echo $ttl_reply; ?> Replies</a>
                                                             <?php } ?>
+                                                            <br>
+                                                            <br>
+                                                            <?php echo get_activity_files(37, $log->id); ?>
                                                             <div class="reply-div reply-box<?php echo $log->id; ?>" style="display: none;">
                                                                 <?php //echo render_textarea('activity_reply['.$log->id.']','','',array('placeholder'=>_l('enter_activity'), 'class' => 'comment-box'),array(),'mtop15'); ?>
                                                                 <div class="form-group mtop15" app-field-wrapper="description">
@@ -112,6 +115,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="reply-view<?php echo $log->id; ?>"></div>
+                                                    
                                                 </div>
                                                 <?php
                                                 $i++;
@@ -150,6 +154,11 @@
                                         </div> 
                                         <div class="col-md-12">
                                             <div class="form-group mtop15" app-field-wrapper="description"><textarea id="description0" val="0"  name="description" class="form-control description_box" placeholder="Enter Activity" rows="4"></textarea></div>
+                                            <label for="upload" style="float: right;">
+                                                <span class="fa fa-paperclip" style="font-size: 25px;position: relative;top: -70px;right: 15px;" aria-hidden="true"></span>
+                                                <input type="file" id="upload" name="activityfile[]" style="display:none" multiple>
+                                            </label>
+                                            <div id="uploadedfile"></div>
                                             <div id="searchResult"></div>
                                             <br>
                                             <!-- <mark style="color:red">* Please use @ for tag someone</mark> -->
@@ -184,7 +193,25 @@
     $this->load->view("admin/follow_up/tag_staff_modal");
 ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#upload').change(function(e) {
+            var files = e.target.files[0].name;
+            var lg = e.target.files.length; // get length
+            var fragment = "";
+            if (lg > 0) {
+              for (var i = 0; i < lg; i++) {
+                  var fileName = e.target.files[i].name; // get file name
 
+                  // append li to UL tag to display File info
+                  fragment += "<li>" + fileName + "</li>";
+              }
+
+              $("#uploadedfile").html(fragment);
+            }
+        });
+    });
+</script>
 <script type="text/javascript">
     $(function () {
         $('#color-group').colorpicker({horizontal: true});

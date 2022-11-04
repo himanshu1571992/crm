@@ -3288,6 +3288,46 @@ function upload_ledger_reco($id = '', $field_name = 'file') {
     return false;
 }
 
+function handle_multi_activty_attachments($data) {
+    $result =array();
+    foreach ($_FILES['activityfile']['error'] as $key => $error) {
+        
+        if (isset($_FILES['activityfile']) && _perfex_upload_error($_FILES['activityfile']['error'][$key])) {
+            header('HTTP/1.0 400 Bad error');
+            return _perfex_upload_error($_FILES['activityfile']['error'][$key]);
+            //die;
+        }
+        $path = get_upload_path_by_type('activity_attachments') .$data["module_id"]. '-'. $data["activity_id"] . '/';
+        $CI = & get_instance();
+        if (isset($_FILES['activityfile']['name'][$key])) {
+
+            // do_action('before_upload_expense_attachment', $data["id"]);
+            // Get the temp file path
+            $tmpFilePath = $_FILES['activityfile']['tmp_name'][$key];
+            $filename = $_FILES['activityfile']['name'][$key];
+            $newFilePath = $path . $filename;
+            // Make sure we have a filepath
+            
+            if (!empty($tmpFilePath) && $tmpFilePath != '') {
+                _maybe_create_upload_path($path);
+
+                // Upload the file into the company uploads dir
+                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    $CI = & get_instance();
+                    $attachment = [
+                        'module_id' => $data["module_id"],
+                        'table_id' => $data["table_id"],
+                        'activity_id' => $data["activity_id"],
+                        'file' => $filename,
+                    ];
+                    $CI->db->insert('tblactivityfiles', $attachment);
+                }
+            }
+        }
+    }
+    return $result;
+}
+
 /**
  * Function that return full path for upload based on passed type
  * @param  string $type
@@ -3628,6 +3668,9 @@ function get_upload_path_by_type($type) {
             break;
             case 'employee_complains':
                 return EMPLOYEE_COMPLAIN_FOLDER;
+            break;
+            case 'activity_attachments':
+                return ACTIVITY_ATTACHMENTS_FOLDER;
             break;
         default:
             return false;

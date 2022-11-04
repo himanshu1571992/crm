@@ -1252,3 +1252,19 @@ function yearly_client_invoice_values($invoice_id, $client_id){
     $total_amt = $CI->db->query("SELECT SUM(total) as total FROM `tblinvoices` WHERE year_id = '".$year_id."' AND clientid = '".$client_id."' AND status != 5")->row()->total;
     return $total_amt;
 }
+
+/* this function use for get activity files */
+function get_activity_files($module_id, $activity_id){
+    $CI = & get_instance();
+    $filedata = $CI->db->query("SELECT `file` FROM `tblactivityfiles` WHERE `module_id`='".$module_id."' AND `activity_id`='".$activity_id."' AND `status` = '1' ")->result();
+    $fileshtml = '';
+    if (!empty($filedata)){
+        $fileshtml .= '<ul>';
+        foreach ($filedata as $value) {
+            $path = site_url("uploads/activity_attachments/") .$module_id.'-'.$activity_id . '/'.$value->file;
+            $fileshtml .='<li class="label label-info"><a  href="'.$path.'" target="_blank">'.$value->file.'</a></li>';
+        }
+        $fileshtml .= '</ul>';
+    }
+    return $fileshtml;    
+}

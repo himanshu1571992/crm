@@ -3775,4 +3775,26 @@ class Leads extends Admin_controller
         $data['month_list'] = $this->db->query("SELECT * from `tblmonths` ORDER BY id ASC ")->result();
         $this->load->view('admin/report/lead_projection_report', $data);
     }
+
+    /* this code use for lead assigned vs lead converted report */
+    public function lead_assign_and_converted()
+    {
+        $data['title'] = 'Lead assigned Vs Lead converted';
+       
+        $data["f_date"] = date("d/m/Y", strtotime('first day of this month', time()));
+        $data["t_date"] = date("d/m/Y", strtotime('last day of this month', time()));
+        
+        if(!empty($_POST)){
+            extract($this->input->post());
+            
+            if(!empty($f_date) && !empty($t_date)){
+                $data['f_date'] = $f_date;
+                $data['t_date'] = $t_date;
+            }
+        }
+
+        $data['sales_person_list'] = $this->db->query("SELECT `sales_person_id` FROM `tblleadstaffgroup` WHERE `status` = 1 ORDER BY `name` ASC ")->result();
+        $this->load->view('admin/leads/lead_assign_and_converted', $data);
+    }
+
 }

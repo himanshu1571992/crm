@@ -790,6 +790,17 @@ class Follow_up extends Admin_controller
                     }
                 }
 
+                /* this code use for store activity attachment */
+                if (!empty($_FILES)){
+                    $attachmentdata = array(
+                        'activity_id' => $insert_id,
+                        'module_id' => 30,
+                        'table_id' => $lead_id,
+                        'section' => 'lead'
+                    );
+                    handle_multi_activty_attachments($attachmentdata);
+                }
+
                 /* this is for tag read activity staff */
                 if (!empty($tag_viewstaff_ids)){
                     $staff_ids = array_unique(explode(",", $tag_viewstaff_ids));
@@ -926,6 +937,7 @@ class Follow_up extends Admin_controller
                                                       $html .=' |<a href="javascript:void(0);" class="view_reply" val="'.$log->id.'" data-type="1" data-last_id="0" > '.$ttl_reply.' Replies</a>';
                                                   }
                                               }
+                                              $html .= get_activity_files(30, $log->id);
                                       $html .='</div></div>
                                         <div class="col-md-12 reply-div reply-box'.$log->id.'" style="display: none;"><div class="form-group mtop15" app-field-wrapper="description"><input type="text" name="activity_reply['.$log->id.']" val="'.$log->id.'" id="description'.$log->id.'" class="form-control description_box"></div>
                                            <div class="text-right">
@@ -934,6 +946,7 @@ class Follow_up extends Admin_controller
                                               <a href="javascript:void(0);" onclick="close_reply_activity();" class="btn btn-danger">Close</a>
                                            </div><br>
                                         </div><div class="reply-view'.$log->id.'"></div>';
+                                        
                       $html .= '</div>';    
                     $i++;
 
@@ -1455,6 +1468,17 @@ class Follow_up extends Admin_controller
                     }
                 }
 
+                /* this code use for store activity attachment */
+                if (!empty($_FILES)){
+                    $attachmentdata = array(
+                        'activity_id' => $insert_id,
+                        'module_id' => 37,
+                        'table_id' => $estimate_id,
+                        'section' => 'estimates'
+                    );
+                    handle_multi_activty_attachments($attachmentdata);
+                }
+
                 set_alert('success', 'Activity Added successfully');
                 redirect(admin_url('follow_up/estimates_activity/' . $estimate_id));
             }
@@ -1520,6 +1544,8 @@ class Follow_up extends Admin_controller
                                                     $html .=' |<a href="javascript:void(0);" class="view_reply" val="'.$log->id.'" data-type="1" data-last_id="0" > '.$ttl_reply.' Replies</a>';
                                                 }
                                             }
+                                            $html .= '<br><br>';
+                                            $html .= get_activity_files(37, $log->id);
                             $html .='</div></div>
                                         <div class="col-md-12 reply-div reply-box'.$log->id.'" style="display: none;"><div class="form-group mtop15" app-field-wrapper="description"><input type="text" name="activity_reply['.$log->id.']" val="'.$log->id.'" id="description'.$log->id.'" class="form-control description_box"></div>
                                            <div class="text-right">

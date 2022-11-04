@@ -4287,10 +4287,12 @@ class Chalan extends Admin_controller {
         }else{
             $where .= " and year_id = '".financial_year()."' ";
         }
-
+        
         // Get records
         $data['invoice_list'] = $this->db->query("SELECT * from `tblchalanmst` where ".$where." ORDER BY id desc ")->result();
-
+        // echo "<pre>";
+        // print_r($data["invoice_list"]);
+        // exit;
         $data['client_data'] = $this->db->query("SELECT * from `tblclientbranch` WHERE `active`=1 AND `client_branch_name` != '' ORDER BY client_branch_name ASC ")->result();
         $data['branch_info'] = $this->db->query("SELECT `id`,`comp_branch_name` from `tblcompanybranch` where status = 1 ORDER BY comp_branch_name ASC ")->result();
 

@@ -460,7 +460,25 @@
     for(var i=ttlrating; i >= 1; i--){
         rating += '<span class="fa fa-star checked"></span>';
     }
-    $(".average_rating").html(rating);
+    var ratingtitle = '';
+    switch (ttlrating) {
+        case '1':
+            ratingtitle = 'Highly dis-satisfied';
+            break;
+        case '2':
+            ratingtitle = 'Dis-satisfied';
+            break;
+        case '3':
+            ratingtitle = 'Partially Satisfied';
+            break;
+        case '4':
+            ratingtitle = 'Satisfied';
+            break;
+        case '5':
+            ratingtitle = 'Highly Satisfied';
+            break;
+    }
+    $(".average_rating").html(ratingtitle+' '+rating);
 </script>
 
 </body>

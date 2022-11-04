@@ -58,7 +58,7 @@
                         <div class="form-group col-md-2" app-field-wrapper="date">
                             <label for="f_date" class="control-label">From Date</label>
                             <div class="input-group date">
-                                <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if(!empty($t_date)){ echo $t_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if(!empty($f_date)){ echo $f_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                             </div>
                         </div>
                         <div class="form-group col-md-2" app-field-wrapper="date">
@@ -101,6 +101,7 @@
                               <tr>
                                 <th>S.No</th>
                                 <th>Challan #</th>
+                                <th>Sales Parson Name</th>
                                 <th>Service Type</th>
                                 <th>Customer</th>
                                 <th>Date</th>
@@ -125,11 +126,36 @@
                                      }elseif($value->process == 2 && $value->under_process == 0 && $pickup_ho->complete == 1 && $pickup_ho->final_complete == 1){
                                          $show_satification = 1;
                                      }
+                                     
                                      if ($show_satification == 1){
+
+                                        /* this code use for get sales parson name */
+                                        $sales_parson_name = '--';
+                                        switch ($value->rel_type) {
+                                            case 'proforma_challan':
+                                                $estimate_id = value_by_id_empty("tblproformachalan", $value->rel_id, "rel_id");
+                                                if (!empty($estimate_id)){
+                                                    $lead_id = value_by_id_empty("tblestimates", $estimate_id, "lead_id");
+                                                    $leadstaff = $this->db->query("SELECT `staff_id` FROM `tblleadassignstaff` WHERE `lead_id` = ".$lead_id." AND `type` = 2")->row();
+                                                    if (!empty($leadstaff)){
+                                                        $sales_parson_name = get_staff_full_name($leadstaff->staff_id);
+                                                    }
+                                                }
+                                                break;
+                                            default:
+                                                $lead_id = value_by_id_empty("tblestimates", $value->rel_id, "lead_id");
+                                                $leadstaff = $this->db->query("SELECT `staff_id` FROM `tblleadassignstaff` WHERE `lead_id` = ".$lead_id." AND `type` = 2")->row();
+                                                if (!empty($leadstaff)){
+                                                    $sales_parson_name = get_staff_full_name($leadstaff->staff_id);
+                                                }
+                                                # code...
+                                                break;
+                                        }
                                     ?>
                                     <tr>
                                         <td><?php echo ++$key; ?></td>
                                         <td><?php echo '<a target="_blank" href="' . site_url('admin/chalan/view/' . $value->id). '" >' .$value->chalanno. '</a>'; ?></td>
+                                        <td><?php echo $sales_parson_name; ?></td>
                                         <td><?php echo ($value->service_type == 1) ? 'Rent' : 'Sale'; ?></td>
                                         <td><a href="<?php echo admin_url('clients/client/'.$value->clientid); ?>" target="_blank"><?php echo cc($client_info->client_branch_name); ?></a></td>
                                         <td><?php echo _d($value->challandate); ?></td>
@@ -409,19 +435,19 @@ $(document).ready(function() {
             {
                 extend: 'excel',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4 ]
+                    columns: [ 0, 1, 2, 3, 4, 5 ]
                 }
             },
             {
                 extend: 'pdf',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4 ]
+                    columns: [ 0, 1, 2, 3, 4, 5 ]
                 }
             },
             {
                 extend: 'print',
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4 ]
+                    columns: [ 0, 1, 2, 3, 4, 5 ]
                 }
             },
             'colvis',

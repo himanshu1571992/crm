@@ -337,6 +337,7 @@ define('EMPLOYEE_COMPLAIN_FOLDER',FCPATH.'uploads/employee_complains' . '/');
 define('TEST_CERTIFICATE_REQUEST_FOLDER',FCPATH.'uploads/inspection/test_certificate' . '/');
 define('ESTIMATE_PURCHASE_ORDER_FOLDER',FCPATH.'uploads/estimates/purchase_order' . '/');
 define('LEDGER_RECO_FOLDER',FCPATH.'uploads/ledger_reco' . '/');
+define('ACTIVITY_ATTACHMENTS_FOLDER',FCPATH.'uploads/activity_attachments' . '/');
 
 //Calling API Settings
 define('CALL_API_KEY', '4cf4540d6d5ab70f33aefc05ca05528fa400b8790d22af8e');
