@@ -323,7 +323,8 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                                                     $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
                                                 }
                                             ?>
-                                            <a href="<?php echo admin_url('invoices/update_accounted_status/'.$value->id.'/rent'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+                                            <!-- <a href="<?php echo admin_url('invoices/update_accounted_status/'.$value->id.'/rent'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a> -->
+                                            <a href="javascript:void(0);" class="accounted_sts<?php echo $value->id; ?>" onclick="update_accounted_status(<?php echo $value->id; ?>);"><?php echo $accounted_text; ?></a>
                                         </td>
                                         <td>
                                             <?php
@@ -369,28 +370,31 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                                                             <a class="text-danger _delete"  target="_blank" href="<?php echo admin_url('invoices/mark_as_cancelled/'.$value->id);?>" data-status="1"><span style="color:red;">CANCEL</span></a>
                                                         <?php
                                                         }
-                                                                if (empty($value->einvoice_irn) && empty($value->einvoice_ack_date) && empty($value->einvoice_ack_number)){
-                                                                    if (!empty($client_info->legal_name) && !empty($client_info->trade_name)){
+                                                            if (empty($value->einvoice_irn) && empty($value->einvoice_ack_date) && empty($value->einvoice_ack_number)){
+                                                                if (!empty($client_info->legal_name) && !empty($client_info->trade_name)){
+                                                                    if ($value->tcs_status > 0){
                                                                         echo '<a href="javascript:void(0);" onclick="generateEinvoice('.$value->id.');" class="btn-with-tooltip" style="font-size: 12px;">GENERATE E-INVOICE</a>';
-                                                                    }else{
+                                                                    }    
+                                                                }else{
+                                                                    if ($value->tcs_status > 0){
                                                                         echo '<a href="javascript:void(0);" onclick="getLegalName('.$value->clientid.');" class="btn-with-tooltip get_legal_name">Get Legal Name</a>';
                                                                     }
                                                                 }
-                                                                if (!empty($value->einvoice_pdf)){
-                                                                    echo '<a href="'.$value->einvoice_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD E-INVOICE</a>';
-                                                                    if ($value->ewayBiIl_id > 0){
-                                                                        $ewayBiIl_pdf = value_by_id_empty("tblwaybill", $value->ewayBiIl_id, "ewaybill_pdf");
+                                                            }
+                                                            if (!empty($value->einvoice_pdf)){
+                                                                echo '<a href="'.$value->einvoice_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD E-INVOICE</a>';
+                                                                if ($value->ewayBiIl_id > 0){
+                                                                    $ewayBiIl_pdf = value_by_id_empty("tblwaybill", $value->ewayBiIl_id, "ewaybill_pdf");
 
-                                                                        echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_ewaybill_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-WAYBILL</a>';
-                                                                        if (!empty($ewayBiIl_pdf)){
-                                                                            echo '<a href="'.$ewayBiIl_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD EwayBill</a>';
-                                                                        }
-                                                                    }else{
-                                                                        echo '<a href="javascript:void(0);" class="btn-with-tooltip" onclick="generate_ewaybill('.$value->id.');" style="font-size: 12px;">GENERATE EWAYBILL</a>';
+                                                                    echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_ewaybill_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-WAYBILL</a>';
+                                                                    if (!empty($ewayBiIl_pdf)){
+                                                                        echo '<a href="'.$ewayBiIl_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD EwayBill</a>';
                                                                     }
-                                                                    
-                                                                    echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-INVOICE</a>';
-                                                                }      
+                                                                }else{
+                                                                    echo '<a href="javascript:void(0);" class="btn-with-tooltip" onclick="generate_ewaybill('.$value->id.');" style="font-size: 12px;">GENERATE EWAYBILL</a>';   
+                                                                }
+                                                                echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-INVOICE</a>';
+                                                            }      
                                                             ?>
                                                     </li>
                                                  </ul>
@@ -776,6 +780,7 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
 <script type="text/javascript" src="http://cdn.rawgit.com/bassjobsen/Bootstrap-3-Typeahead/master/bootstrap3-typeahead.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
    $(function(){
      <?php foreach($editors as $id){ ?>
@@ -1044,6 +1049,32 @@ $(document).ready(function() {
                 $("#cancel-einvoice-modal").modal("show");
                 $(".invoice_id").val(invoice_id);
             }
+        }
+
+        /* this function use for update accounted status */
+        function update_accounted_status(id){
+            var base_url = "<?php echo admin_url('invoices/update_accounted_status/'); ?>"+id+'/rent';
+            swal("Are you sure you want to change this?", {
+                icon : "info",
+                closeOnClickOutside: false,
+                showCancelButton: true,
+                buttons: true,
+            }).then((result) => {
+                if (result == true){
+                   
+                    $.ajax({
+                        type    : "GET",
+                        url     : base_url,
+                        success : function(response){
+                            if(response != ''){
+                                $(".accounted_sts"+id).html(response);
+                                swal("","Accounted Status Updated Successfully", "success");
+                            }
+                        }
+                    });
+                }
+                
+            });
         }
     </script>
 </body>

@@ -677,17 +677,25 @@ function handle_multi_handover_attachments($id,$type) {
 
                 $filename = $_FILES['file']['name'][$key];
                  $newFilePath = $path . $filename;
+
+                 if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    $attachment = [];
+                    $attachment[] = [
+                        'file_name' => $filename,
+                        'filetype' => $_FILES[$type]['type'][$key],
+                    ];
+
+                    array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));
+                }
                 
-                $attachment = [];
+                /*$attachment = [];
                     $attachment[] = [
                         'file_name' => $filename,
                         'filetype' => $_FILES['file']['type'][$key],
                     ];
                 
-
-                // Compress Image
                 compressImage($tmpFilePath,$newFilePath,15);
-                array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));
+                array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));*/
 
             }
         }
@@ -725,16 +733,21 @@ function handle_multi_challan_attachments($id,$type) {
                     $filename = $_FILES['file']['name'][$key];
                      $newFilePath = $path . $filename;
                     
-                    $attachment = [];
+                 
+                    if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                        $attachment = [];
                         $attachment[] = [
                             'file_name' => $filename,
                             'filetype' => $_FILES['file']['type'][$key],
                         ];
+
+                        array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));
+                    }
                     
 
                     // Compress Image
-                    compressImage($tmpFilePath,$newFilePath,15);
-                    array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));
+                    /*compressImage($tmpFilePath,$newFilePath,15);
+                    array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));*/
                 }
             }
         }
@@ -771,16 +784,20 @@ function handle_multi_payment_attachments($id,$type) {
                 $filename = $_FILES['file']['name'][$key];
                  $newFilePath = $path . $filename;
                 
-                $attachment = [];
+                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                    $attachment = [];
                     $attachment[] = [
                         'file_name' => $filename,
                         'filetype' => $_FILES['file']['type'][$key],
                     ];
+
+                    array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));
+                }
                 
 
                 // Compress Image
-                compressImage($tmpFilePath,$newFilePath,15);
-                array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));
+                /*compressImage($tmpFilePath,$newFilePath,15);
+                array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));*/
             }
         }
     }
@@ -817,16 +834,20 @@ function handle_multi_document_attachments($id,$type) {
                 $filename = $_FILES['file']['name'][$key];
                  $newFilePath = $path . $filename;
                 
+                if (move_uploaded_file($tmpFilePath, $newFilePath)) {
                 $attachment = [];
+                   $attachment = [];
                     $attachment[] = [
                         'file_name' => $filename,
                         'filetype' => $_FILES['file']['type'][$key],
                     ];
-                
 
+                    array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));
+                
+                }
                 // Compress Image
-                compressImage($tmpFilePath,$newFilePath,60);
-                array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));
+                /*compressImage($tmpFilePath,$newFilePath,60);
+                array_push($result, $CI->misc_model->add_attachment_to_database($id, $type, $attachment));*/
             }
         }
     }

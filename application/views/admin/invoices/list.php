@@ -331,7 +331,8 @@ if(!empty($this->session->userdata('invoice_search'))){
                                                                 $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
                                                             }
                                                         ?>
-                                                        <a href="<?php echo admin_url('invoices/update_accounted_status/'.$value->id.'/sales'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+                                                        <!-- <a href="<?php echo admin_url('invoices/update_accounted_status/'.$value->id.'/sales'); ?>" onclick="return confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a> -->
+                                                        <a href="javascript:void(0);" class="accounted_sts<?php echo $value->id; ?>" onclick="update_accounted_status(<?php echo $value->id; ?>);"><?php echo $accounted_text; ?></a>
                                                     </td>
                                                     <td>
                                                         <?php
@@ -379,9 +380,13 @@ if(!empty($this->session->userdata('invoice_search'))){
                                                                     }
                                                                         if (empty($value->einvoice_irn) && empty($value->einvoice_ack_date) && empty($value->einvoice_ack_number)){
                                                                             if (!empty($client_info->legal_name) && !empty($client_info->trade_name)){
-                                                                                echo '<a href="javascript:void(0);" onclick="generateEinvoice('.$value->id.');" class="btn-with-tooltip" style="font-size: 12px;">GENERATE E-INVOICE</a>';
+                                                                                if ($value->tcs_status > 0){
+                                                                                    echo '<a href="javascript:void(0);" onclick="generateEinvoice('.$value->id.');" class="btn-with-tooltip" style="font-size: 12px;">GENERATE E-INVOICE</a>';
+                                                                                }    
                                                                             }else{
-                                                                                echo '<a href="javascript:void(0);" onclick="getLegalName('.$value->clientid.');" class="btn-with-tooltip get_legal_name">Get Legal Name</a>';
+                                                                                if ($value->tcs_status > 0){
+                                                                                    echo '<a href="javascript:void(0);" onclick="getLegalName('.$value->clientid.');" class="btn-with-tooltip get_legal_name">Get Legal Name</a>';
+                                                                                }
                                                                             }
                                                                         }
                                                                         if (!empty($value->einvoice_pdf)){
@@ -394,7 +399,7 @@ if(!empty($this->session->userdata('invoice_search'))){
                                                                                     echo '<a href="'.$ewayBiIl_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD EwayBill</a>';
                                                                                 }
                                                                             }else{
-                                                                                echo '<a href="javascript:void(0);" class="btn-with-tooltip" onclick="generate_ewaybill('.$value->id.');" style="font-size: 12px;">GENERATE EWAYBILL</a>';
+                                                                                echo '<a href="javascript:void(0);" class="btn-with-tooltip" onclick="generate_ewaybill('.$value->id.');" style="font-size: 12px;">GENERATE EWAYBILL</a>';   
                                                                             }
                                                                             echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-INVOICE</a>';
                                                                         }      
@@ -788,6 +793,7 @@ if(!empty($this->session->userdata('invoice_search'))){
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
      <script type="text/javascript" src="http://cdn.rawgit.com/bassjobsen/Bootstrap-3-Typeahead/master/bootstrap3-typeahead.min.js"></script>
+     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
    $(function(){
      <?php foreach($editors as $id){ ?>
@@ -1066,6 +1072,32 @@ $(document).ready(function() {
                 $("#cancel-ewaybill-modal").modal("show");
                 $(".invoice_id").val(invoice_id);
             }
+        }
+
+        /* this function use for update accounted status */
+        function update_accounted_status(id){
+            var base_url = "<?php echo admin_url('invoices/update_accounted_status/'); ?>"+id+'/sales';
+            swal("Are you sure you want to change this?", {
+                icon : "info",
+                closeOnClickOutside: false,
+                showCancelButton: true,
+                buttons: true,
+            }).then((result) => {
+                if (result == true){
+                   
+                    $.ajax({
+                        type    : "GET",
+                        url     : base_url,
+                        success : function(response){
+                            if(response != ''){
+                                $(".accounted_sts"+id).html(response);
+                                swal("","Accounted Status Updated Successfully", "success");
+                            }
+                        }
+                    });
+                }
+                
+            });
         }
     </script>
 </body>

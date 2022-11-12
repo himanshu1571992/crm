@@ -258,7 +258,8 @@ if(!empty($s_tdate)){
                                                             $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
                                                         }
                                                     ?>
-                                                    <a href="<?php echo admin_url('debit_note/update_accounted_status/'.$row->id.'/debit_note'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+                                                    <!-- <a href="<?php echo admin_url('debit_note/update_accounted_status/'.$row->id.'/debit_note'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a> -->
+                                                    <a href="javascript:void(0);" class="accounted_sts<?php echo $row->id; ?>" onclick="update_accounted_status(<?php echo $row->id; ?>);"><?php echo $accounted_text; ?></a>
                                                 </td>
 												<td class="">
                                                     <?php if($row->status == 0){ ?>
@@ -559,7 +560,7 @@ if(!empty($s_tdate)){
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
     var a = document.getElementById("sgst_id").value;
     $('#sgst_tot').html(a);
@@ -778,6 +779,32 @@ $(document).on('change', '#module_template_id', function() {
      $("#courierdate").val(courier_date);
      $(".courierfilediv").html(courier_files);
   }
+
+    /* this function use for update accounted status */
+    function update_accounted_status(id){
+        var base_url = "<?php echo admin_url('debit_note/update_accounted_status/'); ?>"+id+'/debit_note';
+        swal("Are you sure you want to change this?", {
+            icon : "info",
+            closeOnClickOutside: false,
+            showCancelButton: true,
+            buttons: true,
+        }).then((result) => {
+            if (result == true){
+                
+                $.ajax({
+                    type    : "GET",
+                    url     : base_url,
+                    success : function(response){
+                        if(response != ''){
+                            $(".accounted_sts"+id).html(response);
+                            swal("","Accounted Status Updated Successfully", "success");
+                        }
+                    }
+                });
+            }
+            
+        });
+    }
 </script>
 </body>
 </html>

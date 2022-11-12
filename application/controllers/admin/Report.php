@@ -2407,7 +2407,7 @@ class Report extends Admin_controller
     }
 
     /* This function use for vendor payment report */
-    public function vendor_payment_report(){
+    public function purchase_payment_report(){
         $where = "pop.acceptance = 1 AND pop.status = 1 AND pop.payfile_done = 1";
         $pwhere = "pay.transport_against = 2 and pay.acceptance = 1 and pay.approved_status = 1 and pay.payfile_done = 1";
         if(!empty($_POST)){
@@ -2445,7 +2445,7 @@ class Report extends Admin_controller
         }
         // echo $this->db->last_query();
         // exit;
-        $data['title'] = 'Vendor Payments';
+        $data['title'] = 'Purchase Payment Report';
         $data['vendor_list'] = $this->db->query("SELECT * from `tblvendor` where status = 1 ORDER BY name ASC ")->result();
         $this->load->view("admin/report/vendor_payments_report", $data);
     }

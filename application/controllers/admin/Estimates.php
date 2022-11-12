@@ -457,8 +457,6 @@ class Estimates extends Admin_controller {
                     redirect(admin_url('estimates/list/'));
                 }
             } else {
-
-                
                 check_permission(6,'edit');
                 $success = $this->Estimates_model->update_pi($proposal_data, $id);
 
@@ -504,7 +502,7 @@ class Estimates extends Admin_controller {
             /* this code use for check estimate order is confirm or not */
             $chk_order = $this->db->query("SELECT id FROM `tblconfirmorder` WHERE `estimate_id` = '".$id."' AND `complete_status` = '1' ")->row();
             if (!empty($chk_order)){
-                set_alert('warning', "Order is completed, so we can't have permission to edit");
+                set_alert('warning', "Order is completed, so you can't edit");
                 redirect(admin_url('estimates/list'));
             }
 

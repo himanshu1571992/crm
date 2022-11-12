@@ -892,7 +892,16 @@ class Debit_note extends Admin_controller {
             $updata["accounted_date"] = date("Y-m-d H:i:s");
         }
         
-        $this->home_model->update($table_name, $updata,array('id'=>$debitnote_id));
-        redirect(admin_url($redirect_url));
+        $response = $this->home_model->update($table_name, $updata,array('id'=>$debitnote_id));
+        if ($response){
+            // redirect(admin_url($redirect_url));
+            $accounted_text = '<span class="btn-sm btn-warning">Pending</span>';
+            if ($updata["accounted_status"] == 1){
+                $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
+            }
+            echo $accounted_text;
+            exit;
+        }
+        
     }
 }

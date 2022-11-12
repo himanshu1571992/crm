@@ -15,8 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   | and path to your installation. However, you should always configure this
   | explicitly and never rely on auto-guessing, especially in production
   | environments.
-  |
- */
+*/
 
 //define('APP_BASE_URL', 'http://10.5.50.63/crm/');
 define('APP_BASE_URL', 'http://localhost/crm/');

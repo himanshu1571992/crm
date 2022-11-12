@@ -5429,8 +5429,17 @@ public function delete_purchasepayment($id) {
             $updata["accounted_date"] = date("Y-m-d H:i:s");
         }
         
-        $this->home_model->update('tblpurchaseinvoice', $updata,array('id'=>$purchaseinvoice_id));
-        redirect(admin_url('purchase/invoice_list'));
+        $response = $this->home_model->update('tblpurchaseinvoice', $updata,array('id'=>$purchaseinvoice_id));
+        if ($response){
+            // redirect(admin_url('purchase/invoice_list'));
+            $accounted_text = '<span class="btn-sm btn-warning">Pending</span>';
+            if ($updata["accounted_status"] == 1){
+                $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
+            }
+            echo $accounted_text;
+            die;
+        }
+        
     }
 
     /* this function use for get renewalapproval */

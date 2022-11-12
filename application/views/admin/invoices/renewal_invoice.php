@@ -212,53 +212,8 @@
 </div>
 </div>
 <div id="finalcialyear_modal" class="modal fade" role="dialog">
-  <div class="modal-dialog ">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close close-model" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" style="color:#fff"> Financial Year Selection </h4>
-      </div>
-      <div class="modal-body">
-          <?php 
-            $financial_year_list = $this->db->query("SELECT `id`,`name` FROM tblfinancialyear WHERE `status` = 1")->result();
-            $companybranch_list = $this->db->query("SELECT `id`,`comp_branch_name` FROM tblcompanybranch WHERE `status` = 1")->result();
-          ?>
-         <div class="row">
-            <div class="col-md-6">
-                <label for="module_id" class="control-label">Financial Year</label>
-                <select class="form-control selectpicker" required="" data-live-search="true" id="financialyear_id" name="financialyear_id">
-                    <option value=""></option>
-                    <?php 
-                        foreach ($financial_year_list as $value) {
-                            $selectcls = ($value->id == financial_year()) ? 'selected' : '';
-                            echo '<option value="'.$value->id.'" '.$selectcls.'>'.cc($value->name).'</option>';
-                        }
-                    ?>
-                </select>
-                <span class='financial_year_msg text-danger' ></span>
-            </div>
-            <div class="col-md-6">
-                <label for="module_id" class="control-label">Branch</label>
-                <select class="form-control selectpicker comp_branch_id" required="" data-live-search="true" id="branch_id" name="branch_id">
-                    <option value=""></option>
-                    <?php 
-                        foreach ($companybranch_list as $value) {
-                            echo '<option value="'.$value->id.'" >'.cc($value->comp_branch_name).'</option>';
-                        }
-                    ?>
-                </select>
-                <span class='company_branch_msg text-danger' ></span>
-            </div>
-         </div>
-      </div>
-      <div class="modal-footer">
-        <input type="hidden" id="invoiceid" name="invoiceid" value="0">  
-        <input type="hidden" id="billing_branch" name="billing_branch_id" value="0">  
-        <button type="button" class="btn btn-default close-model" data-dismiss="modal">Close</button>
-        <button type="submit" autocomplete="off" class="btn btn-info fyearbtn">Renew Invoice</button>
-      </div>
-    </div>
+  <div class="modal-dialog renewal-html">
+    
   </div>
 </div>
 <?php init_tail(); ?>
@@ -314,9 +269,21 @@ $(document).ready(function() {
     $(document).on("click", ".renew-div", function(){
         var rowid = $(this).data('id');
         var branch_id = $(this).data('branch_id');
-        $("#invoiceid").val(rowid);
-        $("#billing_branch").val(branch_id);
-        $("#branch_id option[value='"+branch_id+"']").attr("selected", "selected");
+        $.ajax({
+            type    : "POST",
+            url     : "<?php echo site_url('admin/invoices/get_renewal_invoice_model'); ?>",
+            data    : {'id' : rowid, 'branch_id': branch_id},
+            crossDomain: true,
+            success : function(response){
+                if(response != ''){       
+                    $('.renewal-html').html(response);  
+                    $('.selectpicker').selectpicker('refresh');
+                }
+            }
+        })
+        // $("#invoiceid").val(rowid);
+        // $("#billing_branch").val(branch_id);
+        // $("#branch_id option[value='"+branch_id+"']").attr("selected", "selected");
         $('.selectpicker').selectpicker('refresh');
     });
 

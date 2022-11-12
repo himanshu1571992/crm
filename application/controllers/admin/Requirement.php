@@ -1444,4 +1444,142 @@ class Requirement extends Admin_controller
         }   
         redirect($_SERVER['HTTP_REFERER']); 
     }
+
+    /* this function use for export report */
+    public function requirement_export($id){
+        $fileName = 'Requirement-'.$id.'.xls';
+        $this->load->library('excel');
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        $styleArray = array(
+            'font'  => array(
+            'bold'  => false,
+            'size'  => 14,
+            'name'  => 'Arial'
+        ));
+
+        $textFormat='@';//'General','0.00','@'
+
+         // set Header
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
+        $objPHPExcel->getActiveSheet()->SetCellValue('A3', 'Sr.No.')->getStyle('A3')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
+        $objPHPExcel->getActiveSheet()->getStyle('A3')->applyFromArray($styleArray);
+        
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(50);
+        $objPHPExcel->getActiveSheet()->SetCellValue('B3', 'Item Description')->getStyle('B3')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');;
+        $objPHPExcel->getActiveSheet()->getStyle('B3')->applyFromArray($styleArray);
+
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->SetCellValue('C3', 'Image')->getStyle('C3')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');;
+        $objPHPExcel->getActiveSheet()->getStyle('C3')->applyFromArray($styleArray);
+
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(10);
+        $objPHPExcel->getActiveSheet()->SetCellValue('D3', 'Quantity')->getStyle('D3')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');;
+        $objPHPExcel->getActiveSheet()->getStyle('D3')->applyFromArray($styleArray);
+
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+        $objPHPExcel->getActiveSheet()->SetCellValue('E3', 'Weight in Kg (Approx)')->getStyle('E3')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');;
+        $objPHPExcel->getActiveSheet()->getStyle('E3')->applyFromArray($styleArray);
+
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->SetCellValue('F3', 'Rate')->getStyle('F3')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');;
+        $objPHPExcel->getActiveSheet()->getStyle('F3')->applyFromArray($styleArray);
+
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->SetCellValue('G3', 'Amount')->getStyle('G3')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');;
+        $objPHPExcel->getActiveSheet()->getStyle('G3')->applyFromArray($styleArray);
+
+        // $document_path = $_SERVER["DOCUMENT_ROOT"].'/schacrm';
+        $document_path = $_SERVER["DOCUMENT_ROOT"].'/crm';
+        $rowCount = 5;
+        $requirement_products = $this->db->query("SELECT * FROM tblrequirement_products WHERE `req_id` =  '".$id."' AND `rate_given`= '1' ")->result();
+        if (!empty($requirement_products)){
+            foreach ($requirement_products as $key => $value) {
+
+                $product_image = $document_path.'/assets/images/no_image_available.jpeg';
+                if ($value->product_id > 0){
+                    $image = value_by_id_empty("tblproducts", $value->product_id, "photo");
+                    if (!empty($image) && $image != '--'){
+                        $product_image = $document_path.'/uploads/product/'.$image;
+                    }
+                }else{
+                    $productimagesdata  = $this->db->query("SELECT `image` FROM tblrequirement_productimages WHERE `req_id` =  '".$id."' AND `reqpro_id` =  '".$value->id."' ")->row();
+                    if (!empty($productimagesdata)){
+                        $product_image = $document_path.'/uploads/requirement_product/'.$productimagesdata->image;
+                    }
+                }
+                
+                $rate = 0;
+                $productrate = $this->db->query("SELECT `rate` FROM tblrequirement_productvendors WHERE `req_id` =  '".$id."' AND `reqpro_id` =  '".$value->id."' AND `approve` = 1 ")->row();
+                if (!empty($productrate)){
+                    $rate = $productrate->rate;
+
+                    $amount = $value->quantity*$rate;
+                
+                    $prod_info = $this->db->query("SELECT `unit_id`,`unit_1`,`unit_2`,`size`,`conversion_1`,`conversion_2`,`width_mm` FROM `tblproducts` where `id`= '".$value->product_id."' ")->row();
+                    $product_size = 0;
+                    if(!empty($prod_info)){
+                    if($prod_info->unit_id == 8){
+                            $product_size = $prod_info->size;
+                        }elseif($prod_info->unit_1 == 8){
+                            $product_size = $prod_info->conversion_1;
+                        }elseif($prod_info->unit_2 == 8){
+                            $product_size = $prod_info->conversion_2;
+                        } 
+                    }
+
+                    $objPHPExcel->getActiveSheet()->SetCellValue('A' . $rowCount, ++$key);
+                    $objPHPExcel->getActiveSheet()->getStyle('A' . $rowCount)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->getStyle('A' . $rowCount)->getAlignment()->setVertical('center')->setHorizontal('center');
+
+                    $objPHPExcel->getActiveSheet()->SetCellValue('B' . $rowCount, cc($value->product_name));
+                    $objPHPExcel->getActiveSheet()->getStyle('B' . $rowCount)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->getStyle('B' . $rowCount)->getAlignment()->setVertical('center');
+                    $objDrawing = new PHPExcel_Worksheet_Drawing();
+                    $objDrawing->setPath($product_image);
+                    $objDrawing->setCoordinates('C' . $rowCount);
+                    $objDrawing->setOffsetX(25); 
+                    $objDrawing->setOffsetY(25);
+                    $objDrawing->setHeight(80); 
+                    $objDrawing->setWidth(155); 
+                    $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+                    $objPHPExcel->getActiveSheet()->getRowDimension($rowCount)->setRowHeight(145);
+                    $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(32);
+
+                    $objPHPExcel->getActiveSheet()->SetCellValue('D' . $rowCount, $value->quantity);
+                    $objPHPExcel->getActiveSheet()->getStyle('D' . $rowCount)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->getStyle('D' . $rowCount)->getAlignment()->setVertical('center')->setHorizontal('center');
+
+                    $objPHPExcel->getActiveSheet()->SetCellValue('E' . $rowCount, $product_size);
+                    $objPHPExcel->getActiveSheet()->getStyle('E' . $rowCount)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->getStyle('E' . $rowCount)->getAlignment()->setVertical('center')->setHorizontal('center');
+
+                    $objPHPExcel->getActiveSheet()->SetCellValue('F' . $rowCount, $rate);
+                    $objPHPExcel->getActiveSheet()->getStyle('F' . $rowCount)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->getStyle('F' . $rowCount)->getAlignment()->setVertical('center')->setHorizontal('center');
+
+                    $objPHPExcel->getActiveSheet()->SetCellValue('G' . $rowCount, $amount);
+                    $objPHPExcel->getActiveSheet()->getStyle('G' . $rowCount)->applyFromArray($styleArray);
+                    $objPHPExcel->getActiveSheet()->getStyle('G' . $rowCount)->getAlignment()->setVertical('center')->setHorizontal('center');
+
+                    
+                    $rowCount++;
+                } 
+            }
+        }
+
+        // foreach(range('A','G') as $columnID) {
+        //     $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+        //         ->setAutoSize(true);
+        // }
+
+        $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+        $objWriter->save($fileName);
+        
+        // download file
+        header("Content-Type: application/vnd.ms-excel");
+        redirect(site_url().$fileName);
+
+    }
 }

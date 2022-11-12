@@ -173,7 +173,8 @@
 										$accounted_text = '<span class="btn btn-success">Accounted</span>';
 									}
 								?>
-								<a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_1->id.'/expense'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+								<!-- <a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_1->id.'/expense'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a> -->
+								<a href="javascript:void(0);" class="accounted_sts1<?php echo $row_1->id; ?>" onclick="update_accounted_status(<?php echo $row_1->id; ?>, 1,'expense');"><?php echo $accounted_text; ?></a>
 							</td>
 							<td rowspan="<?php echo $sub_expense_count; ?>" style="text-align:left; padding:8px; border: 1px solid #111;">
 								Purpose - <?php echo get_expense_purpose($row_1->id); ?> <br>
@@ -258,7 +259,8 @@
 											$accounted_text = '<span class="btn btn-success">Accounted</span>';
 										}
 									?>
-									<a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_3->id.'/request'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+									<!-- <a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_3->id.'/request'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a> -->
+									<a href="javascript:void(0);" class="accounted_sts3<?php echo $row_3->id; ?>" onclick="update_accounted_status(<?php echo $row_3->id; ?>, 3,'request');"><?php echo $accounted_text; ?></a>
 								</td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_3->reason; ?></td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_3->description; ?></td>
@@ -307,7 +309,8 @@
 											$accounted_text = '<span class="btn btn-success">Accounted</span>';
 										}
 									?>
-									<a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_5->id.'/request'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+									<!-- <a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_5->id.'/request'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a> -->
+									<a href="javascript:void(0);" class="accounted_sts5<?php echo $row_5->id; ?>" onclick="update_accounted_status(<?php echo $row_5->id; ?>, 5,'request');"><?php echo $accounted_text; ?></a>
 								</td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_5->reason; ?></td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_5->description; ?></td>
@@ -353,7 +356,8 @@
 											$accounted_text = '<span class="btn btn-success">Accounted</span>';
 										}
 									?>
-									<a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_4->id.'/request'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+									<!-- <a href="<?php echo admin_url('expenses/update_accounted_status/'.$row_4->id.'/request'); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a> -->
+									<a href="javascript:void(0);" class="accounted_sts4<?php echo $row_4->id; ?>" onclick="update_accounted_status(<?php echo $row_4->id; ?>, 5,'request');"><?php echo $accounted_text; ?></a>
 								</td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_4->reason; ?></td>
 								<td style="text-align:left; padding:8px; border: 1px solid #111;"><?php echo $row_4->description; ?></td>
@@ -413,7 +417,7 @@
 	
 </html>
 
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 
 $( document ).ready(function() {
@@ -430,4 +434,30 @@ function printFunction() {
 	$('#print_div').hide();
     window.print();
 }
+
+/* this function use for update accounted status */
+function update_accounted_status(id, stype, section){
+        var base_url = "<?php echo admin_url('expenses/update_accounted_status/'); ?>"+id+"/"+section;
+        swal("Are you sure you want to change this?", {
+            icon : "info",
+            closeOnClickOutside: false,
+            showCancelButton: true,
+            buttons: true,
+        }).then((result) => {
+            if (result == true){
+                
+                $.ajax({
+                    type    : "GET",
+                    url     : base_url,
+                    success : function(response){
+                        if(response != ''){
+                            $(".accounted_sts"+stype+id).html(response);
+                            swal("","Accounted Status Updated Successfully", "success");
+                        }
+                    }
+                });
+            }
+            
+        });
+    }
 </script>

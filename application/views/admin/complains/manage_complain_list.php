@@ -114,7 +114,7 @@
                                                             $diff_date = (strtotime($row->actual_complete_date)-strtotime($row->resolve_till));
                                                             $overdue_day = '<a href="javascript:void(0);" data-toggle="popover" title="Delayed Remark" data-content="'.$row->delayed_remark.'" class="btn-sm btn-info">'.round($diff_date / 86400).'</a>';
                                                         }else{
-                                                            $overdue_day = '<span class="text-success">No Due</span>';
+                                                            $overdue_day = '<span class="text-success">No Delay</span>';
                                                         }
                                                     }
                                                     ?>

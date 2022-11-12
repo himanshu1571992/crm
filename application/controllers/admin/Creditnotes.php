@@ -795,7 +795,16 @@ class Creditnotes extends Admin_controller {
             $updata["accounted_date"] = date("Y-m-d H:i:s");
         }
         
-        $this->home_model->update('tblcreditnote', $updata,array('id'=>$creditnote_id));
-        redirect(admin_url('creditnotes'));
+        $response = $this->home_model->update('tblcreditnote', $updata,array('id'=>$creditnote_id));
+        if ($response){
+            // redirect(admin_url('creditnotes'));
+            $accounted_text = '<span class="btn-sm btn-warning">Pending</span>';
+            if ($updata["accounted_status"] == 1){
+                $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
+            }
+            echo $accounted_text;
+            exit;
+        }
+        
     }
 }

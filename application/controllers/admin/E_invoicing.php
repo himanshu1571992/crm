@@ -200,7 +200,7 @@ class E_invoicing extends Admin_controller
 
     /* this function use for client legal name */
     public function get_client_legal_name($client_id){
-        $client_gst_no = trim(client_info($client_id)->vat);
+        /*$client_gst_no = trim(client_info($client_id)->vat);
         $url = "https://appyflow.in/api/verifyGST?gstNo=".$client_gst_no."&key_secret=YQOSFee71jS4lmNc3AKVGztVmQx2";
         $response = send_curl_request($url);
         if (!empty($response)){
@@ -209,7 +209,6 @@ class E_invoicing extends Admin_controller
                 $legal_name = $resultdecode["taxpayerInfo"]["lgnm"];
                 $trade_name = $resultdecode["taxpayerInfo"]["tradeNam"];
 
-                /* update legal name and trade name in the system */
                 $up_data = array("legal_name" => $legal_name, "trade_name" => $trade_name);
                 $this->home_model->update("tblclientbranch", $up_data, array("userid" => $client_id));
                 echo "Client legal name added successfully";
@@ -218,6 +217,22 @@ class E_invoicing extends Admin_controller
                 echo $resultdecode["message"];
                 exit;
             }
+        }*/
+
+
+        $client_gst_no = trim(client_info($client_id)->vat);
+        $response = gstDetails($client_gst_no);
+        if($response['status'] == 1){
+            $legal_name = $response["legal_name"];
+            $trade_name = $response["trade_name"];
+
+            $up_data = array("legal_name" => $legal_name, "trade_name" => $trade_name);
+            $this->home_model->update("tblclientbranch", $up_data, array("userid" => $client_id));
+            echo "Client legal name added successfully";
+            exit;
+        }else{
+            echo $response["message"];
+            exit;
         }
     }
 

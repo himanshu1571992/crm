@@ -330,8 +330,8 @@
                                                                         <div class="table-responsive"> 
                                                                             <table class="table" id="newtable">
                                                                                 <tr>
-                                                                                    <td class="col-md-5"><h4 class="panel-title">Father Name : </h4></td>
-                                                                                    <td><h4><span><?php echo cc($response["father_name"]); ?></span></h4></td>
+                                                                                    <td class="col-md-5"><h4 class="panel-title">Name : </h4></td>
+                                                                                    <td><h4><span><?php echo cc($response["name"]); ?></span></h4></td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td class="col-md-5"><h4 class="panel-title">Address : </h4></td>

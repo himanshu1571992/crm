@@ -66,7 +66,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="reference_no" class="control-label">Reference No</label>
-                                        <input type="text" name="ref_no" class="form-control" value="<?php echo (!empty($upcoming_payment_info)) ?$upcoming_payment_info->ref_no : ''; ?>" required="">
+                                        <input type="text" name="ref_no" class="form-control" value="<?php echo (!empty($upcoming_payment_info)) ?$upcoming_payment_info->ref_no : ''; ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-8">

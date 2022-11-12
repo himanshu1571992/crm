@@ -224,6 +224,18 @@
                                                                         <a href="<?php echo admin_url('requirement/add/' . $row->id); ?>" style="text-align:center" title="edit" >Edit</a>
                                                                     </li>
                                                                 <?php } ?>
+                                                                <?php 
+                                                                    if ($row->initial_approve_status == 1 && $row->approve_status == 1 && $row->purchase_person_status == 1){ 
+                                                                        $chk_pro = $this->db->query("SELECT * FROM `tblrequirement_productvendors` WHERE `req_id` = '".$row->id."' and `approve` = 1")->row();
+                                                                        if (!empty($chk_pro)){
+                                                                ?>
+                                                                    <li>
+                                                                        <a href="<?php echo admin_url('requirement/requirement_export/' . $row->id); ?>" style="text-align:center">Export</a>
+                                                                    </li>
+                                                                <?php 
+                                                                        }
+                                                                    }
+                                                                ?>    
                                                                 <li>
                                                                     <a href="<?php echo admin_url('requirement/requirement_activity/' . $row->id); ?>" style="text-align:center" target="_blank" title="activity" >Activity</a>
                                                                 </li>

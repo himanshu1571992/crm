@@ -339,15 +339,15 @@ function account_verification($number,$ifsc_code){
 }
 
 function rcDetails($number){
-    $url = 'https://api.gridlines.io/rc-api/fetch-detailed';
+    /*$url = 'https://api.gridlines.io/rc-api/fetch-detailed';
     $data = array(
         "rc_number" => $number,
         "consent" => 'Y',
     );
    $response = send_curl_request($url,$data,'POST','gridlines');               
-    $response = json_decode($response);
+    $response = json_decode($response);*/
 
-   //$response = json_decode('{"request_id":"c2657397-eb1c-4d1b-8a6d-09966013cb49","status":200,"data":{"code":"1000","message":"Extracted details.","rc_data":{"document_type":"RC","owner_data":{"serial":"4","name":"MUSTFA BOHRA","father_name":"ASGAR ALIBOHRA","present_address":"LOKMANYA NAGAR KE SAMNA, B-106 BADRI BAG COLONY INDORE, INDORE, -","permanent_address":"LOKMANYA NAGAR KE SAMNA, B-106 BADRI BAG COLONY INDORE, INDORE, -"},"issue_date":"2008-11-04","registered_at":"INDORE RTO, MADHYA PRADESH","status":"ACTIVE","insurance_data":{"policy_number":"36140031216701773902","company":"National Insurance Co. Ltd.","expiry_date":"2022-08-13"},"vehicle_data":{"manufactured_date":"2008-01","category":"LMV","category_description":"L.M.V. (CAR)(LMV)","chassis_number":"MA6MF481P8TK05504","engine_number":"B10S1050552KC2","maker_description":"GEN.MOTORS","maker_model":"CHEVROLET SPARK LT","fuel_type":"PETROL","color":"FAIRY RED","cubic_capacity":"995.00","gross_weight":"1270","number_of_cylinders":"4","seating_capacity":"4","wheelbase":"2500","unladen_weight":"840"}}},"timestamp":1664274639012,"path":"/fetch-detailed"}');
+   $response = json_decode('{"request_id":"c2657397-eb1c-4d1b-8a6d-09966013cb49","status":200,"data":{"code":"1000","message":"Extracted details.","rc_data":{"document_type":"RC","owner_data":{"serial":"4","name":"MUSTFA BOHRA","father_name":"ASGAR ALIBOHRA","present_address":"LOKMANYA NAGAR KE SAMNA, B-106 BADRI BAG COLONY INDORE, INDORE, -","permanent_address":"LOKMANYA NAGAR KE SAMNA, B-106 BADRI BAG COLONY INDORE, INDORE, -"},"issue_date":"2008-11-04","registered_at":"INDORE RTO, MADHYA PRADESH","status":"ACTIVE","insurance_data":{"policy_number":"36140031216701773902","company":"National Insurance Co. Ltd.","expiry_date":"2022-08-13"},"vehicle_data":{"manufactured_date":"2008-01","category":"LMV","category_description":"L.M.V. (CAR)(LMV)","chassis_number":"MA6MF481P8TK05504","engine_number":"B10S1050552KC2","maker_description":"GEN.MOTORS","maker_model":"CHEVROLET SPARK LT","fuel_type":"PETROL","color":"FAIRY RED","cubic_capacity":"995.00","gross_weight":"1270","number_of_cylinders":"4","seating_capacity":"4","wheelbase":"2500","unladen_weight":"840"}}},"timestamp":1664274639012,"path":"/fetch-detailed"}');
     //$response = json_decode('{"request_id":"0cbbe24b-e2b9-42ae-870d-5da66f6a156c","status":500,"error":{"code":"UPSTREAM_INTERNAL_SERVER_ERROR","message":"Upstream source/Government source internal server error. Please start the process again.","type":"https://docs.gridlines.io/#:~:text=rate%20limit%20exceeded.-,500,-INTERNAL_SERVER_ERROR"},"timestamp":1664274679948,"path":"/fetch-detailed"}');
    
     if($response->status == 200 && $response->data->code == 1000){
@@ -355,6 +355,7 @@ function rcDetails($number){
         $responseData = array(
             "status" => 1,
             "message" => $response->data->message,
+            "name" => $response->data->rc_data->owner_data->name,
             "father_name" => $response->data->rc_data->owner_data->father_name,
             "address" => $response->data->rc_data->owner_data->present_address,
             "issue_date" => _d($response->data->rc_data->issue_date),

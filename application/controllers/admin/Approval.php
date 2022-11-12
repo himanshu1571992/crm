@@ -224,10 +224,16 @@ class Approval extends Admin_controller
     }
 
     /* this is for staff notification list */
-    public function staff_notification_list($id = '')
+    public function staff_notification_list($module_id = '')
     {
         $module_ids = array(1,2,3,8,9);
         $where = "n.id > 0 ";
+        if ($module_id != ''){
+            $data['s_module'] = $module_id;
+            $where .= " and n.module_id IN (".$module_id.")";
+            $data['s_status'] = 0;
+        }
+        
         $approve_status = 0;
         if(!empty($_POST)){
             extract($this->input->post());

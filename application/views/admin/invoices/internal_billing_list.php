@@ -277,28 +277,31 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                                                                         <?php echo ($value->lead_id > 0) ? 'Lead Connected' : 'Connect To Lead'; ?>
                                                                         </a>
                                                                         <?php 
-                                                                            if (empty($value->einvoice_irn) && empty($value->einvoice_ack_date) && empty($value->einvoice_ack_number)){
-                                                                                if (!empty($client_info->legal_name) && !empty($client_info->trade_name)){
-                                                                                    echo '<a href="javascript:void(0);" onclick="generateEinvoice('.$value->id.');" class="btn-with-tooltip" style="font-size: 12px;">GENERATE E-INVOICE</a>';
-                                                                                }else{
-                                                                                    echo '<a href="javascript:void(0);" onclick="getLegalName('.$value->clientid.');" class="btn-with-tooltip get_legal_name">Get Legal Name</a>';
-                                                                                }
-                                                                            }
-                                                                            if (!empty($value->einvoice_pdf)){
-                                                                                echo '<a href="'.$value->einvoice_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD E-INVOICE</a>';
-                                                                                if ($value->ewayBiIl_id > 0){
-                                                                                    $ewayBiIl_pdf = value_by_id_empty("tblwaybill", $value->ewayBiIl_id, "ewaybill_pdf");
-            
-                                                                                    echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_ewaybill_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-WAYBILL</a>';
-                                                                                    if (!empty($ewayBiIl_pdf)){
-                                                                                        echo '<a href="'.$ewayBiIl_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD EwayBill</a>';
+                                                                                if (empty($value->einvoice_irn) && empty($value->einvoice_ack_date) && empty($value->einvoice_ack_number)){
+                                                                                    if (!empty($client_info->legal_name) && !empty($client_info->trade_name)){
+                                                                                        if ($value->tcs_status > 0){
+                                                                                            echo '<a href="javascript:void(0);" onclick="generateEinvoice('.$value->id.');" class="btn-with-tooltip" style="font-size: 12px;">GENERATE E-INVOICE</a>';
+                                                                                        }    
+                                                                                    }else{
+                                                                                        if ($value->tcs_status > 0){
+                                                                                            echo '<a href="javascript:void(0);" onclick="getLegalName('.$value->clientid.');" class="btn-with-tooltip get_legal_name">Get Legal Name</a>';
+                                                                                        }
                                                                                     }
-                                                                                }else{
-                                                                                    echo '<a href="javascript:void(0);" class="btn-with-tooltip" onclick="generate_ewaybill('.$value->id.');" style="font-size: 12px;">GENERATE EWAYBILL</a>';
                                                                                 }
-                                                                                
-                                                                                echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-INVOICE</a>';
-                                                                            }  
+                                                                                if (!empty($value->einvoice_pdf)){
+                                                                                    echo '<a href="'.$value->einvoice_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD E-INVOICE</a>';
+                                                                                    if ($value->ewayBiIl_id > 0){
+                                                                                        $ewayBiIl_pdf = value_by_id_empty("tblwaybill", $value->ewayBiIl_id, "ewaybill_pdf");
+                    
+                                                                                        echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_ewaybill_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-WAYBILL</a>';
+                                                                                        if (!empty($ewayBiIl_pdf)){
+                                                                                            echo '<a href="'.$ewayBiIl_pdf.'" class="btn-with-tooltip" style="font-size: 12px;">DOWNLOAD EwayBill</a>';
+                                                                                        }
+                                                                                    }else{
+                                                                                        echo '<a href="javascript:void(0);" class="btn-with-tooltip" onclick="generate_ewaybill('.$value->id.');" style="font-size: 12px;">GENERATE EWAYBILL</a>';   
+                                                                                    }
+                                                                                    echo '<a href="javascript:void(0);" class="btn-with-tooltip" style="color:red;" onclick="cancel_remark('.$value->id.');" style="font-size: 12px;">CANCEL E-INVOICE</a>';
+                                                                                }   
                                                                         ?>
                                                                     </li>
                                                                 </ul>

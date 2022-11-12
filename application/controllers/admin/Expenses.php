@@ -1710,7 +1710,7 @@ class Expenses extends Admin_controller
     {
         check_permission(108,'view');
 
-        $where = " e.status = 1 ";
+        $where = " e.status = 1 and e.save_status = 0";
         $staff_list = get_junior_staff(get_staff_user_id());
         if ($staff_list != ""){
             $data["staffids"] = explode(",",$staff_list);
@@ -2632,7 +2632,16 @@ class Expenses extends Admin_controller
                 $updata["accounted_date"] = date("Y-m-d H:i:s");
             }
             
-            $this->home_model->update($table_name, $updata,array('id'=>$expense_id));
+            $response = $this->home_model->update($table_name, $updata,array('id'=>$expense_id));
+            if ($response){
+                // redirect(admin_url('creditnotes'));
+                $accounted_text = '<span class="btn-sm btn-warning">Pending</span>';
+                if ($updata["accounted_status"] == 1){
+                    $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
+                }
+                echo $accounted_text;
+                die;
+            }
         }
         
         redirect($_SERVER['HTTP_REFERER']);

@@ -103,6 +103,9 @@ class Dashboard extends Admin_controller
         //Notification
         $data['notification_list'] = $this->db->query("SELECT * from tblmasterapproval where staff_id = '".get_staff_user_id()."' and status = 0 and approve_status = 0 order by id desc ")->result();
 
+        // This code use for check pending leave request of login parson for approval
+        $data['pending_leave_request'] = $this->db->query("SELECT COUNT(`l`.`id`) as ttl_count FROM `tblleaves` as `l` RIGHT JOIN `tblleaveapproval` as `la` ON `l`.`id` = `la`.`leave_id` WHERE `l`.`approved_status` = 0 AND `la`.`staff_id` = '".get_staff_user_id()."'")->row()->ttl_count;
+        
         //check if attendace is marked 
         $employee_info = get_employee_info(get_staff_user_id());
 
@@ -134,7 +137,6 @@ class Dashboard extends Admin_controller
         if(!empty($leave_taken_info) || !empty($holiday_info)){
             $today_attendance_status = '7';
         }
-
         $data["today_attendance_status"] = $today_attendance_status;
 
         $data = do_action('before_dashboard_render', $data);

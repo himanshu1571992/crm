@@ -301,7 +301,7 @@ fieldset.for-panel p span.badge-success {
                                 <label class="col-xs-4 control-label">Taxable Amount :</label>
                                     <p class="form-control-static">
                                         <?php 
-                                            echo $paymentrequest_info->amount;
+                                            echo $paymentrequest_info->taxable_amount;
                                         ?>
                                     </p>
                                 </div>

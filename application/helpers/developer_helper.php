@@ -4674,7 +4674,9 @@ if(!function_exists('get_new_other_allowance'))
        	 		$other_allowance = (86.4 / 100) * $difference;
        	 	}else if($salary >= '25650'){
        	 		$other_allowance =  $difference;
-       	 	}else if($salary >= '21900' && $salary <= '25650'){
+       	 	}else if($salary >= '23000' && $salary <= '25650'){
+       	 		 $other_allowance = ($salary-1800-$gross);
+			}else if($salary > '21900' && $salary < '23000'){
 				die;
 			}
        }elseif($for == 2){
@@ -10030,10 +10032,11 @@ function get_product_list_by_category($type, $id = 0) {
         $CI =& get_instance();
 
         $output = "";
-        $staff_info = $CI->db->query("SELECT `branch_id`,`admin`,`bm_branch_id` FROM `tblstaff` WHERE staffid=".$staff_id." AND active = 1 ")->row();
+        $staff_info = $CI->db->query("SELECT `branch_id`,`admin`,`bm_branch_id`,`designation_id` FROM `tblstaff` WHERE staffid=".$staff_id." AND active = 1 ")->row();
         if(!empty($staff_info)){
             switch ($staff_info) {
-                case $staff_info->admin == 1:
+                case $staff_info->admin == 1 || $staff_info->designation_id == 13:
+					
                     $branch_ids = explode(",",$staff_info->branch_id);
                     foreach ($branch_ids as $k => $b_id) {
 

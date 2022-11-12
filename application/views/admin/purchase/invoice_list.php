@@ -172,7 +172,8 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                                             $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
                                                         }
                                                     ?>
-                                                    <a href="<?php echo admin_url('purchase/update_accounted_status/'.$value->id); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a>
+                                                    <!-- <a href="<?php echo admin_url('purchase/update_accounted_status/'.$value->id); ?>" onclick="confirm('Are you sure you want to change this?');"><?php echo $accounted_text; ?></a> -->
+                                                    <a href="javascript:void(0);" class="accounted_sts<?php echo $value->id; ?>" onclick="update_accounted_status(<?php echo $value->id; ?>);"><?php echo $accounted_text; ?></a>
                                                 </td>
                                                 <td class="text-center">
                                                     
@@ -305,7 +306,7 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>
 
@@ -371,6 +372,32 @@ $(document).ready(function() {
         })
 
     });
+
+    /* this function use for update accounted status */
+    function update_accounted_status(id){
+        var base_url = "<?php echo admin_url('purchase/update_accounted_status/'); ?>"+id;
+        swal("Are you sure you want to change this?", {
+            icon : "info",
+            closeOnClickOutside: false,
+            showCancelButton: true,
+            buttons: true,
+        }).then((result) => {
+            if (result == true){
+                
+                $.ajax({
+                    type    : "GET",
+                    url     : base_url,
+                    success : function(response){
+                        if(response != ''){
+                            $(".accounted_sts"+id).html(response);
+                            swal("","Accounted Status Updated Successfully", "success");
+                        }
+                    }
+                });
+            }
+            
+        });
+    }
 </script>
 </body>
 </html>

@@ -1636,7 +1636,6 @@ class Invoices extends Admin_controller
         $data['invoice_list'] = $this->db->query("SELECT * from `tblinvoices` where ".$where." ORDER BY duedate asc ")->result();
         $data['invoice_amount'] = $this->db->query("SELECT sum(total) as ttl_amt from `tblinvoices` where ".$where." ")->row()->ttl_amt;
 
-
         $data['client_data'] = $this->db->query("SELECT `company`,`userid` from `tblclientbranch` WHERE company !='' ORDER BY company ASC ")->result();
 
         $data['title'] = 'Renewal Invoice List';
@@ -3868,11 +3867,19 @@ class Invoices extends Admin_controller
             $updata["accounted_date"] = date("Y-m-d H:i:s");
         }
         
-        $this->home_model->update('tblinvoices', $updata,array('id'=>$invoice_id));
-        if ($page_name == 'sales'){
-            redirect(admin_url("invoices/list"));
-        }else{
-            redirect(admin_url("invoices/rent_list"));
+        $response = $this->home_model->update('tblinvoices', $updata, array('id'=>$invoice_id));
+        if ($response){
+            // if ($page_name == 'sales'){
+            //     redirect(admin_url("invoices/list"));
+            // }else{
+            //     redirect(admin_url("invoices/rent_list"));
+            // }
+            $accounted_text = '<span class="btn-sm btn-warning">Pending</span>';
+            if ($updata["accounted_status"] == 1){
+                $accounted_text = '<span class="btn-sm btn-success">Accounted</span>';
+            }
+            echo $accounted_text;
+            exit;
         }
     }
 
@@ -3939,5 +3946,18 @@ class Invoices extends Admin_controller
         $data["financial_year"] = value_by_id('tblfinancialyear', financial_year(), 'name');
         $data["invoice_list"] = $this->db->query("SELECT * FROM `tblinvoices` WHERE year_id = '".financial_year()."' AND clientid = '".$client_id."' AND tcs_status = 0 AND status != 5")->result();
         $this->load->view('admin/invoices/client_invoice_tcs_charges', $data);
+    }
+
+    public function get_renewal_invoice_model(){
+        if (!empty($_POST)){
+            extract($this->input->post());
+
+            $data["invoiceid"] = $id;
+            $data["billing_branch_id"] = $branch_id;
+            $data["financial_year_list"] = $this->db->query("SELECT `id`,`name` FROM tblfinancialyear WHERE `status` = 1")->result();
+            $data["companybranch_list"] = $this->db->query("SELECT `id`,`comp_branch_name` FROM tblcompanybranch WHERE `status` = 1")->result();
+
+            $this->load->view('admin/invoices/renewal_invoice_model', $data);
+        }    
     }
 }

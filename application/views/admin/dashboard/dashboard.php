@@ -372,6 +372,7 @@
                           }else{
                             swal(response.message, "", "warning");
                           }
+                          location.reload();
                       }
                     }
                 });
@@ -388,9 +389,31 @@ $("document").ready(function() {
 });
 <?php
 }
+if (!empty($pending_leave_request) && $pending_leave_request > 0 && $today_attendance_status > 0){
 ?>
-
-
+$("document").ready(function() {
+      var base_url = "<?php echo site_url('admin/approval/staff_notification_list/3'); ?>"
+      swal("Leave Request Pending For Your Approval", "Please Take Action On It.", {
+          icon : "info",
+          closeOnClickOutside: false,
+          buttons: {
+            confirm: {
+              className : 'btn-info',
+              text: "Take Action",
+              customClass: "swal-back"
+            }
+          },
+      }).then((result) => {
+        
+          if (result == true){
+            window.location.replace(base_url);
+          }
+          
+      });
+  }); 
+<?php
+}  
+?>
 
 function getlinlk(id) {
 
