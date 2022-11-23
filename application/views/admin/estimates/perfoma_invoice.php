@@ -1749,7 +1749,7 @@
 
                             <p class="no-mbot pull-left mtop5 btn-toolbar-notice"><?php echo _l('include_proposal_items_merge_field_help', '<b>{proposal_items}</b>'); ?></p>
 
-                            <?php if ($proposal->id != '') { ?>
+                            <?php if (!empty($proposal) && $proposal->id != '') { ?>
                                 <!-- <button class="btn btn-info mleft5 proposal-form-submit transaction-submit generate_chalan fgf" type="button">
 
                                 <?php echo 'Generate Delivery Challan'; ?>

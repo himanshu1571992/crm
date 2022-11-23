@@ -34,7 +34,16 @@
 	.mt-5{
 		margin-top:15px;
 	}
-
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}     
 </style>
 
 <div id="wrapper">
@@ -262,7 +271,7 @@
           <div class="col-md-4">
               <h4 class="no-mtop mrg3">Transport Charges</h4>
               <div class="row">
-                  <div class="col-md-12 pull-right">
+                  <div class="col-md-12">
                       <div class="form-group" >
                           <input type="number" required="" onchange="setTwoNumberDecimal" step="0.01" name="transport_charges" id="transport_charges" class="form-control" >
                       </div>
@@ -272,7 +281,7 @@
           <div class="col-md-8">
               <h4 class="no-mtop mrg3">Remark</h4>
               <div class="row">
-                  <div class="col-md-12 pull-right">
+                  <div class="col-md-12">
                       <div class="form-group" app-field-wrapper="remark">
                           <textarea id="remark" required="" name="manager_remark" class="form-control" rows="6"></textarea>
                       </div>

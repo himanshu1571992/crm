@@ -36,6 +36,20 @@ fieldset.for-panel p span.badge-success {
     color: #fff;
     background-color: #28a745;
 }
+.control-label > u {
+    font-size: 15px;
+    color: #4381ba;
+}
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}
 </style>
 <div id="wrapper">
     <div class="content">
@@ -60,7 +74,7 @@ fieldset.for-panel p span.badge-success {
                            <legend>Client Info</legend>
                            <div class="col-sm-12">
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">Lead Type <sapn class="pull-right">:</sapn></label>
+                                   <label class="col-sm-6 control-label"><u>Lead Type</u> <sapn class="pull-right">:</sapn></label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static">
                                            <?php
@@ -74,10 +88,9 @@ fieldset.for-panel p span.badge-success {
                                            ?>
                                        </p>  
                                    </div>
-                                   
                                </div>
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">Company Name <sapn class="pull-right">:</sapn></label>
+                                   <label class="col-sm-6 control-label"><u>Company Name</u> <sapn class="pull-right">:</sapn></label>
                                    <div class="col-sm-6">
                                        <?php
                                             if ($enquirycall_info->clientid > 0){
@@ -90,7 +103,7 @@ fieldset.for-panel p span.badge-success {
                                    </div>
                                </div>
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">Address <sapn class="pull-right">:</sapn> </label>
+                                   <label class="col-sm-6 control-label"><u>Address</u> <sapn class="pull-right">:</sapn> </label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static"><i class="fa fa-address-card"></i> <?php echo (isset($enquirycall_info)) ? $enquirycall_info->address : "--"; ?></p>
                                    </div>
@@ -99,7 +112,7 @@ fieldset.for-panel p span.badge-success {
 
                            <div class="col-sm-12">
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">Call Type <sapn class="pull-right">:</sapn> </label>
+                                   <label class="col-sm-6 control-label"><u>Call Type</u> <sapn class="pull-right">:</sapn> </label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static">
                                            <?php
@@ -115,13 +128,13 @@ fieldset.for-panel p span.badge-success {
                                    </div>
                                </div>
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">Contact Person Name <sapn class="pull-right">:</sapn> </label>
+                                   <label class="col-sm-6 control-label"><u>Contact Person Name</u> <sapn class="pull-right">:</sapn> </label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static"><i class="fa fa-user" aria-hidden="true"></i> <?php echo (isset($enquirycall_info)) ? cc($enquirycall_info->person_name) : "--"; ?></p>               
                                    </div>
                                </div>
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">State <sapn class="pull-right">:</sapn></label>
+                                   <label class="col-sm-6 control-label"><u>State</u> <sapn class="pull-right">:</sapn></label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static"><i class="fa fa-flag"></i> <?php echo (isset($enquirycall_info)) ? value_by_id("tblstates", $enquirycall_info->state_id, "name") : "--"; ?></p>             
                                    </div>
@@ -129,7 +142,7 @@ fieldset.for-panel p span.badge-success {
                            </div>
                            <div class="col-sm-12">
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">Service Type <sapn class="pull-right">:</sapn></label>
+                                   <label class="col-sm-6 control-label"><u>Service Type</u> <sapn class="pull-right">:</sapn></label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static">
                                        <?php
@@ -147,14 +160,14 @@ fieldset.for-panel p span.badge-success {
                                    </div>
                                </div>
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">Email <sapn class="pull-right">:</sapn></label>
+                                   <label class="col-sm-6 control-label"><u>Email</u> <sapn class="pull-right">:</sapn></label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static"><i class="fa fa-envelope"></i> <?php echo (isset($enquirycall_info)) ? $enquirycall_info->email : "--"; ?></p>
                                    </div>
                                                            
                                </div>
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">District <sapn class="pull-right">:</sapn></label>
+                                   <label class="col-sm-6 control-label"><u>District</u> <sapn class="pull-right">:</sapn></label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static"><i class="fa fa-building"></i> <?php echo (isset($enquirycall_info)) ? value_by_id("tblcities", $enquirycall_info->city_id, "name") : "--"; ?></p>
                                    </div>
@@ -163,7 +176,7 @@ fieldset.for-panel p span.badge-success {
                            </div>
                            <div class="col-sm-12">
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label"> Root Category <sapn class="pull-right">:</sapn></label>
+                                   <label class="col-sm-6 control-label"> <u>Root Category</u> <sapn class="pull-right">:</sapn></label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static"><?php 
                                        $sub_category_id = "";
@@ -184,7 +197,7 @@ fieldset.for-panel p span.badge-success {
                                    </div>
                                </div>
                                <div class="col-sm-4">
-                                   <label class="col-sm-6 control-label">Contact Number <sapn class="pull-right">:</sapn> </label>
+                                   <label class="col-sm-6 control-label"><u>Contact Number</u> <sapn class="pull-right">:</sapn> </label>
                                    <div class="col-sm-6">
                                        <p class="form-control-static"><i class="fa fa-phone"></i> <?php echo (isset($enquirycall_info) && $enquirycall_info->mobile > 0) ? $enquirycall_info->mobile : "--"; ?></p>                                                   
                                    </div>
@@ -196,7 +209,7 @@ fieldset.for-panel p span.badge-success {
                                    <?php
                                         if (isset($enquirycall_info) && !empty($enquirycall_info)) {
                                             if (in_array($enquirycall_info->service_type, [1, 3]) && $enquirycall_info->duration > 0) {
-                                                echo '<label class="col-sm-6 control-label">Duration <sapn class="pull-right">:</sapn></label>
+                                                echo '<label class="col-sm-6 control-label"><u>Duration</u> <sapn class="pull-right">:</sapn></label>
                                                              <div class="col-sm-6"><p class="form-control-static">' . $enquirycall_info->duration . ' Month</p></div>';
                                             }
                                         }
@@ -206,7 +219,7 @@ fieldset.for-panel p span.badge-success {
                                <div class="col-sm-8">
                                    <?php
                                         if (isset($enquirycall_info) && !empty($enquirycall_info->production_remark)) {
-                                            echo '<label class="col-sm-3 control-label">Assign Remark <sapn class="pull-right">:</sapn></label>
+                                            echo '<label class="col-sm-3 control-label"><u>Assign Remark</u> <sapn class="pull-right">:</sapn></label>
                                                     <div class="col-sm-6"><p class="form-control-static">' . $enquirycall_info->production_remark . '</p></div>';
                                         }
                                     ?>
@@ -268,7 +281,7 @@ fieldset.for-panel p span.badge-success {
                         <hr>
                         
                         <div class="row pro_enq_details">
-                            <div class="table-responsive s_table">
+                            <div class="table-responsive">
                                 <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable1">
                                     <thead>
                                         <tr>
@@ -320,7 +333,7 @@ fieldset.for-panel p span.badge-success {
                         <hr/>
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-12 pull-right">
+                                <div class="col-md-12">
                                     <div class="form-group" app-field-wrapper="remark">
                                         <textarea id="remark" required="" name="remark" class="form-control" rows="6"><?php if(!empty($info)){ echo $info->approvereason; } ?></textarea>
                                     </div>

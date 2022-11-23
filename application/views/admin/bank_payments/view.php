@@ -13,7 +13,18 @@ legend.scheduler-border {
     padding:0 10px; /* To give a bit of padding on the left and right */
     border-bottom:none;
 }</style>
-
+<style>
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }     
+</style>
 <div id="wrapper">
     <div class="content accounting-template">
         <a data-toggle="modal" id="modal" data-target="#myModal"></a>

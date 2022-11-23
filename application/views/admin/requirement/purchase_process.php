@@ -35,6 +35,16 @@
 		margin-top:15px;
 	}
 
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }  
 </style>
 
 <div id="wrapper">
@@ -49,6 +59,8 @@
 	<div class="panel_s">
 		<div class="panel-body">
             <div class="row">
+                <h3 class="text-center">Product Requirement</h3>
+                <hr>
                 <div class="col-md-3">
                     <h5 style="font-size:15px;color:red;"><u>Expected Date</u> : </h5>
                     <div class="form-group">
@@ -151,11 +163,13 @@
          $provendorlist  = $this->db->query("SELECT `v`.`id`,`v`.`name` FROM `tblvendorproductsname` as vp LEFT JOIN `tblvendor` as v ON `vp`.`vendor_id`=`v`.`id` WHERE product_id='".$value->product_id."' ORDER BY id desc ")->result();
 
         ?>
-        <div class="row mt-5">
+        <div class="row">
             <div class="col-md-12">
                 <hr class="hr-panel-heading">
                 <h4 class="no-margin">
                     <?php echo cc($value->product_name).' - Quantity ('.$value->quantity.')'; ?> 
+                    <br>
+                    <br>
                     <?php if ($value->rate_given == 0){  ?>
                         <button val="<?php echo $value->id; ?>" value="<?php if(!empty($productvendors)){ echo (count($productvendors) - 1); }else{ echo 0; } ?>" type="button" class="btn btn-success pull-right addmore" style="margin-top:-6px;">Add More Vendors</button>
                     <?php } ?>
@@ -167,166 +181,170 @@
                 <hr class="hr-panel-heading">
             </div>
             <div class="col-md-12">
-              <table class="table ui-table" id="vendortable_<?php echo $value->id; ?>">
-                  <thead>
-                      <tr>
-                          <th style="width:25%">Vendor</th>
-                          <th style="width:15%">Unit</th>
-                          <th style="width:15%">Rate</th>
-                          <th style="width:10%">Tax</th>
-                          <th style="width:45%">Remark</th>
-                          <th style="width:5%" class="text-center">Action</th>
-                      </tr>
-                  </thead>
-                    <tbody>
-                          <?php if(!empty($productvendors)){
-                            foreach ($productvendors as $k2 => $r2) {
-                                
-                                $approved_status = $r2->approve;
-                                $rategiven = ($value->rate_given == 1) ? 'readonly':'';
-                              ?>
-                                <tr id="tr<?php echo $value->id.'_'.$k2;?>">
-                                  <td>
-                                    <div class="form-group">
-                                          <input class="form-control" value="<?php echo $r2->vendor_name; ?>" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]" <?php echo $rategiven; ?>>
-                                          <datalist id="vendor_<?php echo $value->id; ?>">
-                                              <?php
-                                              if (!empty($vendor_info)) {
-                                                  foreach ($vendor_info as $v_row) {
-                                                      echo '<option value="'.$v_row->name.'">';
-                                                  }
-                                              }
-                                              ?>
-                                            </datalist>
+                <div class="">
+                    <table class="table table-responsive" id="vendortable_<?php echo $value->id; ?>" style="margin-top:2%; !important">
+                        <thead>
+                            <tr>
+                                <th style="width:25%">Vendor</th>
+                                <th style="width:15%">Unit</th>
+                                <th style="width:15%">Rate</th>
+                                <th style="width:10%">Tax</th>
+                                <th style="width:45%">Remark</th>
+                                <th style="width:5%" class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if(!empty($productvendors)){
+                                foreach ($productvendors as $k2 => $r2) {
+                                    
+                                    $approved_status = $r2->approve;
+                                    $rategiven = ($value->rate_given == 1) ? 'readonly':'';
+                                ?>
+                                    <tr id="tr<?php echo $value->id.'_'.$k2;?>">
+                                    <td>
+                                        <div class="form-group">
+                                            <input class="form-control" value="<?php echo $r2->vendor_name; ?>" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]" <?php echo $rategiven; ?>>
+                                            <datalist id="vendor_<?php echo $value->id; ?>">
+                                                <?php
+                                                if (!empty($vendor_info)) {
+                                                    foreach ($vendor_info as $v_row) {
+                                                        echo '<option value="'.$v_row->name.'">';
+                                                    }
+                                                }
+                                                ?>
+                                                </datalist>
 
-                                      </div>
-                                  </td>
-                                  <td>
-                                     <select class="form-control selectpicker" data-live-search="true" name="unit_id_<?php echo $value->id; ?>[]" id="unit_id" <?php echo $rategiven; ?>>
-                                         <option value=""></option>
-                                         <?php
-                                            if (isset($unit_list) && !empty($unit_list)){
-                                               foreach ($unit_list as $uval) {
-                                          ?>
-                                                  <option value="<?php echo $uval->id; ?>" <?php echo ($r2->unit_id == $uval->id) ? 'selected' : ''; ?>><?php echo cc($uval->name); ?></option>
-                                          <?php
-                                               }
-                                            }
-                                         ?>
-                                     </select>
-                                  </td>
-                                  <td><input class="form-control" value="<?php echo $r2->rate; ?>" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate" <?php echo $rategiven; ?>></td>
-                                  <td class="text-center">
-                                      <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]" <?php echo $rategiven; ?>>
-                                          <option value="0" <?php echo ($r2->tax == 0) ? 'selected':''; ?>>Excluding</option>
-                                          <option value="1" <?php echo ($r2->tax == 1) ? 'selected':''; ?>>Including</option>
-                                      </select>
-                                  </td>
-                                  <td><textarea name="vendorremark_<?php echo $value->id; ?>[]" class="form-control" <?php echo $rategiven; ?>><?php echo $r2->remark; ?></textarea></td>
-                                  <td class="text-center">
-                                    <?php if ($value->rate_given == 0){  ?>
-                                        <button type="button" class="btn pull-right btn-danger"  onclick="removeprocomp(<?php echo $value->id.','.$k2;?>);" ><i class="fa fa-remove"></i></button>
-                                    <?php }else{
-                                        echo '<input type="hidden" name="approve_'.$value->id.'[]" value="'.$approved_status.'">';
-                                    } ?>
-                                  </td>
-                                </tr>
-                              <?php
-                            }
-                          }else{ ?>
-                              <?php
-                                  if (!empty($provendorlist)){
-                                    foreach ($provendorlist as $kp=> $provendor) {
-                              ?>
-                              <tr id="tr<?php echo $value->id.'_0';?>">
-                                  <td>
-                                    <div class="form-group">
-                                          <input class="form-control" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]" value="<?php echo $provendor->name; ?>">
-                                          <datalist id="vendor_<?php echo $value->id; ?>">
-                                              <?php
-                                              if (!empty($vendor_info)) {
-                                                  foreach ($vendor_info as $v_row) {
-                                                      echo '<option value="'.$v_row->name.'">';
-                                                  }
-
-                                              }
-                                              ?>
-                                            </datalist>
-
-                                      </div>
-                                  </td>
-                                  <td>
-                                     <select class="form-control selectpicker" data-live-search="true" name="unit_id_<?php echo $value->id; ?>[]" id="unit_id">
-                                         <option value=""></option>
-                                         <?php
-                                            if (isset($unit_list) && !empty($unit_list)){
-                                               foreach ($unit_list as $uval) {
-                                          ?>
-                                                  <option value="<?php echo $uval->id; ?>" <?php echo ($value->unit == $uval->id) ? 'selected' : ''; ?>><?php echo cc($uval->name); ?></option>
-                                          <?php
-                                               }
-                                            }
-                                         ?>
-                                     </select>
-                                  </td>
-                                  <td><input class="form-control" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate"></td>
-                                  <td class="text-center">
-                                      <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]">
-                                          <option value="0">Excluding</option>
-                                          <option value="1">Including</option>
-                                      </select>
-                                  </td>
-                                  <td><textarea name="vendorremark_<?php echo $value->id; ?>[]" class="form-control"></textarea></td>
-                                  <td class="text-center"><button type="button" class="btn pull-right btn-danger"  onclick="removeprocomp(<?php echo $value->id;?>,0);" ><i class="fa fa-remove"></i></button></td>
-                              </tr>
-                              <?php
-                                      }
-                                  }else{
-                              ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="form-control selectpicker" data-live-search="true" name="unit_id_<?php echo $value->id; ?>[]" id="unit_id" <?php echo $rategiven; ?>>
+                                            <option value=""></option>
+                                            <?php
+                                                if (isset($unit_list) && !empty($unit_list)){
+                                                foreach ($unit_list as $uval) {
+                                            ?>
+                                                    <option value="<?php echo $uval->id; ?>" <?php echo ($r2->unit_id == $uval->id) ? 'selected' : ''; ?>><?php echo cc($uval->name); ?></option>
+                                            <?php
+                                                }
+                                                }
+                                            ?>
+                                        </select>
+                                    </td>
+                                    <td><input class="form-control" value="<?php echo $r2->rate; ?>" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate" <?php echo $rategiven; ?>></td>
+                                    <td class="text-center">
+                                        <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]" <?php echo $rategiven; ?>>
+                                            <option value="0" <?php echo ($r2->tax == 0) ? 'selected':''; ?>>Excluding</option>
+                                            <option value="1" <?php echo ($r2->tax == 1) ? 'selected':''; ?>>Including</option>
+                                        </select>
+                                    </td>
+                                    <td><textarea name="vendorremark_<?php echo $value->id; ?>[]" class="form-control" placeholder="remark" <?php echo $rategiven; ?>><?php echo $r2->remark; ?></textarea></td>
+                                    <td class="text-center">
+                                        <?php if ($value->rate_given == 0){  ?>
+                                            <button type="button" class="btn pull-right btn-danger"  onclick="removeprocomp(<?php echo $value->id.','.$k2;?>);" ><i class="fa fa-remove"></i></button>
+                                        <?php }else{
+                                            echo '<input type="hidden" name="approve_'.$value->id.'[]" value="'.$approved_status.'">';
+                                        } ?>
+                                    </td>
+                                    </tr>
+                                <?php
+                                }
+                            }else{ ?>
+                                <?php
+                                    if (!empty($provendorlist)){
+                                        foreach ($provendorlist as $kp=> $provendor) {
+                                ?>
                                 <tr id="tr<?php echo $value->id.'_0';?>">
-                                  <td>
-                                    <div class="form-group">
-                                          <input class="form-control" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]">
-                                          <datalist id="vendor_<?php echo $value->id; ?>">
-                                              <?php
-                                              if (!empty($vendor_info)) {
-                                                  foreach ($vendor_info as $v_row) {
-                                                      echo '<option value="'.$v_row->name.'">';
-                                                  }
+                                    <td>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]" value="<?php echo $provendor->name; ?>">
+                                            <datalist id="vendor_<?php echo $value->id; ?>">
+                                                <?php
+                                                if (!empty($vendor_info)) {
+                                                    foreach ($vendor_info as $v_row) {
+                                                        echo '<option value="'.$v_row->name.'">';
+                                                    }
 
-                                              }
-                                              ?>
-                                            </datalist>
+                                                }
+                                                ?>
+                                                </datalist>
 
-                                      </div></td>
-                                  <td>
-                                     <select class="form-control selectpicker" data-live-search="true" name="unit_id_<?php echo $value->id; ?>[]" id="unit_id">
-                                         <option value=""></option>
-                                         <?php
-                                            if (isset($unit_list) && !empty($unit_list)){
-                                               foreach ($unit_list as $uval) {
-                                          ?>
-                                                  <option value="<?php echo $uval->id; ?>" <?php echo ($value->unit == $uval->id) ? 'selected' : ''; ?>><?php echo cc($uval->name); ?></option>
-                                          <?php
-                                               }
-                                            }
-                                         ?>
-                                     </select>
-                                  </td>
-                                  <td><input class="form-control" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate"></td>
-                                  <td class="text-center">
-                                      <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]">
-                                          <option value="0">Excluding</option>
-                                          <option value="1">Including</option>
-                                      </select>
-                                  </td>
-                                  <td><textarea name="vendorremark_<?php echo $value->id; ?>[]" class="form-control"></textarea></td>
-                                  <td class="text-center"><button type="button" class="btn pull-right btn-danger"  onclick="removeprocomp(<?php echo $value->id;?>,0);" ><i class="fa fa-remove"></i></button></td>
-                              </tr>
-                          <?php  }} ?>
-                    </tbody>
-                </table>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="form-control selectpicker " data-live-search="true" name="unit_id_<?php echo $value->id; ?>[]" id="unit_id">
+                                            <option value=""></option>
+                                            <?php
+                                                if (isset($unit_list) && !empty($unit_list)){
+                                                foreach ($unit_list as $uval) {
+                                            ?>
+                                                    <option value="<?php echo $uval->id; ?>" <?php echo ($value->unit == $uval->id) ? 'selected' : ''; ?>><?php echo cc($uval->name); ?></option>
+                                            <?php
+                                                }
+                                                }
+                                            ?>
+                                        </select>
+                                    </td>
+                                    <td><input class="form-control" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate"></td>
+                                    <td class="text-center">
+                                        <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]">
+                                            <option value="0">Excluding</option>
+                                            <option value="1">Including</option>
+                                        </select>
+                                    </td>
+                                    <td><textarea name="vendorremark_<?php echo $value->id; ?>[]" class="form-control" placeholder="remark"></textarea></td>
+                                    <td class="text-center"><button type="button" class="btn pull-right btn-danger"  onclick="removeprocomp(<?php echo $value->id;?>,0);" ><i class="fa fa-remove"></i></button></td>
+                                </tr>
+                                <?php
+                                        }
+                                    }else{
+                                ?>
+                                    <tr id="tr<?php echo $value->id.'_0';?>">
+                                    <td>
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" list ="vendor_<?php echo $value->id; ?>" placeholder="Vendor" name="vendor_<?php echo $value->id; ?>[]">
+                                            <datalist id="vendor_<?php echo $value->id; ?>">
+                                                <?php
+                                                if (!empty($vendor_info)) {
+                                                    foreach ($vendor_info as $v_row) {
+                                                        echo '<option value="'.$v_row->name.'">';
+                                                    }
+
+                                                }
+                                                ?>
+                                                </datalist>
+
+                                        </div></td>
+                                    <td>
+                                        <select class="form-control selectpicker" data-live-search="true" name="unit_id_<?php echo $value->id; ?>[]" id="unit_id">
+                                            <option value=""></option>
+                                            <?php
+                                                if (isset($unit_list) && !empty($unit_list)){
+                                                    foreach ($unit_list as $uval) {
+                                            ?>
+                                                        <option value="<?php echo $uval->id; ?>" <?php echo ($value->unit == $uval->id) ? 'selected' : ''; ?>><?php echo cc($uval->name); ?></option>
+                                            <?php
+                                                    }
+                                                }
+                                            ?>
+                                        </select>
+                                        
+                                    </td>
+                                    <td><input class="form-control" type="text" name="rate_<?php echo $value->id; ?>[]" placeholder="Rate"></td>
+                                    <td class="text-center">
+                                        <select class="form-control selectpicker" data-live-search="true" name="tax_<?php echo $value->id; ?>[]">
+                                            <option value="0">Excluding</option>
+                                            <option value="1">Including</option>
+                                        </select>
+                                    </td>
+                                    <td><textarea name="vendorremark_<?php echo $value->id; ?>[]" class="form-control" placeholder="remark"></textarea></td>
+                                    <td class="text-center"><button type="button" class="btn pull-right btn-danger"  onclick="removeprocomp(<?php echo $value->id;?>,0);" ><i class="fa fa-remove"></i></button></td>
+                                </tr>
+                            <?php  }} ?>
+                        </tbody>
+                    </table> 
+                </div>
             </div>
+            
           </div>
         <?php
       }

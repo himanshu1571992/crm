@@ -1,5 +1,17 @@
 <?php init_head(); ?>
 <style>.error{border:1px solid red !important;}#adminnote{margin: 0px 8.5px 0px 0px;width: 499px;height: 125px;}.red{border:1px solid red !important;background-color:red !important;color:#fff !important;}.yellow{border:1px solid yellow !important;background-color:yellow !important;color:black  !important;}.blue{border:1px solid blue !important;background-color:blue !important;color:#fff !important;}.green{border:1px solid green !important;background-color:green !important;color:#fff !important;}.orange{border:1px solid orange !important;background-color:orange !important;color:#fff !important;}.ui-table > thead > tr > th {border:1px solid #9d9d9d !important;color: #fff !important; background:#6d7580;}.ui-table > tbody > tr > td{border: 1px solid #c7c7c7;color:#5f6670;}.ui-table > tbody > tr:nth-child(even) {background: #f8f8f8;}</style>
+<style>
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }     
+</style>
 <input id="check_gst" type='hidden' value="0">
 
 <div id="wrapper">
@@ -283,7 +295,7 @@
                             <div class="col-md-12">
                                 <input type="hidden" value="<?php echo $id;?>" name="id">
                                 <div class="row" style="margin-top:2%;padding:8px;">
-                                    <div class="col-md-12 pull-right">
+                                    <div class="col-md-12">
                                        <div class="form-group" app-field-wrapper="remark">
                                         <label>Remark *</label>
                                         <textarea id="remark" required="" name="remark" class="form-control" rows="4"><?php if(!empty($appvoal_info)){ echo $appvoal_info->approvereason; }?></textarea>

@@ -1,5 +1,16 @@
 <?php init_head(); ?>
-<style>.error{border:1px solid red !important;}#adminnote{margin: 0px 8.5px 0px 0px;width: 499px;height: 125px;}.red{border:1px solid red !important;background-color:red !important;color:#fff !important;}.yellow{border:1px solid yellow !important;background-color:yellow !important;color:black  !important;}.blue{border:1px solid blue !important;background-color:blue !important;color:#fff !important;}.green{border:1px solid green !important;background-color:green !important;color:#fff !important;}.orange{border:1px solid orange !important;background-color:orange !important;color:#fff !important;}</style>
+<style>.error{border:1px solid red !important;}#adminnote{margin: 0px 8.5px 0px 0px;width: 499px;height: 125px;}.red{border:1px solid red !important;background-color:red !important;color:#fff !important;}.yellow{border:1px solid yellow !important;background-color:yellow !important;color:black  !important;}.blue{border:1px solid blue !important;background-color:blue !important;color:#fff !important;}.green{border:1px solid green !important;background-color:green !important;color:#fff !important;}.orange{border:1px solid orange !important;background-color:orange !important;color:#fff !important;}
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}        
+</style>
 <input id="check_gst" type='hidden' value="0">
 <!-- Modal Contact -->
 
@@ -16,22 +27,14 @@
                         <hr class="hr-panel-heading">
                         <div class="row">
                             <div class="col-md-6">
-                               
-                             
-                          
                                 <div class="form-group" app-field-wrapper="">
                                     <label class="control-label">Reference No.</label>
                                     <input type="text" readonly="" class="form-control" value="<?php echo 'TDS-'.$tds_info->id; ?>">
                                 </div>
-                               
-                    
-
                                 <div class="form-group" app-field-wrapper="remark">
                                     <label for="remark" class="control-label">Approve/Reject Remark</label>
-                                    <textarea id="remark" required name="remark" style="height: 83px; width: 595px;" class="form-control" rows="4"><?php if(!empty($appvoal_info)){ echo $appvoal_info->remark; } ?></textarea>
+                                    <textarea id="remark" required name="remark" class="form-control" rows="4"><?php if(!empty($appvoal_info)){ echo $appvoal_info->remark; } ?></textarea>
                                 </div>    
-                              
-                                
                             </div>
                             <div class="col-md-6">
                                     <div class="form-group" app-field-wrapper="date"><label for="date" class="control-label"> <small class="req text-danger">* </small>Date</label>
@@ -40,13 +43,10 @@
                                             <div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                                         </div>
                                     </div>
-
                                     <div class="form-group" app-field-wrapper="adminnote">
                                         <label for="adminnote" class="control-label">Remark</label>
-                                        <textarea id="adminnote" name="adminnote" style="height: 83px; width: 595px;" class="form-control" disabled="" rows="4"><?php echo $tds_info->remark; ?></textarea>
+                                        <textarea id="adminnote1" name="adminnote" class="form-control" disabled="" rows="4"><?php echo $tds_info->remark; ?></textarea>
                                     </div>
-
-
                                 </div>
                             </div>
 

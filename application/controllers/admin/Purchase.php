@@ -2212,6 +2212,8 @@ class Purchase extends Admin_controller {
         $data['chk_pending_debitnote']  = $this->db->query("SELECT count(pdn.id) as ttl_recd FROM `tblpurchasedabitnote` as pdn LEFT JOIN `tblpurchasechallanreturn` as pcr ON pcr.id = pdn.parchasechallanreturn_id WHERE pdn.vender_id = '".$vendor_id."' AND pdn.complete = 0")->row();
 
         $data['chk_refund_payment'] = $this->db->query("SELECT * FROM `tblpurchaseorderpayments` where po_id =  '".$id."' ORDER BY id DESC")->result();
+        
+
         $data['title']     = 'Purchase Order Payments (PO-'.$data['purchaseorder_info']->number.')';
         $this->load->view('admin/purchase/purchaseorder_payments', $data);
 

@@ -50,26 +50,6 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div class="form-group" app-field-wrapper="date">
-                                                        <label for="f_date" class="control-label">From Date</label>
-                                                        <div class="input-group date">
-                                                            <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if (!empty($f_date) && $section == 1) {
-                                                                echo $f_date;
-                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group" app-field-wrapper="date">
-                                                        <label for="t_date" class="control-label">To Date</label>
-                                                        <div class="input-group date">
-                                                            <input id="t_date" name="t_date" class="form-control datepicker" value="<?php if (!empty($t_date) && $section == 1) {
-                                                                echo $t_date;
-                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
                                                     <div class="form-group ">
                                                         <label for="source" class="control-label">Status</label>
                                                         <select class="form-control selectpicker" name="status" id="status" data-live-search="true">
@@ -79,6 +59,27 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group" app-field-wrapper="date">
+                                                        <label for="f_date" class="control-label">From Date</label>
+                                                        <div class="input-group date">
+                                                            <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if (!empty($f_date) && $section == 1) {
+                                                                echo $f_date;
+                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group" app-field-wrapper="date">
+                                                        <label for="t_date" class="control-label">To Date</label>
+                                                        <div class="input-group date">
+                                                            <input id="t_date" name="t_date" class="form-control datepicker" value="<?php if (!empty($t_date) && $section == 1) {
+                                                                echo $t_date;
+                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
                                                 <!-- <div class="col-md-2">
                                                     <div class="form-group ">
                                                         <label for="source" class="control-label">Product Type</label>
@@ -108,6 +109,23 @@
                                                                 foreach ($branch_info as $branch) {
                                                                     ?>
                                                                     <option value="<?php echo $branch->id ?>" <?php echo (!empty($branch_id) && $branch_id == $branch->id && $section == 1) ? 'selected':''; ?>><?php echo cc($branch->comp_branch_name); ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group ">
+                                                        <label for="product_name" class="control-label">Product</label>
+                                                        <select class="form-control selectpicker" name="product_id" id="product_id" data-live-search="true">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($product_list) && count($product_list) > 0 ) {
+                                                                foreach ($product_list as $product) {
+                                                                    ?>
+                                                                    <option value="<?php echo $product->id ?>" <?php echo (!empty($product_id) && $product_id == $product->id && $section == 1) ? 'selected':''; ?>><?php echo cc($product->name); ?></option>
                                                                     <?php
                                                                 }
                                                             }
@@ -282,26 +300,6 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div class="form-group" app-field-wrapper="date">
-                                                        <label for="f_date" class="control-label">From Date</label>
-                                                        <div class="input-group date">
-                                                            <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if (!empty($f_date) && $section == 2) {
-                                                                echo $f_date;
-                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group" app-field-wrapper="date">
-                                                        <label for="t_date" class="control-label">To Date</label>
-                                                        <div class="input-group date">
-                                                            <input id="t_date" name="t_date" class="form-control datepicker" value="<?php if (!empty($t_date) && $section == 2) {
-                                                                echo $t_date;
-                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
                                                     <div class="form-group ">
                                                         <label for="source" class="control-label">Status</label>
                                                         <select class="form-control selectpicker" name="status" id="status" data-live-search="true">
@@ -311,6 +309,27 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group" app-field-wrapper="date">
+                                                        <label for="f_date" class="control-label">From Date</label>
+                                                        <div class="input-group date">
+                                                            <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if (!empty($f_date) && $section == 2) {
+                                                                echo $f_date;
+                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group" app-field-wrapper="date">
+                                                        <label for="t_date" class="control-label">To Date</label>
+                                                        <div class="input-group date">
+                                                            <input id="t_date" name="t_date" class="form-control datepicker" value="<?php if (!empty($t_date) && $section == 2) {
+                                                                echo $t_date;
+                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
                                                 <!-- <div class="col-md-2">
                                                     <div class="form-group ">
                                                         <label for="source" class="control-label">Product Type</label>
@@ -340,6 +359,23 @@
                                                                 foreach ($branch_info as $branch) {
                                                                     ?>
                                                                     <option value="<?php echo $branch->id ?>" <?php echo (!empty($branch_id) && $branch_id == $branch->id && $section == 2) ? 'selected':''; ?>><?php echo cc($branch->comp_branch_name); ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group ">
+                                                        <label for="product_name" class="control-label">Product</label>
+                                                        <select class="form-control selectpicker" name="product_id" id="product_id" data-live-search="true">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($product_list) && count($product_list) > 0 ) {
+                                                                foreach ($product_list as $product) {
+                                                                    ?>
+                                                                    <option value="<?php echo $product->id ?>" <?php echo (!empty($product_id) && $product_id == $product->id && $section == 2) ? 'selected':''; ?>><?php echo cc($product->name); ?></option>
                                                                     <?php
                                                                 }
                                                             }
@@ -514,26 +550,6 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <div class="form-group" app-field-wrapper="date">
-                                                        <label for="f_date" class="control-label">From Date</label>
-                                                        <div class="input-group date">
-                                                            <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if (!empty($f_date) && $section == 3) {
-                                                                echo $f_date;
-                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group" app-field-wrapper="date">
-                                                        <label for="t_date" class="control-label">To Date</label>
-                                                        <div class="input-group date">
-                                                            <input id="t_date" name="t_date" class="form-control datepicker" value="<?php if (!empty($t_date) && $section == 3) {
-                                                                echo $t_date;
-                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
                                                     <div class="form-group ">
                                                         <label for="source" class="control-label">Status</label>
                                                         <select class="form-control selectpicker" name="status" id="status" data-live-search="true">
@@ -543,6 +559,27 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group" app-field-wrapper="date">
+                                                        <label for="f_date" class="control-label">From Date</label>
+                                                        <div class="input-group date">
+                                                            <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if (!empty($f_date) && $section == 3) {
+                                                                echo $f_date;
+                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="form-group" app-field-wrapper="date">
+                                                        <label for="t_date" class="control-label">To Date</label>
+                                                        <div class="input-group date">
+                                                            <input id="t_date" name="t_date" class="form-control datepicker" value="<?php if (!empty($t_date) && $section == 3) {
+                                                                echo $t_date;
+                                                            } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
                                                 <!-- <div class="col-md-2">
                                                     <div class="form-group ">
                                                         <label for="source" class="control-label">Product Type</label>
@@ -572,6 +609,23 @@
                                                                 foreach ($branch_info as $branch) {
                                                                     ?>
                                                                     <option value="<?php echo $branch->id ?>" <?php echo (!empty($branch_id) && $branch_id == $branch->id && $section == 3) ? 'selected':''; ?>><?php echo cc($branch->comp_branch_name); ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group ">
+                                                        <label for="product_name" class="control-label">Product</label>
+                                                        <select class="form-control selectpicker" name="product_id" id="product_id" data-live-search="true">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($product_list) && count($product_list) > 0 ) {
+                                                                foreach ($product_list as $product) {
+                                                                    ?>
+                                                                    <option value="<?php echo $product->id ?>" <?php echo (!empty($product_id) && $product_id == $product->id && $section == 3) ? 'selected':''; ?>><?php echo cc($product->name); ?></option>
                                                                     <?php
                                                                 }
                                                             }

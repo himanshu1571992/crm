@@ -215,7 +215,7 @@ $session_id = $this->session->userdata();
                     <thead>
                         <tr>
                             <th>S.No</th>
-                            <th>Client Name</th>                                        
+                            <th width="20%">Client Name</th>                                        
                             <th>Cheque No</th>                                        
                             <th>Cheque Amount</th>                                        
                             <th>Cheque Date</th>                                        
@@ -242,7 +242,6 @@ $session_id = $this->session->userdata();
                             echo cc($client_info1->client_branch_name);
                           ?>
                         </td>
-                        <td><?php echo cc($client_info1->client_branch_name); ?></a></td>
                         <td><?php echo $row->cheque_no; ?></td>
                         <td><?php echo $row->ttl_amt; ?></td>
                         <td><?php echo _d($row->cheque_date); ?></td>

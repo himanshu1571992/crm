@@ -36,6 +36,16 @@
         font-size: 15px;
     }
 
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
 </style>
 <div id="wrapper">
     <div class="content accounting-template">
@@ -67,20 +77,26 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4">   
-                                        <div class="form-group col-md-6">
-                                            <label for="complain_date" class="control-label text-bold"><u>Complain Date :</u></label>
-                                            <div class="input-group date">
-                                                <p><?php echo (isset($complain_info)) ? _d($complain_info->complain_date) : '--'; ?></p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="complain_date" class="control-label text-bold"><u>Complain Date :</u></label>
+                                                    <div class="input-group date">
+                                                        <p><?php echo (isset($complain_info)) ? _d($complain_info->complain_date) : '--'; ?></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <?php if (!empty($complain_info->resolve_till)) { ?>
+                                                    <div class="form-group">
+                                                        <label for="complain_date" class="control-label text-bold"><u>Resolve Till :</u></label>
+                                                        <div class="input-group date">
+                                                            <p><?php echo (isset($complain_info)) ? _d($complain_info->resolve_till) : '--'; ?></p>
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
                                             </div>
                                         </div>
-                                        <?php if (!empty($complain_info->resolve_till)) { ?>
-                                        <div class="form-group col-md-6">
-                                            <label for="complain_date" class="control-label text-bold"><u>Resolve Till :</u></label>
-                                            <div class="input-group date">
-                                                <p><?php echo (isset($complain_info)) ? _d($complain_info->resolve_till) : '--'; ?></p>
-                                            </div>
-                                        </div>
-                                        <?php } ?>
                                     </div>
                                 </div>    
                                 <div class="row">
@@ -116,79 +132,72 @@
                                 <br>
                                 <br>
                                 <div class="row">
-                                    <div class="table-responsive s_table compdv">
-                                        <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable" style="margin-top:2%; !important">
-                                            <thead>
-                                                <tr>
-                                                    <th width="5%"  align="center"><i class="fa fa-cog"></i></th>
-                                                    <th width="35%" align="left">Product Name</th>
-                                                    <th width="10%" align="left">Quantity</th>
-                                                    <th width="20%" align="left">Defect Remarks</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="ui-sortable">
-                                                <?php
-                                                    if (!empty($complain_products)){
-                                                        foreach ($complain_products as $key => $value) {
-                                                           
-                                                ?>
-                                                            <tr class="main" id="tr0">
-                                                                <td align="center"> <?php echo ++$key; ?></td>
-                                                                <td> <?php echo value_by_id("tblproducts", $value->product_id, "name"); ?></td>
-                                                                <td><?php echo $value->qty;?></td>
-                                                                <td><?php echo $value->defect_remark;?></td>
-                                                            </tr>
-                                                <?php   }
-                                                    }
-                                                ?>
-                                            </tbody>
-                                        </table>
-                                        
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable" style="margin-top:2%; !important">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%"  align="center"><i class="fa fa-cog"></i></th>
+                                                        <th width="35%" align="left">Product Name</th>
+                                                        <th width="10%" align="left">Quantity</th>
+                                                        <th width="20%" align="left">Defect Remarks</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="ui-sortable">
+                                                    <?php
+                                                        if (!empty($complain_products)){
+                                                            foreach ($complain_products as $key => $value) {
+                                                    ?>
+                                                                <tr class="main" id="tr0">
+                                                                    <td align="center"> <?php echo ++$key; ?></td>
+                                                                    <td> <?php echo value_by_id("tblproducts", $value->product_id, "name"); ?></td>
+                                                                    <td><?php echo $value->qty;?></td>
+                                                                    <td><?php echo $value->defect_remark;?></td>
+                                                                </tr>
+                                                    <?php   }
+                                                        }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <?php
-                            if (!isset($page)){
-                        ?>
-                        <div class="btn-bottom-toolbar text-right">
-                            <button class="btn btn-info" type="submit">
-                                <?php echo _l('submit'); ?>
-                            </button>
-                        </div>
-                        <?php }elseif(isset($page) && $page == "approval"){
-                            if(empty($approval_info) OR (!empty($approval_info) && $approval_info->approve_status == 5)){    
-                        ?>
-                            <div class="btn-bottom-toolbar text-right">
-                                <button type="submit" name="action" value="5" style="background-color: #f9d306;color:#fff;" class="btn">On Hold</button>
-                                <button type="submit" name="action" value="4" style="background-color: #9d0b1a;color:#fff;" class="btn">Reconciliation</button>
-                                <button class="btn btn-info" name="action" value="1" type="submit">Approve</button>
-                                <button class="btn btn-danger" name="action" value="2" type="submit">Reject</button>
-                            </div>
-                        <?php }
-                            }elseif(isset($page) && $page == "upload_action_plan"){ ?>
-                            <div class="btn-bottom-toolbar text-right">
+                        <?php if (!isset($page)){ ?>
+                            <div class="btn-bottom-toolbar text-right" >
                                 <button class="btn btn-info" type="submit">
                                     <?php echo _l('submit'); ?>
                                 </button>
                             </div>
-                        <?php } ?>
-                    </div>
-                </div>
-                <?php if(isset($page) && $page == "approval"){ ?>
-                <div class="panel_s">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="remark" class="control-label">Approval Remark</label>
-                                    <textarea id="remark" rows="5" required="" name="approval_remark" class="form-control" placeholder="remark..."><?php echo (!empty($approval_info) && !empty($approval_info->approve_remark)) ? $approval_info->approve_remark : ""; ?></textarea>
+                        <?php }else if(isset($page) && $page == "approval"){ ?>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <br><br>
+                                    <div class="form-group">
+                                        <label for="remark" class="control-label">Approval Remark</label>
+                                        <textarea id="remark" rows="5" required="" name="approval_remark" class="form-control" placeholder="remark..."><?php echo (!empty($approval_info) && !empty($approval_info->approve_remark)) ? $approval_info->approve_remark : ""; ?></textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <?php if(empty($approval_info) OR (!empty($approval_info) && $approval_info->approve_status == 5)){ ?>
+                                <div class="btn-bottom-toolbar text-right" >
+                                    <button type="submit" name="action" value="5" style="background-color: #f9d306;color:#fff;margin-top: 5px;" class="btn">On Hold</button>
+                                    <button type="submit" name="action" value="4" style="background-color: #9d0b1a;color:#fff;margin-top: 5px;" class="btn">Reconciliation</button>
+                                    <button class="btn btn-info" name="action" value="1" type="submit" style="margin-top: 5px;">Approve</button>
+                                    <button class="btn btn-danger" name="action" value="2" type="submit" style="margin-top: 5px;">Reject</button>
+                                </div>
+                            <?php } ?>
+                        <?php }elseif(isset($page) && $page == "upload_action_plan"){ ?>    
+                            <div class="btn-bottom-toolbar text-right" >
+                                <button class="btn btn-info" type="submit">
+                                    <?php echo _l('submit'); ?>
+                                </button>
+                            </div>
+                        <?php } ?>     
                     </div>
                 </div>
-                <?php } ?>
+                       
             </div> 
             <?php echo form_close(); ?>
         </div>

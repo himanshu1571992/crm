@@ -31,7 +31,7 @@
                         <div class="form-group" app-field-wrapper="">
                             <label class="control-label">Contact Number<span style="color: red;">*</span></label>
                             <span id="errmsg" style="color: red;"></span>
-                            <input type="text" required="" name="contact_no" id="contact_no" class="form-control" value="<?php echo $value['contact_no']; ?>">
+                            <input type="text" required="" name="contact_no" id="contact_no" minlength="10" maxlength="10" class="form-control" value="<?php echo $value['contact_no']; ?>">
                         </div>
                     </div>
                 </div>
@@ -211,7 +211,7 @@ if(!isset($vendorcontact))
 
 <div class="form-group">
     <span id="errmsg2" style="color: red;"></span>
-    <input type="text" id="contactperson_no" value="" name="persondata['+newaddmore+'][contactperson_no]"  class="form-control onlynumbers">
+    <input type="text" id="contactperson_no" value="" name="persondata['+newaddmore+'][contactperson_no]"  minlength="10" maxlength="10" class="form-control onlynumbers">
 
 </div>
 
@@ -328,7 +328,7 @@ $i++; ?>
 
 <div class="form-group">
     <span id="errmsg2" style="color: red;"></span>
-    <input type="text" id="contactperson_no" name="persondata[<?php echo $i;?>][contactperson_no]" value="<?php echo $contact['contactperson_no']; ?>"  class="form-control onlynumbers">
+    <input type="text" id="contactperson_no" name="persondata[<?php echo $i;?>][contactperson_no]" minlength="10" maxlength="10" value="<?php echo $contact['contactperson_no']; ?>"  class="form-control onlynumbers">
 
 </div>
 
@@ -928,7 +928,7 @@ if(!isset($vendorproduct))
         var addmore = parseInt($(this).attr('value'));
         var newaddmore = addmore + 1;
         $(this).attr('value', newaddmore);
-        $('#myContactTable3 tbody').append('<tr class="main" id="trcc4'+newaddmore+'"><td><div class="form-group"><input type="text" required name="persondata['+newaddmore+'][contactperson_name]" class="form-control" ></div></td><td><div class="form-group"><input type="email" required name="persondata['+newaddmore+'][contactperson_email]" class="form-control"></div></td><td><div class="form-group"><input type="text" required name="persondata['+newaddmore+'][contactperson_no]" class="form-control"></div></td><td><div class="form-group"><select name="persondata['+newaddmore+'][designation_id]" required class="form-control"><option value="">select Designation</option><?php	if (isset($designation_data) && count($designation_data) > 0) {	foreach ($designation_data as $designation_key => $designation_value) {?><option value="<?php echo $designation_value['id'] ?>"><?php echo cc($designation_value['designation']); ?></option><?php }}?></select></div></td><td class="text-center"><button type="button" class="btn btn-danger"  onclick="removeclientperson44('+newaddmore+');" ><i class="fa fa-remove"></i></button></td></tr>');
+        $('#myContactTable3 tbody').append('<tr class="main" id="trcc4'+newaddmore+'"><td><div class="form-group"><input type="text" required name="persondata['+newaddmore+'][contactperson_name]" class="form-control" ></div></td><td><div class="form-group"><input type="email" required name="persondata['+newaddmore+'][contactperson_email]" class="form-control"></div></td><td><div class="form-group"><input type="text" required name="persondata['+newaddmore+'][contactperson_no]" minlength="10" maxlength="10" class="form-control"></div></td><td><div class="form-group"><select name="persondata['+newaddmore+'][designation_id]" required class="form-control"><option value="">select Designation</option><?php	if (isset($designation_data) && count($designation_data) > 0) {	foreach ($designation_data as $designation_key => $designation_value) {?><option value="<?php echo $designation_value['id'] ?>"><?php echo cc($designation_value['designation']); ?></option><?php }}?></select></div></td><td class="text-center"><button type="button" class="btn btn-danger"  onclick="removeclientperson44('+newaddmore+');" ><i class="fa fa-remove"></i></button></td></tr>');
 		 $('.selectpicker').selectpicker('refresh');
 	});
 	function removeclientperson3(procompid)

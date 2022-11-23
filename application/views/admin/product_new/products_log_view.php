@@ -1,4 +1,14 @@
 <?php init_head(); ?>
+<style>
+    .termsList{margin-top:8px;font-size:15px;text-transform: none;}
+    .termsList > table {
+        border: double 5px;
+    }
+    .termsList > table > tbody >tr >td {
+        border: solid 2px;
+        padding: 15px;
+    }
+</style>    
 <div id="wrapper">
     <div class="content accounting-template">
         <div class="row">
@@ -382,8 +392,8 @@
 
 
                         <div class="col-md-12"><h3>Add Iteams</h3><hr/></div>
-                        <div class="table-responsive s_table">
-                        <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable">
+                            <div class="table-responsive s_table">
+                                <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable">
                                     <thead>
                                         <tr>
                                             <th width="5%"  align="center">S.No.</th>
@@ -422,9 +432,9 @@
 
                                     </tbody>
                                 </table>
-
-                                <div class="col-md-12"><h3>Add Product Drawings</h3><hr/></div>
-                                <div class="table-responsive s_table">
+                            </div>
+                            <div class="col-md-12"><h3>Add Product Drawings</h3><hr/></div>
+                            <div class="table-responsive s_table">
                                 <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable">
                                     <thead>
                                         <tr>
@@ -448,52 +458,44 @@
                                                     <td><?php echo $value->drawing_id; ?></td>
                                                     <td><?php echo $value->rev_no; ?></td>
                                                     <td>
-                                                      <?php if (!empty($value->files)){
-                                                          $filesdata = json_decode($value->files);
-                                                          foreach ($filesdata as $k => $file) {
-                                                      ?>
+                                                    <?php if (!empty($value->files)){
+                                                        $filesdata = json_decode($value->files);
+                                                        foreach ($filesdata as $k => $file) {
+                                                    ?>
                                                             <a href="<?php echo base_url('uploads/product/product_drawing') . "/" . $file; ?>" target="_blank"><?php echo $file; ?></a><br>
-                                                      <?php
-                                                          }
-                                                      } ?>
+                                                    <?php
+                                                        }
+                                                    } ?>
                                                     </td>
                                                 </tr>
                                                 <?php
                                             }
                                         }
                                         else{
-                                           ?>
-                                           <tr>
+                                        ?>
+                                        <tr>
                                                 <td colspan="4">product drawing Not Available</td>
-                                           </tr>
-                                           <?php
+                                        </tr>
+                                        <?php
                                         }
                                             ?>
 
                                     </tbody>
                                 </table>
-
-
-                                <div class="col-md-12">
-                                        <h3>Product FAQ</h3>
-                                        <hr/>
+                            </div>
+                            <div class="col-md-12"><h3>Product FAQ</h3><hr/></div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">FAQ</label>
+                                    <div class="col-md-12 table-responsive" style="overflow-x: scroll"><div class="termsList"><?php echo $products_log->faq; ?></div></div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">FAQ</label>
-                                        <textarea disabled="" class="form-control"><?php echo $products_log->faq; ?></textarea>
-                                    </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label">Merging Remark</label>
+                                    <div class="col-md-12 table-responsive" style="overflow-x: scroll"><div class="termsList"><?php echo $products_log->merging_remark; ?></div></div>
                                 </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Merging Remark</label>
-                                        <textarea disabled="" class="form-control"><?php echo $products_log->merging_remark; ?></textarea>
-                                    </div>
-                                </div>
-
-
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>

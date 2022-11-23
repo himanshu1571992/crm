@@ -4,6 +4,16 @@
         font-size: 15px;
         color:#03a9f4;
     }
+    @media (max-width: 500px){
+		.btn-bottom-toolbar {
+			width: 100%
+		}
+	}    
+	@media (max-width: 768px){
+		.btn-bottom-toolbar {
+			width: 100%
+		}
+	}
 </style>
 <div id="wrapper">
     <div class="content accounting-template">

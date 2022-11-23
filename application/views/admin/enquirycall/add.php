@@ -201,7 +201,7 @@
                                                 $company_number = $indiamart_info->mobile;
                                             }
                                         ?>
-                                        <input type="text" id="mobile" class="form-control"  name="mobile" value="<?php echo $company_number; ?>" placeholder="contact number">
+                                        <input type="text" id="mobile" class="form-control" minlength="10" maxlength="10" name="mobile" value="<?php echo $company_number; ?>" placeholder="contact number">
                                     </div>
                                 </div>
                             </div>

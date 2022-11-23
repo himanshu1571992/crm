@@ -1,4 +1,16 @@
 <?php init_head(); ?>
+<style>
+	@media (max-width: 500px){
+		.btn-bottom-toolbar {
+			width: 100%
+		}
+	}    
+	@media (max-width: 768px){
+		.btn-bottom-toolbar {
+			width: 100%
+		}
+	}
+</style>
 <div id="wrapper">
     <div class="content accounting-template">
         <div class="row">
@@ -8,10 +20,8 @@
                 <div class="panel_s">
                     <div class="panel-body">
                         <h4 class="no-margin"><?php if(!empty($title)){ echo $title;}?></h4>
-                    <hr class="hr-panel-heading">
-
+                        <hr class="hr-panel-heading">
                         <div class="row">
-                            
                                 <?php if (isset($_GET["reminder_id"]) && !empty($_GET["reminder_id"])) {
                                     echo '<input type="hidden" name="reminder_id" value="'.$_GET["reminder_id"].'">';
                                 } ?>    

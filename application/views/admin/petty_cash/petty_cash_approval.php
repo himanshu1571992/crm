@@ -14,6 +14,16 @@
 	.badge-success{
 		background-color: yellowgreen;
 	}
+	@media (max-width: 500px){
+		.btn-bottom-toolbar {
+			width: 100%
+		}
+	}    
+	@media (max-width: 768px){
+		.btn-bottom-toolbar {
+			width: 100%
+		}
+	}   
 </style>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <div id="wrapper">

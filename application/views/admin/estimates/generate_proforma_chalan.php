@@ -290,20 +290,28 @@ init_head();
 
                                         <div class="col-md-6">
                                             <?php 
-                                                echo render_input('office_person_number', 'Office Person Number', $office_person_no); 
+                                                echo render_input('office_person_number', 'Office Person Number', $office_person_no, '', ["minlength"=>10,"maxlength"=>10]); 
                                             ?>
                                         </div>
-                                        <div class="col-md-6">
-                                            <?php 
-                                                echo render_input('site_person', 'Site Person', ''); 
-                                            ?>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <?php 
+                                                        echo render_input('site_person', 'Site Person', ''); 
+                                                    ?>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <?php 
+                                                        echo render_input('site_person_number', 'Site Person Number', '', '',["minlength"=>10,"maxlength"=>10]); 
+                                                    ?>
+                                                </div>
+                                            </div>
+                                            
+                                            
                                         </div>
+                                        
 
-                                        <div class="col-md-6">
-                                            <?php 
-                                                echo render_input('site_person_number', 'Site Person Number', ''); 
-                                            ?>
-                                        </div>
+                                        
 
                                     </div>
                                     <?php 

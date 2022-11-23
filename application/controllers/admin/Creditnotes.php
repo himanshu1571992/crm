@@ -691,6 +691,7 @@ class Creditnotes extends Admin_controller {
         $data['contactdata']=$this->db->query("SELECT *,c.id as contactid FROM `tblinvoiceclientperson` icp LEFT JOIN `tblcontacts` c ON icp.`contact_id`=c.`id` WHERE `invoice_id`='".$id."' AND `type`='creditnote'")->result_array();
         $data['creditnote_othercharges'] = $this->db->query("SELECT * from tblcreditnoteothercharges where proposalid = '".$id."' ")->result_array();
         $data["info"] = $this->db->query("SELECT * FROM tblcreditnoteapproval WHERE `creditnote_id` = '".$id."' AND `staff_id` = '".get_staff_user_id()."'")->row();
+        $data["check_approval"] = $this->db->query("SELECT count(*) as count FROM tblcreditnoteapproval WHERE `creditnote_id` = '".$id."' AND `approve_status`='1'")->row();
 
         $this->load->view('admin/creditnotes/creditnotes_approval', $data);
     }

@@ -149,7 +149,7 @@
                                 <div class="form-group">
                                     <label for="vehicle_no" class="control-label">Vehicle No </label>
                                     <?php $vehicle_no = (isset($purchase_info) ? $purchase_info['vehicle_no'] : ""); ?>
-                                    <input type="text" id="vehicle_no" name="vehicle_no" class="form-control" value="<?php echo $vehicle_no; ?>" aria-invalid="false">
+                                    <input type="text" id="vehicle_no" name="vehicle_no" class="form-control"  value="<?php echo $vehicle_no; ?>" aria-invalid="false">
                                 </div>
                                 <div class="clearfix mbot15"></div>
                             </div>
@@ -263,7 +263,7 @@
                                         <div class="form-group col-md-6">
                                             <label for="driver_no" class="control-label">Driver No</label>
                                             <?php $driver_no = (isset($purchase_info) ? $purchase_info['driver_no'] : ""); ?>
-                                            <input type="text" id="driver_no" name="driver_no" class="form-control" value="<?php echo $driver_no; ?>" aria-invalid="false">
+                                            <input type="text" id="driver_no" name="driver_no" minlength="10" maxlength="10" class="form-control" value="<?php echo $driver_no; ?>" aria-invalid="false">
                                         </div>
                                     </div>
                                 </div>

@@ -1,5 +1,16 @@
 <?php init_head(); ?>
-<style>table.items tr.main td { padding: 10px 10px !important;}</style>
+<style>table.items tr.main td { padding: 10px 10px !important;}
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}        
+</style>
 <div id="wrapper">
     <div class="content accounting-template">
         <div class="row">
@@ -100,7 +111,8 @@
                             </div>
                             <div class="col-md-12">
 
-                                <div class="table-responsive s_table proddv" <?php if (isset($prostockdata) && count($prostockdata) > 0 && $stockdata['is_product']==1){?>style="display:block;"<?php }else{?>style="display:none;"<?php }?>>
+                                <!-- <div class="table-responsive s_table proddv" <?php if (isset($prostockdata) && count($prostockdata) > 0 && $stockdata['is_product']==1){?>style="display:block;"<?php }else{?>style="display:none;"<?php }?>> -->
+                                <div class="table-responsive" <?php if (isset($prostockdata) && count($prostockdata) > 0 && $stockdata['is_product']==1){?>style="display:block;"<?php }else{?>style="display:none;"<?php }?>>
                                     <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myproTable" style="margin-top:2%; !important">
                                         <thead>
                                             <tr>

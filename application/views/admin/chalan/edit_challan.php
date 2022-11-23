@@ -127,24 +127,28 @@ init_head();
                                         <div class="col-md-6">
                                             <?php
                                             $office_person_number = $challan_info->office_person_number;
-                                                echo render_input('office_person_number', 'Office Person Number', $office_person_number);
+                                                echo render_input('office_person_number', 'Office Person Number', $office_person_number, '', ["minlength"=>10,"maxlength"=>10]);
                                             ?>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <?php
+                                                        $site_person = $challan_info->site_person;
+                                                        echo render_input('site_person', 'Site Person', $site_person);
+                                                    ?>
+                                                </div>
 
+                                                <div class="col-md-6">
+                                                    <?php
+                                                        $site_person_number = $challan_info->site_person_number;
+                                                        echo render_input('site_person_number', 'Site Person Number', $site_person_number, '', ["minlength"=>10,"maxlength"=>10]);
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>            
 
-                                        <div class="col-md-6">
-                                            <?php
-                                            $site_person = $challan_info->site_person;
-                                                echo render_input('site_person', 'Site Person', $site_person);
-                                            ?>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <?php
-                                            $site_person_number = $challan_info->site_person_number;
-                                                echo render_input('site_person_number', 'Site Person Number', $site_person_number);
-                                            ?>
-                                        </div>
+                                        
                                         <div class="form-group col-md-6">
                                             <label for="site_id" class="control-label"><?php echo _l('site_name'); ?></label>
                                             <select class="form-control selectpicker" name="site_id" id="site_id" data-live-search="true">

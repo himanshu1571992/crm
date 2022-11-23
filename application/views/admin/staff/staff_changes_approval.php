@@ -26,6 +26,17 @@
     background-color: red;
     color: #fff;
 }
+
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }     
 </style>
 <div id="wrapper">
     <div class="content accounting-template">
@@ -1116,7 +1127,7 @@
                         <hr/>
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-12 pull-right">
+                                <div class="col-md-12">
                                     <div class="form-group" app-field-wrapper="remark">
                                         <textarea id="remark" required="" name="remark" class="form-control" rows="6"><?php if(!empty($appvoal_info)){ echo $appvoal_info->remark; } ?></textarea>
                                     </div>

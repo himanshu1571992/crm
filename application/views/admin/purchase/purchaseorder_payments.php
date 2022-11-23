@@ -42,6 +42,7 @@
                                 $chk_invoice = $this->db->query("SELECT * FROM `tblpurchaseinvoice` WHERE `po_id`= '".$purchaseorder_info->id."' ")->row();
                                 $chk_payment_percent = $this->db->query("SELECT `value1` FROM `tbltermsandconditionsdetails` WHERE `master_id`= '1' AND `rel_id`= '".$purchaseorder_info->id."' AND `document_name` = 'purchase_order'")->row();
                                 $chk_payment_dispatch = $this->db->query("SELECT `value1` FROM `tbltermsandconditionsdetails` WHERE `master_id`= '2' AND `rel_id`= '".$purchaseorder_info->id."' AND `document_name` = 'purchase_order'")->row();
+                                $chk_vendor_bankinfo = $this->db->query("SELECT `account_no`,`ifsc` FROM `tblvendor` where id = '".$purchaseorder_info->vendor_id."'")->row();
                                 if (empty($chk_payment_percent) && !empty($chk_invoice) && !empty($chk_mr)){
                                     $btn_show = 1;
                                 }else if (!empty($chk_payment_percent) && !empty($chk_poproformainvoice)){
@@ -54,33 +55,37 @@
                                     
                                 ?>
                                 <div class="col-xs-12 col-md-6 text-right">
-                                  <?php
-                                  if ($btn_show == 1){
-                                      $percent = get_purchase_percent($purchaseorder_info->id, $purchaseorder_info->totalamount);
-                                      if($percent > 100){
-                                          $chk_refund_payment = $this->db->query("SELECT `id` FROM `tblpurchaseorderrefundpayment` WHERE `po_id` = '".$purchaseorder_info->id."' ")->row();
-                                          if (empty($chk_refund_payment)){
-                                  ?>
-                                          <a href="<?php echo admin_url('purchase/po_refund_request/' . $purchaseorder_info->id); ?>" class="btn btn-info">Refund</a>
-                                  <?php
-                                          }
-                                      }
-                                      if (isset($chk_pending_debitnote) && $chk_pending_debitnote->ttl_recd > 0){
-                                    ?>
-                                    <a href="<?php echo admin_url('purchase/po_debitnote_registered_add/' . $purchaseorder_info->id); ?>" class="btn btn-info">Add Debit Note Registered</a>
-                                        <?php } ?>
                                     <?php
-                                        $refundrequest = $this->db->query("SELECT `id` FROM `tblpurchaseorderrefundpayment` WHERE `po_id` != '".$purchaseorder_info->id."' AND `vendor_id`='".$purchaseorder_info->vendor_id."' AND `type`='2' AND `balance_amount` != '0.00' ")->row();
-                                        if (!empty($refundrequest)){
+                                        if (!empty($chk_vendor_bankinfo) && $chk_vendor_bankinfo->account_no != '' && $chk_vendor_bankinfo->ifsc != ''){
+                                            if ($btn_show == 1){
+                                                $percent = get_purchase_percent($purchaseorder_info->id, $purchaseorder_info->totalamount);
+                                                if($percent > 100){
+                                                    $chk_refund_payment = $this->db->query("SELECT `id` FROM `tblpurchaseorderrefundpayment` WHERE `po_id` = '".$purchaseorder_info->id."' ")->row();
+                                                    if (empty($chk_refund_payment)){
                                     ?>
-                                        <a href="<?php echo admin_url('purchase/po_payment_adjustment/' . $purchaseorder_info->id); ?>" class="btn btn-success">Adjust Last Payment</a>
-                                  <?php }else{ ?>
-                                        <a href="<?php echo admin_url('purchase/purchaseorder_payment_add/' . $purchaseorder_info->id); ?>" class="btn btn-info">Add Payment Request</a>
-                                  <?php } ?>
-                                  <?php 
-                                    }else{
-                                        echo '<span class="text-danger pull-right" style="font-size:15px;" >Can\'t Raise Payment Request</span>';
-                                    }
+                                                        <a href="<?php echo admin_url('purchase/po_refund_request/' . $purchaseorder_info->id); ?>" class="btn btn-info">Refund</a>
+                                    <?php
+                                                    }
+                                                }
+                                                if (isset($chk_pending_debitnote) && $chk_pending_debitnote->ttl_recd > 0){
+                                    ?>
+                                                    <a href="<?php echo admin_url('purchase/po_debitnote_registered_add/' . $purchaseorder_info->id); ?>" class="btn btn-info">Add Debit Note Registered</a>
+                                    <?php } ?>
+                                            <?php
+                                                $refundrequest = $this->db->query("SELECT `id` FROM `tblpurchaseorderrefundpayment` WHERE `po_id` != '".$purchaseorder_info->id."' AND `vendor_id`='".$purchaseorder_info->vendor_id."' AND `type`='2' AND `balance_amount` != '0.00' ")->row();
+                                                if (!empty($refundrequest)){
+                                            ?>
+                                                <a href="<?php echo admin_url('purchase/po_payment_adjustment/' . $purchaseorder_info->id); ?>" class="btn btn-success">Adjust Last Payment</a>
+                                        <?php }else{ ?>
+                                                <a href="<?php echo admin_url('purchase/purchaseorder_payment_add/' . $purchaseorder_info->id); ?>" class="btn btn-info">Add Payment Request</a>
+                                        <?php } ?>
+                                        <?php 
+                                            }else{
+                                                echo '<span class="text-danger pull-right" style="font-size:15px;" >Can\'t Raise Payment Request</span>';
+                                            }
+                                        }else{
+                                            echo '<span class="text-danger pull-right" style="font-size:20px;" >* Bank details of the Vendor are not taken from Vendor</span>';
+                                        }    
                                 ?>
                                 </div>
                                 

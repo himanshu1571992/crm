@@ -1,5 +1,25 @@
 <?php init_head(); ?>
-<style>.error{border:1px solid red !important;}#adminnote{margin: 0px 8.5px 0px 0px;width: 499px;height: 125px;}.red{border:1px solid red !important;background-color:red !important;color:#fff !important;}.yellow{border:1px solid yellow !important;background-color:yellow !important;color:black  !important;}.blue{border:1px solid blue !important;background-color:blue !important;color:#fff !important;}.green{border:1px solid green !important;background-color:green !important;color:#fff !important;}.orange{border:1px solid orange !important;background-color:orange !important;color:#fff !important;} .button3 {background-color: #800000;} .hold {background-color: #e8bb0b;}</style>
+<style>
+.error{border:1px solid red !important;}#adminnote{margin: 0px 8.5px 0px 0px;width: 499px;height: 125px;}.red{border:1px solid red !important;background-color:red !important;color:#fff !important;}.yellow{border:1px solid yellow !important;background-color:yellow !important;color:black  !important;}.blue{border:1px solid blue !important;background-color:blue !important;color:#fff !important;}.green{border:1px solid green !important;background-color:green !important;color:#fff !important;}.orange{border:1px solid orange !important;background-color:orange !important;color:#fff !important;} .button3 {background-color: #800000;} .hold {background-color: #e8bb0b;}
+.termsList{margin-top:8px;font-size:15px;text-transform: none;}
+.termsList > table {
+    border: double 5px;
+}
+.termsList > table > tbody >tr >td {
+    border: solid 2px;
+    padding: 15px;
+}
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}        
+</style>
 <input id="check_gst" type='hidden' value="0">
 <!-- Modal Contact -->
 <div class="modal fade" id="contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -543,8 +563,6 @@
                                 <button type="submit" name="submit" value="2" class="btn btn-danger mleft10 proposal-form-submit save-and-send transaction-submit">
                                     Reject
                                 </button>
-
-
                                <button type="submit" name="submit" value="1" class="btn btn-info mleft10 proposal-form-submit save-and-send transaction-submit">
                                     Approve
                                 </button>
@@ -739,7 +757,7 @@
 
                                 <input type="hidden" value="<?php echo $id;?>" name="id">
                                 <div class="row" style="margin-top:2%;padding:8px;">
-                                    <div class="col-md-12 pull-right">
+                                    <div class="col-md-12">
                                         <label class="col-md-6 control-label text-right">Approve/Reject Remark</label>
                                        <div class="form-group" app-field-wrapper="remark">
                                         <textarea id="remark" required="" name="remark" class="form-control" rows="4"><?php if(!empty($appvoal_info)){ echo $appvoal_info->remark; }?></textarea>
@@ -781,21 +799,23 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <div class="col-md-12">
-                            
-                            <?php 
-                                $html = '';
-                                if(!empty($purchase_info['specification'])){
-                                    $html .= '<h4 class="no-mtop mrg3"><u>Notes/Special Remarks :</u></h4><hr><div class="termsList">'.$purchase_info['specification'].'</div><br><br>';
+                            <div class="col-md-12">
+                        
+                                <?php 
+                                    $html = '';
+                                    if(!empty($purchase_info['specification'])){
+                                        $html .= '<h4 class="no-mtop mrg3"><u>Notes/Special Remarks :</u></h4><hr><div class="col-md-12 table-responsive" style="overflow-x: scroll"><div class="termsList">'.$purchase_info['specification'].'</div><br><br></div>';
 
-                                }
-                                if(!empty($purchase_info['product_terms_and_conditions'])){
-                                    $html .= '<h4 class="no-mtop mrg3"><u>Product Terms and Conditions:</u></h4><hr><div class="termsList">'.$purchase_info['product_terms_and_conditions'].'</div><br><br>';
-                                }
-                                $html .= '<h4 class="no-mtop mrg3"><u>General Terms and Conditions:</u></h4><hr><div class="termsList">'.getAllTermsConditions($purchase_info['id'], "purchase_order").'</div>';
-                                echo $html;
-                            ?>         
-                        </div>
+                                    }
+                                    if(!empty($purchase_info['product_terms_and_conditions'])){
+                                        $html .= '<h4 class="no-mtop mrg3"><u>Product Terms and Conditions:</u></h4><hr><div class="col-md-12 table-responsive" style="overflow-x: scroll"><div class="termsList">'.$purchase_info['product_terms_and_conditions'].'</div><br><br></div>';
+                                    }
+                                    $html .= '<h4 class="no-mtop mrg3"><u>General Terms and Conditions:</u></h4><hr><div class="termsList">'.getAllTermsConditions($purchase_info['id'], "purchase_order").'</div>';
+                                    echo $html;
+                                ?>  
+                                <br><br>     
+                            </div>
+                        
                         <div class="popayment_html">
 
                         </div>                                    

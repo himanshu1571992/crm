@@ -36,6 +36,24 @@ fieldset.for-panel p span.badge-success {
     color: #fff;
     background-color: #28a745;
 }
+.termsList{margin-top:8px;font-size:10px;text-transform: none;}
+.termsList > table {
+    border: double 5px;
+}
+.termsList > table > tbody >tr >td {
+    border: solid 2px;
+    padding: 10px;
+}
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
 </style>
 <div id="wrapper">
     <div class="content">
@@ -137,9 +155,13 @@ fieldset.for-panel p span.badge-success {
                                <div class="col-sm-6">
                                     <h4 class="control-label" style="color:red"> Note &nbsp; :</h4>
                                     <p class="form-control-static">
-                                        <?php 
-                                            echo (isset($creditnote_info) && !empty($creditnote_info->note)) ? $creditnote_info->note : "--";
-                                        ?>
+                                        <div class="col-md-12 table-responsive" style="overflow-x: scroll">
+                                            <div class="termsList">
+                                                <?php 
+                                                    echo (isset($creditnote_info) && !empty($creditnote_info->note)) ? $creditnote_info->note : "--";
+                                                ?>
+                                            </div>
+                                        </div>
                                     </p>
                                </div>
                            </div> 
@@ -150,74 +172,81 @@ fieldset.for-panel p span.badge-success {
                     <fieldset class="for-panel">
                         <legend>Client Person</legend>
                         <div class="col-sm-12">
-                            <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable1">
-                                <thead>
-                                    <tr>
-                                        <th width="10%"  align="center"><i class="fa fa-cog"></i></th>
-                                        <th width="20%" align="left"><?php echo _l('name'); ?></th>
-                                        <th width="20%" class="qty" align="left"><?php echo _l('email'); ?></th>
-                                        <th width="20%" align="left"><?php echo _l('number'); ?>	</th>
-                                        <th width="20%" align="left"><?php echo _l('designation'); ?>	</th>
-                                        <th width="20%" align="left"><?php echo _l('type'); ?>	</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="ui-sortable">
-                                    <?php
-                                    $i = 0;
-                                    foreach ($contactdata as $singlecontactdata) {
-                                        $i++;
-                                        ?>
-                                        <tr class="main" id="trcc<?php echo $i; ?>">
-                                            <td>
-                                                <div class="form-group" align="center"><?php echo $i; ?></div>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php echo $singlecontactdata['firstname']; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php echo $singlecontactdata['email']; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php echo $singlecontactdata['phonenumber']; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php echo value_by_id("tbldesignation", $singlecontactdata['designation_id'], "designation");?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php echo value_by_id("tblcontacttype", $singlecontactdata['contact_type'], "contact_type");?>
-                                                </div>
-                                            </td>
+                            <div class="table-responsive">
+                                <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable1">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%"  align="center"><i class="fa fa-cog"></i></th>
+                                            <th width="20%" align="left"><?php echo _l('name'); ?></th>
+                                            <th width="20%" class="qty" align="left"><?php echo _l('email'); ?></th>
+                                            <th width="20%" align="left"><?php echo _l('number'); ?>	</th>
+                                            <th width="20%" align="left"><?php echo _l('designation'); ?>	</th>
+                                            <th width="20%" align="left"><?php echo _l('type'); ?>	</th>
                                         </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>    
+                                    </thead>
+                                    <tbody class="ui-sortable">
+                                        <?php
+                                        $i = 0;
+                                        foreach ($contactdata as $singlecontactdata) {
+                                            $i++;
+                                            ?>
+                                            <tr class="main" id="trcc<?php echo $i; ?>">
+                                                <td>
+                                                    <div class="form-group" align="center"><?php echo $i; ?></div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <?php echo $singlecontactdata['firstname']; ?>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <?php echo $singlecontactdata['email']; ?>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <?php echo $singlecontactdata['phonenumber']; ?>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <?php echo value_by_id("tbldesignation", $singlecontactdata['designation_id'], "designation");?>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <?php echo value_by_id("tblcontacttype", $singlecontactdata['contact_type'], "contact_type");?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>    
+                            </div> 
                         </div> 
                     </fieldset>
                 </div>
-                   <?php 
-                    if(!empty($info) && ($info->approve_status == 0) && ($check_approval->count == 0)){
-                       ?>
-                       <div class="btn-bottom-toolbar bottom-transaction text-right">
-                          
-                           <button type="submit" name="submit" value="1" class="btn btn-info mleft10 proposal-form-submit save-and-send transaction-submit">
-                                Approve
-                            </button>
-                           <button type="submit" name="submit" value="2" class="btn btn-danger mleft10 proposal-form-submit save-and-send transaction-submit">
-                                Reject
-                            </button>
-                        </div> 
-                       <?php 
-                    }
-                    ?>
+                <div class="row">
+                    <div class="col-md-12">
+                        <?php 
+                            if(!empty($info) && ($info->approve_status == 0) && ($check_approval->count == 0)){
+                            ?>
+                            <div class="btn-bottom-toolbar bottom-transaction text-right">
+                                
+                                <button type="submit" name="submit" value="1" class="btn btn-info mleft10 proposal-form-submit save-and-send transaction-submit">
+                                        Approve
+                                    </button>
+                                <button type="submit" name="submit" value="2" class="btn btn-danger mleft10 proposal-form-submit save-and-send transaction-submit">
+                                        Reject
+                                    </button>
+                                </div> 
+                            <?php 
+                            }
+                        ?>
+                    </div>
+                </div>
+                   
             </div>
          </div>
       </div>
@@ -230,45 +259,47 @@ fieldset.for-panel p span.badge-success {
                     <fieldset class="for-panel">
                         <legend>Product Details</legend>
                         <div class="col-sm-12">
-                            <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable1">
-                                <thead>
-                                    <tr>
-                                        <td style="width: 5%;"><i class="fa fa-cog"></i></td>
-                                        <td style="width: 30%;">Description</td>
-                                        <td style="width: 10%;">SAC/HSN Code</td>                                                                                                   
-                                        <td style="width: 7%;">Rate</td>   
-                                        <td style="width: 7%;">Qty</td>                                                  
-                                        <td style="width: 7%;">Days</td>                                                  
-                                        <td style="width: 7%;">Tax %</td>
-                                        <td style="width: 10%;">Tax Amt</td>
-                                        <td style="width: 10%;"><?php echo _l('prop_pro_grand_total'); ?></td>
-                                    </tr>
-                                </thead>
-                                <tbody class="ui-sortable">
-                                    <?php
-                                        if (!empty($creditnote_product)) {
-                                            $i = 0;
-                                            $totsaleprod = count($creditnote_product);
-                                            foreach ($creditnote_product as $single_prod_sale_det) {
-                                                ?>
-                                                <tr class="trtrans<?php echo $i; ?>">
-                                                    <td><?php echo ++$i; ?></td>
-                                                    <td><?php echo cc($single_prod_sale_det['product_name']); ?></td>
-                                                    <td><?php echo $single_prod_sale_det['hsn_code']; ?></td>
-                                                    <td><?php echo $single_prod_sale_det['price']; ?></td>
-                                                    <td><?php echo $single_prod_sale_det['qty']; ?></td>														
-                                                    <td><?php echo $single_prod_sale_det['days']; ?></td>														
-                                                    <td><?php echo $single_prod_sale_det['prodtax']; ?></td>
-                                                    <td><?php echo $single_prod_sale_det['tax_amt']; ?></td>
-                                                    <td><?php echo ($single_prod_sale_det['price'] * $single_prod_sale_det['qty']) + $single_prod_sale_det['tax_amt']; ?></td>
-                                                </tr>
-                                                <?php
-                                                $i++;
+                            <div class="table-responsive">
+                                <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable1">
+                                    <thead>
+                                        <tr>
+                                            <td style="width: 5%;"><i class="fa fa-cog"></i></td>
+                                            <td style="width: 30%;">Description</td>
+                                            <td style="width: 10%;">SAC/HSN Code</td>                                                                                                   
+                                            <td style="width: 7%;">Rate</td>   
+                                            <td style="width: 7%;">Qty</td>                                                  
+                                            <td style="width: 7%;">Days</td>                                                  
+                                            <td style="width: 7%;">Tax %</td>
+                                            <td style="width: 10%;">Tax Amt</td>
+                                            <td style="width: 10%;"><?php echo _l('prop_pro_grand_total'); ?></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="ui-sortable">
+                                        <?php
+                                            if (!empty($creditnote_product)) {
+                                                $i = 0;
+                                                $totsaleprod = count($creditnote_product);
+                                                foreach ($creditnote_product as $single_prod_sale_det) {
+                                                    ?>
+                                                    <tr class="trtrans<?php echo $i; ?>">
+                                                        <td><?php echo ++$i; ?></td>
+                                                        <td><?php echo cc($single_prod_sale_det['product_name']); ?></td>
+                                                        <td><?php echo $single_prod_sale_det['hsn_code']; ?></td>
+                                                        <td><?php echo $single_prod_sale_det['price']; ?></td>
+                                                        <td><?php echo $single_prod_sale_det['qty']; ?></td>														
+                                                        <td><?php echo $single_prod_sale_det['days']; ?></td>														
+                                                        <td><?php echo $single_prod_sale_det['prodtax']; ?></td>
+                                                        <td><?php echo $single_prod_sale_det['tax_amt']; ?></td>
+                                                        <td><?php echo ($single_prod_sale_det['price'] * $single_prod_sale_det['qty']) + $single_prod_sale_det['tax_amt']; ?></td>
+                                                    </tr>
+                                                    <?php
+                                                    $i++;
+                                                }
                                             }
-                                        }
-                                        ?>
-                                </tbody>
-                            </table>    
+                                            ?>
+                                    </tbody>
+                                </table>
+                            </div>        
                         </div> 
                     </fieldset>
                 </div>
@@ -279,65 +310,67 @@ fieldset.for-panel p span.badge-success {
                             <fieldset class="for-panel">
                                 <legend>Other Charges</legend>
                                 <div class="col-sm-12">
-                                    <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable1">
-                                        <thead>
-                                            <tr>
-                                                <th width="5%"  align="center"><i class="fa fa-cog"></i></th>
-                                                <th width="30%" align="left"><?php echo _l('other_charges_cat_name'); ?></th>
-                                                <th width="10%" class="qty" align="left"><?php echo _l('other_charges_sac_code'); ?></th>
-                                                <th width="10%" align="left"><?php echo _l('amt'); ?>	</th>
-                                                <th width="20%" align="left">Tax</th>   
-                                                <th width="10%" align="left">Tax Amount </th> 
-                                                <th width="20%" align="left"><?php echo _l('total_amount'); ?>	</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="ui-sortable">
-                                            <?php
-                                            $othertotalcharges = 0;
-
-                                            $l = 0;
-                                            foreach ($creditnote_othercharges as $singlerentotherchargesp) {
-                                                $l++;
-                                                $othertotalcharges += $singlerentotherchargesp['amount'];
-                                                ?>
-                                                <tr id="tr<?php echo $l; ?>">
-                                                    <td align="center"><?php echo $l; ?></td>
-                                                    <td>
-                                                        <div class="form-group"> <?php echo value_by_id("tblotherchargemaster", $singlerentotherchargesp['category_name'], "category_name"); ?></div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <?php echo $singlerentotherchargesp['sac_code']; ?>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <?php echo $singlerentotherchargesp['amount']; ?>
-                                                        </div>
-                                                    </td>
-
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <?php echo $singlerentotherchargesp['igst']; ?>
-                                                        </div>
-                                                    </td>
-
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <?php echo $singlerentotherchargesp['gst_sgst_amt']; ?>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <?php echo $singlerentotherchargesp['total_maount']; ?>
-                                                        </div>
-                                                    </td>
+                                    <div class="table-responsive">
+                                        <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable1">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%"  align="center"><i class="fa fa-cog"></i></th>
+                                                    <th width="30%" align="left"><?php echo _l('other_charges_cat_name'); ?></th>
+                                                    <th width="10%" class="qty" align="left"><?php echo _l('other_charges_sac_code'); ?></th>
+                                                    <th width="10%" align="left"><?php echo _l('amt'); ?>	</th>
+                                                    <th width="20%" align="left">Tax</th>   
+                                                    <th width="10%" align="left">Tax Amount </th> 
+                                                    <th width="20%" align="left"><?php echo _l('total_amount'); ?>	</th>
                                                 </tr>
+                                            </thead>
+                                            <tbody class="ui-sortable">
                                                 <?php
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>    
+                                                $othertotalcharges = 0;
+
+                                                $l = 0;
+                                                foreach ($creditnote_othercharges as $singlerentotherchargesp) {
+                                                    $l++;
+                                                    $othertotalcharges += $singlerentotherchargesp['amount'];
+                                                    ?>
+                                                    <tr id="tr<?php echo $l; ?>">
+                                                        <td align="center"><?php echo $l; ?></td>
+                                                        <td>
+                                                            <div class="form-group"> <?php echo value_by_id("tblotherchargemaster", $singlerentotherchargesp['category_name'], "category_name"); ?></div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <?php echo $singlerentotherchargesp['sac_code']; ?>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <?php echo $singlerentotherchargesp['amount']; ?>
+                                                            </div>
+                                                        </td>
+
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <?php echo $singlerentotherchargesp['igst']; ?>
+                                                            </div>
+                                                        </td>
+
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <?php echo $singlerentotherchargesp['gst_sgst_amt']; ?>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <?php echo $singlerentotherchargesp['total_maount']; ?>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>    
+                                    </div> 
                                 </div> 
                             </fieldset>
                         <?php } ?>
@@ -350,7 +383,7 @@ fieldset.for-panel p span.badge-success {
                         <hr/>
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-12 pull-right">
+                                <div class="col-md-12">
                                     <div class="form-group" app-field-wrapper="remark">
                                         <textarea id="remark" required="" name="remark" class="form-control" rows="6"><?php if(!empty($info)){ echo $info->approvereason; } ?></textarea>
                                     </div>

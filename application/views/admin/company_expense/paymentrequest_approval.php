@@ -43,6 +43,17 @@ fieldset.for-panel p span.badge-success {
   margin-bottom: 0;
 }
 .hold {background-color: #e8bb0b;}
+
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}     
 </style>
 <div id="wrapper">
     <div class="content">

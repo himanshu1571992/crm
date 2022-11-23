@@ -35,6 +35,16 @@
 		margin-top:15px;
 	}
 
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
 </style>
 
 <div id="wrapper">
@@ -102,55 +112,53 @@
     </div>
 
     <div class="col-md-12">
-                                <div style="overflow-x:auto !important;">
-    <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable" style="margin-top:2%; !important">
-        <thead>
-            <tr>
-                <th width="5%"  align="center"><i class="fa fa-cog"></i></th>
-                <th width="35%" align="left">Product Name</th>
-                <th width="10%" align="left">Unit</th>
-                <th width="10%" align="left">Quantity</th>
-                <th width="20%" align="left">Product Images</th>
-                <th width="20%" align="left">Remarks</th>
-            </tr>
-        </thead>
-        <tbody class="ui-sortable">
-             <?php
-                 $prid = 0;
-                if (isset($requirement_products) && !empty($requirement_products)){
-                  foreach ($requirement_products as $value) {
-              ?>
-                    <tr class="main" id="tr<?php echo $prid; ?>">
-                       <td align="center"><?php echo ++$prid;?></td>
-                       <td><?php echo cc($value->product_name);?></td>
-                       <td><?php echo value_by_id("tblunitmaster", $value->unit, "name"); ?></td>
-                       <td><?php echo $value->quantity; ?></td>
-                       <td>
-                           <div class="form-group">
-                               <?php
-                                  $files_data = $this->db->query("SELECT * FROM `tblrequirement_productimages` WHERE `req_id`='".$value->req_id."' AND `reqpro_id`='".$value->id."' ")->result();
-                                  if (!empty($files_data)){
-                                     foreach ($files_data as $ky => $file) {
-                                ?>
-                                      <a href="<?php echo site_url('uploads/requirement_product/'.$file->image); ?>" target="_blank"><img style="border: 1px solid;" src="<?php echo site_url('uploads/requirement_product/'.$file->image); ?>" width="50" height="50"></a>
-                                <?php
-                                     }
-                                  }
-                               ?>
-                           </div>
-                       </td>
-                       <td><?php echo cc($value->remark); ?></td>
-                  </tr>
-              <?php
-                  }
-                }
-              ?>
-        </tbody>
-    </table></div></div>
-
-
-    
-
+        <div style="overflow-x:auto !important;">
+            <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myTable" style="margin-top:2%; !important">
+                <thead>
+                    <tr>
+                        <th width="5%"  align="center"><i class="fa fa-cog"></i></th>
+                        <th width="35%" align="left">Product Name</th>
+                        <th width="10%" align="left">Unit</th>
+                        <th width="10%" align="left">Quantity</th>
+                        <th width="20%" align="left">Product Images</th>
+                        <th width="20%" align="left">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody class="ui-sortable">
+                    <?php
+                        $prid = 0;
+                        if (isset($requirement_products) && !empty($requirement_products)){
+                        foreach ($requirement_products as $value) {
+                    ?>
+                            <tr class="main" id="tr<?php echo $prid; ?>">
+                            <td align="center"><?php echo ++$prid;?></td>
+                            <td><?php echo cc($value->product_name);?></td>
+                            <td><?php echo value_by_id("tblunitmaster", $value->unit, "name"); ?></td>
+                            <td><?php echo $value->quantity; ?></td>
+                            <td>
+                                <div class="form-group">
+                                    <?php
+                                        $files_data = $this->db->query("SELECT * FROM `tblrequirement_productimages` WHERE `req_id`='".$value->req_id."' AND `reqpro_id`='".$value->id."' ")->result();
+                                        if (!empty($files_data)){
+                                            foreach ($files_data as $ky => $file) {
+                                        ?>
+                                            <a href="<?php echo site_url('uploads/requirement_product/'.$file->image); ?>" target="_blank"><img style="border: 1px solid;" src="<?php echo site_url('uploads/requirement_product/'.$file->image); ?>" width="50" height="50"></a>
+                                        <?php
+                                            }
+                                        }
+                                    ?>
+                                </div>
+                            </td>
+                            <td><?php echo cc($value->remark); ?></td>
+                        </tr>
+                    <?php
+                        }
+                        }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <?php if (empty($appvoal_info) OR (!empty($appvoal_info) && $appvoal_info->approve_status == 5)){ ?>
@@ -224,7 +232,7 @@
           <hr/>
           <div class="col-md-12">
               <div class="row">
-                  <div class="col-md-12 pull-right">
+                  <div class="col-md-12">
                       <div class="form-group" app-field-wrapper="remark">
                           <textarea id="remark" required="" name="remark" class="form-control" rows="6"><?php
                               if (!empty($appvoal_info)) {

@@ -1,7 +1,18 @@
 <?php init_head(); ?>
 <style>.error{border:1px solid red !important;}#adminnote{margin: 0px 8.5px 0px 0px;width: 499px;height: 125px;}.red{border:1px solid red !important;background-color:red !important;color:#fff !important;}.yellow{border:1px solid yellow !important;background-color:yellow !important;color:black  !important;}.blue{border:1px solid blue !important;background-color:blue !important;color:#fff !important;}.green{border:1px solid green !important;background-color:green !important;color:#fff !important;}.orange{border:1px solid orange !important;background-color:orange !important;color:#fff !important;}</style>
 <!-- Modal Contact -->
-
+<style>
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }     
+</style>
 <div id="wrapper">
     <div class="content accounting-template">
         <a data-toggle="modal" id="modal" data-target="#myModal"></a>
@@ -372,41 +383,28 @@
                 </div>
             </div>
         </div>   
-           
-
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="no-mtop mrg3">Approve/Reject Remark</h4>
                             </div>
-
                             <hr/>
                             <div class="col-md-12">
-                               
-                                     <input type="hidden" value="<?php echo $id;?>" name="id">
+                                <input type="hidden" value="<?php echo $id;?>" name="id">
                                 <div class="row">
-                                    <div class="col-md-12 pull-right">
-                                       <div class="form-group" app-field-wrapper="remark">
-                                        <textarea id="remark" required="" name="remark" class="form-control" rows="4"><?php if(!empty($appvoal_info)){ echo $appvoal_info->approve_remark; } ?></textarea>
-                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group" app-field-wrapper="remark">
+                                            <textarea id="remark" required="" name="remark" class="form-control" rows="4"><?php if(!empty($appvoal_info)){ echo $appvoal_info->approve_remark; } ?></textarea>
+                                        </div>
                                     </div>
                                 </div>
-                                </div>
-                           
+                            </div>
                         </div>
-
                     </div>
-
-
                 </div>
             </div>  
-           
-
-            
-
             <?php echo form_close(); ?>
         </div>
         <div class="btn-bottom-pusher"></div>
