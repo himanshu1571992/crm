@@ -58,13 +58,10 @@
                                 ?>
                             </select>
                         </div>
-                        <div class="col-md-1">
-                        <button type="submit" style="margin-top: 25px;" class="btn btn-info">Search</button>
+                        <div class="col-md-2">
+                            <button type="submit" style="margin-top: 25px;" class="btn btn-info">Search</button>
+                            <a style="margin-top: 25px; margin-left: 5px;" class="btn btn-danger" href="">Reset</a>
                         </div>
-                        <div class="col-md-1">
-                         <a style="margin-top: 25px; margin-left: 5px;" class="btn btn-danger" href="">Reset</a>
-                        </div>
-
                     </div>
 
                         <div class="">

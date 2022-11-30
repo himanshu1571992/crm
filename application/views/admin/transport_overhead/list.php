@@ -7,7 +7,14 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h4 class="no-margin"> <?php echo $title; ?><a href="<?php echo admin_url('company_expense/transport_overhead_add'); ?>" class="btn btn-info pull-right" style="margin-top:-6px;">add Transport Overhead</a></h4>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <a href="<?php echo admin_url('company_expense/transport_overhead_add'); ?>" class="btn btn-info pull-right" style="margin-top:-6px;">add Transport Overhead</a>
+                            </div>
+                        </div>
                         <hr class="hr-panel-heading">
                         <div class="row">
                             <div class="">
@@ -65,8 +72,8 @@
                                                             <td><?php echo number_format($row->amount, 2,'.',','); ?></td>
                                                             <td><?php echo _d($row->created_at);?></td>
                                                             <td>
-                                                                <a href="<?php echo admin_url('company_expense/transport_overhead_add/'.$row->id); ?>" class="btn-sm btn-info">Edit</a>
-                                                                <a href="<?php echo admin_url('company_expense/transport_overhead_delete/'.$row->id); ?>" class="btn-sm btn-danger _delete">Delete</a>
+                                                                <a href="<?php echo admin_url('company_expense/transport_overhead_add/'.$row->id); ?>" class="btn btn-info">Edit</a>
+                                                                <a href="<?php echo admin_url('company_expense/transport_overhead_delete/'.$row->id); ?>" class="btn btn-danger _delete">Delete</a>
                                                             </td>
                                                         </tr>
                                             <?php

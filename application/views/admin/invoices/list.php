@@ -136,11 +136,9 @@ if(!empty($this->session->userdata('invoice_search'))){
 
 
 
-                        <div class="col-md-1">
-                        <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
-                        </div>
-                        <div class="col-md-1">
-                         <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
+                        <div class="col-md-2">
+                            <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
+                            <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
                         </div>
 
                     </div>
@@ -206,8 +204,8 @@ if(!empty($this->session->userdata('invoice_search'))){
                                 ?>
 
                                 <hr>
-                                <div class="table-responsive">
-                                <table class="table" id="newtable">
+                                <div class="table-responsive" style="overflow: auto;">
+                                    <table class="table " id="newtable">
                                     <thead>
                                       <tr>
                                         <th>S.No</th>
@@ -421,9 +419,6 @@ if(!empty($this->session->userdata('invoice_search'))){
                                   </table>
                                 </div>
                             </div>
-
-
-
                         </div>
 						 <!-- <div class="btn-bottom-toolbar text-right">
 								<button class="btn btn-info" value="1" name="mark" type="submit">

@@ -181,7 +181,7 @@
                 <hr class="hr-panel-heading">
             </div>
             <div class="col-md-12">
-                <div class="">
+                <div class="table-responsive">
                     <table class="table table-responsive" id="vendortable_<?php echo $value->id; ?>" style="margin-top:2%; !important">
                         <thead>
                             <tr>

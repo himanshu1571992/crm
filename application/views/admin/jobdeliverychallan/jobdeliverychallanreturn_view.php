@@ -2,7 +2,19 @@
 <style>.error{border:1px solid red !important;}#adminnote{margin: 0px 8.5px 0px 0px;width: 499px;height: 125px;}.red{border:1px solid red !important;background-color:red !important;color:#fff !important;}.yellow{border:1px solid yellow !important;background-color:yellow !important;color:black  !important;}.blue{border:1px solid blue !important;background-color:blue !important;color:#fff !important;}.green{border:1px solid green !important;background-color:green !important;color:#fff !important;}.orange{border:1px solid orange !important;background-color:orange !important;color:#fff !important;}</style>
 <input id="check_gst" type='hidden' value="0">
 <!-- Modal Contact -->
-
+<style>
+    
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}       
+</style>
 <div id="wrapper">
     <div class="content accounting-template">
         <a data-toggle="modal" id="modal" data-target="#myModal"></a>
@@ -345,16 +357,9 @@
                             </div>
                             </div>
                         </div>
-
                     </div>
-
-
                 </div>
-            </div>  
-           
-
-            
-
+            </div>                    
             <?php echo form_close(); ?>
             <?php $this->load->view('admin/invoice_items/item'); ?>
         </div>

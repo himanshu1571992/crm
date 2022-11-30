@@ -26,6 +26,8 @@ if(!empty($s_fdate) && !empty($s_tdate)){
                         <hr class="hr-panel-heading">
 
                         <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'attendance_form', 'class' => 'proposal-form')); ?>
+                        
+                        <div class="row">
                         <div class="form-group col-md-4">
                            <label for="staff_id" class="control-label">Employee Name</label>
                         
@@ -44,8 +46,6 @@ if(!empty($s_fdate) && !empty($s_tdate)){
                                 ?>
                             </select>
                         </div>
-                        <div class="row">
-
                             <div class="form-group col-md-3" app-field-wrapper="date">
                             <label for="f_date" class="control-label">From Date</label>
                             <div class="input-group date">

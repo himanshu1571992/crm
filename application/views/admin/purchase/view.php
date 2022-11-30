@@ -161,7 +161,7 @@
                                                     <div class="col-md-12">
                                                         <hr>
                                                     </div>
-                                                    <div class="col-md-12 table-responsive" style="overflow-x: scroll">
+                                                    <div class="col-md-12 table-responsive" style="overflow: scroll">
                                                         <table class="table" id="newtable" width="100%">
                                                             <thead>
                                                                 <tr>

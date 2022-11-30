@@ -48,10 +48,18 @@
   line-height: 1.428571429;
   border-radius: 15px;
 }
+
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}
 </style>
-
-
-
 
 
 <div id="wrapper">

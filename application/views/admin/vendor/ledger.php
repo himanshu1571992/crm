@@ -104,7 +104,16 @@
 		letter-spacing: 0.5px;
 		font-size: 14px;
 	}
-	
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%;
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%;
+        }
+    }
 </style>
 <div id="wrapper">
     <div class="content accounting-template">
@@ -186,6 +195,7 @@ if (isset($vendor_id) && !empty($vendor_id)){
                 <div class="col-md-12">
                     <div class="panel_s">
                         <div class="panel-body">
+                            <div class="table-responsive">
                             <table class="table details-table">
                                 <thead>
                                     <tr>
@@ -310,7 +320,7 @@ if (isset($vendor_id) && !empty($vendor_id)){
                                     }
                                 ?>
                             </table>
-                            
+                            </div> 
                             <table class="table details-table">
                                     <tfoot>
                                         <tr>

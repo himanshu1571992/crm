@@ -9,19 +9,19 @@
             <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'attendance_form', 'class' => 'proposal-form')); ?>
             <div class="col-md-12">
                 <div class="panel_s">
-
                     <div class="panel-body">
-
-                    <h4 class="no-margin"><?php echo $title; ?>  
-                    <?php if(check_permission_page(368,'create')){ ?>
-                    <a href="<?php echo admin_url('estimates/addConfirmOrderStatus'); ?>" class="btn btn-info pull-right" style="margin-top:-6px; "> Create New Status</a>
-                    <?php } ?>
-                 </h4>
-
-                    <hr class="hr-panel-heading">
-
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?> </h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page(368,'create')){ ?>
+                                    <a href="<?php echo admin_url('estimates/addConfirmOrderStatus'); ?>" class="btn btn-info pull-right" style="margin-top:-6px; "> Create New Status</a>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <hr class="hr-panel-heading">
                     <div>
-                    
                     <div >
                         <div class="row col-md-12">
                             <div class="col-md-3">

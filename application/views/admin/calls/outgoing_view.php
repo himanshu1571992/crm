@@ -38,14 +38,10 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-1">                            
+                                <div class="col-md-2">                            
                                     <button type="submit" style="margin-top: 25px;" class="btn btn-info">Search</button>
-                                </div>
-                                <div class="col-md-1">
                                     <a style="margin-top: 25px;" class="btn btn-danger" href="">Reset</a>
                                 </div>
-
-
                                 <div class="col-md-12 table-responsive">																
                                     <table class="table" id="newtable">
                                         <thead>
@@ -114,7 +110,7 @@
                                                     <?php
                                                 }
                                             } else {
-                                                echo '<tr><td class="text-center" colspan="6"><b>Call History are empty!</b></td></tr>';
+                                                echo '<tr><td class="text-center" colspan="8"><b>Call History are empty!</b></td></tr>';
                                             }
                                             ?>
                                         </tbody>

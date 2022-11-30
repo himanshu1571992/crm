@@ -118,7 +118,7 @@
                         <div class="row">
 
 
-                            <div class="col-md-12 table-responsive">																
+                            <div class="col-md-12 table-responsive" style="overflow: scroll;">																
                                 <table class="table" id="newtable">
                                     <thead>
                                         <tr>
@@ -226,11 +226,11 @@
 
 
                         </div>
-                        <div class="btn-bottom-toolbar text-right">
+                        <!-- <div class="btn-bottom-toolbar text-right">
                             <button class="btn btn-info" value="1" name="mark" type="submit">
-<?php echo _l('submit'); ?>
+                            <?php echo _l('submit'); ?>
                             </button>
-                        </div>
+                        </div> -->
                     </div>
 
                 </div>

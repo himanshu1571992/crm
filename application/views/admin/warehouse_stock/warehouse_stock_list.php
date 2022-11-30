@@ -40,12 +40,16 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h4 class="no-margin">
-                            <?php if(!empty($title)){ echo $title;}?>
-                            <a href="<?php echo admin_url('Stock/addstock'); ?>" class="btn btn-info mright5 test pull-right display-block">
-                                <?php echo _l('add_stock'); ?>
-                            </a>
-                        </h4>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php if(!empty($title)){ echo $title;}?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <a href="<?php echo admin_url('Stock/addstock'); ?>" class="btn btn-info mright5 test pull-right display-block">
+                                    <?php echo _l('add_stock'); ?>
+                                </a>
+                            </div>
+                        </div>
                         <hr class="hr-panel-heading">
                         <div class="row">
                             <div class="col-md-12 table-responsive">                                                             

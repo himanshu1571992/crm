@@ -9,16 +9,6 @@
     border: solid 2px;
     padding: 15px;
 }
-@media (max-width: 500px){
-    .btn-bottom-toolbar {
-        width: 100%
-    }
-}    
-@media (max-width: 768px){
-    .btn-bottom-toolbar {
-        width: 100%
-    }
-}        
 </style>
 <input id="check_gst" type='hidden' value="0">
 <!-- Modal Contact -->
@@ -563,6 +553,8 @@
                                 <button type="submit" name="submit" value="2" class="btn btn-danger mleft10 proposal-form-submit save-and-send transaction-submit">
                                     Reject
                                 </button>
+
+
                                <button type="submit" name="submit" value="1" class="btn btn-info mleft10 proposal-form-submit save-and-send transaction-submit">
                                     Approve
                                 </button>
@@ -757,7 +749,7 @@
 
                                 <input type="hidden" value="<?php echo $id;?>" name="id">
                                 <div class="row" style="margin-top:2%;padding:8px;">
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 pull-right">
                                         <label class="col-md-6 control-label text-right">Approve/Reject Remark</label>
                                        <div class="form-group" app-field-wrapper="remark">
                                         <textarea id="remark" required="" name="remark" class="form-control" rows="4"><?php if(!empty($appvoal_info)){ echo $appvoal_info->remark; }?></textarea>

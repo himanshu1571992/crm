@@ -11,15 +11,18 @@
                 <div class="panel_s">
 
                     <div class="panel-body">
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page(427,'create')){ ?>
+                                    <a href="<?php echo admin_url('store/sheet_cutting'); ?>" class="btn btn-info mright5 pull-right display-block" style="margin-top:-6px; "> Sheet Cutting </a>
 
-                    <h4 class="no-margin"><?php echo $title; ?>
-                    <?php if(check_permission_page(427,'create')){ ?>
-                        <a href="<?php echo admin_url('store/sheet_cutting'); ?>" class="btn btn-info mright5 pull-right display-block" style="margin-top:-6px; "> Sheet Cutting </a>
-
-                        <a href="<?php echo admin_url('store/store_cutting'); ?>" class="btn btn-info mright5 pull-right display-block" style="margin-top:-6px; "> Pipe Cutting </a>
-                    <?php } ?>    
-                    </h4>
-
+                                    <a href="<?php echo admin_url('store/store_cutting'); ?>" class="btn btn-info mright5 pull-right display-block" style="margin-top:-6px; "> Pipe Cutting </a>
+                                <?php } ?> 
+                            </div>
+                        </div>
                     <hr class="hr-panel-heading">
 
                     <div>

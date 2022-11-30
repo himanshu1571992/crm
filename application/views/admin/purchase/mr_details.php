@@ -91,7 +91,7 @@ if(!empty($purchaseorder_info)){
                                 $value = (isset($mr_info) ? $mr_info->adminnote : ''); ?>
                                 <div class="form-group" app-field-wrapper="adminnote">
                                     <label for="adminnote" class="control-label">Note</label>
-                                    <textarea id="adminnote" name="adminnote" style="height: 83px; width: 100%;" class="form-control" disabled="" rows="4"><?php echo $value; ?></textarea>
+                                    <textarea id="adminnote1" name="adminnote" class="form-control" disabled="" rows="4"><?php echo $value; ?></textarea>
                                 </div>
                                 <?php
                                 }
@@ -156,19 +156,22 @@ if(!empty($purchaseorder_info)){
                                             </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                        <?php 
+                                            if($mr_info->mr_for == 1){
+                                                $value = (isset($mr_info) ? $mr_info->adminnote : ''); ?>
+                                                <div class="form-group" app-field-wrapper="adminnote">
+                                                    <label for="adminnote" class="control-label">Note</label>
+                                                    <textarea id="adminnote1" name="adminnote"  class="form-control" disabled="" rows="4"><?php echo $value; ?></textarea>
+                                                </div>
+                                            <?php
+                                            }
+                                        ?>
+                                        </div>
                                     </div>
 
 
-                                    <?php 
-                                    if($mr_info->mr_for == 1){
-                                    $value = (isset($mr_info) ? $mr_info->adminnote : ''); ?>
-                                    <div class="form-group" app-field-wrapper="adminnote">
-                                        <label for="adminnote" class="control-label">Note</label>
-                                        <textarea id="adminnote" name="adminnote" style="height: 83px; width: 595px;" class="form-control" disabled="" rows="4"><?php echo $value; ?></textarea>
-                                    </div>
-                                    <?php
-                                    }
-                                    ?>
+                                    
 
                                     <div class="form-group">
                                        <h5>Attachment File</h5>

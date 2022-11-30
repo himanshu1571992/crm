@@ -126,7 +126,7 @@
                                                 $status_class = 'warning';
                                             }          
                                             $counts = $this->db->query("SELECT COUNT(*) as ttl_count FROM `tblsoftwaretask` WHERE `status`='".$status_value['id']."' ")->row()->ttl_count;
-                                            echo '<a href="javascript:void(0);" val="'.$status_value['id'].'" class="task_status btn-sm btn-'.$status_class.'">'.cc($status_value['name']).'
+                                            echo '<a href="javascript:void(0);" val="'.$status_value['id'].'" style="margin:2px;" class="task_status btn btn-'.$status_class.'">'.cc($status_value['name']).'
                                                     <span class="badge badge-danger badge-pill" style="background-color:red;color:#fff;">'.$counts.'</span>
                                                 </a>&nbsp;';
                                         }

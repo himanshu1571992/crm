@@ -45,10 +45,8 @@
                                 <!-- <div class="form-group col-md-2 float-right">
                                         <button class="form-control btn-info" type="submit" value="print">Search</button> 
                                 </div> -->
-                                <div class="col-md-1">                            
+                                <div class="col-md-2">                            
                                     <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
-                                </div>
-                                <div class="col-md-1">
                                     <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
                                 </div>
 
@@ -158,9 +156,6 @@
         } else {
             $("#salary_form").submit();
         }
-
-
-
     });
 </script> 
 

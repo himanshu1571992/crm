@@ -17,11 +17,16 @@
                     <div class="panel_s">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-md-12"><h4 class="no-margin"><?php echo $title; ?> </h4>
-                                <?php if(check_permission_page(357,'create')){ ?>
-                                <a href="<?php echo admin_url('productcategory/addmaterialgrade'); ?>" class="btn btn-info pull-right" style="margin-top:-6px; "> Add Material Grade</a>
-                                <?php } ?>
-                            </div>
+                                <div class="panelHead">
+                                    <div class="col-xs-12 col-md-6">
+                                        <h4><?php echo $title; ?></h4>
+                                    </div>
+                                    <div class="col-xs-12 col-md-6 text-right">
+                                        <?php if(check_permission_page(357,'create')){ ?>
+                                            <a href="<?php echo admin_url('productcategory/addmaterialgrade'); ?>" class="btn btn-info pull-right" style="margin-top:-6px; "> Add Material Grade</a>
+                                        <?php } ?>
+                                    </div>
+                                </div>
                             </div>	                   
                             <hr class="hr-panel-heading">
                             <div class="row">

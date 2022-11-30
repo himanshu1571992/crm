@@ -4,6 +4,17 @@
     .btn-bottom-toolbar{
         margin: 0 0 0 -25px;
     }
+
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}
 </style>
 
 <div id="wrapper">

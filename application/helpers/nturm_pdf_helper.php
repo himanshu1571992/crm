@@ -2220,7 +2220,7 @@ function nturm_ledger_pdf($data){
             <td>'.round($ttl_billing).'.00</td>
          </tr>
 		<tr>
-            <td>Total Recevied</td>
+            <td>Total Received</td>
             <td>'.round($grand_recevied).'.00</td>
          </tr>
          <tr>

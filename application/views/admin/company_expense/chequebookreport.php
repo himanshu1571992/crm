@@ -44,7 +44,8 @@
                     <hr class="hr-panel-heading">
                     <div class="row">
                         <div class="">
-                            <div class="col-md-12">                                                             
+                            <div class="col-md-12"> 
+                                <div class="table-responsive">
                                 <table class="table" id="example">
                                     <thead>
                                         <tr>
@@ -119,6 +120,8 @@
                                      
                                     </tbody>
                                   </table>
+                                </div>                                                            
+                                
                             </div>
                         
                         

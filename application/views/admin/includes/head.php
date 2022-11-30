@@ -50,6 +50,24 @@
                     taskid, taskTrackingStatsData, taskAttachmentDropzone, taskCommentAttachmentDropzone, leadAttachmentsDropzone, newsFeedDropzone, expensePreviewDropzone, taskTrackingChart, cfh_popover_templates = {}, _table_api;
         </script>
         <?php do_action('app_admin_head'); ?>
+        <style>
+            @media (max-width: 500px){
+                .btn-bottom-toolbar {
+                    width: 100%
+                }
+                .btn-bottom-toolbar .btn {
+                    margin-top: 5px !important;
+                }
+            }    
+            @media (max-width: 768px){
+                .btn-bottom-toolbar {
+                    width: 100%
+                }
+                .btn-bottom-toolbar .btn {
+                    margin-top: 5px !important;
+                }
+            }
+        </style>
     </head>
     <body <?php echo admin_body_class(isset($bodyclass) ? $bodyclass : ''); ?><?php
     if ($isRTL === 'true') {

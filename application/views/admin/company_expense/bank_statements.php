@@ -48,8 +48,15 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h4 class="no-margin col-md-11"><?php echo $title; ?></h4>
-                        <a href="<?php echo admin_url('company_expense/bankstatement_entries_list'); ?>" target="_blank" class="btn-sm btn-info">Bank Entries</a>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <a href="<?php echo admin_url('company_expense/bankstatement_entries_list'); ?>" target="_blank" class="btn-sm btn-info">Bank Entries</a>
+                            </div>
+                        </div>
+                        
                         <hr class="hr-panel-heading">
                         <div class="row">
                             <div class="col-md-4">
@@ -144,7 +151,8 @@
                                 </div>
                             </div>
                         </fieldset>-->
-                        <div class="col-md-12">                                                             
+                        <div class="col-md-12">
+                            <div class="table-responsive">
                             <table class="table" id="example">
                                 
                                 <thead>
@@ -268,6 +276,8 @@
                                 </tbody>
                                 <tfoot><tr><td colspan="3" align="center">Totals</td><td class="text-danger" align="center"><?php echo number_format($ttdebit_amt, 2, '.', ''); ?></td><td class="text-success" align="center"><?php echo number_format($ttcredit_amt, 2, '.', ''); ?></td><td></td></tr></tfoot>
                             </table>
+                            </div>                                                             
+                            
                         </div>
                     </div>    
                 </div>    

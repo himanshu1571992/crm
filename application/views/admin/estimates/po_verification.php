@@ -28,6 +28,17 @@ fieldset.for-panel legend {
     font-size: 16px;
     font-weight: bold;
 }
+
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}
 </style>
 <input id="check_gst" type='hidden' value="0">
 <!-- Modal Contact -->

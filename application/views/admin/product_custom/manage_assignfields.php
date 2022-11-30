@@ -9,11 +9,14 @@
                 <div class="panel_s">
 
                     <div class="panel-body">
-
-                    <h4 class="no-margin"><?php echo $title; ?> <?php if(check_permission_page(292,'create')){ ?> <a href="<?php echo admin_url('productcustom/assignfields'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Assign Field</a> <?php } ?></h4>
-
-
-
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                            <?php if(check_permission_page(292,'create')){ ?> <a href="<?php echo admin_url('productcustom/assignfields'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Assign Field</a> <?php } ?>
+                            </div>
+                        </div>
                     <hr class="hr-panel-heading">
                     <form method="post" enctype="multipart/form-data" action="">
 

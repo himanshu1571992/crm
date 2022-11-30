@@ -20,19 +20,20 @@ if(!empty($s_fdate) && !empty($s_tdate)){
                     <div class="panel-body">
                         <h4 class="no-margin"><?php echo $title; ?></h4>
                         <hr class="hr-panel-heading">
-                            <div class="form-group col-md-3" app-field-wrapper="date">
-                                <h4>Employee Name : </h3>
-                                <?php echo (isset($sales_report_info)) ? get_employee_fullname($sales_report_info->staff_id): "--"; ?>
-                            </div>
+                            
                             <div class="row">
                                 <div class="form-group col-md-3" app-field-wrapper="date">
-                                <h4>Date : </h3>
-                                <?php echo (isset($sales_report_info)) ? db_date($sales_report_info->salesdate) : date("d/m/Y"); ?>
-                            </div>
-                            <div class="form-group col-md-3" app-field-wrapper="date">
-                                <h4>Remark : </h3>
-                                <?php echo (isset($sales_report_info)) ? $sales_report_info->remark : "--"; ?>
-                            </div>
+                                    <h4>Employee Name : </h3>
+                                    <?php echo (isset($sales_report_info)) ? get_employee_fullname($sales_report_info->staff_id): "--"; ?>
+                                </div>
+                                <div class="form-group col-md-3" app-field-wrapper="date">
+                                    <h4>Date : </h3>
+                                    <?php echo (isset($sales_report_info)) ? db_date($sales_report_info->salesdate) : date("d/m/Y"); ?>
+                                </div>
+                                <div class="form-group col-md-3" app-field-wrapper="date">
+                                    <h4>Remark : </h3>
+                                    <?php echo (isset($sales_report_info)) ? $sales_report_info->remark : "--"; ?>
+                                </div>
                             
                             </div>
                         <br>

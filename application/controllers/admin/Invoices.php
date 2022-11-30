@@ -3261,7 +3261,7 @@ class Invoices extends Admin_controller
             $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."I".$siteheadingcol)->applyFromArray($styleArray);
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells("A$siteheadingcol:"."E".$siteheadingcol);
             $objPHPExcel->getActiveSheet()->SetCellValue("A".$siteheadingcol)->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');
-            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Total Recevied")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
+            $objPHPExcel->getActiveSheet()->SetCellValue("A$siteheadingcol", "Total Received")->getStyle("A$siteheadingcol:"."E".$siteheadingcol)->getAlignment()->setHorizontal('center');
 
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells("F$siteheadingcol:"."I".$siteheadingcol);
             $objPHPExcel->getActiveSheet()->SetCellValue("F".$siteheadingcol)->getStyle("F$siteheadingcol:"."I".$siteheadingcol)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFDBE2F1');

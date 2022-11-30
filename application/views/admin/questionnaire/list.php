@@ -117,36 +117,39 @@
                 <div class="panel_s">
 
                     <div class="panel-body">
-
-                        <h4 class="no-margin"><?php echo $title; ?>
-                        <?php if (check_permission_page(333,'view')){ ?>
-                        <a href="javascript:void(0)" data-toggle="modal" data-target="#addquestions" class="btn btn-info pull-right" style="margin-top:-6px; "> Add New Questions </a>
-                        <?php } ?>
-                        </h4>
-
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if (check_permission_page(333,'view')){ ?>
+                                    <a href="javascript:void(0)" data-toggle="modal" data-target="#addquestions" class="btn btn-info pull-right" style="margin-top:-6px; "> Add New Questions </a>
+                                <?php } ?>
+                            </div>
+                        </div>
                         <hr class="hr-panel-heading">
-
                         <div>
 
                             <div>
-                                <div class="col-md-4">
-                                    <div class="form-group" app-field-wrapper="status">
-                                        <label for="staff_id" class="control-label"> Employee Name</label>
-                                        <select class="form-control selectpicker" name="staff_id" id="staff_id" data-live-search="true">
-                                            <option value=""></option>
-                                            <?php
-                                            if (isset($staff_list)) {
-                                                foreach ($staff_list as $value) {
-                                                    ?>
-                                                    <option value="<?php echo $value->staffid; ?>" <?php echo (isset($staff_id) && $staff_id == $value->staffid) ? 'selected' : "" ?>><?php echo cc($value->firstname); ?></option>
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div> 
+                                 
                                 <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group" app-field-wrapper="status">
+                                            <label for="staff_id" class="control-label"> Employee Name</label>
+                                            <select class="form-control selectpicker" name="staff_id" id="staff_id" data-live-search="true">
+                                                <option value=""></option>
+                                                <?php
+                                                if (isset($staff_list)) {
+                                                    foreach ($staff_list as $value) {
+                                                        ?>
+                                                        <option value="<?php echo $value->staffid; ?>" <?php echo (isset($staff_id) && $staff_id == $value->staffid) ? 'selected' : "" ?>><?php echo cc($value->firstname); ?></option>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-md-2">
                                         <div class="form-group" app-field-wrapper="date">
                                             <label for="f_date" class="control-label">From Date</label>

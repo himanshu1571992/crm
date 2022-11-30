@@ -10,12 +10,16 @@
                 <div class="panel_s">
 
                     <div class="panel-body">
-
-                        <h4 class="no-margin"><?php echo $title; ?>  
-                        <?php if(check_permission_page(388,'create')){?>
-                        <a class="pull-right btn btn-info" href="<?php echo admin_url('staff_interview/addGeneralQuestion');?>"><i class="fa fa-plus"></i> Add General Question</a>
-                        <?php } ?>
-                    </h4>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page(388,'create')){?>
+                                    <a class="pull-right btn btn-info" href="<?php echo admin_url('staff_interview/addGeneralQuestion');?>"><i class="fa fa-plus"></i> Add General Question</a>
+                                <?php } ?>
+                            </div>
+                        </div>
                     <hr class="hr-panel-heading">
                     <div class="row">
                         <div class="col-md-12">

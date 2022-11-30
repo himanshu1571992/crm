@@ -157,7 +157,7 @@ $session_id = $this->session->userdata();
                                                         <?php
                                                             if ($row->payfile_done == 0 && $row->acceptance == 1) {
                                                                 ?>
-                                                                <a target="_blank" class="btn-sm btn-info" href="<?php echo admin_url('bank_payments/add?type=pay_request&id=' . $row->id); ?>">Pay File</a>
+                                                                <a target="_blank" class="btn btn-info" href="<?php echo admin_url('bank_payments/add?type=pay_request&id=' . $row->id); ?>">Pay File</a>
                                                                 <?php
                                                             } else {
                                                                 if (!empty($utr_no_info->utr_no)) {
@@ -1081,7 +1081,7 @@ $session_id = $this->session->userdata();
                                               <?php
                                               if ($row->payfile_done == 0 && $row->acceptance == 1) {
                                                   ?>
-                                                  <a target="_blank" class="btn-sm btn-info" href="<?php echo admin_url('bank_payments/add?type=employee_salary&id=' . $row->id); ?>">Pay File</a>
+                                                  <a target="_blank" class="btn btn-info" href="<?php echo admin_url('bank_payments/add?type=employee_salary&id=' . $row->id); ?>">Pay File</a>
                                                   <?php
                                               } else {
                                                   if (!empty($utr_no_info->utr_no)) {

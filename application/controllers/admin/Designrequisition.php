@@ -254,6 +254,7 @@ class Designrequisition extends Admin_controller
                                                 <td>Name</td>
                                                 <td>Action</td>
                                                 <td>Read At</td>
+                                                <td>Remark</td>
                                             </tr>
                                         </thead>
                                         <tbody>';

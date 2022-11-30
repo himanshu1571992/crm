@@ -30,7 +30,16 @@
         background:#51647c;
         color:#fff;
     }
-
+	@media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%;
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%;
+        }
+    }
 </style>
 
 
@@ -42,7 +51,12 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-					<h4 class="no-margin">Manage Salary <a href="<?php echo admin_url('salary/export_afterpaycash/'.$year.'/'.$month); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Export Unpaid Report</a></h4>
+						<div class="row panelHead">
+                            <div class="col-xs-12 col-md-6"><h4>Manage Salary</h4></div>   
+                            <div class="col-xs-12 col-md-6 text-right">
+                            	<a href="<?php echo admin_url('salary/export_afterpaycash/'.$year.'/'.$month); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Export Unpaid Report</a>
+                            </div>
+                        </div>
 					<hr class="hr-panel-heading">
 					
 					<div class="row">

@@ -240,7 +240,7 @@
 													<?php
 												}
 											}else{
-		                                        echo '<tr><td class="text-center" colspan="6"><h5>Record Not Found</h5></td></tr>';
+		                                        echo '<tr><td class="text-center" colspan="11"><h5>Record Not Found</h5></td></tr>';
 		                                    }
 											?>
 												

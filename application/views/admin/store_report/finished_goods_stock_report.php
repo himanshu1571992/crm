@@ -119,9 +119,9 @@
                                                 <?php
                                                     if ($value->material_status == 1){
                                                         if ($value->service_type == 1){
-                                                            echo '<a href="javascript:void(0)" data-stype="2" data-proqty="'.$value->qty.'" data-proname="'.cc($product_name).'" data-logid="'.$value->id.'"  class="btn-sm btn-info convertproduct">Convert To Sales</a>';
+                                                            echo '<a href="javascript:void(0)" data-stype="2" data-proqty="'.$value->qty.'" data-proname="'.cc($product_name).'" data-logid="'.$value->id.'" style="display: block ruby;" class="btn-sm btn-info convertproduct">Convert To Sales</a>';
                                                         }else if ($value->service_type == 2){
-                                                            echo '<a href="javascript:void(0)" data-stype="1" data-proqty="'.$value->qty.'" data-proname="'.cc($product_name).'" data-logid="'.$value->id.'" class="btn-sm btn-info convertproduct">Convert To Rent</a>';
+                                                            echo '<a href="javascript:void(0)" data-stype="1" data-proqty="'.$value->qty.'" data-proname="'.cc($product_name).'" data-logid="'.$value->id.'" style="display: block ruby;" class="btn-sm btn-info convertproduct">Convert To Rent</a>';
                                                         }
                                                     }else{
                                                         echo '--';

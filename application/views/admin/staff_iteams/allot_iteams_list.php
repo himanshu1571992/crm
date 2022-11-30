@@ -9,10 +9,12 @@
                 <div class="panel_s">
 
                     <div class="panel-body">
-
-                    <h4><?php echo $title; ?>
-                    <a href="<?php echo admin_url('staff_iteams/add_allot_iteams'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Allot Iteams</a></h4>
-                        
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6"><h4><?php echo $title; ?></h4></div>   
+                            <div class="col-xs-12 col-md-6 text-right">
+                            <a href="<?php echo admin_url('staff_iteams/add_allot_iteams'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Allot Iteams</a>
+                            </div>
+                        </div>
 
                     <hr class="hr-panel-heading">
 

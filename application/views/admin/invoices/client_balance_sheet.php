@@ -512,6 +512,7 @@ if (!empty($site_ids)) {
                                         <h3 class="text-center company-title">Client Deposit Details</h3>
                                         <div class="separator"><span></span></div>
                                     </div>
+                                    <div class="table-responsive">
                                     <table class="table details-table">
                                         <thead>
                                             <tr>
@@ -525,28 +526,28 @@ if (!empty($site_ids)) {
                                         <tbody>
                                             <?php
                                             foreach ($clientdeposits_info as $key => $deposit) {
-                                                if ($deposit->payment_mode == 1) {
-                                                    $mode = 'Cheque';
-                                                } else if ($deposit->payment_mode == 2) {
-                                                    $mode = 'NEFT';
-                                                } else if ($deposit->payment_mode == 3) {
-                                                    $mode = 'Cash';
-                                                }
-                                                ?>
-                                                <tr>
-                                                    <td><?php echo ++$key; ?></td>
-                                                    <td><?php echo _d($deposit->date); ?></td>
-                                                    <td><?php echo $mode; ?></td>
+                                                        if ($deposit->payment_mode == 1) {
+                                                            $mode = 'Cheque';
+                                                        } else if ($deposit->payment_mode == 2) {
+                                                            $mode = 'NEFT';
+                                                        } else if ($deposit->payment_mode == 3) {
+                                                            $mode = 'Cash';
+                                                        }
+                                                        ?>
+                                                        <tr>
+                                                            <td><?php echo ++$key; ?></td>
+                                                            <td><?php echo _d($deposit->date); ?></td>
+                                                            <td><?php echo $mode; ?></td>
 
-                                                    <td><?php echo value_by_id("tblbankmaster", $deposit->bank_id, "name"); ?></td>
-                                                    <td><?php echo $deposit->ttl_amt; ?></td>
-                                                </tr>
-                                        <?php
-                                    }
-                                    ?>
-
+                                                            <td><?php echo value_by_id("tblbankmaster", $deposit->bank_id, "name"); ?></td>
+                                                            <td><?php echo $deposit->ttl_amt; ?></td>
+                                                        </tr>
+                                                <?php
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
+                                    </div>
                                 <?php } ?>
 
 

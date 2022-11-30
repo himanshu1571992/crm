@@ -86,59 +86,60 @@ if($lead->client_branch_id > 0){
 
             <div class="col-md-12">  
 
-            <hr>    
-            <a href="<?php echo admin_url('proposals/proposal?rel_type=proposal&rel_id='.$lead_id); ?>" class="btn btn-info mbot25"><?php echo _l('new_proposal'); ?></a>                         
-                <table class="table" id="newtable">
-
-                  <thead>
-                    <tr>
-                      <th>S.No</th>
-                      <th>Quotation #</th>
-                      <th>Staff Name</th>
-                      <th>Customer</th>
-                      <th>Total Tax</th>                      
-                      <th>date</th>
-                      <th>Open Till</th>
-                      <th>Date Created</th>
-                      <th>Status</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                 <tbody>
-                  <?php
-                  $ttl_amt = 0;
-                  if(!empty($quotation_list)){
-                      foreach ($quotation_list as $key => $value) {
-                          $ttl_amt += $value->total;
-                      ?>
-                      <tr>
-                          <td><?php echo ++$key; ?></td>                                                
-                          <td><?php echo '<a href="' . admin_url('proposals/list_proposals/' . $value->id) . '"  target="_blank" ">' . format_proposal_number($value->id) . '</a>'; ?></td>
-                          <td><?php echo get_employee_name($value->addedfrom); ?></td>
-                          <td><?php echo cc($value->subject); ?></td>
-                          <td><?php echo $value->total_tax; ?></td>                                                               
-                          <td><?php echo _d($value->date); ?></td> 
-                          <td><?php echo _d($value->open_till); ?></td> 
-                          <td><?php echo _d($value->datecreated); ?></td> 
-                          <td><?php echo format_proposal_status($value->status); ?></td>  
-                          <td><?php echo $value->total; ?></td>                      
-                        </tr>
-                      <?php
-                      }
-                 }else{
-                    echo '<tr><td class="text-center" colspan="10"><h5>Record Not Found</h5></td></tr>';
-                  }
-                  ?>
-                   
-                  </tbody>
-                   <tfoot>
-                       <tr>
-                          <td colspan="9" class="text-center"><b>Total Amount</b></td>
-                          <td><b><?php echo $ttl_amt; ?></b></td>
-                        </tr>
-                  </tfoot>
-                  </table>
-              </div>
+                <hr>    
+                <a href="<?php echo admin_url('proposals/proposal?rel_type=proposal&rel_id='.$lead_id); ?>" class="btn btn-info mbot25"><?php echo _l('new_proposal'); ?></a>                         
+                <div class="table-responsive">    
+                    <table class="table" id="newtable">
+                        <thead>
+                            <tr>
+                            <th>S.No</th>
+                            <th>Quotation #</th>
+                            <th>Staff Name</th>
+                            <th>Customer</th>
+                            <th>Total Tax</th>                      
+                            <th>date</th>
+                            <th>Open Till</th>
+                            <th>Date Created</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $ttl_amt = 0;
+                        if(!empty($quotation_list)){
+                            foreach ($quotation_list as $key => $value) {
+                                $ttl_amt += $value->total;
+                            ?>
+                            <tr>
+                                <td><?php echo ++$key; ?></td>                                                
+                                <td><?php echo '<a href="' . admin_url('proposals/list_proposals/' . $value->id) . '"  target="_blank" ">' . format_proposal_number($value->id) . '</a>'; ?></td>
+                                <td><?php echo get_employee_name($value->addedfrom); ?></td>
+                                <td><?php echo cc($value->subject); ?></td>
+                                <td><?php echo $value->total_tax; ?></td>                                                               
+                                <td><?php echo _d($value->date); ?></td> 
+                                <td><?php echo _d($value->open_till); ?></td> 
+                                <td><?php echo _d($value->datecreated); ?></td> 
+                                <td><?php echo format_proposal_status($value->status); ?></td>  
+                                <td><?php echo $value->total; ?></td>                      
+                                </tr>
+                            <?php
+                            }
+                        }else{
+                            echo '<tr><td class="text-center" colspan="10"><h5>Record Not Found</h5></td></tr>';
+                        }
+                        ?>
+                        
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="9" class="text-center"><b>Total Amount</b></td>
+                                <td><b><?php echo $ttl_amt; ?></b></td>
+                                </tr>
+                        </tfoot>
+                    </table>
+                </div>    
+            </div>
 
 
                           

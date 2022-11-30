@@ -15,10 +15,14 @@
                 <div class="panel_s">
                     <div class="panel-body">
                         <div class="col-md-12">
-                            <h4 class="no-margin">
-                                <?php echo $title; ?>
-                                <a target="_blank" class="btn btn-info pull-right" href="<?php echo admin_url('store/add_cutting_products'); ?>">Add Cutting Product</a>
-                            </h4>
+                            <div class="row panelHead">
+                                <div class="col-xs-12 col-md-6">
+                                    <h4><?php echo $title; ?></h4>
+                                </div>
+                                <div class="col-xs-12 col-md-6 text-right">
+                                    <a target="_blank" class="btn btn-info pull-right" href="<?php echo admin_url('store/add_cutting_products'); ?>">Add Cutting Product</a>
+                                </div>
+                            </div>
                             <hr class="hr-panel-heading">
                         </div>
                     <div>
@@ -44,12 +48,12 @@
                                             $prohtml ='';
                                             $sub_products  = $this->db->query("SELECT `id`,`sub_name` FROM `tblproducts` WHERE id IN (".$value->sub_products_ids.")  ")->result();
                                             if (!empty($sub_products)){
-                                                $prohtml .= "<table class='table ui-table'><thead><tr><th>Sub Product List</th></tr></thead><tbody>";
+                                                $prohtml .= "<div class='table-responsive'><table class='table ui-table'><thead><tr><th>Sub Product List</th></tr></thead><tbody>";
                                                 foreach ($sub_products as $val) {
                                                     $productname = str_replace('"','&quot;', $val->sub_name);
                                                     $prohtml .= "<tr><td>".cc($productname)." ".product_code($val->id)."</td></li></tr>";
                                                 }
-                                                $prohtml .= "</tbody></table>";
+                                                $prohtml .= "</tbody></table></div>";
                                             }
                                     ?>
                                         <tr>
@@ -59,9 +63,9 @@
                                             <td><a target="_blank" href="<?php echo admin_url('product_new/view/'.$value->product_id);?>"><?php echo value_by_id("tblproducts", $value->product_id, "sub_name"); ?></a></td>
                                             <td><a target="_blank" href="<?php echo admin_url('product_new/view/'.$value->product_id);?>"><?php echo  product_code($value->product_id); ?></a> </td>
                                             <td>
-                                                <a  class="btn-sm btn-success" href="javascript:void(0);" data-html="true" data-container="body" data-toggle="popover" data-placement="left" data-content="<?php echo $prohtml; ?>">View</a>
-                                                <a class="btn-sm btn-info" href="<?php echo admin_url('store/add_cutting_products/'.$value->id); ?>">Edit</a>
-                                                <a  class="btn-sm btn-danger _delete" href="<?php echo admin_url('store/deleteCuttingProducts/'.$value->id); ?>" >Delete</a>
+                                                <a  class="btn btn-success" href="javascript:void(0);" data-html="true" data-container="body" data-toggle="popover" data-placement="left" data-content="<?php echo $prohtml; ?>">View</a>
+                                                <a class="btn btn-info" href="<?php echo admin_url('store/add_cutting_products/'.$value->id); ?>">Edit</a>
+                                                <a  class="btn btn-danger _delete" href="<?php echo admin_url('store/deleteCuttingProducts/'.$value->id); ?>" >Delete</a>
                                             </td>
                                           </tr>
                                         <?php

@@ -29,6 +29,22 @@
         background:#51647c;
         color:#fff;
     }
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+        .btn-bottom-toolbar .btn {
+            margin-top: 5px !important;
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+        .btn-bottom-toolbar .btn {
+            margin-top: 5px !important;
+        }
+    }
 </style>
 
 <div id="wrapper">

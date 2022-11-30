@@ -30,11 +30,17 @@
         background:#51647c;
         color:#fff;
     }
-
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%;
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%;
+        }
+    }
 </style>
-
-
-
 <div id="wrapper">
     <div class="content accounting-template">
 		 <div class="row">
@@ -70,13 +76,8 @@
 								<input id="date" required name="date" class="form-control datepicker" value="<?php echo (isset($s_date) && $s_date != "") ? $s_date : date('d/m/Y') ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
 							</div>
 						</div>
-						
-												
 					</div>
-					
                         <div class="row">
-						
-							
                             <div class="col-md-12">																
 								<table class="table ui-table">
 									<thead>

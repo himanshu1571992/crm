@@ -114,9 +114,9 @@
                                                             ?>    
                                                         </td>
                                                         <td>
-                                                            <a href="<?php echo admin_url('tds/add_tds_challan/'.$row->id);?>" class="btn-sm btn-primary">Edit</a>
-                                                            <a href="<?php echo admin_url('tds/view_tds_challan/'.$row->id);?>" class="btn-sm btn-success">View</a>
-                                                            <a href="<?php echo admin_url('tds/delete_tds_challan/'.$row->id);?>" class="btn-sm btn-danger _delete">Delete</a>
+                                                            <a href="<?php echo admin_url('tds/add_tds_challan/'.$row->id);?>" class="btn btn-primary">Edit</a>
+                                                            <a href="<?php echo admin_url('tds/view_tds_challan/'.$row->id);?>" class="btn btn-success">View</a>
+                                                            <a href="<?php echo admin_url('tds/delete_tds_challan/'.$row->id);?>" class="btn btn-danger _delete">Delete</a>
                                                         </td>
                                                     </tr>
                                             <?php

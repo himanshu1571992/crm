@@ -10,7 +10,14 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-					<h4 class="no-margin"><?php echo $title; ?>   <?php if(check_permission_page(155,'create')){ ?><span style="padding-left: 72%;"><a href="<?php  echo admin_url('reminder/add'); ?>" class="btn btn-info"><i class="fa fa-bell-o" aria-hidden="true"></i> Set New Reminder</a></span> <?php } ?></h4>
+						<div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+								<?php if(check_permission_page(155,'create')){ ?><span><a href="<?php  echo admin_url('reminder/add'); ?>" class="btn btn-info"><i class="fa fa-bell-o" aria-hidden="true"></i> Set New Reminder</a></span> <?php } ?>
+                            </div>
+                        </div>
 					<hr class="hr-panel-heading">
 					
 					<div class="row">
@@ -49,17 +56,10 @@
 							</div>
 						</div>
 						
-						<div class="col-md-1">
+						<div class="col-md-2">
 							<button style="margin-top: 24px;" class="btn btn-info" type="submit" value="print">Search</button>
-						</div>
-						<div class="col-md-1">
 							<a style="margin-top: 24px;" class="btn btn-danger" href="<?php echo admin_url('reminder');?>">Reset</a>
 						</div>
-
-
-
-
-
 						<div class="col-md-12 table-responsive">																
 								<table class="table">
 									<thead>

@@ -7,7 +7,14 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h4 class="no-margin"> <?php echo $title; ?><a href="<?php echo admin_url('company_expense/add_bankstatement_entries'); ?>" class="btn btn-info pull-right" style="margin-top:-6px;">add Bank Statement Entries</a></h4>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <a href="<?php echo admin_url('company_expense/add_bankstatement_entries'); ?>" class="btn btn-info pull-right" style="margin-top:-6px;">add Bank Statement Entries</a>
+                            </div>
+                        </div>
                         <hr class="hr-panel-heading">
                         <div class="row">
                             <div class="">
@@ -92,8 +99,8 @@
                                                             <td><?php echo number_format($row->amount, 2,'.',','); ?></td>
                                                             <td><?php echo (!empty($row->description)) ? cc($row->description) : 'n/a'; ?></td>
                                                             <td>
-                                                                <a href="<?php echo admin_url('company_expense/add_bankstatement_entries/'.$row->id); ?>" class="btn-sm btn-info">Edit</a>
-                                                                <a href="<?php echo admin_url('company_expense/delete_bankstatement_entries/'.$row->id); ?>" class="btn-sm btn-danger _delete">Delete</a>
+                                                                <a href="<?php echo admin_url('company_expense/add_bankstatement_entries/'.$row->id); ?>" class="btn btn-info"><i class="fa fa-edit"></i></a>
+                                                                <a href="<?php echo admin_url('company_expense/delete_bankstatement_entries/'.$row->id); ?>" class="btn btn-danger _delete"><i class="fa fa-trash"></i></a>
                                                             </td>
                                                         </tr>
                                             <?php

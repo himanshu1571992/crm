@@ -18,14 +18,16 @@
                 <div class="col-md-12">
                     <div class="panel_s">
                         <div class="panel-body">
-
-                            <div class="row">
-                                <div class="col-md-12"><h4 class="no-margin"><?php echo $title; ?> </h4>
-                                <?php if(check_permission_page(342,'create')){?>
-                                <a href="#" class="btn btn-info pull-right add-model" data-toggle="modal" data-target="#addModal" style="margin-top:-6px; "> Add New Complain Types</a>
-                                <?php } ?>
-                            </div>
-                            </div>	                   
+                            <div class="row panelHead">
+                                <div class="col-xs-12 col-md-6">
+                                    <h4><?php echo $title; ?> </h4>
+                                </div>
+                                <div class="col-xs-12 col-md-6 text-right">
+                                    <?php if(check_permission_page(342,'create')){?>
+                                        <a href="#" class="btn btn-info pull-right add-model" data-toggle="modal" data-target="#addModal" style="margin-top:-6px; "> Add New Complain Types</a>
+                                    <?php } ?>
+                                </div>
+                            </div>                   
 
                             <hr class="hr-panel-heading">
 

@@ -228,16 +228,16 @@ fieldset.for-panel p span.badge-success {
                                         $product_name = value_by_id("tbltemperoryproduct", $pdata->product_id, "product_name").temp_product_code($pdata->product_id);
                                     }
                                     echo '<div class="row">
-                                            <div class="col-sm-8">
-                                                <div class="form-horizontal">               
-                                                    <label class="col-xs-3 control-label" style="color:red;">'.$i++.') Product Name :</label>
-                                                        <p class="form-control-static '.$color.'">'.cc($product_name).'</p>                        
+                                            <div class="col-sm-6">
+                                                <div class="col-sm-12">               
+                                                    <label class="col-sm-3 control-label" style="color:red;">'.$i++.') Product Name :</label>
+                                                    <p class="col-sm-7 form-control-static '.$color.'">'.cc($product_name).'</p>                        
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4">
-                                                <div class="form-horizontal">               
-                                                    <label class="col-xs-5 control-label" style="color:red;"> Qty :</label>
-                                                    <p class="form-control-static"><span class="badge badge-success" style="font-size: 13px;padding: 6px 12px 6px 12px;">'.$pdata->qty.'</span></p>                       
+                                            <div class="col-sm-6">
+                                                <div class="col-sm-12">               
+                                                    <label class="col-sm-3 control-label" style="color:red;"> Qty :</label>
+                                                    <p class="col-sm-7 form-control-static"><span class="badge badge-success" style="font-size: 13px;padding: 6px 12px 6px 12px;">'.$pdata->qty.'</span></p>                       
                                                 </div>
                                             </div>
                                         </div>';

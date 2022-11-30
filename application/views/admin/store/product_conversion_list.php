@@ -11,13 +11,17 @@
                 <div class="panel_s">
 
                     <div class="panel-body">
-
-                    <h4 class="no-margin"><?php echo $title; ?>
-                    <?php if(check_permission_page(428,'create')){ ?>
-                        <a href="<?php echo admin_url('store/product_conversion'); ?>" class="btn btn-info pull-right" style="margin-top:-6px; margin-left:5px; "> Add Product Conversion </a>
-                    <?php } ?> 
-                    <a href="<?php echo admin_url('store/conversion_details_list'); ?>" target="_blank" class="btn btn-success pull-right" style="margin-top:-6px; "> Conversion Details </a>       
-                    </h4>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page(428,'create')){ ?>
+                                    <a href="<?php echo admin_url('store/product_conversion'); ?>" class="btn btn-info" style=" margin-left:5px; "> Add Product Conversion </a>
+                                <?php } ?> 
+                                <a href="<?php echo admin_url('store/conversion_details_list'); ?>" target="_blank" class="btn btn-success" > Conversion Details </a>       
+                            </div>
+                        </div>
 
                     <hr class="hr-panel-heading">
 

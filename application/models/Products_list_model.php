@@ -6,7 +6,7 @@ class Products_list_model extends CRM_Model {
 
     private $table_name = "tblproducts";
     var $column_order = array(null, 'name','id','unit_2','product_cat_id','photo','status','is_varified','created_at'); //set column field database for datatable orderable
-    var $column_search = array('name','id','unit_2','product_cat_id','photo','status','is_varified','created_at'); //set column field database for datatable searchable 
+    var $column_search = array('sub_name','id','unit_2','product_cat_id','photo','status','is_varified','created_at'); //set column field database for datatable searchable 
     var $order = array('id' => 'desc'); // default order 
 
     public function __construct() {

@@ -38,31 +38,28 @@
                             <div class="row panelHead">
                                 <div class="col-xs-12 col-md-6">
                                     <h4><?php echo $title;
-if (check_permission_page(43, 'create')) { ?></h4>
+                                            if (check_permission_page(43, 'create')) { ?></h4>
+                                </div>
+                                <div class="col-xs-12 col-md-6 text-right">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info text-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Create Material Receipt
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right toggle-menu">
+                                            <li>
+                                                <!-- <a target="_blank" href="<?php echo admin_url('purchase/material_receipt'); ?>">Against PO</a> -->
+                                                <a target="_blank" href="<?php echo admin_url('purchase/material_receipt_cash'); ?>">Cash MR</a>
+                                                <a target="_blank" href="<?php echo admin_url('purchase/material_receipt_gas'); ?>">Gas MR</a>
+                                                <a target="_blank" href="<?php echo admin_url('purchase/against_pending_po'); ?>">Against PO (Pending)</a>
+                                                <a target="_blank" href="<?php echo admin_url('purchase/deliverychallan_return'); ?>">Delivery Challan</a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <div class="col-xs-12 col-md-6 text-right">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-info text-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Create Material Receipt
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-right toggle-menu">
-                                                <li>
-                                                    <!-- <a target="_blank" href="<?php echo admin_url('purchase/material_receipt'); ?>">Against PO</a> -->
-                                                    <a target="_blank" href="<?php echo admin_url('purchase/material_receipt_cash'); ?>">Cash MR</a>
-                                                    <a target="_blank" href="<?php echo admin_url('purchase/material_receipt_gas'); ?>">Gas MR</a>
-                                                    <a target="_blank" href="<?php echo admin_url('purchase/against_pending_po'); ?>">Against PO (Pending)</a>
-                                                    <a target="_blank" href="<?php echo admin_url('purchase/deliverychallan_return'); ?>">Delivery Challan</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-<?php } ?>
+                                        <?php } ?>
                                 </div>
                             </div>
-
                             <hr class="hr-panel-heading">
-
                             <div class="row">
-
                                 <div class="form-group col-md-2">
                                     <label for="vendor_id" class="control-label">Select Vendor</label>
                                     <select class="form-control selectpicker vendor_id" data-live-search="true" id="vendor_id" name="vendor_id">
@@ -131,7 +128,7 @@ if (check_permission_page(43, 'create')) { ?></h4>
                                     <hr>
                                 </div>
 
-                                <div class="col-md-12 table-responsive">
+                                <div class="col-md-12 table-responsive" style="overflow: scroll;">
                                     <table class="table" id="newtable">
                                         <thead>
                                             <tr>

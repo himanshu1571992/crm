@@ -850,300 +850,340 @@ class Report_API extends CI_Controller {
     }
 
     /* This function use for client ledger api */
-    public function client_ledger($client_branch_id){
-        $branch = $this->db->query("SELECT * from tblclientbranch where userid = '".$client_branch_id."' order by client_branch_name asc")->row();
-        $client_branch = array();
-        
-        if(!empty($branch)){
-            $data['client_id'] = $branch->client_id;
-        }
-        $client_branch[] = $client_branch_id;
-        $data['client_branch'] = $client_branch;
-        $i = 0;
-        $order = 'asc';
-        $service_type = 2;
+    public function client_ledger(){
 
-        $grand_bal = $grand_recevied = $allinvoice_ids = $alldn_ids = $ttl_billing = 0;
-        $vendor_outstanding_amount = 0;
-        /*get vendor outstanding amount if client have as vendor also */            
-        $vendordata = $this->db->query("SELECT GROUP_CONCAT(vendor_id) as vendor_ids FROM `tblclientbranch` WHERE `userid` IN (".$client_branch_id.") ")->row();
-        $vendorids_str = (!empty($vendordata)) ? $vendordata->vendor_ids : 0;
-        if ($vendorids_str > 0){
-            $vendor_outstanding_amount = get_vendor_ledger_amount($vendorids_str);
+        if(!empty($_GET))
+        {
+            extract($this->input->get());   
         }
-        $output_arr = array();
-        $site_info = $this->db->query("SELECT i.site_id, s.name FROM tblinvoices as  i LEFT JOIN tblsitemanager as s ON i.site_id = s.id where i.clientid = '".$client_branch_id."' and i.site_id > 0  GROUP By i.site_id ORDER by i.id DESC")->result();
-        if(!empty($site_info)){
-            foreach ($site_info as $r) {
-                $i++;
-                $site_id = $r->site_id;
-                $site_name = $r->name;
-                $site_info = $this->db->query("SELECT * FROM tblsitemanager where id = '".$site_id."' ")->row();
-                $ttl_bal = 0;
-                $ttl_recv = 0;
-                $ttl_amt = 0;
-                $ttl_tds = 0;
-                $parent_ids = 0;
-                $invoice_data = array();
-                $parent_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$client_branch_id.") and site_id = '".$site_id."' and service_type = '".$service_type."' and parent_id = '0' and status != '5' order by date ".$order." ")->result();
-                if (!empty($parent_invoice)){
-                    
-                    foreach ($parent_invoice as $parent) {
-                        $parent_ids .= ','.$parent->id;
-						$allinvoice_ids .= ','.$parent->id;
-                        $due_days= due_days($parent->payment_due_date);
+        elseif(!empty($_POST)) 
+        {
+            extract($this->input->post());
+        }
+
+        if(!empty($client_branch_id)){
+            $branch = $this->db->query("SELECT * from tblclientbranch where userid = '".$client_branch_id."' order by client_branch_name asc")->row();
+            $client_branch = array();
+            
+            if(!empty($branch)){
+                $data['client_id'] = $branch->client_id;
+            }
+            $client_branch[] = $client_branch_id;
+            $data['client_branch'] = $client_branch;
+            $i = 0;
+            $order = 'asc';
+            $service_type = 2;
+
+            $grand_bal = $grand_recevied = $allinvoice_ids = $alldn_ids = $ttl_billing = 0;
+            $vendor_outstanding_amount = 0;
+            /*get vendor outstanding amount if client have as vendor also */            
+            $vendordata = $this->db->query("SELECT GROUP_CONCAT(vendor_id) as vendor_ids FROM `tblclientbranch` WHERE `userid` IN (".$client_branch_id.") ")->row();
+            $vendorids_str = (!empty($vendordata)) ? $vendordata->vendor_ids : 0;
+            if ($vendorids_str > 0){
+                $vendor_outstanding_amount = get_vendor_ledger_amount($vendorids_str);
+            }
+            $output_arr = array();
+            $site_info = $this->db->query("SELECT i.site_id, s.name FROM tblinvoices as  i LEFT JOIN tblsitemanager as s ON i.site_id = s.id where i.clientid = '".$client_branch_id."' and i.site_id > 0  GROUP By i.site_id ORDER by i.id DESC")->result();
+            if(!empty($site_info)){
+                foreach ($site_info as $r) {
+                    $i++;
+                    $site_id = $r->site_id;
+                    $site_name = $r->name;
+                    $site_info = $this->db->query("SELECT * FROM tblsitemanager where id = '".$site_id."' ")->row();
+                    $ttl_bal = 0;
+                    $ttl_recv = 0;
+                    $ttl_amt = 0;
+                    $ttl_tds = 0;
+                    $parent_ids = 0;
+                    $invoice_data = array();
+                    $parent_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$client_branch_id.") and site_id = '".$site_id."' and service_type = '".$service_type."' and parent_id = '0' and status != '5' order by date ".$order." ")->result();
+                    if (!empty($parent_invoice)){
                         
-                        $received = invoice_received($parent->id);
-                        $received_tds = invoice_tds_received($parent->id);
-                        $bal_amt = ($parent->total - $received - $received_tds);
-
-                        $ttl_recv += $received;
-                        $ttl_tds += $received_tds;
-                        $ttl_amt += $parent->total;
-                        $ttl_bal += $bal_amt;
-                        $grand_bal += $bal_amt;
-                        $ttl_billing += $parent->total;
-
-                        $payment_info = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date, p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '2' and p.invoiceid = '".$parent->id."' and cp.status = 1 order by p.id asc ")->result();
-
-                        // IF there is only one recored of payment which is made by cheque and cheque is not clear
-                        if(count($payment_info) == 1){
-                            if($payment_info[0]->payment_mode == 1 && $payment_info[0]->chaque_status != 1){
-                                $payment_info = '';
-                            }
-                        }
-                        //Getting site person
-                        $person_info = invoice_contact_person($parent->id);
-                        $delivery_data = $this->get_delivery_info($parent->challan_id);
-                        if(!empty($payment_info)){
-                            $j = 0;
-                            foreach ($payment_info as  $r1) {
-
-                                $to_see = ($r1->payment_mode == 1 && $r1->chaque_status != 1) ? '0' : '1';
-
-                                if($to_see == 1){
-                                    $ref_no = value_by_id('tblclientpayment',$r1->pay_id,'reference_no');
-                                    $receipt_date = $r1->date;
-                                    if($r1->payment_mode == 1 && $r1->chaque_status == 1 && !empty($r1->chaque_clear_date)){
-                                        $receipt_date = $r1->chaque_clear_date;
-                                    }
-                                    if($r1->amount >= $parent->total){
-                                        $due_days = 'PAID';
-                                    }elseif($parent->payment_due_date > date("Y-m-d")){
-                                        $due_days = 0;
-                                    }
-                                    
-                                    $invoice_data[] = array(
-                                        "invoice_number" => $parent->number,
-                                        "r_type" => "INV",
-                                        "invoice_date" => $parent->invoice_date,
-                                        "invoice_amount" => ($j == 0) ? $parent->total : '--',
-                                        "total_recd" => ($j == 0) ? strval($received) : '--',
-                                        "payment_recd" => $r1->amount,
-                                        "tds" => $r1->paid_tds_amt,
-                                        "balance" => ($j == 0) ? number_format($bal_amt, 2) : '--',
-                                        "receipt_date" => ($r1->amount > 0) ? _d($receipt_date) : '--',
-                                        "ref_detail" => $ref_no,
-                                        "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
-                                        "due_days" => ($j == 0) ? $due_days : 0,
-                                        "delivery_date" => $delivery_data["delivery_date"],
-                                        "delivery_status" => $delivery_data["delivery_status"],
-                                    );
-                                    $j++;
-                                }
-                            }
-                        }else{
-                            $invoice_data[] = array(
-                                "invoice_number" => $parent->number,
-                                "r_type" => "INV",
-                                "invoice_date" => $parent->invoice_date,
-                                "invoice_amount" => $parent->total,
-                                "total_recd" => '0.00',
-                                "payment_recd" => '0.00',
-                                "tds" => '--',
-                                "balance" => number_format($bal_amt, 2),
-                                "receipt_date" => '--',
-                                "ref_detail" => '--',
-                                "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
-                                "due_days" => $due_days,
-                                "delivery_date" => $delivery_data["delivery_date"],
-                                "delivery_status" => $delivery_data["delivery_status"],
-                            );
-                        }
-                        /* get child invoice */
-                        $child_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$client_branch_id.") and site_id = '".$site_id."' and service_type = '".$service_type."' and parent_id = '".$parent->id."' and status != '5' order by date ".$order." ")->result();
-                        if(!empty($child_invoice)){
-                            foreach ($child_invoice as $child) {
-                                $allinvoice_ids .= ','.$child->id;
-                                $due_days = due_days($child->payment_due_date);
-
-                                $received = invoice_received($child->id);
-                                $received_tds = invoice_tds_received($child->id);
-                                $bal_amt = ($child->total - $received - $received_tds);
-
-                                $ttl_recv += $received;
-                                $ttl_tds += $received_tds;
-                                $ttl_amt += $child->total;
-                                $ttl_bal += $bal_amt;
-                                $grand_bal += $bal_amt;
-                                $ttl_billing += $child->total;
-
-                                $child_payment_info = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '2' and p.invoiceid = '".$child->id."' and cp.status = 1 order by p.id asc ")->result();
-
-                                // IF there is only one recored of payment which is made by cheque and cheque is not clear
-                                if(count($child_payment_info) == 1){
-                                    if($child_payment_info[0]->payment_mode == 1 && $child_payment_info[0]->chaque_status != 1){
-                                        $child_payment_info = '';
-                                    }
-                                }
-
-                                //Getting site person
-                                $person_info = invoice_contact_person($child->id);
-                                $delivery_data = $this->get_delivery_info($child->challan_id);
-                                if(!empty($child_payment_info)){
-                                    $j = 0;
-                                    $lastChildInvoiceId = 0;
-		                            foreach ($child_payment_info as  $r2) {
-                                        $to_see = ($r2->payment_mode == 1 && $r2->chaque_status != 1) ? '0' : '1';
-                                        if($to_see == 1){
-                                            $ref_no = value_by_id('tblclientpayment',$r2->pay_id,'reference_no');
-
-                                            $receipt_date = $r2->date;
-                                            if($r2->payment_mode == 1 && $r2->chaque_status == 1 && !empty($r2->chaque_clear_date)){
-                                                $receipt_date = $r2->chaque_clear_date;
-                                            }
-                                            if($r2->amount >= $child->total){
-                                                $due_days = 'PAID';
-                                            }elseif($child->payment_due_date > date("Y-m-d")){
-                                                $due_days = 0;
-                                            }
-                                            $invoice_data[] = array(
-                                                "invoice_number" => $child->number,
-                                                "r_type" => "INV",
-                                                "invoice_date" => $child->invoice_date,
-                                                "invoice_amount" => ($j == 0) ? $child->total : '--',
-                                                "total_recd" => ($j == 0) ? strval($received) : '--',
-                                                "payment_recd" => $r2->amount,
-                                                "tds" => $r2->paid_tds_amt,
-                                                "balance" => ($j == 0) ? number_format($bal_amt, 2) : '--',
-                                                "receipt_date" => ($r2->amount > 0) ? _d($receipt_date) : '--',
-                                                "ref_detail" => $ref_no,
-                                                "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
-                                                "due_days" => ($j == 0) ? $due_days : 0,
-                                                "delivery_date" => $delivery_data["delivery_date"],
-                                                "delivery_status" => $delivery_data["delivery_status"],
-                                            );
-                                            $lastChildInvoiceId = $child->id;
-											$j++;
-                                        }else{
-                                            if($child->id != $lastChildInvoiceId){
-                                                $invoice_data[] = array(
-                                                    "invoice_number" => $child->number,
-                                                    "r_type" => "INV",
-                                                    "invoice_date" => $child->invoice_date,
-                                                    "invoice_amount" => $child->total,
-                                                    "total_recd" => '0.00',
-                                                    "payment_recd" => '0.00',
-                                                    "tds" => '--',
-                                                    "balance" => number_format($bal_amt, 2),
-                                                    "receipt_date" => '--',
-                                                    "ref_detail" => '--',
-                                                    "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
-                                                    "due_days" => $due_days,
-                                                    "delivery_date" => $delivery_data["delivery_date"],
-                                                    "delivery_status" => $delivery_data["delivery_status"],
-                                                );
-                                            }
-                                            $lastChildInvoiceId = $child->id;
-                                        }
-                                    }
-                                }else{
-                                    $invoice_data[] = array(
-                                        "invoice_number" => $child->number,
-                                        "r_type" => "INV",
-                                        "invoice_date" => $child->invoice_date,
-                                        "invoice_amount" => $child->total,
-                                        "total_recd" => '0.00',
-                                        "payment_recd" => '0.00',
-                                        "tds" => '--',
-                                        "balance" => number_format($bal_amt, 2),
-                                        "receipt_date" => '--',
-                                        "ref_detail" => '--',
-                                        "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
-                                        "due_days" => $due_days,
-                                        "delivery_date" => $delivery_data["delivery_date"],
-                                        "delivery_status" => $delivery_data["delivery_status"],
-                                    );
-                                }
-                            }
-                        }
-                    }
-
-                    //Getting Debit Notes againt parent invoice
-                    $debit_note_info = $this->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by dabit_note_date ".$order." ")->result();
-                    if(!empty($debit_note_info)){
-                        foreach ($debit_note_info as $debitnote) {
-                            $alldn_ids .= ','.$debitnote->id;
-
-                            $received = debitnote_received($debitnote->number);
-                            $received_tds = debitnote_tds_received($debitnote->number);
-                            $bal_amt = ($debitnote->totalamount - $received - $received_tds);
+                        foreach ($parent_invoice as $parent) {
+                            $parent_ids .= ','.$parent->id;
+                            $allinvoice_ids .= ','.$parent->id;
+                            $due_days= due_days($parent->payment_due_date);
+                            
+                            $received = invoice_received($parent->id);
+                            $received_tds = invoice_tds_received($parent->id);
+                            $bal_amt = ($parent->total - $received - $received_tds);
 
                             $ttl_recv += $received;
                             $ttl_tds += $received_tds;
-                            $ttl_amt += $debitnote->totalamount;
+                            $ttl_amt += $parent->total;
                             $ttl_bal += $bal_amt;
                             $grand_bal += $bal_amt;
-                            $ttl_billing += $debitnote->totalamount;
-                            $debitnote_payment = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '3' and p.debitnote_no = '".$debitnote->number."' and cp.status = 1 order by p.id asc ")->result();
+                            $ttl_billing += $parent->total;
+
+                            $payment_info = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date, p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '2' and p.invoiceid = '".$parent->id."' and cp.status = 1 order by p.id asc ")->result();
 
                             // IF there is only one recored of payment which is made by cheque and cheque is not clear
-                            if(count($debitnote_payment) == 1){
-                                if($debitnote_payment[0]->payment_mode == 1 && $debitnote_payment[0]->chaque_status != 1){
-                                    $debitnote_payment = '';
+                            if(count($payment_info) == 1){
+                                if($payment_info[0]->payment_mode == 1 && $payment_info[0]->chaque_status != 1){
+                                    $payment_info = '';
                                 }
                             }
-                            if(!empty($debitnote_payment)){
+                            //Getting site person
+                            $person_info = invoice_contact_person($parent->id);
+                            $delivery_data = $this->get_delivery_info($parent->challan_id);
+                            if(!empty($payment_info)){
                                 $j = 0;
-                                foreach ($debitnote_payment as  $r3) {
-                                    $to_see = ($r3->payment_mode == 1 && $r3->chaque_status != 1) ? '0' : '1';
-                                    if($to_see == 1){    
+                                foreach ($payment_info as  $r1) {
 
-                                        $ref_no = value_by_id('tblclientpayment',$r3->pay_id,'reference_no');
-                                        $receipt_date = _d($r3->date);
-                                        if($r3->payment_mode == 1 && $r3->chaque_status == 1 && !empty($r3->chaque_clear_date)){
-                                            $receipt_date = _d($r3->chaque_clear_date);
+                                    $to_see = ($r1->payment_mode == 1 && $r1->chaque_status != 1) ? '0' : '1';
+
+                                    if($to_see == 1){
+                                        $ref_no = value_by_id('tblclientpayment',$r1->pay_id,'reference_no');
+                                        $receipt_date = $r1->date;
+                                        if($r1->payment_mode == 1 && $r1->chaque_status == 1 && !empty($r1->chaque_clear_date)){
+                                            $receipt_date = $r1->chaque_clear_date;
                                         }
-
+                                        if($r1->amount >= $parent->total){
+                                            $due_days = 'PAID';
+                                        }elseif($parent->payment_due_date > date("Y-m-d")){
+                                            $due_days = 0;
+                                        }
+                                        
                                         $invoice_data[] = array(
-                                            "invoice_number" => $debitnote->number,
-                                            "r_type" => "DN",
-                                            "invoice_date" => $debitnote->dabit_note_date,
-                                            "invoice_amount" => ($j == 0) ? $debitnote->totalamount : '--',
+                                            "invoice_number" => $parent->number,
+                                            "r_type" => "INV",
+                                            "invoice_date" => $parent->invoice_date,
+                                            "invoice_amount" => ($j == 0) ? $parent->total : '--',
                                             "total_recd" => ($j == 0) ? strval($received) : '--',
-                                            "payment_recd" => $r3->amount,
-                                            "tds" => $r3->paid_tds_amt,
+                                            "payment_recd" => $r1->amount,
+                                            "tds" => $r1->paid_tds_amt,
                                             "balance" => ($j == 0) ? number_format($bal_amt, 2) : '--',
-                                            "receipt_date" => $receipt_date,
+                                            "receipt_date" => ($r1->amount > 0) ? _d($receipt_date) : '--',
                                             "ref_detail" => $ref_no,
-                                            "contact_person" => '--',
-                                            "due_days" => 0,
-                                            "delivery_date" => '--',
-                                            "delivery_status" => '--',
+                                            "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
+                                            "due_days" => ($j == 0) ? $due_days : 0,
+                                            "delivery_date" => $delivery_data["delivery_date"],
+                                            "delivery_status" => $delivery_data["delivery_status"],
                                         );
                                         $j++;
                                     }
                                 }
                             }else{
                                 $invoice_data[] = array(
-                                    "invoice_number" => $debitnote->number,
-                                    "r_type" => "DN",
-                                    "invoice_date" => $debitnote->dabit_note_date,
-                                    "invoice_amount" => $debitnote->totalamount,
+                                    "invoice_number" => $parent->number,
+                                    "r_type" => "INV",
+                                    "invoice_date" => $parent->invoice_date,
+                                    "invoice_amount" => $parent->total,
                                     "total_recd" => '0.00',
                                     "payment_recd" => '0.00',
                                     "tds" => '--',
                                     "balance" => number_format($bal_amt, 2),
+                                    "receipt_date" => '--',
+                                    "ref_detail" => '--',
+                                    "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
+                                    "due_days" => $due_days,
+                                    "delivery_date" => $delivery_data["delivery_date"],
+                                    "delivery_status" => $delivery_data["delivery_status"],
+                                );
+                            }
+                            /* get child invoice */
+                            $child_invoice = $this->db->query("SELECT * FROM tblinvoices where clientid IN (".$client_branch_id.") and site_id = '".$site_id."' and service_type = '".$service_type."' and parent_id = '".$parent->id."' and status != '5' order by date ".$order." ")->result();
+                            if(!empty($child_invoice)){
+                                foreach ($child_invoice as $child) {
+                                    $allinvoice_ids .= ','.$child->id;
+                                    $due_days = due_days($child->payment_due_date);
+
+                                    $received = invoice_received($child->id);
+                                    $received_tds = invoice_tds_received($child->id);
+                                    $bal_amt = ($child->total - $received - $received_tds);
+
+                                    $ttl_recv += $received;
+                                    $ttl_tds += $received_tds;
+                                    $ttl_amt += $child->total;
+                                    $ttl_bal += $bal_amt;
+                                    $grand_bal += $bal_amt;
+                                    $ttl_billing += $child->total;
+
+                                    $child_payment_info = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '2' and p.invoiceid = '".$child->id."' and cp.status = 1 order by p.id asc ")->result();
+
+                                    // IF there is only one recored of payment which is made by cheque and cheque is not clear
+                                    if(count($child_payment_info) == 1){
+                                        if($child_payment_info[0]->payment_mode == 1 && $child_payment_info[0]->chaque_status != 1){
+                                            $child_payment_info = '';
+                                        }
+                                    }
+
+                                    //Getting site person
+                                    $person_info = invoice_contact_person($child->id);
+                                    $delivery_data = $this->get_delivery_info($child->challan_id);
+                                    if(!empty($child_payment_info)){
+                                        $j = 0;
+                                        $lastChildInvoiceId = 0;
+                                        foreach ($child_payment_info as  $r2) {
+                                            $to_see = ($r2->payment_mode == 1 && $r2->chaque_status != 1) ? '0' : '1';
+                                            if($to_see == 1){
+                                                $ref_no = value_by_id('tblclientpayment',$r2->pay_id,'reference_no');
+
+                                                $receipt_date = $r2->date;
+                                                if($r2->payment_mode == 1 && $r2->chaque_status == 1 && !empty($r2->chaque_clear_date)){
+                                                    $receipt_date = $r2->chaque_clear_date;
+                                                }
+                                                if($r2->amount >= $child->total){
+                                                    $due_days = 'PAID';
+                                                }elseif($child->payment_due_date > date("Y-m-d")){
+                                                    $due_days = 0;
+                                                }
+                                                $invoice_data[] = array(
+                                                    "invoice_number" => $child->number,
+                                                    "r_type" => "INV",
+                                                    "invoice_date" => $child->invoice_date,
+                                                    "invoice_amount" => ($j == 0) ? $child->total : '--',
+                                                    "total_recd" => ($j == 0) ? strval($received) : '--',
+                                                    "payment_recd" => $r2->amount,
+                                                    "tds" => $r2->paid_tds_amt,
+                                                    "balance" => ($j == 0) ? number_format($bal_amt, 2) : '--',
+                                                    "receipt_date" => ($r2->amount > 0) ? _d($receipt_date) : '--',
+                                                    "ref_detail" => $ref_no,
+                                                    "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
+                                                    "due_days" => ($j == 0) ? $due_days : 0,
+                                                    "delivery_date" => $delivery_data["delivery_date"],
+                                                    "delivery_status" => $delivery_data["delivery_status"],
+                                                );
+                                                $lastChildInvoiceId = $child->id;
+                                                $j++;
+                                            }else{
+                                                if($child->id != $lastChildInvoiceId){
+                                                    $invoice_data[] = array(
+                                                        "invoice_number" => $child->number,
+                                                        "r_type" => "INV",
+                                                        "invoice_date" => $child->invoice_date,
+                                                        "invoice_amount" => $child->total,
+                                                        "total_recd" => '0.00',
+                                                        "payment_recd" => '0.00',
+                                                        "tds" => '--',
+                                                        "balance" => number_format($bal_amt, 2),
+                                                        "receipt_date" => '--',
+                                                        "ref_detail" => '--',
+                                                        "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
+                                                        "due_days" => $due_days,
+                                                        "delivery_date" => $delivery_data["delivery_date"],
+                                                        "delivery_status" => $delivery_data["delivery_status"],
+                                                    );
+                                                }
+                                                $lastChildInvoiceId = $child->id;
+                                            }
+                                        }
+                                    }else{
+                                        $invoice_data[] = array(
+                                            "invoice_number" => $child->number,
+                                            "r_type" => "INV",
+                                            "invoice_date" => $child->invoice_date,
+                                            "invoice_amount" => $child->total,
+                                            "total_recd" => '0.00',
+                                            "payment_recd" => '0.00',
+                                            "tds" => '--',
+                                            "balance" => number_format($bal_amt, 2),
+                                            "receipt_date" => '--',
+                                            "ref_detail" => '--',
+                                            "contact_person" => (!empty($person_info['site_name'])) ? $person_info['site_name'] : '--',
+                                            "due_days" => $due_days,
+                                            "delivery_date" => $delivery_data["delivery_date"],
+                                            "delivery_status" => $delivery_data["delivery_status"],
+                                        );
+                                    }
+                                }
+                            }
+                        }
+
+                        //Getting Debit Notes againt parent invoice
+                        $debit_note_info = $this->db->query("SELECT * FROM tbldebitnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by dabit_note_date ".$order." ")->result();
+                        if(!empty($debit_note_info)){
+                            foreach ($debit_note_info as $debitnote) {
+                                $alldn_ids .= ','.$debitnote->id;
+
+                                $received = debitnote_received($debitnote->number);
+                                $received_tds = debitnote_tds_received($debitnote->number);
+                                $bal_amt = ($debitnote->totalamount - $received - $received_tds);
+
+                                $ttl_recv += $received;
+                                $ttl_tds += $received_tds;
+                                $ttl_amt += $debitnote->totalamount;
+                                $ttl_bal += $bal_amt;
+                                $grand_bal += $bal_amt;
+                                $ttl_billing += $debitnote->totalamount;
+                                $debitnote_payment = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '3' and p.debitnote_no = '".$debitnote->number."' and cp.status = 1 order by p.id asc ")->result();
+
+                                // IF there is only one recored of payment which is made by cheque and cheque is not clear
+                                if(count($debitnote_payment) == 1){
+                                    if($debitnote_payment[0]->payment_mode == 1 && $debitnote_payment[0]->chaque_status != 1){
+                                        $debitnote_payment = '';
+                                    }
+                                }
+                                if(!empty($debitnote_payment)){
+                                    $j = 0;
+                                    foreach ($debitnote_payment as  $r3) {
+                                        $to_see = ($r3->payment_mode == 1 && $r3->chaque_status != 1) ? '0' : '1';
+                                        if($to_see == 1){    
+
+                                            $ref_no = value_by_id('tblclientpayment',$r3->pay_id,'reference_no');
+                                            $receipt_date = _d($r3->date);
+                                            if($r3->payment_mode == 1 && $r3->chaque_status == 1 && !empty($r3->chaque_clear_date)){
+                                                $receipt_date = _d($r3->chaque_clear_date);
+                                            }
+
+                                            $invoice_data[] = array(
+                                                "invoice_number" => $debitnote->number,
+                                                "r_type" => "DN",
+                                                "invoice_date" => $debitnote->dabit_note_date,
+                                                "invoice_amount" => ($j == 0) ? $debitnote->totalamount : '--',
+                                                "total_recd" => ($j == 0) ? strval($received) : '--',
+                                                "payment_recd" => $r3->amount,
+                                                "tds" => $r3->paid_tds_amt,
+                                                "balance" => ($j == 0) ? number_format($bal_amt, 2) : '--',
+                                                "receipt_date" => $receipt_date,
+                                                "ref_detail" => $ref_no,
+                                                "contact_person" => '--',
+                                                "due_days" => 0,
+                                                "delivery_date" => '--',
+                                                "delivery_status" => '--',
+                                            );
+                                            $j++;
+                                        }
+                                    }
+                                }else{
+                                    $invoice_data[] = array(
+                                        "invoice_number" => $debitnote->number,
+                                        "r_type" => "DN",
+                                        "invoice_date" => $debitnote->dabit_note_date,
+                                        "invoice_amount" => $debitnote->totalamount,
+                                        "total_recd" => '0.00',
+                                        "payment_recd" => '0.00',
+                                        "tds" => '--',
+                                        "balance" => number_format($bal_amt, 2),
+                                        "receipt_date" => '--',
+                                        "ref_detail" => '--',
+                                        "contact_person" => '--',
+                                        "due_days" => 0,
+                                        "delivery_date" => '--',
+                                        "delivery_status" => '--',
+                                    );
+                                }
+                            }
+                        }
+
+                        //Getting Credit Notes againt parent invoice
+                        $credit_note_info = $this->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by date ".$order." ")->result();
+                        if(!empty($credit_note_info)){
+                            foreach ($credit_note_info as $creditnote) {
+
+                                $ttl_recv += $creditnote->totalamount;
+                                $ttl_bal -= $creditnote->totalamount;
+                                $grand_bal -= $creditnote->totalamount;
+
+                                $invoice_data[] = array(
+                                    "invoice_number" => $creditnote->number,
+                                    "r_type" => "CN",
+                                    "invoice_date" => $creditnote->date,
+                                    "invoice_amount" => '0.00',
+                                    "total_recd" => $creditnote->totalamount,
+                                    "payment_recd" => '0.00',
+                                    "tds" => '0.00',
+                                    "balance" => '--',
                                     "receipt_date" => '--',
                                     "ref_detail" => '--',
                                     "contact_person" => '--',
@@ -1151,265 +1191,242 @@ class Report_API extends CI_Controller {
                                     "delivery_date" => '--',
                                     "delivery_status" => '--',
                                 );
+
                             }
                         }
                     }
+                    if (!empty($invoice_data)){
+                        $output_arr["site_data"][] = array(
+                            "site_name" => $site_name,
+                            "invoice_data" => $invoice_data,
+                            "ttl_invoice_amt" => number_format($ttl_amt, 2),
+                            "ttl_recd_amt" => number_format($ttl_recv, 2),
+                            "ttl_payment_recd_amt" => number_format($ttl_recv, 2),
+                            "tds" => number_format($ttl_tds, 2),
+                            "balance" => number_format($ttl_bal, 2),
+                        );
+                    }
+                    $grand_recevied += ($ttl_recv + $ttl_tds);
+                }
+            }
 
-                    //Getting Credit Notes againt parent invoice
-                    $credit_note_info = $this->db->query("SELECT * FROM tblcreditnote where invoice_id IN (".$parent_ids.") and invoice_id > '0' and status = '1' order by date ".$order." ")->result();
-                    if(!empty($credit_note_info)){
-                        foreach ($credit_note_info as $creditnote) {
+            /* getting debitnote payment */
+            $payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 and dn.status > 0  GROUP by dn.id ")->result();
+            if(empty($payment_debitnote)){
+                $payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 and dn.status > 0  GROUP by dn.id ")->result();
+            }
+            if(!empty($payment_debitnote)){
+                $ttl_bal = 0;
+                $ttl_tds = 0;
+                $ttl_recv = 0;
+                $ttl_amt = 0;
+                $dn_payment = array();
+                foreach ($payment_debitnote as $debitnote) {
+                    $received = debitnote_received($debitnote->number);
+                    $received_tds = debitnote_tds_received($debitnote->number);
+                    $bal_amt = ($debitnote->amount - $received - $received_tds);
 
-                            $ttl_recv += $creditnote->totalamount;
-                            $ttl_bal -= $creditnote->totalamount;
-                            $grand_bal -= $creditnote->totalamount;
+                    $ttl_recv += $received;
+                    $ttl_tds += $received_tds;
+                    $ttl_amt += $debitnote->amount;
+                    $ttl_bal += $bal_amt;
+                    $grand_bal += $bal_amt;
 
-                            $invoice_data[] = array(
-                                "invoice_number" => $creditnote->number,
-                                "r_type" => "CN",
-                                "invoice_date" => $creditnote->date,
-                                "invoice_amount" => '0.00',
-                                "total_recd" => $creditnote->totalamount,
-                                "payment_recd" => '0.00',
-                                "tds" => '0.00',
-                                "balance" => '--',
-                                "receipt_date" => '--',
-                                "ref_detail" => '--',
-                                "contact_person" => '--',
-                                "due_days" => 0,
-                                "delivery_date" => '--',
-                                "delivery_status" => '--',
-                            );
-
+                    $ttl_billing += $debitnote->amount;
+                    $debitnote_payment = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '3' and p.debitnote_no = '".$debitnote->number."' and cp.status = 1 order by p.id asc ")->result();
+                    // IF there is only one recored of payment which is made by cheque and cheque is not clear
+                    if(count($debitnote_payment) == 1){
+                        if($debitnote_payment[0]->payment_mode == 1 && $debitnote_payment[0]->chaque_status != 1){
+                            $debitnote_payment = '';
                         }
                     }
+
+                    if(!empty($debitnote_payment)){
+                        $j = 0;
+                        foreach ($debitnote_payment as  $r4) {
+
+                            $to_see = ($r4->payment_mode == 1 && $r4->chaque_status != 1) ? '0' : '1';
+                            if($to_see == 1){
+                                $ref_no = value_by_id('tblclientpayment',$r4->pay_id,'reference_no');
+
+                                $receipt_date = _d($r4->date);
+                                if($r4->payment_mode == 1 && $r4->chaque_status == 1 && !empty($r4->chaque_clear_date)){
+                                    $receipt_date = _d($r4->chaque_clear_date);
+                                }
+                                $dn_payment[] = array(
+                                    "details" => "DN (Delay in Payment)",
+                                    "dn_number" => $debitnote->number,
+                                    "dn_date" => _d($debitnote->date),
+                                    "amount" => ($j == 0) ? $debitnote->amount : '--',
+                                    "total_recd" => ($j == 0) ? strval($received) : '--',
+                                    "payment_recd" => $r4->amount,
+                                    "tds" => $r4->paid_tds_amt,
+                                    "payment_bal" => ($j == 0) ? number_format($bal_amt, 2) : '--',
+                                    "remark" => $r4->note,
+                                    "payment_receipt_date" => $receipt_date,
+                                    "payment_ref_detail" => $ref_no,
+                                );
+                                $j++;
+                            }
+                        }
+                    }else{
+                        $dn_payment[] = array(
+                            "details" => "DN (Delay in Payment)",
+                            "dn_number" => $debitnote->number,
+                            "dn_date" => _d($debitnote->date),
+                            "amount" => $debitnote->amount,
+                            "total_recd" => '0.00',
+                            "payment_recd" => '0.00',
+                            "tds" => '--',
+                            "payment_bal" => number_format($bal_amt, 2),
+                            "remark" => '--',
+                            "payment_receipt_date" => '--',
+                            "payment_ref_detail" => '--',
+                        );
+                    
+                    }
                 }
-                if (!empty($invoice_data)){
-                    $output_arr["site_data"][] = array(
-                        "site_name" => $site_name,
-                        "invoice_data" => $invoice_data,
-                        "ttl_invoice_amt" => number_format($ttl_amt, 2),
-                        "ttl_recd_amt" => number_format($ttl_recv, 2),
-                        "ttl_payment_recd_amt" => number_format($ttl_recv, 2),
-                        "tds" => number_format($ttl_tds, 2),
-                        "balance" => number_format($ttl_bal, 2),
-                    );
+                if (!empty($dn_payment)){
+                    $output_arr["dn_payment"]["data"] = $dn_payment;
+                    $output_arr["dn_payment"]["ttl_amt"] = number_format($ttl_amt, 2);
+                    $output_arr["dn_payment"]["ttl_recd_amt"] = number_format($ttl_recv, 2);
+                    $output_arr["dn_payment"]["ttl_payment_recd_amt"] = number_format($ttl_recv, 2);
+                    $output_arr["dn_payment"]["tds"] = number_format($ttl_tds, 2);
+                    $output_arr["dn_payment"]["balance"] = number_format($ttl_bal, 2);
                 }
                 $grand_recevied += ($ttl_recv + $ttl_tds);
             }
-        }
-
-        /* getting debitnote payment */
-        $payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$allinvoice_ids.") and i.invoice_id > 0 and i.type = 1 and dn.status > 0  GROUP by dn.id ")->result();
-        if(empty($payment_debitnote)){
-            $payment_debitnote = $this->db->query("SELECT dn.* from tbldebitnotepayment as dn LEFT JOIN tbldebitnotepaymentitems as i ON dn.id = i.debitnote_id where i.invoice_id IN (".$alldn_ids.") and i.invoice_id > 0 and i.type = 2 and dn.status > 0  GROUP by dn.id ")->result();
-        }
-        if(!empty($payment_debitnote)){
-            $ttl_bal = 0;
-            $ttl_tds = 0;
-            $ttl_recv = 0;
-            $ttl_amt = 0;
-            $dn_payment = array();
-            foreach ($payment_debitnote as $debitnote) {
-                $received = debitnote_received($debitnote->number);
-                $received_tds = debitnote_tds_received($debitnote->number);
-                $bal_amt = ($debitnote->amount - $received - $received_tds);
-
-                $ttl_recv += $received;
-                $ttl_tds += $received_tds;
-                $ttl_amt += $debitnote->amount;
-                $ttl_bal += $bal_amt;
-                $grand_bal += $bal_amt;
-
-                $ttl_billing += $debitnote->amount;
-                $debitnote_payment = $this->db->query("SELECT cp.payment_mode,cp.chaque_status,cp.chaque_clear_date,p.* FROM `tblclientpayment` as cp LEFT JOIN tblinvoicepaymentrecords as p ON cp.id = p.pay_id WHERE p.paymentmethod = '3' and p.debitnote_no = '".$debitnote->number."' and cp.status = 1 order by p.id asc ")->result();
-                // IF there is only one recored of payment which is made by cheque and cheque is not clear
-                if(count($debitnote_payment) == 1){
-                    if($debitnote_payment[0]->payment_mode == 1 && $debitnote_payment[0]->chaque_status != 1){
-                        $debitnote_payment = '';
+            /* this is for gettting on account */
+            $onaccout_amt = 0;
+            $onaccout_amt_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_branch_id.") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ")->result();  
+            if(!empty($onaccout_amt_info)){
+                foreach ($onaccout_amt_info as $on_am) {
+                    $to_see = ($on_am->payment_mode == 1 && $on_am->chaque_status != 1) ? '0' : '1';
+                    if($to_see == 1){
+                        $onaccout_amt += $on_am->ttl_amt;
                     }
                 }
+            }
+            $waveoff_amt = $this->db->query("SELECT COALESCE(SUM(amount),0) AS ttl_amount FROM `tblclientwaveoff`  where client_id IN (".$client_branch_id.") and status = 1 and service_type = '".$service_type."' ")->row()->ttl_amount;
+            $onaccout_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_branch_id.") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ")->result();
+            $waveoff_info = $this->db->query("SELECT * FROM `tblclientwaveoff`  where client_id IN (".$client_branch_id.") and status = 1 and service_type = '".$service_type."' ")->result();
+            $pendingcheque_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_branch_id.") and payment_mode = 1 and chaque_status IN (0,2,3,4) and status = 1 ")->result();
+            $clientdeposits_info = $this->db->query("SELECT * FROM `tblclientdeposits`  where client_id IN (" . $client_branch_id . ") and status = 1 ")->result();
+            $clientrefund_info = $this->db->query("SELECT r.*, pd.utr_no, pd.utr_date,pd.method from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (" . $client_branch_id . ") and pd.utr_no != '' and service_type = '".$service_type."' order by r.id desc")->result();
 
-                if(!empty($debitnote_payment)){
-                    $j = 0;
-                    foreach ($debitnote_payment as  $r4) {
+            $clientrefund_amt = $this->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (" . $client_branch_id . ") and pd.utr_no != '' and service_type = '".$service_type."' order by r.id desc")->row()->ttl_amount;
+            $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt)) - $vendor_outstanding_amount;
+            
+            $output_arr["ttl_billing"] = round($ttl_billing).'.00';
+            $output_arr["ttl_recevied"] = round($grand_recevied).'.00';
+            $output_arr["ttl_balance"] = round($grand_bal).'.00';
+            $output_arr["onaccount"] = "-".round($onaccout_amt).'.00';
+            /*waveoff amount details*/
+            if(!empty($waveoff_info)){
+                foreach ($waveoff_info as $wave_row) {
+                    $title = (!empty($wave_row->remark)) ? '"'.$wave_row->remark.'"' : "Waveoff";
+                    $output_arr[$title."_sign"] = ($wave_row->amount > 0) ? '-' : '+';
+                    $output_arr[$title] = round($wave_row->amount).'.00';
+                }
+            }
+            /*client refund details*/
+            if(!empty($clientrefund_info)){
+                foreach ($clientrefund_info as $crrow) {
+                    $output_arr["client_refund"] = round($crrow->amount).'.00';
+                }
+            }
+            if ($vendor_outstanding_amount > 0){
+                $output_arr["vendor_outstanding_sign"] = '-';
+                $output_arr["vendor_outstanding_amt"] = round($vendor_outstanding_amount).'.00';
+            }
+            $output_arr["final_amount"] = round($final_balance).'.00';
 
-                        $to_see = ($r4->payment_mode == 1 && $r4->chaque_status != 1) ? '0' : '1';
-                        if($to_see == 1){
-                            $ref_no = value_by_id('tblclientpayment',$r4->pay_id,'reference_no');
+            // IF there is only one recored of payment which is made by cheque and cheque is not clear
+            if(count($onaccout_info) == 1){
+                if($onaccout_info[0]->payment_mode == 1 && $onaccout_info[0]->chaque_status != 1){
+                    $onaccout_info = '';
+                }
+            }
+            /* on account details */
+            if(!empty($onaccout_info)){
+                foreach ($onaccout_info as $key => $on_acc) {
 
-                            $receipt_date = _d($r4->date);
-                            if($r4->payment_mode == 1 && $r4->chaque_status == 1 && !empty($r4->chaque_clear_date)){
-                                $receipt_date = _d($r4->chaque_clear_date);
-                            }
-                            $dn_payment[] = array(
-                                "details" => "DN (Delay in Payment)",
-                                "dn_number" => $debitnote->number,
-                                "dn_date" => _d($debitnote->date),
-                                "amount" => ($j == 0) ? $debitnote->amount : '--',
-                                "total_recd" => ($j == 0) ? strval($received) : '--',
-                                "payment_recd" => $r4->amount,
-                                "tds" => $r4->paid_tds_amt,
-                                "payment_bal" => ($j == 0) ? number_format($bal_amt, 2) : '--',
-                                "remark" => $r4->note,
-                                "payment_receipt_date" => $receipt_date,
-                                "payment_ref_detail" => $ref_no,
-                            );
-                            $j++;
-                        }
+                    $to_see = ($on_acc->payment_mode == 1 && $on_acc->chaque_status != 1) ? '0' : '1';
+
+                    $onAccountDate = _d($on_acc->date);
+                    if(!empty($on_acc->chaque_clear_date)){
+                        $onAccountDate = _d($on_acc->chaque_clear_date);
                     }
-                }else{
-                    $dn_payment[] = array(
-                        "details" => "DN (Delay in Payment)",
-                        "dn_number" => $debitnote->number,
-                        "dn_date" => _d($debitnote->date),
-                        "amount" => $debitnote->amount,
-                        "total_recd" => '0.00',
-                        "payment_recd" => '0.00',
-                        "tds" => '--',
-                        "payment_bal" => number_format($bal_amt, 2),
-                        "remark" => '--',
-                        "payment_receipt_date" => '--',
-                        "payment_ref_detail" => '--',
+
+                    if($to_see == 1){
+                        $output_arr["onaccount_list"][] = array(
+                            "onaccount_date" => $onAccountDate,
+                            "reference_no" => $on_acc->reference_no,
+                            "ttl_amt" => $on_acc->ttl_amt,
+                        );
+                    }
+                }
+            }
+            /* get pending cheque data */
+            if(!empty($pendingcheque_info)){
+                foreach ($pendingcheque_info as $key => $client_pay) {
+                    switch ($client_pay->chaque_status) {
+                        case 0:
+                            $status = 'Pending';
+                            break;
+                        case 2:
+                            $status = 'Bounced';
+                            break;
+                        case 3:
+                            $status = 'Redeposit';
+                            break;
+                        default:
+                            $status = 'Cancel';
+                            break;
+                    }
+                    $output_arr["pending_cheque"][] = array(
+                        "cheque_no" => $client_pay->cheque_no,
+                        "cheque_date" => _d($client_pay->cheque_date),
+                        "status" => $status,
                     );
-                
                 }
             }
-            if (!empty($dn_payment)){
-                $output_arr["dn_payment"]["data"] = $dn_payment;
-                $output_arr["dn_payment"]["ttl_amt"] = number_format($ttl_amt, 2);
-                $output_arr["dn_payment"]["ttl_recd_amt"] = number_format($ttl_recv, 2);
-                $output_arr["dn_payment"]["ttl_payment_recd_amt"] = number_format($ttl_recv, 2);
-                $output_arr["dn_payment"]["tds"] = number_format($ttl_tds, 2);
-                $output_arr["dn_payment"]["balance"] = number_format($ttl_bal, 2);
-            }
-            $grand_recevied += ($ttl_recv + $ttl_tds);
-        }
-        /* this is for gettting on account */
-        $onaccout_amt = 0;
-        $onaccout_amt_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_branch_id.") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ")->result();	
-        if(!empty($onaccout_amt_info)){
-            foreach ($onaccout_amt_info as $on_am) {
-                $to_see = ($on_am->payment_mode == 1 && $on_am->chaque_status != 1) ? '0' : '1';
-                if($to_see == 1){
-                    $onaccout_amt += $on_am->ttl_amt;
+            /* get client deposites data */
+            if (!empty($clientdeposits_info)) {
+                foreach ($clientdeposits_info as $key => $deposit) {
+                    if ($deposit->payment_mode == 1) {
+                        $mode = 'Cheque';
+                    } else if ($deposit->payment_mode == 2) {
+                        $mode = 'NEFT';
+                    } else if ($deposit->payment_mode == 3) {
+                        $mode = 'Cash';
+                    }
+                    $output_arr["client_deposits"][] = array(
+                        "date" => _d($deposit->date),
+                        "mode" => $mode,
+                        "bank_name" => value_by_id("tblbankmaster", $deposit->bank_id, "name"),
+                        "amount" => $deposit->ttl_amt,
+                    );
                 }
             }
+            /* client refund data */
+            if (!empty($clientrefund_info)){
+                foreach ($clientrefund_info as $key => $refunddata) {
+                    $output_arr["client_refund"][] = array(
+                        "date" => _d($refunddata->date),
+                        "utr_no" => $refunddata->utr_no,
+                        "method" => $refunddata->method,
+                        "amount" => $refunddata->amount,
+                    );
+                }
+            }
+             $return_arr = array("status" => true, "message" => "Success", "data" => (isset($output_arr) ? $output_arr : []));
+        }else{
+             $return_arr = array("status" => false, "message" => "Required parameters are missing", "data" => []);
         }
-        $waveoff_amt = $this->db->query("SELECT COALESCE(SUM(amount),0) AS ttl_amount FROM `tblclientwaveoff`  where client_id IN (".$client_branch_id.") and status = 1 and service_type = '".$service_type."' ")->row()->ttl_amount;
-        $onaccout_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_branch_id.") and payment_behalf = 1 and service_type = '".$service_type."' and status = 1 ")->result();
-        $waveoff_info = $this->db->query("SELECT * FROM `tblclientwaveoff`  where client_id IN (".$client_branch_id.") and status = 1 and service_type = '".$service_type."' ")->result();
-        $pendingcheque_info = $this->db->query("SELECT * FROM `tblclientpayment`  where client_id IN (".$client_branch_id.") and payment_mode = 1 and chaque_status IN (0,2,3,4) and status = 1 ")->result();
-        $clientdeposits_info = $this->db->query("SELECT * FROM `tblclientdeposits`  where client_id IN (" . $client_branch_id . ") and status = 1 ")->result();
-        $clientrefund_info = $this->db->query("SELECT r.*, pd.utr_no, pd.utr_date,pd.method from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (" . $client_branch_id . ") and pd.utr_no != '' and service_type = '".$service_type."' order by r.id desc")->result();
 
-        $clientrefund_amt = $this->db->query("SELECT COALESCE(SUM(r.amount),0) AS ttl_amount from  tblclientrefund as r LEFT JOIN tblbankpaymentdetails as pd ON r.id = pd.pay_type_id and pd.pay_type = 'client_refund' where client_id IN (" . $client_branch_id . ") and pd.utr_no != '' and service_type = '".$service_type."' order by r.id desc")->row()->ttl_amount;
-        $final_balance = (round($grand_bal) - round($onaccout_amt) - round($waveoff_amt) + round($clientrefund_amt)) - $vendor_outstanding_amount;
         
-        $output_arr["ttl_billing"] = round($ttl_billing).'.00';
-        $output_arr["ttl_recevied"] = round($grand_recevied).'.00';
-        $output_arr["ttl_balance"] = round($grand_bal).'.00';
-        $output_arr["onaccount"] = "-".round($onaccout_amt).'.00';
-        /*waveoff amount details*/
-        if(!empty($waveoff_info)){
-            foreach ($waveoff_info as $wave_row) {
-                $title = (!empty($wave_row->remark)) ? '"'.$wave_row->remark.'"' : "Waveoff";
-                $output_arr[$title."_sign"] = ($wave_row->amount > 0) ? '-' : '+';
-                $output_arr[$title] = round($wave_row->amount).'.00';
-            }
-        }
-        /*client refund details*/
-        if(!empty($clientrefund_info)){
-            foreach ($clientrefund_info as $crrow) {
-                $output_arr["client_refund"] = round($crrow->amount).'.00';
-            }
-        }
-        if ($vendor_outstanding_amount > 0){
-            $output_arr["vendor_outstanding_sign"] = '-';
-            $output_arr["vendor_outstanding_amt"] = round($vendor_outstanding_amount).'.00';
-        }
-        $output_arr["final_amount"] = round($final_balance).'.00';
-
-        // IF there is only one recored of payment which is made by cheque and cheque is not clear
-        if(count($onaccout_info) == 1){
-            if($onaccout_info[0]->payment_mode == 1 && $onaccout_info[0]->chaque_status != 1){
-                $onaccout_info = '';
-            }
-        }
-        /* on account details */
-        if(!empty($onaccout_info)){
-            foreach ($onaccout_info as $key => $on_acc) {
-
-                $to_see = ($on_acc->payment_mode == 1 && $on_acc->chaque_status != 1) ? '0' : '1';
-
-                $onAccountDate = _d($on_acc->date);
-                if(!empty($on_acc->chaque_clear_date)){
-                    $onAccountDate = _d($on_acc->chaque_clear_date);
-                }
-
-                if($to_see == 1){
-                    $output_arr["onaccount_list"][] = array(
-                        "onaccount_date" => $onAccountDate,
-                        "reference_no" => $on_acc->reference_no,
-                        "ttl_amt" => $on_acc->ttl_amt,
-                    );
-                }
-            }
-        }
-        /* get pending cheque data */
-        if(!empty($pendingcheque_info)){
-            foreach ($pendingcheque_info as $key => $client_pay) {
-                switch ($client_pay->chaque_status) {
-                    case 0:
-                        $status = 'Pending';
-                        break;
-                    case 2:
-                        $status = 'Bounced';
-                        break;
-                    case 3:
-                        $status = 'Redeposit';
-                        break;
-                    default:
-                        $status = 'Cancel';
-                        break;
-                }
-                $output_arr["pending_cheque"][] = array(
-                    "cheque_no" => $client_pay->cheque_no,
-                    "cheque_date" => _d($client_pay->cheque_date),
-                    "status" => $status,
-                );
-            }
-        }
-        /* get client deposites data */
-        if (!empty($clientdeposits_info)) {
-            foreach ($clientdeposits_info as $key => $deposit) {
-                if ($deposit->payment_mode == 1) {
-                    $mode = 'Cheque';
-                } else if ($deposit->payment_mode == 2) {
-                    $mode = 'NEFT';
-                } else if ($deposit->payment_mode == 3) {
-                    $mode = 'Cash';
-                }
-                $output_arr["client_deposits"][] = array(
-                    "date" => _d($deposit->date),
-                    "mode" => $mode,
-                    "bank_name" => value_by_id("tblbankmaster", $deposit->bank_id, "name"),
-                    "amount" => $deposit->ttl_amt,
-                );
-            }
-        }
-        /* client refund data */
-        if (!empty($clientrefund_info)){
-            foreach ($clientrefund_info as $key => $refunddata) {
-                $output_arr["client_refund"][] = array(
-                    "date" => _d($refunddata->date),
-                    "utr_no" => $refunddata->utr_no,
-                    "method" => $refunddata->method,
-                    "amount" => $refunddata->amount,
-                );
-            }
-        }
-        $return_arr = array("status" => true, "message" => "Success", "data" => (isset($output_arr) ? $output_arr : []));
+       
         header('Content-type: application/json');
         echo json_encode($return_arr);
         // http://localhost/crm/Report_API/client_ledger/1

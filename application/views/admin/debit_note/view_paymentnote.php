@@ -76,36 +76,34 @@
 							</select>
 						</div>
 
-						<div class="col-md-1">
-                        <button type="submit" style="margin-top: 25px;" class="btn btn-info">Search</button>
-                        </div>
-                        <div class="col-md-1">
-                         <a style="margin-top: 25px;" class="btn btn-danger" href="">Reset</a>
+						<div class="col-md-2">
+                            <button type="submit" style="margin-top: 25px;" class="btn btn-info">Search</button>
+                            <a style="margin-top: 25px;" class="btn btn-danger" href="">Reset</a>
                         </div>
 
 
 						<div class="col-md-12">
-                                                    <div class="row1">
-                                                        <fieldset class="scheduler-border"><br>
-                                                            <div class="col-md-12">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <h4 style="color: red; text-align: center;" class="control-label">Total Amount</h4>
-                                                                        <p id="igst_tot" style="color: red; text-align: center;"><?php echo number_format($dn_amount, 2, '.', ''); ?></p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <h4 style="color: red; text-align: center;" class="control-label">Total Count</h4>
-                                                                        <p id="igst_tot" style="color: red; text-align: center;"><?php echo count($debitnote_list); ?></p>
-                                                                    </div>
-                                                                </div>
+                            <div class="row1">
+                                <fieldset class="scheduler-border"><br>
+                                    <div class="col-md-12">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <h4 style="color: red; text-align: center;" class="control-label">Total Amount</h4>
+                                                <p id="igst_tot" style="color: red; text-align: center;"><?php echo number_format($dn_amount, 2, '.', ''); ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <h4 style="color: red; text-align: center;" class="control-label">Total Count</h4>
+                                                <p id="igst_tot" style="color: red; text-align: center;"><?php echo count($debitnote_list); ?></p>
+                                            </div>
+                                        </div>
 
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
+                                    </div>
+                                </fieldset>
+                            </div>
                          <hr>
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow: auto;">
 								<table class="table" id="newtable">
 									<thead>
 									  <tr>

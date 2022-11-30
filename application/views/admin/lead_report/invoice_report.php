@@ -86,60 +86,62 @@ if($lead->client_branch_id > 0){
             </div>
             </form>
 
-            <div class="col-md-12">  
-            <hr>                             
-                <table class="table" id="newtable">
-                  <thead>
-                    <tr>
-                      <th>S.No</th>
-                      <th>Invoice #</th>
-                      <th>Staff Name</th>
-                      <th>Service Type</th>                      
-                      <th>Invoice Date</th>
-                      <th>Customer</th>
-                      <th>Status</th>
-                      <th>Amount</th>
-                    </tr>
-                  </thead>
-                 <tbody>
-                  <?php
-                  $ttl_amt = 0;
-                  if(!empty($invoice_list)){
-                      foreach ($invoice_list as $key => $value) {
-                        if($value->service_type == 1){
-                          $service_type = 'Rent';
-                        }else{
-                          $service_type = 'Sales';
-                        }
-                        $client_info = $this->db->query("SELECT `client_branch_name` from `tblclientbranch` where userid = '".$value->clientid."'  ")->row();
-                        $ttl_amt += $value->total;
-                      ?>
+            <div class="col-md-12">
+              <div class="table-responsive">  
+                  <hr>                             
+                  <table class="table" id="newtable">
+                    <thead>
                       <tr>
-                          <td><?php echo ++$key; ?></td>                                                
-                          <td><?php echo '<a href="' . admin_url('invoices/download_pdf/' . $value->id) .'" target="_blank">' .format_invoice_number($value->id). '</a>'; ?></td>
-                          <td><?php echo get_employee_name($value->addedfrom); ?></td>
-                          <td><?php echo $service_type; ?></td>                          
-                          <td><?php echo _d($value->invoice_date); ?></td> 
-                          <td><a href="<?php echo admin_url('clients/client/'.$value->clientid);?>" target="_blank"><?php echo cc($client_info->client_branch_name); ?></a></td>
-                          <td><?php echo format_invoice_status($value->status); ?></td>   
-                          <td><?php echo $value->total; ?></td>                  
-                        </tr>
-                      <?php
-                      }
-                 }else{
-                    echo '<tr><td class="text-center" colspan="8"><h5>Record Not Found</h5></td></tr>';
-                  }
-                  ?>
-                   
-                  </tbody>
-                  <tfoot>
-                       <tr>
-                          <td colspan="7" class="text-center"><b>Total Amount</b></td>
-                          <td><b><?php echo $ttl_amt; ?></b></td>
-                        </tr>
-                  </tfoot>
-                  </table>
+                        <th>S.No</th>
+                        <th>Invoice #</th>
+                        <th>Staff Name</th>
+                        <th>Service Type</th>                      
+                        <th>Invoice Date</th>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                  <tbody>
+                    <?php
+                    $ttl_amt = 0;
+                    if(!empty($invoice_list)){
+                        foreach ($invoice_list as $key => $value) {
+                          if($value->service_type == 1){
+                            $service_type = 'Rent';
+                          }else{
+                            $service_type = 'Sales';
+                          }
+                          $client_info = $this->db->query("SELECT `client_branch_name` from `tblclientbranch` where userid = '".$value->clientid."'  ")->row();
+                          $ttl_amt += $value->total;
+                        ?>
+                        <tr>
+                            <td><?php echo ++$key; ?></td>                                                
+                            <td><?php echo '<a href="' . admin_url('invoices/download_pdf/' . $value->id) .'" target="_blank">' .format_invoice_number($value->id). '</a>'; ?></td>
+                            <td><?php echo get_employee_name($value->addedfrom); ?></td>
+                            <td><?php echo $service_type; ?></td>                          
+                            <td><?php echo _d($value->invoice_date); ?></td> 
+                            <td><a href="<?php echo admin_url('clients/client/'.$value->clientid);?>" target="_blank"><?php echo cc($client_info->client_branch_name); ?></a></td>
+                            <td><?php echo format_invoice_status($value->status); ?></td>   
+                            <td><?php echo $value->total; ?></td>                  
+                          </tr>
+                        <?php
+                        }
+                  }else{
+                      echo '<tr><td class="text-center" colspan="8"><h5>Record Not Found</h5></td></tr>';
+                    }
+                    ?>
+                    
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7" class="text-center"><b>Total Amount</b></td>
+                            <td><b><?php echo $ttl_amt; ?></b></td>
+                          </tr>
+                    </tfoot>
+                    </table>
               </div>
+            </div>
 
 
                           

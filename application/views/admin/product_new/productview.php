@@ -7,6 +7,25 @@
     border-radius:10px;
     box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.3);
 }
+.productimgcircle {
+    height:300px;
+    width: 300px;
+    margin-left: 20%;
+}
+@media (max-width: 500px){
+    .productimgcircle {
+        height:200px;
+        width: 200px;
+        margin-left: 15%;
+    }
+}    
+@media (max-width: 768px){
+    .productimgcircle {
+        height:200px;
+        width: 200px;
+        margin-left: 15%;
+    }
+}       
 </style>
 <div id="wrapper">
     <div class="content accounting-template">
@@ -51,7 +70,7 @@
                                                         $product_image = base_url('uploads/product') . "/" . $product['photo'];
                                                     }
                                                 ?>
-                                                <img alt="" style="height:300px;width: 300px;margin-left: 20%;" title="" class="img-circle img-thumbnail isTooltip" src="<?php echo $product_image; ?>" data-original-title="Product">
+                                                <img alt="" title="" class="img-circle img-thumbnail isTooltip productimgcircle" src="<?php echo $product_image; ?>" data-original-title="Product">
                                                 <ul title="Ratings" class="list-inline ratings text-center">
                                                     <li><a href="#"><span class="glyphicon glyphicon-star"></span></a></li>
                                                     <li><a href="#"><span class="glyphicon glyphicon-star"></span></a></li>

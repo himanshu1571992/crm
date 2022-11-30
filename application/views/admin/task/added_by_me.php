@@ -139,15 +139,15 @@
 														<td><?php echo value_by_id('tbltaskfor',$value->related_to,'name'); ?></td>
 														<td><?php echo $priority; ?></td>
 														<td>
-															<a class="btn-info btn-sm" href="<?php echo admin_url('Task/task_details/'.$value->id); ?>">View</a>
+															<a class="btn-success btn" href="<?php echo admin_url('Task/task_details/'.$value->id); ?>">View</a>
 
-															<a class="btn-info btn-sm" href="<?php echo admin_url('Task/add/'.$value->id); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+															<a class="btn-info btn" href="<?php echo admin_url('Task/add/'.$value->id); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
-															<a class="btn-info btn-sm" target="_blank" href="<?php echo admin_url('Task/activity_log/'.$value->id); ?>">Activity</a>
+															<a class="btn-info btn" target="_blank" href="<?php echo admin_url('Task/activity_log/'.$value->id); ?>">Activity</a>
 
-															<a class="btn-info btn-sm" target="_blank" href="<?php  echo admin_url('reminder/add/0/3'); ?>">Set Reminder</a>
+															<a class="btn-warning btn" target="_blank" href="<?php  echo admin_url('reminder/add/0/3'); ?>">Set Reminder</a>
 
-															<button type="button" value="<?php echo $value->id; ?>" class="btn-info btn-sm assignees" data-toggle="modal" data-target="#myModal">Assignees (<?php echo $assignee_info->staff_count; ?>)</button>
+															<button type="button" value="<?php echo $value->id; ?>" class="btn-info btn assignees" data-toggle="modal" data-target="#myModal">Assignees (<?php echo $assignee_info->staff_count; ?>)</button>
 
 														</td>
 													</tr>

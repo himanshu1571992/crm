@@ -41,20 +41,17 @@
                 <div class="panel_s">
 
                     <div class="panel-body">
-
-                    <h4 class="no-margin"><?php echo $title; ?> <?php if(check_permission_page('134,266','create') ){ ?> <a href="<?php echo admin_url('petty_cash/add'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add New Department</a> <?php } ?></h4>
-
-
-
-                    <hr class="hr-panel-heading">
-
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page('134,266','create') ){ ?> <a href="<?php echo admin_url('petty_cash/add'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add New Department</a> <?php } ?>
+                            </div>
+                        </div>
+                        <hr class="hr-panel-heading">
                     <div class="row">
-                    
-               
-                    
-                        <div class="">
-                        
-                            
+                        <div class="table-responsive">
                             <div class="col-md-12">                                                             
                                 <table class="table ui-table">
                                     <thead>

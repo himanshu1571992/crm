@@ -12,12 +12,10 @@
                     <div class="panel-body">
 					<h4 class="no-margin">Print Expense format</h4>
 					<hr class="hr-panel-heading">
-					
 					<div class="row">
-					
 						<div class="form-group col-md-4">
 							<label for="staff_id" class="control-label"><?php echo 'Employee Name'; ?> *</label>
-							<select class="form-control myselect" required id="staff_id" name="staff_id">
+							<select class="form-control selectpicker" data-live-search="true" required id="staff_id" name="staff_id">
 								<option value="" disabled selected >--Select One-</option>
 								<?php
 								if(!empty($staff_list)){
@@ -45,7 +43,7 @@
 							</div>
 						</div>
 						
-						<div class="form-group col-md-2 float-right">
+						<div class="form-group col-md-2 float-right" style="margin-top: 26px;">
 							<button class="form-control btn-info" type="submit" value="print">Print Report</button>
 						</div>
 													

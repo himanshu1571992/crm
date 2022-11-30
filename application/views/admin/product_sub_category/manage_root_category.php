@@ -10,19 +10,17 @@
                 <div class="panel_s">
 
                     <div class="panel-body">
-
-                    <h4 class="no-margin">Root Category List <?php if(check_permission_page('75,246','create')){ ?> <a href="<?php echo admin_url('productsubcategory/productsubcategory'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add New Category</a> <?php } ?></h4>
-
-
-
-                    <hr class="hr-panel-heading">
-
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4>Root Category List</h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page('75,246','create')){ ?> <a href="<?php echo admin_url('productsubcategory/productsubcategory'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add New Category</a> <?php } ?>
+                            </div>
+                        </div>
+                        <hr class="hr-panel-heading">
                     <div class="row">
-                    
-              
                         <div class="">
-                        
-                            
                             <div class="col-md-12 table-responsive">                                                             
                                 <table class="table" id="newtable">
                                     <thead>

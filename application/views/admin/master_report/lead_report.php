@@ -69,124 +69,59 @@ if(!empty($staff_id)){
                 <div class="panel_s">
 
                     <div class="panel-body">
-
-
-
                     <div class="col-md-4"><h4 class="no-margin"> </h4></div>  
-
-
-
                    <h4 class="no-margin"><?php echo $title; ?> <!-- <a href="<?php echo admin_url('master_report_export/export_lead?range='.$s_range.'&f_date='.$date_a.'&t_date='.$date_b.'&staff_id='.$staff); ?>" class="btn btn-info pull-right" style="margin-top:-6px;">Export</a> --></h4>
 
 
 
-          <hr class="hr-panel-heading">
-
-          
-
+          <hr class="hr-panel-heading">       
           <div class="row">
-
             <form method="post" id="salary_form" enctype="multipart/form-data" action="">
-
-              <div class="form-group col-md-3">
-
-                  <select class="form-control selectpicker" id="staff_id" name="staff_id" data-live-search="true">
-
-                      <option value="" selected >--Select Employee-</option>
-
-                      <?php
-
-                      if(!empty($staff_list)){
-
-                          foreach($staff_list as $staff){
-
-                              ?>
-
-                              <option value="<?php echo $staff->staffid;?>" <?php if(!empty($staff_id) && $staff_id == $staff->staffid){ echo 'selected'; } ?>><?php echo cc($staff->firstname); ?></option>
-
-                              <?php
-
-                          }
-
-                      }
-
-                      ?>
-
-                  </select>
-
-              </div>
-
-             <div class="col-md-2">
-
-                <div class="form-group select-placeholder">
-
-                    <select class="selectpicker" name="range" id="range" data-width="100%" required="" onchange="render_customer_statement();">
-
-                        <option value="1" <?php if(!empty($range) && $range == 1){ echo 'selected'; } ?>>Today</option>
-
-                        <option value="2" <?php if(!empty($range) && $range == 2){ echo 'selected'; } ?>>This Week</option>
-
-                        <option value="3" <?php if(!empty($range) && $range == 3){ echo 'selected'; } ?>>This Month</option>
-
-                        <option value="4" <?php if(!empty($range) && $range == 4){ echo 'selected'; } ?>>Last Month</option>
-
-                        <option value="5" <?php if(!empty($range) && $range == 5){ echo 'selected'; } ?>>This Year</option>
-
-                        <option value="period" <?php if(!empty($range) && $range == 'period'){ echo 'selected'; } ?>>Custom Date</option>
-
+                <div class="form-group col-md-3">
+                    <select class="form-control selectpicker" id="staff_id" name="staff_id" data-live-search="true">
+                        <option value="" selected >--Select Employee-</option>
+                        <?php
+                            if(!empty($staff_list)){
+                                foreach($staff_list as $staff){
+                                    ?>
+                                    <option value="<?php echo $staff->staffid;?>" <?php if(!empty($staff_id) && $staff_id == $staff->staffid){ echo 'selected'; } ?>><?php echo cc($staff->firstname); ?></option>
+                                    <?php
+                                }
+                            }
+                        ?>
                     </select>
-
                 </div>
-
-               
-
-            </div>
-
-             <div class="col-md-2">
-
-                   <div class="period <?php if(!empty($range) && $range == 'period'){  }else{ echo 'hide'; } ?> ">
-
-                      <div class="input-group date">
-
-                          <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if(!empty($f_date)){ echo $f_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
-
-                      </div>
-
-                  </div>
-
-              </div>
-
-              <div class="col-md-2">
-
-                  <div class="period <?php if(!empty($range) && $range == 'period'){  }else{ echo 'hide'; } ?>">
-
-                       <div class="input-group date">
-
-                          <input id="t_date" name="t_date" class="form-control datepicker" value="<?php if(!empty($t_date)){ echo $t_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
-
-                      </div>
-
-                  </div>
-
-              </div>
-
-
-
-    
-
-            
-
-            <div class="col-md-1">                            
-            <button type="submit" class="btn btn-info">Search</button>
-            </div>
-            <div class="col-md-1">
-             <a class="btn btn-danger" href="" style="margin-left: 20px;">Reset</a>
-            </div>
-
+                <div class="col-md-2">
+                    <div class="form-group select-placeholder">
+                        <select class="selectpicker" name="range" id="range" data-width="100%" required="" onchange="render_customer_statement();">
+                            <option value="1" <?php if(!empty($range) && $range == 1){ echo 'selected'; } ?>>Today</option>
+                            <option value="2" <?php if(!empty($range) && $range == 2){ echo 'selected'; } ?>>This Week</option>
+                            <option value="3" <?php if(!empty($range) && $range == 3){ echo 'selected'; } ?>>This Month</option>
+                            <option value="4" <?php if(!empty($range) && $range == 4){ echo 'selected'; } ?>>Last Month</option>
+                            <option value="5" <?php if(!empty($range) && $range == 5){ echo 'selected'; } ?>>This Year</option>
+                            <option value="period" <?php if(!empty($range) && $range == 'period'){ echo 'selected'; } ?>>Custom Date</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="period <?php if(!empty($range) && $range == 'period'){  }else{ echo 'hide'; } ?> ">
+                        <div class="input-group date">
+                            <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if(!empty($f_date)){ echo $f_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="period <?php if(!empty($range) && $range == 'period'){  }else{ echo 'hide'; } ?>">
+                        <div class="input-group date">
+                            <input id="t_date" name="t_date" class="form-control datepicker" value="<?php if(!empty($t_date)){ echo $t_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">                            
+                    <button type="submit" class="btn btn-info">Search</button>
+                    <a class="btn btn-danger" href="" style="margin-left: 20px;">Reset</a>
+                </div>
             </form>
-
-
-
             <div class="col-md-12 table-responsive">  
 
             <hr>                             

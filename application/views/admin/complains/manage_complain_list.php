@@ -64,14 +64,10 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-1">                            
-                                    <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
+                                <div class="col-md-2" style="margin-top: 24px;" >                            
+                                    <button type="submit" class="btn btn-info">Search</button>
+                                    <a class="btn btn-danger" href="">Reset</a>
                                 </div>
-                                <div class="col-md-1">
-                                    <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
-                                </div>
-
-
                                 <div class="col-md-12 table-responsive">																
                                     <table class="table" id="newtable">
                                         <thead>

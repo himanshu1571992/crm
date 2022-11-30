@@ -48,13 +48,15 @@
                 <div class="panel_s">
 
                     <div class="panel-body">
-
-                    <h4 class="no-margin">Bank Payments List <?php if(check_permission_page(57,'create')){ ?><a href="<?php echo admin_url('bank_payments/add'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Payments</a><?php } ?></h4>
-
-
-
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4>Bank Payments List</h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page(57,'create')){ ?><a href="<?php echo admin_url('bank_payments/add'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Payments</a><?php } ?>
+                            </div>
+                        </div>
                     <hr class="hr-panel-heading">
-
                     <div class="row">
                     
                     <div class="row col-md-12">
@@ -71,21 +73,14 @@
                                 <input id="t_date" required="" name="t_date" class="form-control datepicker" value="<?php if(!empty($s_tdate)){ echo $s_tdate; }else{ echo date('d/m/Y'); } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                             </div>
                         </div>
-                        
-
-                        
-                        <div class="col-md-1">                            
-                        <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
+                        <div class="col-md-2">                            
+                            <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
+                            <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
                         </div>
-                        <div class="col-md-1">
-                         <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
-                        </div>
-
-                                                
                     </div>
                     
                         <div class="">
-                        
+                        <hr>
                             
                         <div class="col-md-12 table-responsive">																
 								<table class="table" id="newtable">
@@ -98,7 +93,7 @@
                                         <th>UTR No.</th>
                                         <th>Status</th>
                                         <th>Total Amount</th>
-                                        <th class="text-center">Action</th>
+                                        <th width="20%" class="text-center">Action</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -179,12 +174,12 @@
                                                     <?php
                                                     if($row->status == 1){
                                                     ?>
-                                                    <a href="<?php echo admin_url('bank_payments/export/'.$row->id); ?>" class="btn-sm btn-primary" >Excel Export</a>
+                                                    <a href="<?php echo admin_url('bank_payments/export/'.$row->id); ?>" class="btn btn-info" >Excel Export</a>
                                                     <?php    
                                                     }
                                                     ?>
                                                     
-                                                    <a href="<?php echo admin_url('bank_payments/view/'.$row->id); ?>" class="btn-sm btn-primary" >View</a>
+                                                    <a href="<?php echo admin_url('bank_payments/view/'.$row->id); ?>" class="btn btn-success" >View</a>
                                                      <?php
                                                     
                                                     if($row->status == 0 || $row->status == 2 || $row->status == 4 || $row->status == 5){ 
@@ -255,7 +250,10 @@
         <h4 class="modal-title">Update UTR No.</h4>
       </div>
       <div class="modal-body">
-        <div id="utr_html"></div>
+        <div class="table-responsive">
+            <div id="utr_html"></div>
+        </div>
+        
         <!-- <div class="row">
             <form action="<?php echo admin_url('bank_payments/update_reference'); ?>" class="proposal-form" enctype="multipart/form-data" method="post" accept-charset="utf-8">
             <div class="col-md-6">

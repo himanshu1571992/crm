@@ -83,47 +83,49 @@ if($lead->client_branch_id > 0){
             </form>
 
             <div class="col-md-12">  
-            <hr>                             
-                <table class="table" id="newtable">
-                   <thead>
-                        <tr>
-                           <th>S.No</th>
-                           <th>Customer Name</th>
-                           <th>Customer No.</th>
-                           <th>Date</th>
-                           <th>Agent No.</th>
-                           <th class="text-center">Call Type</th>
-                           <th class="text-center">Recording</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <?php
-                        if(!empty($call_history)){
-                            foreach ($call_history as $k => $row) {
-                                $customer_name = $this->db->query("SELECT c.firstname from tblcontacts as c LEFT JOIN tblenquiryclientperson as cp ON cp.contact_id = c.id where cp.enquiry_id = '".$lead_id."' and c.phonenumber = '".$row->customer_number."' ")->row()->firstname;
-                                ?>
-                                <tr>
-                                    <td><?php echo ++$k; ?></td>
-                                    <td><?php echo (!empty(cc($customer_name))) ? cc($customer_name) : '--'; ?></td>
-                                    <td><?php echo $row->customer_number; ?></td>
-                                    <td><?php echo _d($row->created_at);?></td>
-                                    <td><?php echo $row->agent_number; ?></td>
-                                    <td class="text-center"><img height="35" width="35" src="<?php if($row->call_status == 'Answered'){ echo base_url('assets/images/calltransfer.png'); }else{ echo base_url('assets/images/misscall.png'); }  ?>"></td>
-                                    <td class="text-center">
-                                        <audio controls style="height: 30px;width: 210px;">
-                                          <source src="<?php echo $row->recording_url; ?>" type="audio/mpeg">
-                                        </audio>
-                                    </td>
-                                </tr>    
-                                <?php
+                <hr>                   
+                <div class="table-responsive">          
+                    <table class="table" id="newtable">
+                    <thead>
+                            <tr>
+                            <th>S.No</th>
+                            <th>Customer Name</th>
+                            <th>Customer No.</th>
+                            <th>Date</th>
+                            <th>Agent No.</th>
+                            <th class="text-center">Call Type</th>
+                            <th class="text-center">Recording</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if(!empty($call_history)){
+                                foreach ($call_history as $k => $row) {
+                                    $customer_name = $this->db->query("SELECT c.firstname from tblcontacts as c LEFT JOIN tblenquiryclientperson as cp ON cp.contact_id = c.id where cp.enquiry_id = '".$lead_id."' and c.phonenumber = '".$row->customer_number."' ")->row()->firstname;
+                                    ?>
+                                    <tr>
+                                        <td><?php echo ++$k; ?></td>
+                                        <td><?php echo (!empty(cc($customer_name))) ? cc($customer_name) : '--'; ?></td>
+                                        <td><?php echo $row->customer_number; ?></td>
+                                        <td><?php echo _d($row->created_at);?></td>
+                                        <td><?php echo $row->agent_number; ?></td>
+                                        <td class="text-center"><img height="35" width="35" src="<?php if($row->call_status == 'Answered'){ echo base_url('assets/images/calltransfer.png'); }else{ echo base_url('assets/images/misscall.png'); }  ?>"></td>
+                                        <td class="text-center">
+                                            <audio controls style="height: 30px;width: 210px;">
+                                            <source src="<?php echo $row->recording_url; ?>" type="audio/mpeg">
+                                            </audio>
+                                        </td>
+                                    </tr>    
+                                    <?php
+                                }
+                            }else{
+                                echo '<tr><td class="text-center" colspan="7"><b>Call History are empty!</b></td></tr>';
                             }
-                        }else{
-                            echo '<tr><td class="text-center" colspan="7"><b>Call History are empty!</b></td></tr>';
-                        }
-                        ?>
-                     </tbody>    
-                </table>
-              </div>
+                            ?>
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
 
 
                           

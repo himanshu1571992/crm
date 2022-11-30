@@ -13,6 +13,19 @@
         echo'0';
     }
 } ?>"> -->
+<style>
+    
+    @media (max-width: 500px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }    
+    @media (max-width: 768px){
+        .btn-bottom-toolbar {
+            width: 100%
+        }
+    }
+    </style>
 <input id="check_gst" type='hidden' value="0">
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog modal-lg">

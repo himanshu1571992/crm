@@ -1,7 +1,4 @@
-
 <?php init_head(); ?>
-
-
 <?php
 if(!empty($this->session->userdata('purchaseinvoice_search'))){
     $search_arr = $this->session->userdata('purchaseinvoice_search');
@@ -15,21 +12,15 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
             <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'attendance_form', 'class' => 'proposal-form')); ?>
             <div class="col-md-12">
                 <div class="panel_s">
-
                     <div class="panel-body">
-
-                    <div class="row panelHead">
-                        <div class="col-xs-12 col-md-6"><h4><?php echo $title;  if(check_permission_page(45,'create')){ ?> </h4></div>   
-                        <div class="col-xs-12 col-md-6 text-right">
-                            <a href="<?php echo admin_url('purchase/payment_invoice'); ?>" type="submit" class="btn btn-info">Create new Invoice</a> <?php } ?>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6"><h4><?php echo $title;  if(check_permission_page(45,'create')){ ?> </h4></div>   
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <a href="<?php echo admin_url('purchase/payment_invoice'); ?>" type="submit" class="btn btn-info">Create new Invoice</a> <?php } ?>
+                            </div>
                         </div>
-                    </div>
-
-                    <hr class="hr-panel-heading">
-
-                    <div class="row">
-                    
-                    <div>
+                        <hr class="hr-panel-heading">
+                    <div class="row"><div>
                         <div class="col-md-4" id="employee_div">
                             <div class="form-group ">
                                 <label for="branch_id" class="control-label">Select Vendor</label>
@@ -47,15 +38,12 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                 </select>
                             </div>
                         </div>
-
-
                         <div class="form-group col-md-2" app-field-wrapper="date">
                             <label for="f_date" class="control-label">From Date</label>
                             <div class="input-group date">
                                 <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if(!empty($f_date)){ echo $f_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                             </div>
                         </div>
-
                         <div class="form-group col-md-2" app-field-wrapper="date">
                             <label for="t_date" class="control-label">To Date</label>
                             <div class="input-group date">
@@ -82,16 +70,10 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                 </select>
                             </div>
                         </div> -->
-
-
-                        
-                        <div class="col-md-1">                            
-                        <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
+                        <div class="col-md-2">                            
+                            <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
+                            <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
                         </div>
-                        <div class="col-md-1">
-                         <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
-                        </div>
-                       
                     </div>
                         
                             <div class="col-md-12">
@@ -111,7 +93,7 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                         <th>Amount</th>
                                         <th>Date</th>
                                         <th>Invoice For</th>
-                                        <th width="15%">Invoices</th>
+                                        <th width="20%">Invoices</th>
                                         <th>Accounted Status</th>
                                         <th width="30%">Action</th>
                                       </tr>
@@ -177,7 +159,6 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                                 </td>
                                                 <td class="text-center">
                                                     
-                                                    
                                                     <?php
                                                         $chk_mr_files = $this->db->query("SELECT * FROM `tblmaterialreceiptfiles` WHERE `mr_id` IN (".$value->mr_id.")")->result();
                                                         if(!empty($chk_mr_files)){
@@ -187,6 +168,7 @@ if(!empty($this->session->userdata('purchaseinvoice_search'))){
                                                         }
                                                     ?>
                                                     <a target="_blank"  class="btn-sm btn-info" href="<?php echo admin_url('purchase/purchase_invoice_pdf/'.$value->id);?>" data-status="1" title="System Invoice">System Invoice</a>
+                                                    
                                                     <div class="btn-group pull-right">
                                                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                           <i class="fa fa-ellipsis-v" aria-hidden="true"></i>

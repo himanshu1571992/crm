@@ -301,7 +301,7 @@ if(!empty($this->session->userdata('lead_search'))){
                         ?>  
                         
                         
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow: auto;">
                         <table class="table ui-table">
                             <thead>
                               <tr>

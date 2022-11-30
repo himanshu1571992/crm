@@ -81,46 +81,48 @@
                                                                           <div class="modal-body">
                                                                             <div class="row">
                                                                                 <div class="col-md-12">
-                                                                                    <div class="form-group" id="docAttachDivVideo" >
-                                                                                        <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop saletable">
-                                                                                            <thead>
-                                                                                                <tr>
-                                                                                                  <th width="1%" align="left">S.No</th>
-                                                                                                  <th width="30%" align="left">Remark</th>
-                                                                                                  <th width="10%" align="left">Uploaded Design</th>
-                                                                                                </tr>
-                                                                                            </thead>
-                                                                                            <tbody>
-                                                                                              <?php
-                                                                                                  $i = 0;
-                                                                                                  $drequisition_remarks = $this->db->query("SELECT * FROM `tbldesignrequisitionremark` WHERE `id` IN (".$row->remark_ids.") ")->result();
-                                                                                                  if (isset($drequisition_remarks) && !empty($drequisition_remarks)){
-                                                                                                     foreach ($drequisition_remarks as $value) {
-                                                                                              ?>
-                                                                                                    <tr class="main" id="tre<?php echo $i; ?>">
-                                                                                                        <td><?php echo ++$i; ?></td>
-                                                                                                        <td><?php echo (!empty($value->remark)) ? cc($value->remark) : "";?></td>
-                                                                                                        <td>
-                                                                                                          <div class="form-group">
-                                                                                                            <?php if (!empty($value->design_files)){
-                                                                                                                $designfiles = json_decode($value->design_files);
-                                                                                                                foreach ($designfiles as $k => $file) {
-                                                                                                            ?>
-                                                                                                                  <?php echo $k+1; ?>) <a href="<?php echo base_url('uploads/design_requisition/design_remarks_files') . "/" . $file; ?>" target="_blank"><?php echo $file; ?></a><br>
-                                                                                                            <?php
-                                                                                                                }
-                                                                                                            } ?>
-
-                                                                                                          </div>
-                                                                                                        </td>
+                                                                                    <div class="table-responsive">
+                                                                                        <div class="form-group" id="docAttachDivVideo" >
+                                                                                            <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop saletable">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                    <th width="1%" align="left">S.No</th>
+                                                                                                    <th width="30%" align="left">Remark</th>
+                                                                                                    <th width="10%" align="left">Uploaded Design</th>
                                                                                                     </tr>
-                                                                                              <?php
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                <?php
+                                                                                                    $i = 0;
+                                                                                                    $drequisition_remarks = $this->db->query("SELECT * FROM `tbldesignrequisitionremark` WHERE `id` IN (".$row->remark_ids.") ")->result();
+                                                                                                    if (isset($drequisition_remarks) && !empty($drequisition_remarks)){
+                                                                                                        foreach ($drequisition_remarks as $value) {
+                                                                                                ?>
+                                                                                                        <tr class="main" id="tre<?php echo $i; ?>">
+                                                                                                            <td><?php echo ++$i; ?></td>
+                                                                                                            <td><?php echo (!empty($value->remark)) ? cc($value->remark) : "";?></td>
+                                                                                                            <td>
+                                                                                                            <div class="form-group">
+                                                                                                                <?php if (!empty($value->design_files)){
+                                                                                                                    $designfiles = json_decode($value->design_files);
+                                                                                                                    foreach ($designfiles as $k => $file) {
+                                                                                                                ?>
+                                                                                                                    <?php echo $k+1; ?>) <a href="<?php echo base_url('uploads/design_requisition/design_remarks_files') . "/" . $file; ?>" target="_blank"><?php echo $file; ?></a><br>
+                                                                                                                <?php
+                                                                                                                    }
+                                                                                                                } ?>
 
-                                                                                                     }
-                                                                                                  }
-                                                                                              ?>
-                                                                                            </tbody>
-                                                                                        </table>
+                                                                                                            </div>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                <?php
+
+                                                                                                        }
+                                                                                                    }
+                                                                                                ?>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

@@ -122,8 +122,8 @@
                         <hr>
                     </div>
 
-                    <div class="col-md-12 table-responsive">
-                        <table class="table" id="newtable">
+                    <div class="col-md-12 table-responsive" style="overflow: auto;">
+                        <table class="table" id="newtable" >
                             <thead>
                               <tr>
                                 <th>S.No</th>

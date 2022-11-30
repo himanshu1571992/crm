@@ -1,5 +1,17 @@
 <?php init_head(); ?>
-
+<style>
+    
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}
+</style>
 <style>#adminnote{margin: 0px 13.5px 0px 0px;height:120px;width:100%;}.error{border:1px solid red !important;}.red{border:1px solid red !important;background-color:red !important;color:#fff !important;}.yellow{border:1px solid yellow !important;background-color:yellow !important;color:black  !important;}.blue{border:1px solid blue !important;background-color:blue !important;color:#fff !important;}.green{border:1px solid green !important;background-color:green !important;color:#fff !important;}.orange{border:1px solid orange !important;background-color:orange !important;color:#fff !important;}</style>
 
 <!-- <input id="check_gst" type='hidden' value="<?php if(isset($invoice->is_gst)){if ($invoice->is_gst == 1){echo'1';}else{echo'0';}}else{if(!empty($clientsate) == get_staff_state()){echo'1';}else{echo'0';}} ?>"> -->

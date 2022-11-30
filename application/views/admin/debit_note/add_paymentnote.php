@@ -1,5 +1,18 @@
 <?php init_head(); ?>
 <style>#adminnote{margin: 0px 13.5px 0px 0px;height: 128px;width: 509px;}.error{border:1px solid red !important;}.red{border:1px solid red !important;background-color:red !important;color:#fff !important;}.yellow{border:1px solid yellow !important;background-color:yellow !important;color:black  !important;}.blue{border:1px solid blue !important;background-color:blue !important;color:#fff !important;}.green{border:1px solid green !important;background-color:green !important;color:#fff !important;}.orange{border:1px solid orange !important;background-color:orange !important;color:#fff !important;}</style>
+<style>
+    
+@media (max-width: 500px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}    
+@media (max-width: 768px){
+    .btn-bottom-toolbar {
+        width: 100%
+    }
+}
+</style>
 <!-- <input id="check_gst" type='hidden' value="<?php if(isset($invoice->is_gst)){if ($invoice->is_gst == 1){echo'1';}else{echo'0';}}else{if($clientsate == get_staff_state()){echo'1';}else{echo'0';}} ?>"> -->
 <input id="check_gst" type='hidden' value="0">
 <div class="modal fade" id="myModal" role="dialog">
@@ -160,7 +173,7 @@
                     <div class="panel-body">
                     	<h4 class="no-mtop mrg3">Invioce Details</h4>
                         <hr/>
-
+					  			<div class="table-responsive">
                                     <div class="form-group" id="docAttachDivVideo">
                                         <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop saletable">
                                             <thead>
@@ -295,9 +308,10 @@
                                             <label class="label-control subHeads"><a class="addmoresalepro" value="<?php echo count($invoicedata_info); ?>>">Add More <i class="fa fa-plus"></i></a></label>
                                         </div>
                                     </div>
-                                    </div>
-                                    </div>
-                                    </div>
+								</div>	
+                            </div>
+                        </div>
+                    </div>
 
 
             <div class="panel_s invoice accounting-template">
@@ -305,7 +319,7 @@
                     <div class="panel-body">
                     	<h4 class="no-mtop mrg3">Debit Note Details</h4>
                         <hr/>
-
+					<div class="table-responsive">						
 	                    <div class="form-group" id="docAttachDivVideo">
 	                        <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop debitnotetable">
 	                            <thead>
@@ -440,9 +454,10 @@
 	                            <label class="label-control subHeads"><a class="addmoredebitnote" value="<?php echo count($invoicedata_info); ?>>">Add More <i class="fa fa-plus"></i></a></label>
 	                        </div>
 	                    </div>
-	                    </div>
-	                    </div>
-	                    </div>
+					</div>	
+	            </div>
+	        </div>
+        </div>
 
 
 

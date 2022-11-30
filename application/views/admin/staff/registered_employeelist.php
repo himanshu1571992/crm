@@ -23,14 +23,10 @@
                                 <input id="f_date" name="f_date" class="form-control datepicker" value="<?php echo (isset($s_fdate) && $s_fdate != "") ? $s_fdate : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                             </div>
                         </div>
-                        <div class="col-md-1">                            
-                        <button type="submit" style="margin-top: 25px;" class="btn btn-info">Search</button>
+                        <div class="col-md-2">                            
+                          <button type="submit" style="margin-top: 25px;" class="btn btn-info">Search</button>
+                          <a style="margin-top: 25px;" class="btn btn-danger" href="">Reset</a>
                         </div>
-                        <div class="col-md-1">
-                         <a style="margin-top: 25px;" class="btn btn-danger" href="">Reset</a>
-                        </div>
-
-                   
                       <div class="row">
                        <div class="col-md-12 table-responsive">  <div>                                                    
 

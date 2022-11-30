@@ -8,7 +8,14 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                    <h4 class="no-margin"><?php echo $title; ?> <a href="<?php echo admin_url('departments/add_subdivision'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Sub Division</a></h4>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <a href="<?php echo admin_url('departments/add_subdivision'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Sub Division</a>
+                            </div>
+                        </div>
                     <hr class="hr-panel-heading">
                     <div class="row">
                         <div class="">

@@ -174,11 +174,9 @@ if(!empty($staff_id)){
 
             
 
-            <div class="col-md-1">                            
-            <button type="submit" class="btn btn-info">Search</button>
-            </div>
-            <div class="col-md-1">
-             <a class="btn btn-danger" href="" style="margin-left: 20px;">Reset</a>
+            <div class="col-md-2">                            
+              <button type="submit" class="btn btn-info">Search</button>
+              <a class="btn btn-danger" href="" style="margin-left: 20px;">Reset</a>
             </div>
 
             </form>

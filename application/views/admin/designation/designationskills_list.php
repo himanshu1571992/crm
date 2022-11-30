@@ -7,11 +7,16 @@
             <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'department_form', 'class' => 'department-form')); ?>
             <div class="col-md-12">
                 <div class="panel_s">
-
                     <div class="panel-body">
-
-                    <h4 class="no-margin"><?php echo $title; ?> <a href="<?php echo admin_url('designation/designationskill_add'); ?>" class="btn btn-info pull-right" style="margin-top:-6px;">Add Designation Skills</a></h4>
-                    <hr class="hr-panel-heading">
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4><?php echo $title; ?></h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                            <a href="<?php echo admin_url('designation/designationskill_add'); ?>" class="btn btn-info pull-right" style="margin-top:-6px;">Add Designation Skills</a>
+                            </div>
+                        </div>
+                        <hr class="hr-panel-heading">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
@@ -48,7 +53,7 @@
                                             <th width="1%">S.No</th>
                                             <th width="15%">Date</th>
                                             <th>Designation</th>
-                                            <th width="15%">Action</th>
+                                            <th width="20%">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -61,7 +66,7 @@
                                                 if(!empty($row->designation_ids)){
                                                     $designation = explode(",", $row->designation_ids);
                                                     foreach($designation as $d_id) {
-                                                        $dname .= "<span class='btn-sm btn-success'>".value_by_id("tbldesignation", $d_id, "designation")."</span>&nbsp;";
+                                                        $dname .= "<span class='label label-success'>".value_by_id("tbldesignation", $d_id, "designation")."</span>&nbsp;";
                                                     }
                                                 }
 

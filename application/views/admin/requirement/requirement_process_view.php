@@ -141,9 +141,7 @@
                                }
                                ?>
                       		</div>
-
-
-
+                              <div class="table-responsive">
                                 <table class="table ui-table" id="table_<?php echo $value->id; ?>">
                                     <thead>
                                       <tr>
@@ -175,6 +173,7 @@
 
                                     </tbody>
                                   </table>
+                                </div>  
                       </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -183,6 +182,7 @@
                 </div>
             </div>
             <div class="col-md-12">
+              <div class="table-responsive">
                 <table class="table ui-table" id="vendortable_<?php echo $value->id; ?>">
                       <thead>
                           <tr>
@@ -233,6 +233,7 @@
                           ?>
                       </tbody>
                   </table>
+                </div>
               </div>
           </div>
         <?php

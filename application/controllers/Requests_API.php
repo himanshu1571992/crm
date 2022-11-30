@@ -400,10 +400,13 @@ class Requests_API extends Clients_controller
 
 			$stafff = array();
 
-
 			
-			//$Staffgroup = get_staff_group(14);
-			$Staffgroup =  get_staff_group(14,$user_id);
+			if(empty($multiselect_id)){
+				$multiselect_id = 14;
+			}
+			
+			//$Staffgroup =  get_staff_group(14,$user_id);
+			$Staffgroup =  get_staff_group($multiselect_id,$user_id);
 
 			$i=0;
 
@@ -1170,6 +1173,9 @@ class Requests_API extends Clients_controller
 						'payment_status'=>$payment_status,
 						'current_salary'=>$current_salary,
 						'trip_id'=>$request_info->trip_id,
+						'receive_status'=>$request_info->receive_status,
+						'by_pettycash'=>$request_info->by_pettycash,
+						'manager_approved_status'=>$request_info->manager_approved_status,
 						'trip_no'=>$trip_no,
 						'expense_arr'=>$expense_arr,
 					);

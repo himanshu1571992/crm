@@ -82,10 +82,10 @@
                                         <td class="text-center"><?php echo $toggleActive; ?></td>
                                         <td class="text-center">
                                         <?php if (check_permission_page(327,'edit')){ ?>
-                                          <a href="<?php echo admin_url('company_expense/subhead_master/'.$value->id); ?>" class="btn-sm btn-primary" title="Edit">Edit</a>
+                                          <a href="<?php echo admin_url('company_expense/subhead_master/'.$value->id); ?>" class="btn btn-primary" title="Edit">Edit</a>
                                         <?php }else{ echo '--';} ?>  
                                         <?php if (check_permission_page(327,'delete')){ ?>
-                                          <a href="<?php echo admin_url('company_expense/delete_subhead_master/'.$value->id); ?>" class="btn-sm btn-danger _delete" title="Edit">Delete</a>
+                                          <a href="<?php echo admin_url('company_expense/delete_subhead_master/'.$value->id); ?>" class="btn btn-danger _delete" title="Edit">Delete</a>
                                         <?php }else{ echo '--';} ?>  
                                         </td>
 

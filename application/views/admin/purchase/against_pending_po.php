@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div class="">
-                            <div class="col-md-12">                                                             
+                            <div class="col-md-12 table-responsive">                                                             
                                 <table class="table ui-table">
                                     <thead>
                                       <tr>

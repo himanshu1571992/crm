@@ -204,7 +204,7 @@ if(!empty($this->session->userdata('rent_invoice_search'))){
                         ?>
 
                         <hr>
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow: auto;">
                         <table class="table" id="newtable">
                             <thead>
                               <tr>

@@ -108,13 +108,8 @@
             margin-top:10px;
         }
     }
-
-    @media print {
-        .invoice {
-            width:900px;
-            height:800px;
-        }
-    }
+    
+    
     .invoice-header {
         margin: 0 -20px;
         margin-bottom: 0px;
@@ -176,6 +171,37 @@
 .h3, h3 {
     font-size: 16px;
 }
+    @media (max-width: 500px){
+        .invoice-price .invoice-price-left .sub-price {
+            display: contents;
+            vertical-align: middle;
+            padding: 0 20px
+        }
+        .invoice-price .invoice-price-right { 
+            font-size: 21px;
+        }
+    }    
+    @media (max-width: 768px){
+        .invoice-price .invoice-price-left .sub-price {
+            display: contents;
+            vertical-align: middle;
+            padding: 0 20px
+        }
+        .invoice-price .invoice-price-right {
+            font-size: 21px;
+        }
+    }
+    @media print {
+        .invoice {
+            width:900px;
+            height:800px;
+        }
+        .invoice-price .invoice-price-left .sub-price {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 0 20px
+        }
+    }
 </style>
 <div id="wrapper">
     <div class="content accounting-template">
@@ -275,7 +301,7 @@
                                         }
                                     }
                                 ?>
-                                <div class="row table-row table-responsive">
+                                <div class="col-md-12 table-responsive">
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>

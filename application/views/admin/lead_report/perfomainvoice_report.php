@@ -87,7 +87,8 @@ if($lead->client_branch_id > 0){
             </form>
 
             <div class="col-md-12">  
-            <hr>                             
+              <hr>                     
+              <div class="table-responsive">        
                 <table class="table" id="newtable">
                   <thead>
                     <tr>
@@ -137,6 +138,7 @@ if($lead->client_branch_id > 0){
                   </tfoot>
                   </table>
               </div>
+            </div>
 
 
                           

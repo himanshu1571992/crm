@@ -84,7 +84,7 @@
                                                 echo '<span class="text-danger pull-right" style="font-size:15px;" >Can\'t Raise Payment Request</span>';
                                             }
                                         }else{
-                                            echo '<span class="text-danger pull-right" style="font-size:20px;" >* Bank details of the Vendor are not taken from Vendor</span>';
+                                            echo '<span class="text-danger pull-right" style="font-size:15px;" >* Vendor bank details is not updated</span>';
                                         }    
                                 ?>
                                 </div>

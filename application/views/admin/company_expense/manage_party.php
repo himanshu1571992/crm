@@ -35,38 +35,35 @@
 <div id="wrapper">
     <div class="content accounting-template">
          <div class="row">
-
             <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'attendance_form', 'class' => 'proposal-form')); ?>
             <div class="col-md-12">
                 <div class="panel_s">
-
                     <div class="panel-body">
-
-                    <h4 class="no-margin">Expense Party List <?php if(check_permission_page(92,'create') ){ ?> <a href="<?php echo admin_url('company_expense/add_party'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add New Party</a> <?php } ?></h4>
-
-
-
-                    <hr class="hr-panel-heading">
-
-                    <div class="row">
-                    
-                    <div class="col-md-4">
-                        <div class="form-group" id="category_id">
-                            <label for="branch_id" class="control-label">Category *</label>
-                            <select class="form-control" required="" id="category_id" name="category_id">
-                                <option value="" selected=" disabled ">--Select One--</option>
-                                <?php
-                                if(!empty($category_info)){
-                                    foreach ($category_info as $key => $value) {
-                                       ?>                                               
-                                         <option value="<?php echo $value->id; ?>" <?php if(!empty($scategory_id) && $scategory_id == $value->id){ echo 'selected';} ?>  ><?php echo cc($value->name); ?></option>
-                                       <?php
-                                    }
-                                }
-                                ?>
-                            </select>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6"><h4>Expense Party List</h4></div>   
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page(92,'create') ){ ?> <a href="<?php echo admin_url('company_expense/add_party'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add New Party</a> <?php } ?>
+                            </div>
                         </div>
-                    </div>    
+                    <hr class="hr-panel-heading">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group" id="category_id">
+                                <label for="branch_id" class="control-label">Category *</label>
+                                <select class="form-control" required="" id="category_id" name="category_id">
+                                    <option value="" selected=" disabled ">--Select One--</option>
+                                    <?php
+                                    if(!empty($category_info)){
+                                        foreach ($category_info as $key => $value) {
+                                        ?>                                               
+                                            <option value="<?php echo $value->id; ?>" <?php if(!empty($scategory_id) && $scategory_id == $value->id){ echo 'selected';} ?>  ><?php echo cc($value->name); ?></option>
+                                        <?php
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>    
 
                         
                           <div class="col-md-1">                            

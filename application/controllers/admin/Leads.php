@@ -190,9 +190,9 @@ class Leads extends Admin_controller
 
         $uriSegment = 4;
         $perPage = 25;
-
+        $amount_filter = '';
         // Get record count
-        $totalRec = $this->leads_model->get_lead_count($where);
+        $totalRec = $this->leads_model->get_lead_count($where, $amount_filter);
 
         // Pagination configuration
         $config['base_url']    = admin_url().'leads/list/';
@@ -224,7 +224,7 @@ class Leads extends Admin_controller
         $offset = !$page?0:$page;
 
         // Get records
-        $data['lead_list'] = $this->leads_model->get_lead($where,$offset,$perPage);
+        $data['lead_list'] = $this->leads_model->get_lead($where,$offset,$perPage,$amount_filter);
         //$data['lead_data'] = $this->leads_model->get_lead_search_details($where,$status_where);
 
         $data['sources_info'] = $this->db->query("SELECT * from `tblleadssources` where status = 1 ORDER BY name ASC ")->result();
@@ -3504,6 +3504,10 @@ class Leads extends Admin_controller
 
                 $where .= " and l.enquiry_date between '".$f_date."' and '".$t_date."' ";
             }
+        }else{
+            /* get last 3 month record by defult */
+            $startdate = date('Y-m-01', strtotime('-3 month'));
+            $where .= " and l.enquiry_date BETWEEN '".$startdate."' and '".date('Y-m-t')."' ";
         }
 
         $data['lead_info'] = $this->db->query("SELECT l.* from `tblleads` as l LEFT JOIN tblleadassignstaff as ls ON l.id = ls.lead_id LEFT JOIN tblproductinquiry as lp ON l.id = lp.enquiry_id where ".$where." GROUP BY l.id ORDER BY l.id desc ")->result();

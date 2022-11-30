@@ -487,4 +487,3 @@ function gstDetails($number){
     return $responseData;
 }
 
-

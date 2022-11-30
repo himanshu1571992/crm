@@ -39,13 +39,15 @@
             <?php echo form_open_multipart($this->uri->uri_string(), array('id' => 'attendance_form', 'class' => 'proposal-form')); ?>
             <div class="col-md-12">
                 <div class="panel_s">
-
                     <div class="panel-body">
-
-                    <h4 class="no-margin">Handover List <?php if(check_permission_page(154,'create')){ ?> <a href="<?php echo admin_url('handover/add'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add New Handover</a> <?php } ?></h4>
-
-
-
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6">
+                                <h4>Handover List</h4>
+                            </div>
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page(154,'create')){ ?> <a href="<?php echo admin_url('handover/add'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add New Handover</a> <?php } ?>
+                            </div>
+                        </div>
                     <hr class="hr-panel-heading">
 
                     <div class="row">
@@ -66,16 +68,10 @@
                                 ?>
                             </select>
                         </div>
-                        
-
-                        
-                        <div class="col-md-1">                            
-                        <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
+                        <div class="col-md-2">                            
+                            <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
+                            <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
                         </div>
-                        <div class="col-md-1">
-                         <a style="margin-top: 24px;" class="btn btn-danger" href="">Reset</a>
-                        </div>
-               
                     </div>
                     
                         <div class="">
@@ -239,8 +235,13 @@ $(document).ready(function() {
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Receiver to Final Receiver</h4>
       </div>
-      <div class="modal-body" id="handover_data">
-        <p>Some text in the modal.</p>
+      <div class="modal-body" >
+        <div class="table-responsive">
+            <div id="handover_data">
+                <p>Some text in the modal.</p>
+            </div>
+        </div>
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

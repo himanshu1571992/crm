@@ -1,16 +1,38 @@
 <?php init_head(); ?>
+<style>
+    .addbtn {
+        margin-top:-6px;
+        margin-left:3px;
+    }
+    @media (max-width: 500px){
+        .addbtn {
+            margin-top: 15px;
+        }
+    }    
+    @media (max-width: 768px){
+        .addbtn {
+            margin-top: 15px;
+        }
+    }
+</style>
 <div id="wrapper">
     <div class="content accounting-template">
         <div class="row">
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h4 class="no-margin"><?php echo $title; ?> <a target="_blank" href="<?php echo admin_url('designrequisition/design_master_list'); ?>" class="btn btn-success pull-right" style="margin-top:-6px; margin-left:3px;"> Drawing Master List</a>
-                        <?php if (check_permission_page(393,'create')){?>
-                        <a href="<?php echo admin_url('designrequisition/add'); ?>" class="btn btn-info pull-right" style="margin-top:-6px; "> Add Design Requisition</a>
-                        <?php } ?>
-                        </h4>
-                        <hr class="hr-panel-heading">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6"><h4 class="no-margin"><?php echo $title; ?></h4></div>
+                                <div class="col-md-6">
+                                    <a target="_blank" href="<?php echo admin_url('designrequisition/design_master_list'); ?>" class="btn btn-success pull-right addbtn" style="margin-left:3px;"> Drawing Master List</a>
+                                    <?php if (check_permission_page(393,'create')){?>
+                                        <a href="<?php echo admin_url('designrequisition/add'); ?>" class="btn btn-info pull-right addbtn" > Add Design Requisition</a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <hr class="hr-panel-heading">
+                        </div>
                         <div class="col-md-12">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li role="presentation" class="text-center <?php echo (!empty($section) && $section == 1) ? 'active' : ''; ?>">
@@ -62,7 +84,7 @@
                                         </div>
                                     <?php echo form_close(); ?>
                                         <div class="row">
-                                            <div class="table-responsive">
+                                            <div style="overflow: auto;">
                                           <div class="col-md-12">
                                               <table class="table" id="newtable">
                                                   <thead>
@@ -225,129 +247,129 @@
                                         </div>
                                     <?php echo form_close(); ?>
                                       <div class="row">
-                                          <div class="table-responsive">
-                                              <div class="col-md-12">
-                                                  <table class="table" id="newtable2">
-                                                      <thead>
-                                                          <tr>
-                                                              <th>S.No</th>
-                                                              <th>Request No.</th>
-                                                              <th style="width: 50.717px;">Status</th>
-                                                              <th>Date</th>
-                                                              <th>Expected Date</th>
-                                                              <th>Expected Completion Date</th>
-                                                              <th>Product Type</th>
-                                                              <th>Type</th>
-                                                              <th>Client/Staff</th>
-                                                              <th>Design Status</th>
-                                                              <th class="text-center">Action</th>
-                                                          </tr>
-                                                      </thead>
-                                                      <tbody>
-                                                        <?php
-                                                        if (!empty($design_departmentlist)) {
-                                                            $i = 1;
-                                                            foreach ($design_departmentlist as $key => $row) {
-                                                                $completeremark = $this->db->query("SELECT COUNT(*) as ttl_row FROM `tbldesignrequisitionremark` WHERE `designrequisition_id` = ".$row->id." AND `complete_by_design` = 1")->row()->ttl_row;
-                                                                $countremark = $this->db->query("SELECT COUNT(*) as ttl_row FROM `tbldesignrequisitionremark` WHERE `designrequisition_id` = ".$row->id)->row()->ttl_row;
-                                                                $check_submission = $this->db->query("SELECT id FROM `tbldesignsubmission` WHERE `designrequisition_id` = ".$row->id." ORDER BY id DESC")->row();
-                                                                if ($row->design_status == 1){
-                                                                    $design_status = '<label class="label label-success">Approved</label>';
-                                                                }else if ($row->design_status == 2){
-                                                                    $design_status = '<label class="label label-danger">Rejected</label>';
-                                                                }else{
-                                                                    $design_status = (!empty($check_submission)) ? '<label class="label label-warning">Pending</label>' : '<label class="label label-info">Action Pending</label>';
-                                                                }
-                                                                $expected_date = (!empty($row->expected_date)) ? _d($row->expected_date) : 'N/A';
-                                                                $expected_completed_date = (!empty($row->expected_completed_date)) ? _d($row->expected_completed_date) : '';
-                                                                $expectedcompleted_date = (!empty($row->expected_completed_date)) ? _d($row->expected_completed_date) : 'SET DATE';
-                                                       ?>
-                                                                <tr>
-                                                                    <td Width="1%"><?php echo ++$key; ?></td>
-                                                                    <td>
-                                                                        <?php echo "DR-".str_pad($row->id, 3, '0', STR_PAD_LEFT); ?>
-                                                                        <?php echo get_creator_info($row->added_by, $row->created_at); ?>
-                                                                    </td>
-                                                                    <td><?php echo ($row->enquirycall_id > 0) ? '<span class="btn-sm btn-success" >From Lead</span>' : '<span class="btn-sm btn-info">Direct</span>'; ?></td>
-                                                                    <td><?php echo _d($row->date); ?></td>
-                                                                    <td><?php echo $expected_date; ?></td>
-                                                                    <td><a href="javascript:void(0);" class="label label-primary completedate" data-toggle="modal" data-target="#expectedcomplete_date" data-section="2"  data-id="<?php echo $row->id; ?>" data-expected_date="<?php echo $expected_completed_date; ?>"><?php echo $expectedcompleted_date; ?></a></td>
-                                                                    <td><?php echo ($row->product_type == 1) ? 'Standard' : 'Customized'; ?></td>
-                                                                    <td><?php echo ($row->type == 1) ? 'Staff' : 'Client'; ?></td>
-                                                                    <td>
-                                                                        <?php
-                                                                            if ($row->type == 1){
-                                                                                echo get_employee_name($row->staff_id);
-                                                                            }else{
-                                                                                if ($row->client_id > 0){
-                                                                                    echo client_info($row->client_id)->client_branch_name;
+                                            <div style="overflow: auto;">
+                                                <div class="col-md-12">
+                                                    <table class="table" id="newtable2">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No</th>
+                                                                <th>Request No.</th>
+                                                                <th style="width: 50.717px;">Status</th>
+                                                                <th>Date</th>
+                                                                <th>Expected Date</th>
+                                                                <th>Expected Completion Date</th>
+                                                                <th>Product Type</th>
+                                                                <th>Type</th>
+                                                                <th>Client/Staff</th>
+                                                                <th>Design Status</th>
+                                                                <th class="text-center">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            if (!empty($design_departmentlist)) {
+                                                                $i = 1;
+                                                                foreach ($design_departmentlist as $key => $row) {
+                                                                    $completeremark = $this->db->query("SELECT COUNT(*) as ttl_row FROM `tbldesignrequisitionremark` WHERE `designrequisition_id` = ".$row->id." AND `complete_by_design` = 1")->row()->ttl_row;
+                                                                    $countremark = $this->db->query("SELECT COUNT(*) as ttl_row FROM `tbldesignrequisitionremark` WHERE `designrequisition_id` = ".$row->id)->row()->ttl_row;
+                                                                    $check_submission = $this->db->query("SELECT id FROM `tbldesignsubmission` WHERE `designrequisition_id` = ".$row->id." ORDER BY id DESC")->row();
+                                                                    if ($row->design_status == 1){
+                                                                        $design_status = '<label class="label label-success">Approved</label>';
+                                                                    }else if ($row->design_status == 2){
+                                                                        $design_status = '<label class="label label-danger">Rejected</label>';
+                                                                    }else{
+                                                                        $design_status = (!empty($check_submission)) ? '<label class="label label-warning">Pending</label>' : '<label class="label label-info">Action Pending</label>';
+                                                                    }
+                                                                    $expected_date = (!empty($row->expected_date)) ? _d($row->expected_date) : 'N/A';
+                                                                    $expected_completed_date = (!empty($row->expected_completed_date)) ? _d($row->expected_completed_date) : '';
+                                                                    $expectedcompleted_date = (!empty($row->expected_completed_date)) ? _d($row->expected_completed_date) : 'SET DATE';
+                                                        ?>
+                                                                    <tr>
+                                                                        <td Width="1%"><?php echo ++$key; ?></td>
+                                                                        <td>
+                                                                            <?php echo "DR-".str_pad($row->id, 3, '0', STR_PAD_LEFT); ?>
+                                                                            <?php echo get_creator_info($row->added_by, $row->created_at); ?>
+                                                                        </td>
+                                                                        <td><?php echo ($row->enquirycall_id > 0) ? '<span class="btn-sm btn-success" >From Lead</span>' : '<span class="btn-sm btn-info">Direct</span>'; ?></td>
+                                                                        <td><?php echo _d($row->date); ?></td>
+                                                                        <td><?php echo $expected_date; ?></td>
+                                                                        <td><a href="javascript:void(0);" class="label label-primary completedate" data-toggle="modal" data-target="#expectedcomplete_date" data-section="2"  data-id="<?php echo $row->id; ?>" data-expected_date="<?php echo $expected_completed_date; ?>"><?php echo $expectedcompleted_date; ?></a></td>
+                                                                        <td><?php echo ($row->product_type == 1) ? 'Standard' : 'Customized'; ?></td>
+                                                                        <td><?php echo ($row->type == 1) ? 'Staff' : 'Client'; ?></td>
+                                                                        <td>
+                                                                            <?php
+                                                                                if ($row->type == 1){
+                                                                                    echo get_employee_name($row->staff_id);
                                                                                 }else{
-                                                                                    echo $row->client_name;
+                                                                                    if ($row->client_id > 0){
+                                                                                        echo client_info($row->client_id)->client_branch_name;
+                                                                                    }else{
+                                                                                        echo $row->client_name;
+                                                                                    }
                                                                                 }
-                                                                            }
-                                                                        ?>
-                                                                    </td>
-                                                                    <td>
-                                                                      <?php if (!empty($check_submission)){ ?>
-                                                                          <a href="javascript:void(0)" class="status" onclick="get_assign_status(<?php echo $check_submission->id; ?>, 'designsubmission');" data-target="#requisition_status" id="status" data-toggle="modal"><?php echo $design_status; ?></a>
-                                                                      <?php }else{
-                                                                          echo '<label class="label label-info">Action Pending</label>';
-                                                                      } ?>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                      <div class="btn-group pull-right">
-                                                                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                                              <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                                          </button>
-                                                                          <ul class="dropdown-menu dropdown-menu-right toggle-menu">
-                                                                              <li>
-                                                                                  <a href="<?php echo admin_url('designrequisition/view/' . $row->id); ?>" target="_blank" title="view" >View</a>
-                                                                              </li>
-                                                                              <li>
-                                                                                  <a href="<?php echo admin_url('designrequisition/designrequisition_activity/' . $row->id); ?>" target="_blank" title="activity" >Activity</a>
-                                                                              </li>
-                                                                              <li>
-                                                                                  <a href="javascript:void(0);" onclick="get_production_remark(<?php echo $row->id; ?>);" data-target="#productionremark" id="status" data-toggle="modal">Update Remark</a>
-                                                                              </li>
-                                                                              <?php if ($completeremark == $countremark){ ?>
+                                                                            ?>
+                                                                        </td>
+                                                                        <td>
+                                                                        <?php if (!empty($check_submission)){ ?>
+                                                                            <a href="javascript:void(0)" class="status" onclick="get_assign_status(<?php echo $check_submission->id; ?>, 'designsubmission');" data-target="#requisition_status" id="status" data-toggle="modal"><?php echo $design_status; ?></a>
+                                                                        <?php }else{
+                                                                            echo '<label class="label label-info">Action Pending</label>';
+                                                                        } ?>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                        <div class="btn-group pull-right">
+                                                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                                            </button>
+                                                                            <ul class="dropdown-menu dropdown-menu-right toggle-menu">
                                                                                 <li>
-                                                                                    <a href="javascript:void(0);" onclick="get_design_submission(<?php echo $row->id; ?>);" data-target="#designsubmission" id="dsubmission" data-toggle="modal">Design Submission</a>
+                                                                                    <a href="<?php echo admin_url('designrequisition/view/' . $row->id); ?>" target="_blank" title="view" >View</a>
                                                                                 </li>
-                                                                              <?php }else{ ?>
                                                                                 <li>
-                                                                                    <a href="javascript:void(0);" onclick="confirm('You can\'t submit Design, until you update remarks');">Design Submission</a>
+                                                                                    <a href="<?php echo admin_url('designrequisition/designrequisition_activity/' . $row->id); ?>" target="_blank" title="activity" >Activity</a>
                                                                                 </li>
-                                                                              <?php } ?>
+                                                                                <li>
+                                                                                    <a href="javascript:void(0);" onclick="get_production_remark(<?php echo $row->id; ?>);" data-target="#productionremark" id="status" data-toggle="modal">Update Remark</a>
+                                                                                </li>
+                                                                                <?php if ($completeremark == $countremark){ ?>
+                                                                                    <li>
+                                                                                        <a href="javascript:void(0);" onclick="get_design_submission(<?php echo $row->id; ?>);" data-target="#designsubmission" id="dsubmission" data-toggle="modal">Design Submission</a>
+                                                                                    </li>
+                                                                                <?php }else{ ?>
+                                                                                    <li>
+                                                                                        <a href="javascript:void(0);" onclick="confirm('You can\'t submit Design, until you update remarks');">Design Submission</a>
+                                                                                    </li>
+                                                                                <?php } ?>
 
-                                                                                <?php
-                                                                                    if ($row->design_status == 1){
-                                                                                         $chk_converted = $this->db->query("SELECT COUNT(`id`) as ttl_row FROM `tbldesignmaster` WHERE `designrequisition_id`= ".$row->id." ")->row()->ttl_row;
-                                                                                         if ($chk_converted > 0){
-                                                                                           echo "<li><a href='javascript:void(0);' style='color:yellowgreen'>Master Converted</a></li>";
-                                                                                         }else{
-                                                                                           $chkremarkdesign = $this->db->query("SELECT `id` FROM `tbldesignrequisitionremark` WHERE `designrequisition_id`='".$row->id."' AND `design_files` !='' ")->row();
-                                                                                           if (!empty($chkremarkdesign)){
-                                                                                ?>
-                                                                                  <li>
-                                                                                      <a href="<?php echo admin_url('designrequisition/convert_to_master/' . $row->id); ?>" target="_blank" title="convert to master" >Convert To Master</a>
-                                                                                  </li>
-                                                                                <?php
+                                                                                    <?php
+                                                                                        if ($row->design_status == 1){
+                                                                                            $chk_converted = $this->db->query("SELECT COUNT(`id`) as ttl_row FROM `tbldesignmaster` WHERE `designrequisition_id`= ".$row->id." ")->row()->ttl_row;
+                                                                                            if ($chk_converted > 0){
+                                                                                            echo "<li><a href='javascript:void(0);' style='color:yellowgreen'>Master Converted</a></li>";
+                                                                                            }else{
+                                                                                            $chkremarkdesign = $this->db->query("SELECT `id` FROM `tbldesignrequisitionremark` WHERE `designrequisition_id`='".$row->id."' AND `design_files` !='' ")->row();
+                                                                                            if (!empty($chkremarkdesign)){
+                                                                                    ?>
+                                                                                    <li>
+                                                                                        <a href="<?php echo admin_url('designrequisition/convert_to_master/' . $row->id); ?>" target="_blank" title="convert to master" >Convert To Master</a>
+                                                                                    </li>
+                                                                                    <?php
+                                                                                                }
                                                                                             }
                                                                                         }
-                                                                                    }
-                                                                               ?>
-                                                                              <input type="hidden" class="ttlsubmission<?php echo $row->id; ?>" name="ttldesignsubmission" value="<?php echo (!empty($check_submission)) ? "Y" : "N"; ?>">
-                                                                          </ul>
-                                                                      </div>
-                                                                    </td>
-                                                                </tr>
-                                                                <?php
+                                                                                ?>
+                                                                                <input type="hidden" class="ttlsubmission<?php echo $row->id; ?>" name="ttldesignsubmission" value="<?php echo (!empty($check_submission)) ? "Y" : "N"; ?>">
+                                                                            </ul>
+                                                                        </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <?php
+                                                                }
                                                             }
-                                                        }
-                                                        ?>
-                                                    </tbody>
-                                                  </table>
-                                              </div>
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                           </div>
                                       </div>
                                 </div>

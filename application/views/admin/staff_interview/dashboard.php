@@ -120,11 +120,14 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h4 class="no-margin"><?php echo $title; ?> 
-                        <?php if(check_permission_page(379,'create')){?>
-                        <a href="<?php echo admin_url('staff_interview/add_interview_details'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Interview Details</a>
-                        <?php } ?>
-                        </h4>
+                        <div class="row panelHead">
+                            <div class="col-xs-12 col-md-6"><h4><?php echo $title; ?></h4></div>   
+                            <div class="col-xs-12 col-md-6 text-right">
+                                <?php if(check_permission_page(379,'create')){?>
+                                    <a href="<?php echo admin_url('staff_interview/add_interview_details'); ?>" type="submit" class="btn btn-info pull-right" style="margin-top:-6px;">Add Interview Details</a>
+                                <?php } ?>
+                            </div>
+                        </div>
                         <hr class="hr-panel-heading">
                         <div class="row">
                             <?php echo form_open($this->uri->uri_string(), array('id' => 'designation', 'class' => 'designation-form')); ?>

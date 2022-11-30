@@ -4,6 +4,19 @@
     .popover{
         max-width:600px;
     }
+    .addbtn {
+        margin-top:-6px;
+    }
+    @media (max-width: 500px){
+        .addbtn {
+            margin-top: 15px;
+        }
+    }    
+    @media (max-width: 768px){
+        .addbtn {
+            margin-top: 15px;
+        }
+    }
 </style>
 
 <div id="wrapper">
@@ -12,12 +25,18 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <h4 class="no-margin"><?php echo $title; ?>
-                        <?php if(check_permission_page(323,'create')){?>    
-                        <a href="<?php echo admin_url('enquirycall/add'); ?>" class="btn btn-info pull-right" style="margin-top:-6px; "> Add Call Enquiry </a>
-                        <?php } ?>
-                        </h4>
-                        <hr class="hr-panel-heading">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6"><h4 class="no-margin"><?php echo $title; ?></h4></div>
+                                <div class="col-md-6">
+                                    <?php if(check_permission_page(323,'create')){?>    
+                                        <a href="<?php echo admin_url('enquirycall/add'); ?>" class="btn btn-info pull-right addbtn"> Add Call Enquiry </a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <hr class="hr-panel-heading">
+                        </div>
+                        
                         <div>
                             <div class="col-md-12">
                                 <ul class="nav nav-tabs" role="tablist">

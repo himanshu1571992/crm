@@ -36,6 +36,18 @@ fieldset.for-panel p span.badge-success {
     color: #fff;
     background-color: #28a745;
 }
+@media (max-width: 500px){
+    .form-control-static {
+        margin-right: 100px;
+        float: right;
+    }
+}    
+@media (max-width: 768px){
+    .form-control-static {
+        margin-right: 100px;
+        float: right;
+    }
+}     
 </style>
 <div id="wrapper">
     <div class="content">
@@ -54,320 +66,297 @@ fieldset.for-panel p span.badge-success {
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Category :</label>
-                                    <p class="form-control-static">
-                                        <?php 
-                                            if(!empty($paymentrequest_info)){
-                                             echo value_by_id('tblcompanyexpensecatergory',$paymentrequest_info->category_id,'name');   
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <?php if(!empty($paymentrequest_info->category_id) && ($paymentrequest_info->category_id == 3 || $paymentrequest_info->category_id == 4 || $paymentrequest_info->category_id == 6) ){ ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Type :</label>
-                                    <p class="form-control-static">
-                                        <?php 
-                                            if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 1 && $paymentrequest_info->category_id == 3){
-                                                    echo 'Rent';
-                                            }
-                                            else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 3){
-                                                    echo 'Deposit';
-                                            }
-                                            else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 3 && $paymentrequest_info->category_id == 3){
-                                                    echo 'Both';
-                                            }
-                                            else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 1 && $paymentrequest_info->category_id == 4){
-                                                    echo 'Recurring';
-                                            }
-                                            else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 4){
-                                                    echo 'Onetime';
-                                            }
-                                            else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 1 && $paymentrequest_info->category_id == 6){
-                                                    echo 'Regular';
-                                            }
-                                            else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 6){
-                                                    echo 'Onetime';
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } ?>
-                            
-                            <?php 
-                            //if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 1 && $paymentrequest_info->category_id == 3){
-                            if($paymentrequest_info->from_date > 0  && $paymentrequest_info->to_date > 0){
-                            ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">From Date : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->from_date)){
-                                                echo _d($paymentrequest_info->from_date);
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">To Date : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->to_date)){
-                                                echo _d($paymentrequest_info->to_date);
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 3){ ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Deposit Amount : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->deposit_amount)){
-                                                echo $paymentrequest_info->deposit_amount;
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 3 && $paymentrequest_info->category_id == 3){?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">From Date : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->from_date)){
-                                                echo _d($paymentrequest_info->from_date);
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">To Date : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->to_date)){
-                                                echo _d($paymentrequest_info->to_date);
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>  
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Deposit Amount : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->deposit_amount)){
-                                                echo $paymentrequest_info->deposit_amount;
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 1 && $paymentrequest_info->category_id == 6){ ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Transport Against : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->transport_against) && $paymentrequest_info->transport_against == 1){
-                                                echo 'Invoice';
-                                            }
-                                            else
-                                            {
-                                                echo 'PO';
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Party Name : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->party_id)){
-                                                echo value_by_id('tblcompanyexpenseparties',$paymentrequest_info->party_id,'name');
-                                            }elseif(!empty($paymentrequest_info->party_name)){
-                                                echo $paymentrequest_info->party_name;
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 6){?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Transport Against : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->transport_against) && $paymentrequest_info->transport_against == 1){
-                                                echo 'Invoice';
-                                            }
-                                            else
-                                            {
-                                                echo 'PO';
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Party Name : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(!empty($paymentrequest_info->party_id)){
-
-                                               echo value_by_id('tblcompanyexpenseparties',$paymentrequest_info->party_id,'name');
-                                            }elseif(!empty($paymentrequest_info->party_name)){
-                                                echo $paymentrequest_info->party_name;
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } ?>
- 
-                            <?php if(!empty($paymentrequest_info->category_id) && $paymentrequest_info->category_id == 3 || $paymentrequest_info->category_id == 4 || $paymentrequest_info->category_id == 5) { ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Party Name : </label>
-                                    <p class="form-control-static">
-                                         <?php 
-                                            if(isset($paymentrequest_info->party_id)){
-
-                                               echo value_by_id('tblcompanyexpenseparties',$paymentrequest_info->party_id,'name');
-                                            }
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } ?>
-                      
-                            <?php if(!empty($paymentrequest_info->head_id)) { ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Head :</label>
-                                    <p class="form-control-static">
-                                        <?php 
-                                            echo value_by_id('tblheads',$paymentrequest_info->head_id,'name');
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } ?>
-
-                            <?php if(!empty($paymentrequest_info->sub_head_id)) { ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Sub Head :</label>
-                                    <p class="form-control-static">
-                                        <?php 
-                                            echo value_by_id('tblsubheads',$paymentrequest_info->sub_head_id,'name');
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } ?>
-
-                            <?php if(!empty($paymentrequest_info->amount)) { ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Paid Amount :</label>
-                                    <p class="form-control-static">
-                                        <?php 
-                                            echo $paymentrequest_info->amount;
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } ?>
-                            <?php if(!empty($paymentrequest_info->taxable_amount)) { ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Taxable Amount :</label>
-                                    <p class="form-control-static">
-                                        <?php 
-                                            echo $paymentrequest_info->taxable_amount;
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } ?>    
-                            <?php if(!empty($paymentrequest_info->tds_amt)) { ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">TDS Amount :</label>
-                                    <p class="form-control-static">
-                                        <?php 
-                                            echo $paymentrequest_info->tds_amt;
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } ?>
-                            <?php if(!empty($paymentrequest_info->booking_date)) { ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Booking Date :</label>
-                                    <p class="form-control-static">
-                                        <?php 
-                                            echo _d($paymentrequest_info->booking_date);
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php } ?>
-                            <?php if(!empty($paymentrequest_info->remark)) { ?>
-                            <div class="col-md-6">
-                                <div class="form-horizontal">
-                                <label class="col-xs-4 control-label">Remark :</label>
-                                    <p class="form-control-static">
-                                        <?php 
-                                            echo $paymentrequest_info->remark;
-                                        ?>
-                                    </p>
-                                </div>
-                            </div>
-                            <?php }
-                            if (!empty($paymentrequest_info)){
-                                $file_info = $this->db->query("SELECT * from tblfiles where rel_type = 'payment_request' and rel_id = '".$paymentrequest_info->id."' ")->result();
-                                if(!empty($file_info)){
-                            ?>
-                            <div class="col-md-12">
-                            <legend for="file" class="control-label">Uploaded Files :</legend>
-                                <div class="form-horizontal">
-                                    
-                                    <div class="card">
-                                        <ul class="list-group list-group-flush">
-                                        <?php 
-                                            foreach ($file_info as $key => $file) {
-                                        ?>
-                                                <li class="list-group-item col-md-6"><?php echo 1+$key.') '; ?><a target="_blank" href="<?php echo base_url('uploads/payment_request/'.$file->rel_id.'/'.$file->file_name); ?>"><?php echo $file->file_name; ?></a></li>
-                                        <?php            
-                                            }
-                                        ?>
-                                        </ul>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table>
+                                                    <tr>
+                                                        <td class="col-md-6"><label class="control-label">Category : &nbsp;</label></td>
+                                                        <td class="col-md-6">
+                                                            <?php 
+                                                                if(!empty($paymentrequest_info)){
+                                                                    echo value_by_id('tblcompanyexpensecatergory',$paymentrequest_info->category_id,'name');   
+                                                                }
+                                                            ?>
+                                                        </td>
+                                                    </tr>
+                                                    <?php if(!empty($paymentrequest_info->category_id) && ($paymentrequest_info->category_id == 3 || $paymentrequest_info->category_id == 4 || $paymentrequest_info->category_id == 6) ){ ?>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Type : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 1 && $paymentrequest_info->category_id == 3){
+                                                                            echo 'Rent';
+                                                                    }
+                                                                    else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 3){
+                                                                            echo 'Deposit';
+                                                                    }
+                                                                    else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 3 && $paymentrequest_info->category_id == 3){
+                                                                            echo 'Both';
+                                                                    }
+                                                                    else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 1 && $paymentrequest_info->category_id == 4){
+                                                                            echo 'Recurring';
+                                                                    }
+                                                                    else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 4){
+                                                                            echo 'Onetime';
+                                                                    }
+                                                                    else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 1 && $paymentrequest_info->category_id == 6){
+                                                                            echo 'Regular';
+                                                                    }
+                                                                    else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 6){
+                                                                            echo 'Onetime';
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if($paymentrequest_info->from_date > 0  && $paymentrequest_info->to_date > 0){ ?>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">From Date : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->from_date)){
+                                                                        echo _d($paymentrequest_info->from_date);
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">To Date : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->to_date)){
+                                                                        echo _d($paymentrequest_info->to_date);
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 3){ ?>    
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Deposit Amount : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->deposit_amount)){
+                                                                        echo $paymentrequest_info->deposit_amount;
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 3 && $paymentrequest_info->category_id == 3){?>    
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">From Date : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->from_date)){
+                                                                        echo _d($paymentrequest_info->from_date);
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">To Date : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->to_date)){
+                                                                        echo _d($paymentrequest_info->to_date);
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Deposit Amount : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->deposit_amount)){
+                                                                        echo $paymentrequest_info->deposit_amount;
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 1 && $paymentrequest_info->category_id == 6){ ?>    
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Transport Against : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->transport_against) && $paymentrequest_info->transport_against == 1){
+                                                                        echo 'Invoice';
+                                                                    }else{
+                                                                        echo 'PO';
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Party Name : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->party_id)){
+                                                                        echo value_by_id('tblcompanyexpenseparties',$paymentrequest_info->party_id,'name');
+                                                                    }elseif(!empty($paymentrequest_info->party_name)){
+                                                                        echo $paymentrequest_info->party_name;
+                                                                    }else{
+                                                                        echo "N/a";
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } else if(!empty($paymentrequest_info->type) && $paymentrequest_info->type == 2 && $paymentrequest_info->category_id == 6){?>    
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Transport Against : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->transport_against) && $paymentrequest_info->transport_against == 1){
+                                                                        echo 'Invoice';
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        echo 'PO';
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Party Name : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(!empty($paymentrequest_info->party_id)){
+                                                                        echo value_by_id('tblcompanyexpenseparties',$paymentrequest_info->party_id,'name');
+                                                                    }elseif(!empty($paymentrequest_info->party_name)){
+                                                                        echo $paymentrequest_info->party_name;
+                                                                    }else{
+                                                                        echo "N/a";
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?> 
+                                                    <?php if(!empty($paymentrequest_info->category_id) && $paymentrequest_info->category_id == 3 || $paymentrequest_info->category_id == 4 || $paymentrequest_info->category_id == 5) { ?>   
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Party Name : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    if(isset($paymentrequest_info->party_id) && $paymentrequest_info->party_id > 0){
+                                                                        echo value_by_id('tblcompanyexpenseparties',$paymentrequest_info->party_id,'name');
+                                                                    }else{
+                                                                        echo "N/a";
+                                                                    }
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if(!empty($paymentrequest_info->head_id)) { ?>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Head : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    echo value_by_id('tblheads',$paymentrequest_info->head_id,'name');
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>    
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <?php 
-                                }
-                            }
-                            ?>     
+                            <div class="col-md-6">
+                                <div class="form-horizontal">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table>
+                                                    <?php if(!empty($paymentrequest_info->sub_head_id)) { ?>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Sub Head : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    echo value_by_id('tblsubheads',$paymentrequest_info->sub_head_id,'name');
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?> 
+                                                    <?php if(!empty($paymentrequest_info->amount)) { ?>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Paid Amount : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    echo $paymentrequest_info->amount;
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if(!empty($paymentrequest_info->taxable_amount)) { ?>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Taxable Amount : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    echo $paymentrequest_info->taxable_amount;
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if(!empty($paymentrequest_info->tds_amt)) { ?>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">TDS Amount : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    echo $paymentrequest_info->tds_amt;
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if(!empty($paymentrequest_info->booking_date)) { ?>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Booking Date : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    echo _d($paymentrequest_info->booking_date);
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php if(!empty($paymentrequest_info->remark)) { ?>
+                                                        <tr>
+                                                            <td class="col-md-6"><label class="control-label">Remark : &nbsp;</label></td>
+                                                            <td class="col-md-6">
+                                                                <?php 
+                                                                    echo $paymentrequest_info->remark;
+                                                                ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                    <?php 
+                                                        if (!empty($paymentrequest_info)){
+                                                            $file_info = $this->db->query("SELECT * from tblfiles where rel_type = 'payment_request' and rel_id = '".$paymentrequest_info->id."' ")->result();
+                                                            if(!empty($file_info)){
+                                                        ?>
+                                                            <tr>
+                                                                <td class="col-md-6"><label class="control-label">Uploaded Files : &nbsp;</label></td>
+                                                                <td class="col-md-6">
+                                                                    <div class="card">
+                                                                        <ul class="list-group list-group-flush">
+                                                                        <?php 
+                                                                            foreach ($file_info as $key => $file) {
+                                                                        ?>
+                                                                                <li class="list-group-item col-md-6"><?php echo 1+$key.') '; ?><a target="_blank" href="<?php echo base_url('uploads/payment_request/'.$file->rel_id.'/'.$file->file_name); ?>"><?php echo $file->file_name; ?></a></li>
+                                                                        <?php            
+                                                                            }
+                                                                        ?>
+                                                                        </ul>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        <?php 
+                                                            }
+                                                        }
+                                                        ?>   
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
                         </div>
 
                        </fieldset>

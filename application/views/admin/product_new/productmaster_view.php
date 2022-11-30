@@ -19,7 +19,7 @@
                     <hr class="hr-panel-heading">
                     <div class="row">
                         <div class="col-md-12">
-                            <div>
+                            <div class="table-responsive">
                                 <table class="table" id="newtable">
                                     <thead>
                                         <tr>

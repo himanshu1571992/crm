@@ -217,11 +217,11 @@
 
 
                         </div>
-                        <div class="btn-bottom-toolbar text-right">
+                        <!-- <div class="btn-bottom-toolbar text-right">
                             <button class="btn btn-info" value="1" name="mark" type="submit">
-<?php echo _l('submit'); ?>
+                                <?php echo _l('submit'); ?>
                             </button>
-                        </div>
+                        </div> -->
                     </div>
 
                 </div>

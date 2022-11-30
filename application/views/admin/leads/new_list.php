@@ -311,18 +311,11 @@ if(!empty($this->session->userdata('lead_search'))){
                                 </select>
                             </div>
                         </div> -->
-                                              
-
-                        
-
-                       
                         <div class="col-md-2">                            
                             <button type="submit" style="margin-top: 24px;" class="btn btn-info">Search</button>
                             <a href=""><button type="submit" value="1" name="reset" style="margin-top: 24px;" class="btn btn-danger">Reset</button></a>
                         </div>
-                       
                    </div>
-                       
                     </div>
                                                 
                     <div class="col-md-12"> 
@@ -360,7 +353,7 @@ if(!empty($this->session->userdata('lead_search'))){
                             <span class="dot circle-danger"></span> Total Missed Calls
                             <span class="dot circle-warning"></span> Total Activity
                         </div>
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow: auto;">
                         <table class="table ui-table">
                             <thead>
                               <tr>

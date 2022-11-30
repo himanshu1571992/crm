@@ -34,13 +34,15 @@
                 <div class="col-md-12">
                     <div class="panel_s">
                         <div class="panel-body">
-
-                            <div class="row">
-                                <div class="col-md-12"><h4 class="no-margin"><?php echo $title; ?> </h4>
-                                <?php if(check_permission_page(341,'create')){ ?>
-                                <a href="<?php echo admin_url('complains/add'); ?>" class="btn btn-info pull-right" style="margin-top:-6px; "> Add New Complains</a>
-                                <?php } ?>
-                            </div>
+                            <div class="row panelHead">
+                                <div class="col-xs-12 col-md-6">
+                                    <h4 class="no-margin"><?php echo $title; ?> </h4>
+                                </div>
+                                <div class="col-xs-12 col-md-6 text-right">
+                                    <?php if(check_permission_page(341,'create')){ ?>
+                                        <a href="<?php echo admin_url('complains/add'); ?>" class="btn btn-info pull-right" style="margin-top:-6px; "> Add New Complains</a>
+                                    <?php } ?>
+                                </div>
                             </div>	                   
 
                             <hr class="hr-panel-heading">

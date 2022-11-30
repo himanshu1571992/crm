@@ -120,9 +120,9 @@
                                                             ?>    
                                                         </td>
                                                         <td>
-                                                            <a href="<?php echo admin_url('employees/add_esic_challan/'.$row->id);?>" class="btn-sm btn-primary">Edit</a>
-                                                            <a href="<?php echo admin_url('employees/view_pf_challan/'.$row->id);?>" class="btn-sm btn-success">View</a>
-                                                            <a href="<?php echo admin_url('employees/delete_pf_challan/'.$row->id);?>" class="btn-sm btn-danger _delete">Delete</a>
+                                                            <a href="<?php echo admin_url('employees/add_esic_challan/'.$row->id);?>" class="btn btn-primary">Edit</a>
+                                                            <a href="<?php echo admin_url('employees/view_pf_challan/'.$row->id);?>" class="btn btn-success">View</a>
+                                                            <a href="<?php echo admin_url('employees/delete_pf_challan/'.$row->id);?>" class="btn btn-danger _delete">Delete</a>
                                                         </td>
                                                     </tr>
                                             <?php
