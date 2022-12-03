@@ -44,8 +44,15 @@ class Calls extends Admin_controller
 
         }else{
             //$where .= " and l.status = 0 and YEAR(l.created_at) = '".date('Y')."' and MONTH(l.created_at) = '".date('m')."'";
-            $where .= " and status = 0 and DATE(created_at) = '".date('Y-m-d')."'";
-            $wherei .= " and status = 0 and `date` > '2022-01-01'";
+            // $where .= " and status = 0 and DATE(created_at) = '".date('Y-m-d')."'";
+            // $wherei .= " and status = 0 and `date` > '2022-01-01'";
+
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and status = 0 and DATE(created_at) BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $wherei .= " and status = 0 and date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['s_fdate'] = _d($from_date_year);
+            $data['s_tdate'] = _d($to_date_year);
         }
         $data['task_list'] = $this->db->query("SELECT * from tblappleads where ".$where."  ORDER by id desc")->result();
         $data['indiamartlead_list'] = $this->db->query("SELECT * from tblindiamartclientrecord where ".$wherei."  ORDER by id desc")->result();
@@ -57,7 +64,6 @@ class Calls extends Admin_controller
         if(!empty($keys_info) && !empty($keys_info->callingnumber)){
             $data['calling_numbes'] = $this->db->query("SELECT * from tblvagentnumbers  where status = 1 and id IN (".$keys_info->callingnumber.") group by exotel_number order by id asc")->result();
         }
-
 
         $data['title'] = 'Incoming Call List';
         $this->load->view('admin/calls/view', $data);

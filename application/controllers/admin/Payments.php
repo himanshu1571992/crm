@@ -21,11 +21,7 @@ class Payments extends Admin_controller
     {
         check_permission(51,'view');
 
-        $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
-        $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
-
         $where = " p.id > '0' and cp.is_suspense_account = 0";
-
         if(!empty($_POST)){
             extract($this->input->post());
             /*echo '<pre/>';
@@ -62,7 +58,11 @@ class Payments extends Admin_controller
             }
 
         }else{
-            $where .= " and p.date  BETWEEN  '".$from_date_year."' and  '".$to_date_year."' ";           
+            // $where .= " and p.date  BETWEEN  '".$from_date_year."' and  '".$to_date_year."' "; 
+            $date_range = get_last_month_date();
+            $where .= " and p.date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['s_fdate'] = _d($date_range["start_date"]);
+            $data['s_tdate'] = _d($date_range["end_date"]);          
         }
 
 

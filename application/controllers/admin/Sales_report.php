@@ -329,10 +329,10 @@ class Sales_report extends Admin_controller
 	/* this function use for Cancelled Documents List */
 	public function cancelled_documents_list(){
 		$data["title"] = "Cancelled Documents List";
-		$data['invoice_list'] = $this->db->query("SELECT * FROM `tblinvoices` WHERE `status` = '5' ORDER BY id DESC ")->result();
-		$data['debitnote_list'] = $this->db->query("SELECT * FROM `tbldebitnote` WHERE `status` = '0' ORDER BY id DESC ")->result();
-		$data["dn_payment_list"] = $this->db->query("SELECT * FROM `tbldebitnotepayment` WHERE `status` = '0' ORDER BY id DESC")->result();
-		$data["creditnote_list"] = $this->db->query("SELECT * FROM `tblcreditnote` WHERE `status` = '5' ")->result();
+		$data['invoice_list'] = $this->db->query("SELECT * FROM `tblinvoices` WHERE `year_id` = '".financial_year()."' and `status` = '5' ORDER BY id DESC ")->result();
+		$data['debitnote_list'] = $this->db->query("SELECT * FROM `tbldebitnote` WHERE `year_id` = '".financial_year()."' and `status` = '0' ORDER BY id DESC ")->result();
+		$data["dn_payment_list"] = $this->db->query("SELECT * FROM `tbldebitnotepayment` WHERE `year_id` = '".financial_year()."' and `status` = '0' ORDER BY id DESC")->result();
+		$data["creditnote_list"] = $this->db->query("SELECT * FROM `tblcreditnote` WHERE `year_id` = '".financial_year()."' and `status` = '5' ")->result();
 		
 		$this->load->view('admin/sales_report/cancelled_document_list',$data);
 	}

@@ -68,7 +68,7 @@
                                             <td><?php echo get_employee_fullname($value->added_by); ?></td>
                                             <td><?php echo value_by_id("tbldivisionmaster", $value->department_id, "title"); ?></td>
                                             <td><?php echo date("d/m/Y" ,strtotime($value->created_at)); ?></td>
-                                            <td><a href="javascript:void(0)" class="btn-sm btn-info status"  onclick="get_production_details('<?php echo $value->id; ?>');" data-id="<?php echo $value->id; ?>" data-target="#stock_details" id="status" data-toggle="modal">View Details</a></td>
+                                            <td><a href="javascript:void(0)" class="btn-sm btn-info status" onclick="get_production_details('<?php echo $value->id; ?>');" data-id="<?php echo $value->id; ?>" data-target="#stock_details" id="status" data-toggle="modal">View Details</a></td>
                                         </tr>
                                         <?php
                                         }

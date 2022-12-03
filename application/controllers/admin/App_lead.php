@@ -32,26 +32,29 @@ class App_lead extends Admin_controller
 
             $where = " la.staff_id = '".get_staff_user_id()."' ";
 
-            if(!empty($f_date) && !empty($t_date)){
+           if(!empty($f_date) && !empty($t_date)){
 
-                $data['s_fdate'] = $f_date;
-                $data['s_tdate'] = $t_date;
+                    $data['s_fdate'] = $f_date;
+                    $data['s_tdate'] = $t_date;
 
-                $f_date = str_replace("/","-",$f_date);
-                $t_date = str_replace("/","-",$t_date);
+                    $f_date = str_replace("/","-",$f_date);
+                    $t_date = str_replace("/","-",$t_date);
 
-                $from_date = date('Y-m-d',strtotime($f_date));           
-                $to_date = date('Y-m-d',strtotime($t_date));
+                    $from_date = date('Y-m-d',strtotime($f_date));           
+                    $to_date = date('Y-m-d',strtotime($t_date));
 
-                $where .= " and l.created_at  BETWEEN  '".$from_date."' and  '".$to_date."' ";
-            } 
+                    $where .= " and l.created_at  BETWEEN  '".$from_date."' and  '".$to_date."' ";
+           } 
 
-            if(!empty($status)){
+            
+
+           if(!empty($status)){
                 $where .= " and l.status = '".$status."'";
                 $data['s_status'] = $status;
-            }
+           }
+            
 
-            $data['task_list'] = $this->db->query("SELECT l.* from tblappleads as l LEFT JOIN tbllappeadassignstaff  as la ON l.id = la.lead_id where  ".$where."  ORDER by l.id desc")->result(); 
+          $data['task_list'] = $this->db->query("SELECT l.* from tblappleads as l LEFT JOIN tbllappeadassignstaff  as la ON l.id = la.lead_id where  ".$where."  ORDER by l.id desc")->result(); 
         }else{
           $data['task_list'] = $this->db->query("SELECT l.* from tblappleads as l LEFT JOIN tbllappeadassignstaff  as la ON l.id = la.lead_id where la.staff_id = '".get_staff_user_id()."' and l.status = 0 and YEAR(l.created_at) = '".date('Y')."' and MONTH(l.created_at) = '".date('m')."' ORDER by l.id desc")->result(); 
         
@@ -61,6 +64,11 @@ class App_lead extends Admin_controller
 
         $this->load->view('admin/app_lead/view', $data);
     }
+
+
+
+
+
     public function details($id)
     {
 

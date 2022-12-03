@@ -63,7 +63,11 @@ class Creditnotes extends Admin_controller {
                 $where .= " and date  BETWEEN  '" . $from_date . "' and  '" . $to_date . "' ";
             }
         } else {
-            $where .= " and year_id = '" . financial_year() . "' ";
+            // $where .= " and year_id = '" . financial_year() . "' ";
+            $date_range = get_last_month_date();
+            $where .= " and date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['s_fdate'] = _d($date_range["start_date"]);
+            $data['s_tdate'] = _d($date_range["end_date"]);
         }
 
         $data['debitnote_list'] = $this->db->query("SELECT * from tblcreditnote where  ".$where." order by id desc ")->result();
@@ -512,6 +516,7 @@ class Creditnotes extends Admin_controller {
            }
         }else{
             $where = " id > '0' and year_id = '".financial_year()."' ";
+            
         }
 
 

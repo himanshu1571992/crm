@@ -416,6 +416,12 @@ class Requirement extends Admin_controller
                 $data['t_date'] = $t_date;
                 $where .= " and DATE(r.created_at) between '" . db_date($f_date) . "' and '" . db_date($t_date) . "' ";
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and DATE(r.created_at) BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }
         if(is_admin() == 1){
         	$data['requirement_info']  = $this->db->query("SELECT r.*,ra.approve_status as approvalstatus FROM `tblrequirement` as r LEFT JOIN tblrequirement_approval as ra ON r.id = ra.req_id where ".$where." and r.cancel = 0 and r.initial_approve_status = 1 and r.approve_status != 1 group by r.id Order by r.id desc  ")->result();

@@ -122,10 +122,16 @@ class Purchase extends Admin_controller {
            }
 
     	}else{
-            $where .= " and po.year_id = '".financial_year()."'";
+            $date_range = get_last_month_date();
+            // $where .= " and po.year_id = '".financial_year()."'";
+            $where .= " and po.date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
             $where .= " and (po.status = 0 || po.status = 1 || po.status = 4 || po.status = 5) and po.cancel = 0";
-            $where1 .= " and po.year_id = '".financial_year()."'";
+
+            // $where1 .= " and po.year_id = '".financial_year()."'";
+            $where1 .= " and po.date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
             $where1 .= " and (po.status = 0 || po.status = 1 || po.status = 4 || po.status = 5) and po.cancel = 0";
+            $data['s_fdate'] = _d($date_range["start_date"]);
+            $data['s_tdate'] = _d($date_range["end_date"]);
         }
 //        echo"<pre>";
 //                print_r($data);exit;
@@ -1931,7 +1937,11 @@ class Purchase extends Admin_controller {
 
             }
         }else{
-            $where = "status = 1 and year_id = '".financial_year()."' ";
+            // $where = "status = 1 and year_id = '".financial_year()."' ";
+            $date_range = get_last_month_date();
+            $where = " status = 1 and date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['f_date'] = _d($date_range["start_date"]);
+            $data['t_date'] = _d($date_range["end_date"]);
         }
 
         // Get records
@@ -3127,13 +3137,10 @@ public function delete_purchasepayment($id) {
         if(!empty($_POST)){
             extract($this->input->post());
 
-
-
             if($vendor_id != ''){
                 $data['vendor_id'] = $vendor_id;
                 $where .= " and p.vendor_id = '".$vendor_id."'";
             }
-
 
             if(!empty($f_date) && !empty($t_date)){
 
@@ -3147,9 +3154,13 @@ public function delete_purchasepayment($id) {
                 $to_date = date('Y-m-d',strtotime($t_date));
 
                 $where .= " and p.date  BETWEEN  '".$from_date."' and  '".$to_date."' ";
-           }
-
-
+            }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and p.date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['s_fdate'] = _d($from_date_year);
+            $data['s_tdate'] = _d($to_date_year);
         }
         $data['po_item_list'] = $this->db->query("SELECT p.number,p.date,p.vendor_id,pp.* from tblpurchaseorderproduct as pp LEFT JOIN tblpurchaseorder as p ON pp.po_id = p.id where  ".$where." order by p.id desc ")->result();
 
@@ -3172,27 +3183,21 @@ public function delete_purchasepayment($id) {
                 $data['cient_id'] = $cient_id;
                 $where .= " and clientid = '".$cient_id."'";
             }
-
-
             if(!empty($f_date) && !empty($t_date)){
 
                 $data['s_fdate'] = $f_date;
                 $data['s_tdate'] = $t_date;
 
-                $f_date = str_replace("/","-",$f_date);
-                $t_date = str_replace("/","-",$t_date);
-
-                $from_date = date('Y-m-d',strtotime($f_date));
-                $to_date = date('Y-m-d',strtotime($t_date));
-
-                $where .= " and date  BETWEEN  '".$from_date."' and  '".$to_date."' ";
-           }
-
-
+                $where .= " and date  BETWEEN  '".db_date($f_date)."' and  '".db_date($t_date)."' ";
+            }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['s_fdate'] = _d($from_date_year);
+            $data['s_tdate'] = _d($to_date_year);
         }
         $data['estimate_list'] = $this->db->query("SELECT * from tblestimates where  ".$where." order by id desc ")->result();
-
-
         $data['client_info'] = $this->db->query("SELECT * from tblclientbranch where active = 1 AND client_branch_name !='' ORDER BY client_branch_name ASC ")->result_array();
 
         $data['title'] = 'Delivery Performance (SEPL/SLS/04)';
@@ -3238,7 +3243,12 @@ public function delete_purchasepayment($id) {
 
             }
         }else{
-            $where = "status = 1 and itc_status =  0 ";
+            // $where = "status = 1 and itc_status =  0 ";
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where = "status = 1 and itc_status =  0 and date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }
 
         // Get records
@@ -4832,6 +4842,8 @@ public function delete_purchasepayment($id) {
                 $where .= " and vendor_id ='".$vendor_id."'";
                 $data['vendor_id'] = $vendor_id;
             }
+        }else{
+            $where .= " and account_confirmation != '1' ";
         }
         $data["title"] = "Purchase Refund Confirmation";
         $data['refund_payment_list'] = $this->db->query("SELECT * FROM tblpurchaseorderrefundpayment WHERE ".$where." ORDER BY id DESC ")->result();

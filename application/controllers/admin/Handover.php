@@ -23,20 +23,26 @@ class Handover extends Admin_controller
         if(!empty($_POST)){
             extract($this->input->post());
 
+            $where = "receiver_id = '".$receiver."'";
+            if (!empty($f_date) && !empty($t_date)) {
+                $data['f_date'] = $f_date;
+                $data['t_date'] = $t_date;
+
+                $where .= " and created_at BETWEEN '" . db_date($f_date) . "' and '" . db_date($t_date) . "'";
+            }
             $data['s_receiver'] = $receiver;
-
-            $data['handover_info']  = $this->db->query("SELECT * FROM tblhandover WHERE receiver_id = '".$receiver."' order by id desc ")->result();
-
-
+            $data['handover_info']  = $this->db->query("SELECT * FROM tblhandover WHERE ".$where." order by id desc ")->result();
         }else{
-             $data['handover_info']  = $this->db->query("SELECT * FROM tblhandover  order by id desc ")->result();
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where = "created_at BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['handover_info']  = $this->db->query("SELECT * FROM tblhandover WHERE ".$where." order by id desc ")->result();
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }
-
-
 
         $data['title'] = 'Handover List';
         $this->load->view('admin/handover/manage', $data);
-
     }
 
     public function add($id="")

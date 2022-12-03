@@ -327,7 +327,12 @@ class Proposals extends Admin_controller {
 
             }
         }else{
-            $where .= " and t1.year_id = '".financial_year()."'";
+            // $where .= " and t1.year_id = '".financial_year()."'";
+            /* get last 3 month record by defult */
+            $date_range = get_last_month_date();
+            $where .= " and t1.date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['f_date'] = _d($date_range["start_date"]);
+            $data['t_date'] = _d($date_range["end_date"]);
 
         }
         // Get records

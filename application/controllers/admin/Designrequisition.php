@@ -49,6 +49,13 @@ class Designrequisition extends Admin_controller
                     }
                 }
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $where1 .= " and date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }
 
         /* all design requisition list */
@@ -164,8 +171,8 @@ class Designrequisition extends Admin_controller
                 $chk_remarkdata = $this->db->query("SELECT * FROM `tbldesignrequisitionremark` WHERE `designrequisition_id` = $id")->result();
                 if (!empty($chk_remarkdata)){
                    foreach ($chk_remarkdata as $value) {
-                      if (!empty($data->files)){
-                          $filesdecode = json_decode($data->files, TRUE);
+                      if (!empty($value->files)){
+                          $filesdecode = json_decode($value->files, TRUE);
                           if (!empty($filesdecode)){
                              foreach ($filesdecode as $file) {
                                  $path = get_upload_path_by_type('design_requisition') . $id . '/'.$file;
@@ -924,7 +931,7 @@ class Designrequisition extends Admin_controller
 
               if ($data["submit"] == 1){
                   $this->home_model->update('tbldesignmaster', array("date" => date("Y-m-d"), "status" => 1, "approved_by" => get_staff_user_id()),array('id'=>$id));
-                  $this->home_model->update('tbldesignrequisition', array("show_status" => 4),array('id'=>$dsubmission_info->designrequisition_id));
+                  $this->home_model->update('tbldesignrequisition', array("show_status" => 4),array('id'=>$designmaster_info->designrequisition_id));
                   set_alert('success', "Design master approvad successfully");
               }else{
                   $this->home_model->delete("tbldesignmaster", array('id'=>$id));

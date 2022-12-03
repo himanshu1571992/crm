@@ -715,6 +715,8 @@ class Manage_cheque extends Admin_controller
                 $data['received_status'] = $received_status;
                 $where .= " and received_status = '".$received_status."'";
             }
+        }else{
+            $where .= " and received_status != '1' ";
         }
 
         $data['upcoming_payment_list'] = $this->db->query("SELECT * from `tblupcommingpayments` where ".$where." order by created_at desc")->result();

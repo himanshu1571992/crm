@@ -174,7 +174,11 @@ class Chalan extends Admin_controller {
 
             }
         }else{
-            $where = " year_id = '".financial_year()."' ";
+            // $where = " year_id = '".financial_year()."' ";
+            $date_range = get_last_month_date();
+            $where .= " and challandate BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['f_date'] = _d($date_range["start_date"]);
+            $data['t_date'] = _d($date_range["end_date"]);
         }
         /*echo $where;
         die;*/
@@ -3447,7 +3451,17 @@ class Chalan extends Admin_controller {
 
 
         }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
 
+            $where_p_delivery .= " and date BETWEEN '".$from_date_year."' and '".$to_date_year."' ";
+            $where_p_pickup .= " and date BETWEEN '".$from_date_year."' and '".$to_date_year."' ";
+            $where_p_other .= " and date BETWEEN '".$from_date_year."' and '".$to_date_year."' ";
+
+            $where_complete .= " and date BETWEEN '".$from_date_year."' and '".$to_date_year."' ";
+            $where_complete_other .= " and date BETWEEN '".$from_date_year."' and '".$to_date_year."' ";
+            $data['s_fdate'] = _d($from_date_year);
+            $data['s_tdate'] = _d($to_date_year);
         }
         $data['pending_delivery_info'] = $this->db->query("SELECT * from `tbltempdeliverypickupreport` where ".$where_p_delivery." ORDER BY id asc ")->result();
         $data['pending_pickup_info'] = $this->db->query("SELECT * from `tbltempdeliverypickupreport` where ".$where_p_pickup."  ORDER BY id asc ")->result();
@@ -3723,6 +3737,12 @@ class Chalan extends Admin_controller {
 
                 $where .= " and `date` >= '".db_date($f_date)."' and `date` <= '".db_date($t_date)."' ";
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }
 
         // Get records
@@ -4287,7 +4307,11 @@ class Chalan extends Admin_controller {
                 }
             }
         }else{
-            $where .= " and year_id = '".financial_year()."' ";
+            // $where .= " and year_id = '".financial_year()."' ";
+            $date_range = get_last_month_date();
+            $where .= " and challandate BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['f_date'] = _d($date_range["start_date"]);
+            $data['t_date'] = _d($date_range["end_date"]);
         }
 
         // Get records

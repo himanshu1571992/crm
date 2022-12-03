@@ -273,7 +273,11 @@ class Estimates extends Admin_controller {
                 }
             }
         }else{
-            $where .= " and year_id = '".financial_year()."'";
+            // $where .= " and year_id = '".financial_year()."'";
+            $date_range = get_last_month_date();
+            $where .= " and date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['f_date'] = _d($date_range["start_date"]);
+            $data['t_date'] = _d($date_range["end_date"]);
         }
 
         // Get records

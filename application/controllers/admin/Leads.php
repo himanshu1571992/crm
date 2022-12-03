@@ -3505,9 +3505,10 @@ class Leads extends Admin_controller
                 $where .= " and l.enquiry_date between '".$f_date."' and '".$t_date."' ";
             }
         }else{
+            
             /* get last 3 month record by defult */
-            $startdate = date('Y-m-01', strtotime('-3 month'));
-            $where .= " and l.enquiry_date BETWEEN '".$startdate."' and '".date('Y-m-t')."' ";
+            $date_range = get_last_month_date();
+            $where .= " and l.enquiry_date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
         }
 
         $data['lead_info'] = $this->db->query("SELECT l.* from `tblleads` as l LEFT JOIN tblleadassignstaff as ls ON l.id = ls.lead_id LEFT JOIN tblproductinquiry as lp ON l.id = lp.enquiry_id where ".$where." GROUP BY l.id ORDER BY l.id desc ")->result();
@@ -3708,6 +3709,12 @@ class Leads extends Admin_controller
 
                 $where .= " and l.enquiry_date between '".db_date($f_date)."' and '".db_date($t_date)."' ";
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and l.enquiry_date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }
         $data['lead_info'] = $this->db->query("SELECT l.* from `tblleads` as l WHERE ".$where." GROUP BY l.id ORDER BY l.id DESC ")->result();
         $data['mainleadtype_info'] = $this->db->query("SELECT * from `tblmainenquirytypemaster` where status = 1 ORDER BY name ASC")->result();

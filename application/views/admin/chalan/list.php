@@ -67,7 +67,7 @@
                         <div class="form-group col-md-4" app-field-wrapper="date">
                             <label for="f_date" class="control-label">From Date</label>
                             <div class="input-group date">
-                                <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if(!empty($t_date)){ echo $t_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                <input id="f_date" name="f_date" class="form-control datepicker" value="<?php if(!empty($f_date)){ echo $f_date; } ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                             </div>
                         </div>
 

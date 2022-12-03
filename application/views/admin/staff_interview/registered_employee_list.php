@@ -40,8 +40,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <br>
-                                <div class="col-md-12">  <div class="table-responsive">                                                    
+                                <div class="col-md-12">  <div>                                                    
                                         <table class="table" id="newtable">
                                             <thead>
                                                 <tr>

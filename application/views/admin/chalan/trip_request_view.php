@@ -174,12 +174,12 @@ legend.scheduler-border {
                         <div class="panel panel-info">
                             <?php foreach ($getreadby_data as $value) { ?>
                             <div class="panel-body">
-                                <div class="col-md-12">
-                                    <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-xs-10">
                                         <h4 class="product-name"><strong><?php echo get_employee_fullname($value->staff_id); ?></strong></h4>
                                         <p class="text-danger">Read At - (<?php echo (!empty($value->readdate)) ? _d($value->readdate) : "--"; ?>)</p>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-xs-2">
                                         <?php if ($value->approve_status == 0) { 
                                             $cls = "text-warning";
                                             $status = "Pending";

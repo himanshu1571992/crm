@@ -887,6 +887,13 @@ class Client extends Admin_controller {
                 $data['service_type'] = $service_type;
                 $where .= " and r.service_type = '" . $service_type . "'";
             }
+        }else{
+            // $where = "status = 1 and itc_status =  0 ";
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and r.date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['sf_date'] = _d($from_date_year);
+            $data['st_date'] = _d($to_date_year);
         }
 
         $data['title'] = 'Client Refund';

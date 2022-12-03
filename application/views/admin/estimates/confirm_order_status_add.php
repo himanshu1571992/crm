@@ -1,18 +1,5 @@
 <?php init_head(); ?>
 <style>.error{border:1px solid red !important;}.mrg3{margin-bottom: 3%;margin-top: 3% !important;}table.items tr.main td {padding-top: 8px !important;padding-bottom: 8px !important;}</style>
-<style>
-    
-    @media (max-width: 500px){
-        .btn-bottom-toolbar {
-            width: 100%
-        }
-    }    
-    @media (max-width: 768px){
-        .btn-bottom-toolbar {
-            width: 100%
-        }
-    }
-    </style>
 <div id="wrapper">
     <div class="content">
    <div class="row">

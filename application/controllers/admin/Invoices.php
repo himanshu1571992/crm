@@ -155,8 +155,14 @@ class Invoices extends Admin_controller
 
             }
         }else{
-            $where .= " and i.year_id = '".financial_year()."' and cb.company_branch = '0'";
-            $where_ttl = "i.status != 5 and i.service_type = 2 and i.year_id = '".financial_year()."' and cb.company_branch = '0'";
+            $date_range = get_last_month_date();
+            $where .= " and cb.company_branch = '0' and i.invoice_date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $where_ttl = "i.status != 5 and i.service_type = 2 and cb.company_branch = '0' and i.invoice_date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['f_date'] = _d($date_range["start_date"]);
+            $data['t_date'] = _d($date_range["end_date"]);
+
+            // $where .= " and i.year_id = '".financial_year()."' and cb.company_branch = '0'";
+            // $where_ttl = "i.status != 5 and i.service_type = 2 and i.year_id = '".financial_year()."' and cb.company_branch = '0'";
         }
 
         // Get records
@@ -221,8 +227,14 @@ class Invoices extends Admin_controller
 
             }
         }else{
-            $where .= " and i.year_id = '".financial_year()."' and cb.company_branch = '0'";
-            $where_ttl = "i.status != 5 and i.service_type = 1 and i.year_id = '".financial_year()."' and cb.company_branch = '0'";
+            $date_range = get_last_month_date();
+            $where .= " and cb.company_branch = '0' and i.invoice_date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $where_ttl = "i.status != 5 and i.service_type = 1 and cb.company_branch = '0' and i.invoice_date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['f_date'] = _d($date_range["start_date"]);
+            $data['t_date'] = _d($date_range["end_date"]);
+
+            // $where .= " and i.year_id = '".financial_year()."' and cb.company_branch = '0'";
+            // $where_ttl = "i.status != 5 and i.service_type = 1 and i.year_id = '".financial_year()."' and cb.company_branch = '0'";
         }
 
 
@@ -2191,7 +2203,7 @@ class Invoices extends Admin_controller
         $letter = chr(65 + $numeric);
         $num2 = intval($num / 26);
         if ($num2 > 0) {
-            return getNameFromNumber($num2 - 1) . $letter;
+            return $this->getNameFromNumber($num2 - 1) . $letter;
         } else {
             return $letter;
         }
@@ -3400,8 +3412,14 @@ class Invoices extends Admin_controller
 
             }
         }else{
-            $where .= " and i.year_id = '".financial_year()."'";
-            $where_ttl = "i.status != 5 and i.year_id = '".financial_year()."' and cb.company_branch = '1'";
+            $date_range = get_last_month_date();
+            $where .= " and i.invoice_date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $where_ttl = "i.status != 5 and cb.company_branch = '1' and i.invoice_date BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['f_date'] = _d($date_range["start_date"]);
+            $data['t_date'] = _d($date_range["end_date"]);
+
+            // $where .= " and i.year_id = '".financial_year()."'";
+            // $where_ttl = "i.status != 5 and i.year_id = '".financial_year()."' and cb.company_branch = '1'";
         }
 
 

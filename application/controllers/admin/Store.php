@@ -21,8 +21,14 @@ class Store extends Admin_controller
                 $data['f_date'] = $f_date;
                 $data['t_date'] = $t_date;
 
-                $where .= " and DATE(created_at) between '".db_date($f_date)."' and '".db_date($t_date)."' ";
+                $where .= " and DATE(created_at) BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."' ";
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and DATE(created_at) BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }     
         $data['store_issue_list'] = $this->db->query("SELECT * FROM `tblstore_issue` WHERE $where ORDER BY id DESC")->result();
         $this->load->view('admin/store/main_store_issue_list', $data); 

@@ -73,17 +73,23 @@ class Enquirycall extends Admin_controller
                 }
             }
         }else{
-            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
-            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            // $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            // $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            // $where1 .= " and DATE(created_at) between '".$from_date_year."' and '".$to_date_year."' ";
 
-            $where1 .= " and DATE(created_at) between '".$from_date_year."' and '".$to_date_year."' ";
+            /* get last 3 month record by defult */
+            $date_range = get_last_month_date(3);
+            $where1 .= " and DATE(created_at) BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $where2 .= " and DATE(created_at) BETWEEN '".$date_range["start_date"]."' and '".$date_range["end_date"]."' ";
+            $data['f_date'] = _d($date_range["start_date"]);
+            $data['t_date'] = _d($date_range["end_date"]);
         }
 //        $data['source_list'] = $this->db->query("SELECT * from `tblleadssources`")->result();
         //$data["source_list"] = $this->db->query("SELECT `id`,`exotel_number`,`source`,`source_id` FROM `tblvagentnumbers` WHERE `source_id` > 0 and `status` = 1 GROUP BY exotel_number ORDER BY source ASC")->result();
         $data["source_list"] = $this->db->query("SELECT * FROM `tblleadssources` WHERE `status` = 1 ORDER BY name ASC ")->result();
         $data["staff_list"] = get_staff_list();
-        $data['verifiedcall_list'] = $this->db->query("SELECT * from `tblenquirycall` WHERE ".$where1." ORDER BY `id` DESC")->result();
-        $data['unverifiedcall_list'] = $this->db->query("SELECT * from `tblenquirycall` WHERE ".$where2." ORDER BY `id` DESC")->result();
+        $data['verifiedcall_list'] = $this->db->query("SELECT * FROM `tblenquirycall` WHERE ".$where1." ORDER BY `id` DESC")->result();
+        $data['unverifiedcall_list'] = $this->db->query("SELECT * FROM `tblenquirycall` WHERE ".$where2." ORDER BY `id` DESC")->result();
 
         $this->load->view('admin/enquirycall/list', $data);
     }

@@ -36,6 +36,12 @@ class Complains extends Admin_controller
 
                 $where .= " and approve_status = ". $approve_status."";
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and complain_date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['s_fdate'] = _d($from_date_year);
+            $data['s_tdate'] = _d($to_date_year);
         }
 
         $data['complains_list'] = $this->db->query("SELECT * from tblcomplains where  ".$where." order by id desc ")->result();
@@ -322,6 +328,12 @@ class Complains extends Admin_controller
 
                 $where .= " and complain_type_id = ". $complain_type."";
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and complain_date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['s_fdate'] = _d($from_date_year);
+            $data['s_tdate'] = _d($to_date_year);
         }
 
         $data['complains_list'] = $this->db->query("SELECT * from tblcomplains where  ".$where." order by id desc ")->result();

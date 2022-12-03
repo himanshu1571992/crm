@@ -1125,7 +1125,7 @@ class Task extends Admin_controller
 			$to_date = date("Y-m-d",strtotime($to_date));
 			$to_date = $to_date.' 23:59:59';
 
-			$where .= " and t.created_at between '".$from_date."' and '".$to_date."' ";
+			$where .= " and DATE(t.created_at) between '".$from_date."' and '".$to_date."' ";
 
 			if(!empty($related_to)){
 				$where .= " and t.related_to = '".$related_to."'";
@@ -1137,7 +1137,11 @@ class Task extends Admin_controller
 			}
     	}else{
     		//$where .= " and MONTH(t.created_at) = '".date('m')."' and YEAR(t.created_at) = '".date('Y')."'";
-
+			$from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and DATE(t.created_at) BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['s_from_date'] = _d($from_date_year);
+            $data['s_to_date'] = _d($to_date_year);
     	}
 
 

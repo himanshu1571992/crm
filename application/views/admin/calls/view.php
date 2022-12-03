@@ -21,8 +21,6 @@
 <div id="wrapper">
     <div class="content accounting-template">
         <div class="row">
-
-            
                 <div class="col-md-12">
                     <div class="panel_s">
                         <div class="panel-body">
@@ -67,7 +65,7 @@
                                                     if(!empty($_POST["f_date"]) && !empty($_POST["t_date"])){
                                                         $where .= " and date  BETWEEN  '".db_date($_POST["f_date"])."' and  '".db_date($_POST["t_date"])."' ";
                                                     }else{
-                                                        $where .= " and date = '".date('Y-m-d')."' ";
+                                                        $where .= " and date BETWEEN '".db_date($s_fdate)."' AND '".db_date($s_tdate)."' ";
                                                     }
 
                                                     if (!empty($_POST["type"])){
@@ -81,7 +79,8 @@
                                                         $where .= " and agent_number = ".$_POST["agent"]." ";
                                                     }
                                                 }else{
-                                                    $where .= " and date = '".date('Y-m-d')."'";
+                                                    
+                                                    $where .= " and date BETWEEN '".db_date($s_fdate)."' AND '".db_date($s_tdate)."' ";
                                                 }
                                     ?>
                                                 <div role="tabpanel" class="tab-pane <?php echo $active_cls; ?> <?php echo (!empty($section) && $section == $val->source_id) ? 'active' : ''; ?>" id="tab<?php echo $val->source_id; ?>">
@@ -89,13 +88,15 @@
                                                         <div class="form-group col-md-2" app-field-wrapper="date">
                                                             <label for="f_date" class="control-label"><?php echo 'From Date'; ?></label>
                                                             <div class="input-group date">
-                                                                <input id="f_date" name="f_date" class="form-control datepicker" value="<?php echo (isset($_POST["f_date"]) && $_POST["f_date"] != "" && !empty($section) && $section == $val->source_id) ? $_POST["f_date"] : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                                <!-- <input id="f_date" name="f_date" class="form-control datepicker" value="<?php echo (isset($s_fdate) && $s_fdate != "" && !empty($section) && $section == $val->source_id) ? $s_fdate : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div> -->
+                                                                <input id="f_date" name="f_date" class="form-control datepicker" value="<?php echo (isset($s_fdate) && $s_fdate != "") ? $s_fdate : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-2" app-field-wrapper="date">
                                                             <label for="t_date" class="control-label"><?php echo 'To Date'; ?></label>
                                                             <div class="input-group date">
-                                                                <input id="t_date" name="t_date" class="form-control datepicker" value="<?php echo (isset($_POST["t_date"]) && $_POST["t_date"] != "" && !empty($section) && $section == $val->source_id) ? $_POST["t_date"] : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                                                <!-- <input id="t_date" name="t_date" class="form-control datepicker" value="<?php echo (isset($_POST["t_date"]) && $_POST["t_date"] != "" && !empty($section) && $section == $val->source_id) ? $_POST["t_date"] : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div> -->
+                                                                <input id="t_date" name="t_date" class="form-control datepicker" value="<?php echo (isset($s_tdate) && $s_tdate != "") ? $s_tdate : ''; ?>" aria-invalid="false" type="text"><div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
                                                             </div>
                                                         </div>
                                                         <div class="form-group col-md-2">

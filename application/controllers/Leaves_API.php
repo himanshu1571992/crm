@@ -187,7 +187,8 @@ class Leaves_API extends CRM_Controller
 					}
 				}
 
-				if($category == 2 || $category == 3){
+				// For Paid Leave
+				if($category == 3){
 					$leave_name = value_by_id('tblleavescategories',$category,'name');
 					$start_date = date('Y-m-d', strtotime(' +3 day'));
 					$from_date  = date('Y-m-d',strtotime($from_date));

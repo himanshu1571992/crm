@@ -1268,3 +1268,11 @@ function get_activity_files($module_id, $activity_id){
     }
     return $fileshtml;    
 }
+
+/* this function use for get date according to month */
+function get_last_month_date($month = 3){
+    
+    $startdate = date('Y-m-01', strtotime('-'.$month.' month'));
+    $enddate = date('Y-m-t');
+    return array("start_date"=> $startdate, "end_date"=> $enddate);
+}

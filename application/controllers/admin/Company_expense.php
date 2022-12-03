@@ -1816,6 +1816,12 @@ class Company_expense extends Admin_controller
 
                 $where .= " and date  BETWEEN  '" . db_date($f_date) . "' and  '" . db_date($t_date) . "' ";
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }
 
         $data['overhead_list'] = $this->db->query("SELECT * from tbltransportoverhead where  " . $where . " order by id desc ")->result();

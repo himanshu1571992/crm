@@ -34,19 +34,6 @@
 
 
 </style>
-<style>
-    
-    @media (max-width: 500px){
-        .btn-bottom-toolbar {
-            width: 100%
-        }
-    }    
-    @media (max-width: 768px){
-        .btn-bottom-toolbar {
-            width: 100%
-        }
-    }
-    </style>
 <div id="wrapper">
     <div class="content accounting-template">
         <div class="row">

@@ -306,7 +306,7 @@ class Tds extends Admin_controller
                 $data['f_date'] = $f_date;
                 $data['t_date'] = $t_date;
 
-                $where .= " and date between '".db_date($f_date)."' and '".db_date($t_date)."' ";
+                $where .= " and date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."' ";
             }
 
             if (strlen($type) > 0){
@@ -314,6 +314,12 @@ class Tds extends Admin_controller
 
                 $where .= " and rel_type = '".$type."' ";
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }
         $data['tds_report'] = $this->db->query("SELECT * FROM tbltdsdeduction WHERE $where ORDER BY id DESC ")->result();
         $data['tds_section_list'] = $this->db->query("SELECT * FROM tbltdssections WHERE status = 1 ORDER BY id ASC ")->result();
@@ -399,8 +405,14 @@ class Tds extends Admin_controller
                 $data['f_date'] = $f_date;
                 $data['t_date'] = $t_date;
 
-                $where .= " and date between '".db_date($f_date)."' and '".db_date($t_date)."' ";
+                $where .= " and date BETWEEN '".db_date($f_date)."' and '".db_date($t_date)."' ";
             }
+        }else{
+            $from_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'from_date');
+            $to_date_year = value_by_id_empty('tblfinancialyear',getCurrentFinancialYear(),'to_date');
+            $where .= " and date BETWEEN '".$from_date_year."' AND '".$to_date_year."' ";
+            $data['f_date'] = _d($from_date_year);
+            $data['t_date'] = _d($to_date_year);
         }
 
         $data['tds_challan_list'] = $this->db->query("SELECT * FROM tbltdschallans WHERE $where ORDER BY id DESC ")->result();

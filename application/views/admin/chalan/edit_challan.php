@@ -222,66 +222,64 @@ init_head();
                                 <h4 class="modal-title pull-right">Warehouse Selected :- <?php echo value_by_id('tblwarehouse',$challan_info->warehouse_id,'name'); ?></h4>
                             </div>
 
-                            <?php
-                                $product_info = json_decode($challan_info->product_json);
-                            ?>
+<?php
+$product_info = json_decode($challan_info->product_json);
+?>
 
                             <h4 class="text-center">Product List</h4>
-                            <div class="table-responsive">
-                                <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="productTable" style="margin-top:2% !important;">
-                                    <thead>
-                                        <tr>
-                                            <th width="25%" align="center">Product Name</th>
-                                            <th width="15%" align="center">Quantity</th>
-                                            <th width="5%" align="center"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="ui-sortable" style="font-size:15px;">
-                                        <?php
-                                        $j = 0;
-                                        if(!empty($product_info)){
-                                            foreach ($product_info as  $singleproduct) {
+                            <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="productTable" style="margin-top:2% !important;">
+                                <thead>
+                                    <tr>
+                                        <th width="25%" align="center">Product Name</th>
+                                        <th width="15%" align="center">Quantity</th>
+                                        <th width="5%" align="center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ui-sortable" style="font-size:15px;">
+                                    <?php
+                                    $j = 0;
+                                    if(!empty($product_info)){
+                                        foreach ($product_info as  $singleproduct) {
 
-                                                ?>
-                                                <tr class="main" id="ptr<?php echo $j; ?>">
-                                                    <td class="text-center">
-                                                        <div class="form-group">
-                                                            <select class="form-control selectpicker" name="productdata[<?php echo $j; ?>][product_id]" data-live-search="true">
-                                                                <option value=""></option>
-                                                                <?php
-                                                                if (isset($item_data) && count($item_data) > 0) {
-                                                                    foreach ($item_data as $product_value) {
-                                                                        ?>
-                                                                        <option value="<?php echo $product_value['id'] ?>" <?php if($singleproduct->product_id == $product_value['id']){ echo 'selected'; } ?>><?php echo $product_value['sub_name'] ?></option>
-                                                                        <?php
-                                                                    }
+                                            ?>
+                                            <tr class="main" id="ptr<?php echo $j; ?>">
+                                                <td class="text-center">
+                                                    <div class="form-group">
+                                                        <select class="form-control selectpicker" name="productdata[<?php echo $j; ?>][product_id]" data-live-search="true">
+                                                            <option value=""></option>
+                                                            <?php
+                                                            if (isset($item_data) && count($item_data) > 0) {
+                                                                foreach ($item_data as $product_value) {
+                                                                    ?>
+                                                                    <option value="<?php echo $product_value['id'] ?>" <?php if($singleproduct->product_id == $product_value['id']){ echo 'selected'; } ?>><?php echo $product_value['sub_name'] ?></option>
+                                                                    <?php
                                                                 }
-                                                                ?></select>
-                                                        </div>
-                                                    </td>
+                                                            }
+                                                            ?></select>
+                                                    </div>
+                                                </td>
 
-                                                    <td width="15" align="center"><input type="text" id="reqqty<?php echo $j; ?>" name="productdata[<?php echo $j; ?>][product_qty]" value="<?php echo $singleproduct->product_qty; ?>"></td>
+                                                <td width="15" align="center"><input type="text" id="reqqty<?php echo $j; ?>" name="productdata[<?php echo $j; ?>][product_qty]" value="<?php echo $singleproduct->product_qty; ?>"></td>
 
-                                                    <td width="5%">
-                                                        <button type="button" class="btn pull-right btn-danger"  onclick="removeproduct(<?php echo $j; ?>);" ><i class="fa fa-remove"></i></button>
-                                                    </td>
+                                                <td width="5%">
+                                                    <button type="button" class="btn pull-right btn-danger"  onclick="removeproduct(<?php echo $j; ?>);" ><i class="fa fa-remove"></i></button>
+                                                </td>
 
-                                                </tr>
-                                                <?php
-                                                $j++;
-                                            }
-                                        }else{
-                                        ?>
-                                            <tr class="main" id="tr0">
-                                                <td colspan="3" align="center">Products are not available</td>
                                             </tr>
-                                        <?php
+                                            <?php
+                                            $j++;
                                         }
-                                        ?>
+                                    }else{
+                                       ?>
+                                        <tr class="main" id="tr0">
+                                            <td colspan="3" align="center">Products are not available</td>
+                                        </tr>
+                                       <?php
+                                    }
+                                    ?>
 
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                             <div class="col-xs-12">
                                 <label class="label-control subHeads"><a class="addmoreproduct" value="<?php echo (!empty($j)) ? $j : 1; ?>">Add More Product<i class="fa fa-plus"></i></a></label>
                                 <button type="button" class="get_components btn btn-info pull-right">Get Component</button>
@@ -292,69 +290,67 @@ init_head();
 
                             <h4 class="text-center">Component List</h4>
                             <div id="component_table_div">
-                                <div class="table-responsive">
-                                    <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myproTable" style="margin-top:2% !important;">
-                                        <thead>
-                                            <tr>
-                                                <th width="25%" align="center">Item Name</th>
-                                                <th width="15%" align="center">Req Qty</th>
-                                                <th width="15%" align="center">Deliverable Quantity</th>
-                                                <th width="20%" align="center">Chalan Status</th>
-                                                <th width="10%" align="center">Pending</th>
-                                                <th width="5%" align="center"></th>
+                            <table class="table credite-note-items-table items table-main-credit-note-edit no-mtop" id="myproTable" style="margin-top:2% !important;">
+                                <thead>
+                                    <tr>
+                                        <th width="25%" align="center">Item Name</th>
+                                        <th width="15%" align="center">Req Qty</th>
+                                        <th width="15%" align="center">Deliverable Quantity</th>
+                                        <th width="20%" align="center">Chalan Status</th>
+                                        <th width="10%" align="center">Pending</th>
+                                        <th width="5%" align="center"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="ui-sortable" style="font-size:15px;">
+                                    <?php
+                                    $k = 0;
+                                    if(!empty($components_info)){
+                                        foreach ($components_info as $singlerequriedcomponent) {
+
+
+
+											$deliverableqty = $singlerequriedcomponent['deleverable_qty'];
+                                            $requiredqty = $singlerequriedcomponent['required_qty'];
+
+                                            ?>
+                                            <tr class="main" id="tr<?php echo $k; ?>">
+                                                <td width="25%" align="left">
+                                                    <div class="form-group"><input type="hidden" name="componentdata[<?php echo $k; ?>][componentid]" value="<?php echo $singlerequriedcomponent['component_id']; ?>"><?php echo value_by_id('tblproducts',$singlerequriedcomponent['component_id'],'sub_name'); ?></div>
+                                                </td>
+
+                                                <td width="15" align="center"><input type="hidden" id="reqqty<?php echo $k; ?>" name="componentdata[<?php echo $k; ?>][requiredqty]" value="<?php echo $requiredqty; ?>"><?php echo $requiredqty; ?></td>
+
+
+                                                <td width="10%" align="center"><input class="form-control deliver_qty" id="deliverableqty<?php echo $k; ?>"  type="text" name="componentdata[<?php echo $k; ?>][deliverableqty]" value="<?php echo $deliverableqty; ?>"></td>
+
+                                                <td width="20%" align="center" >
+                                                    <select class="form-control selectpicker" id="pendingststatus<?php echo $k; ?>" name="componentdata[<?php echo $k; ?>][flag]" onchange="statuschange(this.value,'<?php echo $k; ?>')" data-live-search="true">
+                                                        <option value="0">Pending</option>
+                                                        <option value="1" selected=selected>Approved</option>
+                                                    </select>
+                                                </td>
+
+                                                <td width="15%" align="center"><input class="form-control" id="pendingqty<?php echo $k; ?>" onkeyup="getdeliverableqty(this.value,'<?php echo $k; ?>')" type="text" name="componentdata[<?php echo $k; ?>][remainingqty]" value="0"></td>
+
+                                                <td width="5%">
+                                                    <button type="button" class="btn pull-right btn-danger"  onclick="removecomponent(<?php echo $k; ?>);" ><i class="fa fa-remove"></i></button>
+                                                </td>
+
                                             </tr>
-                                        </thead>
-                                        <tbody class="ui-sortable" style="font-size:15px;">
                                             <?php
-                                            $k = 0;
-                                            if(!empty($components_info)){
-                                                foreach ($components_info as $singlerequriedcomponent) {
+                                            $k++;
+                                        }
+                                    }else{
+                                       ?>
+                                        <tr class="main" id="tr0">
+                                            <td colspan="7" align="center">Components are not available</td>
+                                        </tr>
+                                       <?php
+                                    }
+                                    ?>
 
-
-
-                                                    $deliverableqty = $singlerequriedcomponent['deleverable_qty'];
-                                                    $requiredqty = $singlerequriedcomponent['required_qty'];
-
-                                                    ?>
-                                                    <tr class="main" id="tr<?php echo $k; ?>">
-                                                        <td width="25%" align="left">
-                                                            <div class="form-group"><input type="hidden" name="componentdata[<?php echo $k; ?>][componentid]" value="<?php echo $singlerequriedcomponent['component_id']; ?>"><?php echo value_by_id('tblproducts',$singlerequriedcomponent['component_id'],'sub_name'); ?></div>
-                                                        </td>
-
-                                                        <td width="15" align="center"><input type="hidden" id="reqqty<?php echo $k; ?>" name="componentdata[<?php echo $k; ?>][requiredqty]" value="<?php echo $requiredqty; ?>"><?php echo $requiredqty; ?></td>
-
-
-                                                        <td width="10%" align="center"><input class="form-control deliver_qty" id="deliverableqty<?php echo $k; ?>"  type="text" name="componentdata[<?php echo $k; ?>][deliverableqty]" value="<?php echo $deliverableqty; ?>"></td>
-
-                                                        <td width="20%" align="center" >
-                                                            <select class="form-control selectpicker" id="pendingststatus<?php echo $k; ?>" name="componentdata[<?php echo $k; ?>][flag]" onchange="statuschange(this.value,'<?php echo $k; ?>')" data-live-search="true">
-                                                                <option value="0">Pending</option>
-                                                                <option value="1" selected=selected>Approved</option>
-                                                            </select>
-                                                        </td>
-
-                                                        <td width="15%" align="center"><input class="form-control" id="pendingqty<?php echo $k; ?>" onkeyup="getdeliverableqty(this.value,'<?php echo $k; ?>')" type="text" name="componentdata[<?php echo $k; ?>][remainingqty]" value="0"></td>
-
-                                                        <td width="5%">
-                                                            <button type="button" class="btn pull-right btn-danger"  onclick="removecomponent(<?php echo $k; ?>);" ><i class="fa fa-remove"></i></button>
-                                                        </td>
-
-                                                    </tr>
-                                                    <?php
-                                                    $k++;
-                                                }
-                                            }else{
-                                            ?>
-                                                <tr class="main" id="tr0">
-                                                    <td colspan="7" align="center">Components are not available</td>
-                                                </tr>
-                                            <?php
-                                            }
-                                            ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
+                                </tbody>
+                            </table>
 							<div class="col-xs-12">
 								<label class="label-control subHeads"><a class="addmorecomp" value="<?php echo (!empty($k)) ? $k : 1; ?>">Add More Item<i class="fa fa-plus"></i></a></label>
 							</div>
